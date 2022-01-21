@@ -1,9 +1,6 @@
 #include <iostream>
 #include <queue>
 
-using namespace std;
-
-
 class Player {
 public:
 	PxRigidActor* actorPtr;				// Each player instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
