@@ -81,8 +81,13 @@ void releaseAllControls()
 
 void updateDrivingMode()
 {
+	bool gasPedal = false;
+
 	releaseAllControls();
-	for (int i = 0; i < player.inputQueue.size(); i++)
+
+	int queueSize = player.inputQueue.size();
+
+	for (int i = 0; i < queueSize; i++)
 	{
 		// get and pop first element in input queue
 		DriveMode input = player.inputQueue.front();
@@ -94,6 +99,12 @@ void updateDrivingMode()
 			PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity() + gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
 			velocity = glm::vec3(vel[0], vel[1], vel[2]);
 		}
+
+		// lazy fix for enabling donuts
+		if (input == eDRIVE_MODE_ACCEL_FORWARDS) {
+			gasPedal = true;
+		}
+		if (glm::length(velocity) < 1.f && input == eDRIVE_MODE_HANDBRAKE && gasPedal) continue;
 
 		// If we want to move forward but are currently in the reverse gear...
 		if (eDRIVE_MODE_ACCEL_FORWARDS == input && gVehicle4W->mDriveDynData.getCurrentGear() == PxVehicleGearsData::eREVERSE)
@@ -109,7 +120,6 @@ void updateDrivingMode()
 			if (glm::length(velocity) > 0 && glm::dot(glm::normalize(velocity), player.getDir()) > 0) input = eDRIVE_MODE_BRAKE;
 			else gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 		}
-
 
 		// Add changes from the corresponding input
 		switch (input)

@@ -51,44 +51,34 @@ public:
 	void handleInput(GLFWwindow* window)
 	{
 		// Handles key inputs
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		{
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
 			inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);
-		}
-		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		{
 
+		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) 
 			inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);
-		}
-		else {
-			inputQueue.push(DriveMode::eDRIVE_MODE_NONE);
-		}
+		
 
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		{
 			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
-		}
+		
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		{
 			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
-		}
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS /* || shouldBrake*/)
-		{
-
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) 
 			inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
-		}
-		if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		{
+		
 
-		}
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		{
-
-		}
-		else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
-		{
-
-		}
+		//if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+		//{
+		//
+		//}
+		//if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		//{
+		//
+		//}
+		//else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+		//{
+		//
+		//}
 		
 	}
 };
