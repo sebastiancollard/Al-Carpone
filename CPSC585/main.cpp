@@ -1,5 +1,25 @@
 #include"init.h"
 
+
+void checkSpecialInputs(GLFWwindow* window)
+{
+	// Handles key inputs
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		if (!state.Q_isHeld) {
+			state.toggleCameraMode();
+		}
+		state.Q_isHeld = true;
+	}
+	else state.Q_isHeld = false;
+
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+		if (state.cameraMode == CAMERA_MODE_BOUND) state.cameraMode = CAMERA_MODE_BOUND_FREELOOK;
+	}
+	else if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) state.cameraMode = CAMERA_MODE_BOUND;
+}
+
+
 int main()
 {
 	//Set up physx with vehicle snippet
@@ -70,7 +90,6 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 
-
 		state.updateTime();
 		if (state.timeStep >= 1.0f / 30.0f) {
 			updateTitle(window);
@@ -92,7 +111,6 @@ int main()
 		shaderProgram.Activate();
 		
 		// Handle ball input
-		
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 			createDynamic(PxTransform(
 				PxVec3(camera.Position.x, camera.Position.y, camera.Position.z)), 
@@ -100,13 +118,27 @@ int main()
 				PxVec3(camera.Orientation.x, camera.Orientation.y, camera.Orientation.z) * 175.0f
 			);
 		
+		checkSpecialInputs(window);
+
+		if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
+			printf("hi\n");
+			camera.Inputs(window);
+		}
+		else if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) {
+			camera.Inputs(window);
+			camera.Position = player.getPos() - (player.getDir() * 10.0f) + glm::vec3(0, 5, 0);
+		}
+		else {
+			//Update camera as third person camera behind the car
+			camera.Position = player.getPos() - (player.getDir() * 10.0f) + glm::vec3(0, 5, 0);
+			camera.Orientation = player.getDir();
+		}
+
 
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(90.0f, 0.1f, 1000.0f);
 
-		//Update camera as third person camera behind the car
-		camera.Position = player.getPos() - (player.getDir() * 10.0f) + glm::vec3(0, 5, 0);
-		camera.Orientation = player.getDir();
+		
 
 		// render physx shapes
 		{
