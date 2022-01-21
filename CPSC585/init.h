@@ -83,25 +83,5 @@ std::vector<physx_actor_entity> physx_actors;
 #include"physXVehicleFunctions.h"
 //All of the physx functions needed for setup + running
 #include"physXGeneralFunctions.h"
-
-
- //Used for debugging
-void printMat4(glm::mat4 m) {
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			printf("%.2f ", m[i][j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-}
-
-//Wel find a spot to move all these one off functions
-void updateTitle(GLFWwindow* window)
-{
-	std::string FPS = std::to_string((int)ceil(1. / state.timeStep * state.frameCount));
-	std::string RT = std::to_string((state.timeStep / state.frameCount) * 1000);
-	std::string title = "Output Window / " + FPS + "FPS / " + RT + "ms";
-	glfwSetWindowTitle(window, title.c_str());
-
-}
+//Miscelanious functions who dont have a home yet
+#include"miscFunctions.h"

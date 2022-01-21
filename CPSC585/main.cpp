@@ -1,23 +1,5 @@
+//Initializes the physx system and all global variables and calls other includes.
 #include"init.h"
-
-
-void checkSpecialInputs(GLFWwindow* window)
-{
-	// Handles key inputs
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-	{
-		if (!state.Q_isHeld) {
-			state.toggleCameraMode();
-		}
-		state.Q_isHeld = true;
-	}
-	else state.Q_isHeld = false;
-
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		if (state.cameraMode == CAMERA_MODE_BOUND) state.cameraMode = CAMERA_MODE_BOUND_FREELOOK;
-	}
-	else if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) state.cameraMode = CAMERA_MODE_BOUND;
-}
 
 
 int main()
@@ -67,7 +49,6 @@ int main()
 
 
 	//Create base meshes
-
 	Mesh box;
 	box.createBox(2.5f, 2.f, 5.f);
 
@@ -89,7 +70,7 @@ int main()
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
-
+		//Update the time and fps counter.
 		state.updateTime();
 		if (state.timeStep >= 1.0f / 30.0f) {
 			updateTitle(window);
@@ -99,7 +80,7 @@ int main()
 
 		// Take care of all GLFW events
 		glfwPollEvents();
-
+		//Simulate physics through the timestep
 		stepPhysics(window);
 
 		// Specify the color of the background
@@ -118,14 +99,18 @@ int main()
 				PxVec3(camera.Orientation.x, camera.Orientation.y, camera.Orientation.z) * 175.0f
 			);
 		
+		//Check for special inputs (currently only camera mode change)
 		checkSpecialInputs(window);
 
+		//Update the camera based on its current mode
 		if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
-			printf("hi\n");
+			//Player has full control of camera
 			camera.Inputs(window);
 		}
 		else if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) {
 			camera.Inputs(window);
+			//Overwrite the player inputted position with the bound 3d camera position. 
+			//Probably not the best way to do this.
 			camera.Position = player.getPos() - (player.getDir() * 10.0f) + glm::vec3(0, 5, 0);
 		}
 		else {
@@ -137,8 +122,6 @@ int main()
 
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(90.0f, 0.1f, 1000.0f);
-
-		
 
 		// render physx shapes
 		{
