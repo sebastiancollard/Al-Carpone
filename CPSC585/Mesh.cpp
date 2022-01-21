@@ -1,20 +1,24 @@
 #include "Mesh.h"
 #include "glm/glm.hpp"
 
+// Mesh constructor
 Mesh::Mesh()
 {
+	// Initializes buffer IDs
 	VAO_ID = VBO_POS_ID = VBO_UV_ID = EBO_ID = 0;
-
+	// Initialized number of verts and primitives
 	numVertices = numPrimitives = 0;
-
+	// We'll be working with triangles for OpenGL
 	primitiveType = GL_TRIANGLES;
 }
 
+// Mesh deconstructor
 Mesh::~Mesh()
 {
 	clear();
 }
 
+// Clears buffers and resets IDs
 void Mesh::clear()
 {
 	if (VBO_POS_ID)
@@ -42,10 +46,13 @@ void Mesh::clear()
 	}
 }
 
+// Create renderable box
 void Mesh::createPlane(float base, float size, float uvScale)
 {
+	// A plane consists of 2 triangles
 	numPrimitives = 2;
 
+	// Use inputs to define vertices
 	verts = {
 		-size,base,-size,
 		 size,base,-size,
@@ -53,6 +60,7 @@ void Mesh::createPlane(float base, float size, float uvScale)
 		-size,base, size,
 	};
 
+	// Define UV coords for each vertex
 	UVs = {
 		0.0f * uvScale, 0.0f * uvScale,
 		1.0f * uvScale, 0.0f * uvScale,
@@ -60,22 +68,29 @@ void Mesh::createPlane(float base, float size, float uvScale)
 		0.0f * uvScale, 1.0f * uvScale,
 	};
 
+	// Defind order in which vertices are drawing on the screen
 	indices = {
 		0, 1, 2,
 		2, 3, 0
 	};
 
+	// General setup needed to generate, bind, and populate buffers as well as 
+	// setting the size and location of each layout.
 	createGLObjects();
 }
 
+// Create renderable plane
 void Mesh::createBox(float w, float h, float l)
 {
+	// A box consists of 6 faces, each are 2 triangles
 	numPrimitives = 6 * 2;
 
+	// Update parameters to halfextents
 	w *= 0.5f;
 	h *= 0.5f;
 	l *= 0.5f;
 
+	// Use halfextents to define vertices/triangles
 	verts = {
 		// bottom face
 		w, -h, l,
@@ -114,6 +129,7 @@ void Mesh::createBox(float w, float h, float l)
 		w,  h, -l
 	};
 
+	// Define UV coords for each vertex
 	UVs = {
 		// bottom face
 		0.0f, 0.0f,
@@ -152,6 +168,7 @@ void Mesh::createBox(float w, float h, float l)
 		0.0f, 1.0f
 	};
 
+	// Define order in which vertices are drawing on the screen
 	indices = {
 		0, 1, 2,
 		0, 2, 3,
@@ -167,9 +184,12 @@ void Mesh::createBox(float w, float h, float l)
 		20, 22, 23
 	};
 
+	// General setup needed to generate, bind, and populate buffers as well as 
+	// setting the size and location of each layout.
 	createGLObjects();
 }
 
+// Create renderable sphere
 void Mesh::createSphere(float rad, uint32_t hSegs, uint32_t vSegs)
 {
 	numPrimitives = hSegs * vSegs * 2;
@@ -222,67 +242,109 @@ void Mesh::createSphere(float rad, uint32_t hSegs, uint32_t vSegs)
 	createGLObjects();
 }
 
+// General setup needed to generate, bind, and populate buffers as well as 
+// setting the size and location of each layout.
 void Mesh::createGLObjects()
 {
-	// create vertex buffer objects for pos, uv
+	// Create vertex buffer objects (VBOs) for pos and uv
+
+	// Generate buffer ID for the position VBO
 	glGenBuffers(1, &VBO_POS_ID);
+	// Binds the position VBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_POS_ID);
+	// Populates the array buffer with the vertex data
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * verts.size(), verts.data(), GL_STATIC_DRAW);
+	// Error check
 	CHECK_GL;
 
+	// Generate buffer ID for the uv VBO
 	glGenBuffers(1, &VBO_UV_ID);
+	// Binds the uv VBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_UV_ID);
+	// Populates the array buffer with the UV data
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * UVs.size(), UVs.data(), GL_STATIC_DRAW);
+	// Error check
 	CHECK_GL;
 
-	// create index buffer object
+	// Create index buffer object (EBO)
+
+
+	// Generate buffer ID for the EBO
 	glGenBuffers(1, &EBO_ID);
+	// Binds the EBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_ID);
+	// Populates the array buffer with the indice data
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);
+	// Error check
 	CHECK_GL;
 
+	// Unbind the buffers
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	// Error check
 	CHECK_GL;
 
-	// create vertex array
+	// Create vertex array object (VAO)
+
+	// Generate buffer ID for the VAO
 	glGenVertexArrays(1, &VAO_ID);
+	// Binds the VAO
 	glBindVertexArray(VAO_ID);
+	// Error check
 	CHECK_GL;
 
+	// Layout locations used for the vertex shader
 	GLuint posLayoutLoc = 0;
 	GLuint uvLayoutLoc = 1;
 
+	// Bind the EBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_ID);
 
+	// Bind the VBOs, specify their layout location, size, type, stride, etc...
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_POS_ID);
 	glVertexAttribPointer(posLayoutLoc, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_UV_ID);
 	glVertexAttribPointer(uvLayoutLoc, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	// Error check
 	CHECK_GL;
 
+	// Enable the position vertex attribute 
 	glEnableVertexAttribArray(posLayoutLoc);
+	// Enable the UV vertex attribute 
 	glEnableVertexAttribArray(uvLayoutLoc);
+	// Error check
 	CHECK_GL;
 
+	// Unbind VAO
 	glBindVertexArray(0);
 
+	// Disable the position vertex attribute 
 	glDisableVertexAttribArray(posLayoutLoc);
+	// Disable the UV vertex attribute 
 	glDisableVertexAttribArray(uvLayoutLoc);
 
+	// Unbind the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	// Unbind the EBO
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	// Error check
 	CHECK_GL;
 }
 
 void Mesh::render()
 {
+	// Bind the VAO
 	glBindVertexArray(VAO_ID);
+	// Error check
 	CHECK_GL;
 
+	// Render
 	glDrawElements(primitiveType, 3 * numPrimitives, GL_UNSIGNED_INT, (void*)0);
+	// Error check
 	CHECK_GL;
 
+	// Unbind VAO
 	glBindVertexArray(0);
+	// Error check
 	CHECK_GL;
 }
