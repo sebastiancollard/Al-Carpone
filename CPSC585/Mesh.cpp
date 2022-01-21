@@ -3,7 +3,7 @@
 
 Mesh::Mesh()
 {
-	meshVAID = meshVBID_pos = meshVBID_uv = meshIBID = 0;
+	VAO_ID = VBO_POS_ID = VBO_UV_ID = EBO_ID = 0;
 
 	numVertices = numPrimitives = 0;
 
@@ -17,28 +17,28 @@ Mesh::~Mesh()
 
 void Mesh::clear()
 {
-	if (meshVBID_pos)
+	if (VBO_POS_ID)
 	{
-		glDeleteBuffers(1, &meshVBID_pos);
-		meshVBID_pos = 0;
+		glDeleteBuffers(1, &VBO_POS_ID);
+		VBO_POS_ID = 0;
 	}
 
-	if (meshVBID_uv)
+	if (VBO_UV_ID)
 	{
-		glDeleteBuffers(1, &meshVBID_uv);
-		meshVBID_uv = 0;
+		glDeleteBuffers(1, &VBO_UV_ID);
+		VBO_UV_ID = 0;
 	}
 
-	if (meshIBID)
+	if (EBO_ID)
 	{
-		glDeleteBuffers(1, &meshIBID);
-		meshIBID = 0;
+		glDeleteBuffers(1, &EBO_ID);
+		EBO_ID = 0;
 	}
 
-	if (meshVAID)
+	if (VAO_ID)
 	{
-		glDeleteVertexArrays(1, &meshVAID);
-		meshVAID = 0;
+		glDeleteVertexArrays(1, &VAO_ID);
+		VAO_ID = 0;
 	}
 }
 
@@ -46,21 +46,21 @@ void Mesh::createPlane(float base, float size, float uvScale)
 {
 	numPrimitives = 2;
 
-	posData = {
+	verts = {
 		-size,base,-size,
 		 size,base,-size,
 		 size,base, size,
 		-size,base, size,
 	};
 
-	uvData = {
+	UVs = {
 		0.0f * uvScale, 0.0f * uvScale,
 		1.0f * uvScale, 0.0f * uvScale,
 		1.0f * uvScale, 1.0f * uvScale,
 		0.0f * uvScale, 1.0f * uvScale,
 	};
 
-	indexData = {
+	indices = {
 		0, 1, 2,
 		2, 3, 0
 	};
@@ -76,84 +76,96 @@ void Mesh::createBox(float w, float h, float l)
 	h *= 0.5f;
 	l *= 0.5f;
 
-	// bottom face
-	posData.insert(posData.end(), { w, -h,  l }); uvData.insert(uvData.end(), { 0.0f, 0.0f });
-	posData.insert(posData.end(), { -w, -h,  l }); uvData.insert(uvData.end(), { 1.0f, 0.0f });
-	posData.insert(posData.end(), { -w, -h, -l }); uvData.insert(uvData.end(), { 1.0f, 1.0f });
-	posData.insert(posData.end(), { w, -h, -l }); uvData.insert(uvData.end(), { 0.0f, 1.0f });
+	verts = {
+		// bottom face
+		w, -h, l,
+		-w, -h, l,
+		-w, -h, -l,
+		w, -h, -l,
 
-	// top face
-	posData.insert(posData.end(), { -w,  h,  l }); uvData.insert(uvData.end(), { 0.0f, 0.0f });
-	posData.insert(posData.end(), { w,  h,  l }); uvData.insert(uvData.end(), { 1.0f, 0.0f });
-	posData.insert(posData.end(), { w,  h, -l }); uvData.insert(uvData.end(), { 1.0f, 1.0f });
-	posData.insert(posData.end(), { -w,  h, -l }); uvData.insert(uvData.end(), { 0.0f, 1.0f });
+		// top face
+		-w, h, l,
+		w, h, l,
+		w, h, -l,
+		-w, h, -l,
 
-	// left face
-	posData.insert(posData.end(), { -w, -h, -l }); uvData.insert(uvData.end(), { 0.0f, 0.0f });
-	posData.insert(posData.end(), { -w, -h,  l }); uvData.insert(uvData.end(), { 1.0f, 0.0f });
-	posData.insert(posData.end(), { -w,  h,  l }); uvData.insert(uvData.end(), { 1.0f, 1.0f });
-	posData.insert(posData.end(), { -w,  h, -l }); uvData.insert(uvData.end(), { 0.0f, 1.0f });
+		// left face
+		-w, -h, -l,
+		- w, -h,  l,
+		- w,  h,  l,
+		- w,  h, -l,
 
-	// right face
-	posData.insert(posData.end(), { w, -h,  l }); uvData.insert(uvData.end(), { 0.0f, 0.0f });
-	posData.insert(posData.end(), { w, -h, -l }); uvData.insert(uvData.end(), { 1.0f, 0.0f });
-	posData.insert(posData.end(), { w,  h, -l }); uvData.insert(uvData.end(), { 1.0f, 1.0f });
-	posData.insert(posData.end(), { w,  h,  l }); uvData.insert(uvData.end(), { 0.0f, 1.0f });
+		// right face
+		w, -h,  l,
+		w, -h, -l,
+		w,  h, -l,
+		w,  h,  l,
+		
+		// front face
+		-w, -h,  l,
+		w, -h,  l,
+		w,  h,  l,
+		- w,  h,  l,
 
-	// front face
-	posData.insert(posData.end(), { -w, -h,  l }); uvData.insert(uvData.end(), { 0.0f, 0.0f });
-	posData.insert(posData.end(), { w, -h,  l }); uvData.insert(uvData.end(), { 1.0f, 0.0f });
-	posData.insert(posData.end(), { w,  h,  l }); uvData.insert(uvData.end(), { 1.0f, 1.0f });
-	posData.insert(posData.end(), { -w,  h,  l }); uvData.insert(uvData.end(), { 0.0f, 1.0f });
+		// back face
+		w, -h, -l,
+		-w, -h, -l,
+		-w,  h, -l,
+		w,  h, -l
+	};
 
-	// back face
-	posData.insert(posData.end(), { w, -h, -l }); uvData.insert(uvData.end(), { 0.0f, 0.0f });
-	posData.insert(posData.end(), { -w, -h, -l }); uvData.insert(uvData.end(), { 1.0f, 0.0f });
-	posData.insert(posData.end(), { -w,  h, -l }); uvData.insert(uvData.end(), { 1.0f, 1.0f });
-	posData.insert(posData.end(), { w,  h, -l }); uvData.insert(uvData.end(), { 0.0f, 1.0f });
+	UVs = {
+		// bottom face
+		0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		0.0f, 1.0f,
 
-	std::vector< unsigned int > tri00;
-	std::vector< unsigned int > tri01;
-	tri00.push_back(0); tri00.push_back(1); tri00.push_back(2);
-	tri01.push_back(0); tri01.push_back(2); tri01.push_back(3);
+		// top face
+		 0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		 0.0f, 1.0f,
 
-	std::vector< unsigned int > tri02;
-	std::vector< unsigned int > tri03;
-	tri02.push_back(4); tri02.push_back(5); tri02.push_back(6);
-	tri03.push_back(4); tri03.push_back(6); tri03.push_back(7);
+		 // left face
+		 0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		 0.0f, 1.0f,
 
-	std::vector< unsigned int > tri04;
-	std::vector< unsigned int > tri05;
-	tri04.push_back(8); tri04.push_back(9); tri04.push_back(10);
-	tri05.push_back(8); tri05.push_back(10); tri05.push_back(11);
+		 // right face
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f,
 
-	std::vector< unsigned int > tri06;
-	std::vector< unsigned int > tri07;
-	tri06.push_back(12); tri06.push_back(13); tri06.push_back(14);
-	tri07.push_back(12); tri07.push_back(14); tri07.push_back(15);
+		// front face
+		 0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		 0.0f, 1.0f,
 
-	std::vector< unsigned int > tri08;
-	std::vector< unsigned int > tri09;
-	tri08.push_back(16); tri08.push_back(17); tri08.push_back(18);
-	tri09.push_back(16); tri09.push_back(18); tri09.push_back(19);
+		 // back face
+		0.0f, 0.0f,
+		 1.0f, 0.0f,
+		 1.0f, 1.0f,
+		0.0f, 1.0f
+	};
 
-	std::vector< unsigned int > tri10;
-	std::vector< unsigned int > tri11;
-	tri10.push_back(20); tri10.push_back(21); tri10.push_back(22);
-	tri11.push_back(20); tri11.push_back(22); tri11.push_back(23);
-
-	indexData.insert(indexData.end(), tri00.begin(), tri00.end());
-	indexData.insert(indexData.end(), tri01.begin(), tri01.end());
-	indexData.insert(indexData.end(), tri02.begin(), tri02.end());
-	indexData.insert(indexData.end(), tri03.begin(), tri03.end());
-	indexData.insert(indexData.end(), tri04.begin(), tri04.end());
-	indexData.insert(indexData.end(), tri05.begin(), tri05.end());
-	indexData.insert(indexData.end(), tri06.begin(), tri06.end());
-	indexData.insert(indexData.end(), tri07.begin(), tri07.end());
-	indexData.insert(indexData.end(), tri08.begin(), tri08.end());
-	indexData.insert(indexData.end(), tri09.begin(), tri09.end());
-	indexData.insert(indexData.end(), tri10.begin(), tri10.end());
-	indexData.insert(indexData.end(), tri11.begin(), tri11.end());
+	indices = {
+		0, 1, 2,
+		0, 2, 3,
+		4, 5, 6,
+		4, 6, 7,
+		8, 9, 10,
+		8, 10, 11,
+		12, 13, 14,
+		12, 14, 15,
+		16, 17, 18,
+		16, 18, 19,
+		20, 21, 22,
+		20, 22, 23
+	};
 
 	createGLObjects();
 }
@@ -177,8 +189,8 @@ void Mesh::createSphere(float rad, uint32_t hSegs, uint32_t vSegs)
 			float y = std::cos(theta);
 			float z = std::sin(theta) * std::sin(phi);
 
-			posData.insert(posData.end(), { rad * x, rad * y, rad * z });
-			uvData.insert(uvData.end(), { 1.0f - (float)h / hSegs, (float)v / vSegs });
+			verts.insert(verts.end(), { rad * x, rad * y, rad * z });
+			UVs.insert(UVs.end(), { 1.0f - (float)h / hSegs, (float)v / vSegs });
 		}
 	}
 
@@ -202,8 +214,8 @@ void Mesh::createSphere(float rad, uint32_t hSegs, uint32_t vSegs)
 			tri1.push_back(topRight);
 			tri1.push_back(topLeft);
 
-			indexData.insert(indexData.end(), tri0.begin(), tri0.end());
-			indexData.insert(indexData.end(), tri1.begin(), tri1.end());
+			indices.insert(indices.end(), tri0.begin(), tri0.end());
+			indices.insert(indices.end(), tri1.begin(), tri1.end());
 		}
 	}
 
@@ -213,20 +225,20 @@ void Mesh::createSphere(float rad, uint32_t hSegs, uint32_t vSegs)
 void Mesh::createGLObjects()
 {
 	// create vertex buffer objects for pos, uv
-	glGenBuffers(1, &meshVBID_pos);
-	glBindBuffer(GL_ARRAY_BUFFER, meshVBID_pos);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * posData.size(), posData.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &VBO_POS_ID);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_POS_ID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * verts.size(), verts.data(), GL_STATIC_DRAW);
 	CHECK_GL;
 
-	glGenBuffers(1, &meshVBID_uv);
-	glBindBuffer(GL_ARRAY_BUFFER, meshVBID_uv);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * uvData.size(), uvData.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &VBO_UV_ID);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_UV_ID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * UVs.size(), UVs.data(), GL_STATIC_DRAW);
 	CHECK_GL;
 
 	// create index buffer object
-	glGenBuffers(1, &meshIBID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIBID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indexData.size(), indexData.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &EBO_ID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_ID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_STATIC_DRAW);
 	CHECK_GL;
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -234,29 +246,29 @@ void Mesh::createGLObjects()
 	CHECK_GL;
 
 	// create vertex array
-	glGenVertexArrays(1, &meshVAID);
-	glBindVertexArray(meshVAID);
+	glGenVertexArrays(1, &VAO_ID);
+	glBindVertexArray(VAO_ID);
 	CHECK_GL;
 
-	GLuint loc_pos = 0;
-	GLuint los_uv = 1;
+	GLuint posLayoutLoc = 0;
+	GLuint uvLayoutLoc = 1;
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIBID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_ID);
 
-	glBindBuffer(GL_ARRAY_BUFFER, meshVBID_pos);
-	glVertexAttribPointer(loc_pos, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glBindBuffer(GL_ARRAY_BUFFER, meshVBID_uv);
-	glVertexAttribPointer(los_uv, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_POS_ID);
+	glVertexAttribPointer(posLayoutLoc, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_UV_ID);
+	glVertexAttribPointer(uvLayoutLoc, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	CHECK_GL;
 
-	glEnableVertexAttribArray(loc_pos);
-	glEnableVertexAttribArray(los_uv);
+	glEnableVertexAttribArray(posLayoutLoc);
+	glEnableVertexAttribArray(uvLayoutLoc);
 	CHECK_GL;
 
 	glBindVertexArray(0);
 
-	glDisableVertexAttribArray(loc_pos);
-	glDisableVertexAttribArray(los_uv);
+	glDisableVertexAttribArray(posLayoutLoc);
+	glDisableVertexAttribArray(uvLayoutLoc);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -265,7 +277,7 @@ void Mesh::createGLObjects()
 
 void Mesh::render()
 {
-	glBindVertexArray(meshVAID);
+	glBindVertexArray(VAO_ID);
 	CHECK_GL;
 
 	glDrawElements(primitiveType, 3 * numPrimitives, GL_UNSIGNED_INT, (void*)0);

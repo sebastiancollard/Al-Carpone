@@ -59,14 +59,14 @@ protected:
 	unsigned int numVertices;
 	unsigned int numPrimitives;
 
-	GLuint meshVAID;
-	GLuint meshIBID;
-	GLuint meshVBID_pos;
-	GLuint meshVBID_uv;
+	GLuint VAO_ID;
+	GLuint EBO_ID;
+	GLuint VBO_POS_ID;
+	GLuint VBO_UV_ID;
 
-	std::vector<GLuint> indexData;
-	std::vector<GLfloat> posData;
-	std::vector<GLfloat> uvData;
+	std::vector<GLuint> indices;
+	std::vector<GLfloat> verts;
+	std::vector<GLfloat> UVs;
 };
 
 #endif
