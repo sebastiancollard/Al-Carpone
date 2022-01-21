@@ -49,13 +49,18 @@ int main()
 
 
 	//Create base meshes
+	std::vector<Mesh> meshes;
+
 	Mesh box;
+	meshes.push_back(box);
 	box.createBox(2.5f, 2.f, 5.f);
 
 	Mesh sphere;
+	meshes.push_back(sphere);
 	sphere.createSphere(0.5f, 32, 32);
 
 	Mesh plane;
+	meshes.push_back(plane);
 	plane.createPlane(0, 1000, 10);
 
 	// Enables the Depth Buffer
@@ -210,8 +215,14 @@ int main()
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 	}
+
+	// for each mesh created, delete it
+	for (Mesh& m : meshes) m.~Mesh();
+	
+	// Delete textures
 	texture_crate.Delete();
 	shaderProgram.Delete();
+
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program
