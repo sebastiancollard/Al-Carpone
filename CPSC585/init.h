@@ -2,6 +2,7 @@
 #define PVD_HOST "127.0.0.1"	//Set this to the IP address of the system running the PhysX Visual Debugger that you want to connect to.
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL; }
 
+//Screen width and height. May want to change this to a dynamic value eventually.
 const unsigned int width = 800;
 const unsigned int height = 800;
 
@@ -35,7 +36,7 @@ const unsigned int height = 800;
 using namespace physx;
 using namespace snippetvehicle;
 
-//All of the vehicle tuning settings
+//Vehicle tuning settings
 #include"physXVehicleSettings.h"
 
 #include"Player.h"
