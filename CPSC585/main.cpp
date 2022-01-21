@@ -123,39 +123,45 @@ int main()
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(90.0f, 0.1f, 1000.0f);
 
-		// render physx shapes
+		// Render dynamic physx shapes
 		{
 			const int MAX_NUM_ACTOR_SHAPES = 128;
 			PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
+
+			// Loop over each actor in the scene
 			for (PxU32 i = 0; i < static_cast<PxU32>(physx_actors.size()); i++)
 			{
+				// Fetch the number of shapes that make up the actor
 				const PxU32 nbShapes = physx_actors[i].actorPtr->getNbShapes();
 				PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
 				physx_actors[i].actorPtr->getShapes(shapes, nbShapes);
 				
 				for (PxU32 j = 0; j < nbShapes; j++)
 				{
+					// Get the geometry of the shape
 					const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[j], *physx_actors[i].actorPtr));
 					const PxGeometryHolder h = shapes[j]->getGeometry();
 		
-					// render object
+					// Generate a mat4 out of the shape position so can send it to the vertex shader
 					glm::mat4 model_matrix = glm::make_mat4(&shapePose.column0.x);
-					//glm::mat4 mvp_mat = camera.cameraMatrix * model_matrix;
 
-
+					// check what geometry type the shape is
 					if (h.any().getType() == PxGeometryType::eBOX)
 					{
 						glActiveTexture(GL_TEXTURE0);
 						texture_crate.Bind();
+						// This texture is also sent to the fragment shader 
 						texture_crate.texUnit(shaderProgram, "tex0", 0);
-						
+						// Export camera matrix to the vertex shader
 						camera.exportMatrix(shaderProgram, "camMatrix");
+						// Export the shape's model matrix to the vertex shader
 						glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-
+						// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
 						box.render();
 					}
 					else if (h.any().getType() == PxGeometryType::eSPHERE)
 					{
+						// Same as eBOX
 						glActiveTexture(GL_TEXTURE0);
 						texture_checker.Bind();
 						texture_checker.texUnit(shaderProgram, "tex0", 0);
@@ -166,18 +172,23 @@ int main()
 						sphere.render();
 					}
 					else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
-
+						// Currently, the vehicle chassis is a convexmesh. 
 						glActiveTexture(GL_TEXTURE0);
 
+						// Export camera matrix to the vertex shader
 						camera.exportMatrix(shaderProgram, "camMatrix");
+						// Export the shape's model matrix to the vertex shader
 						glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 
+						// The first 6 shapes are the wheels followed by the chassis.
 						if (j > 5) {
+							// Render a box in the same spot as the chassis with the crate texture
 							texture_crate.Bind();
 							texture_crate.texUnit(shaderProgram, "tex0", 0);
 							box.render();
 						} 
 						else {
+							// Render a sphere in the same spot as the wheels with a checker texture
 							texture_checker.Bind();
 							texture_checker.texUnit(shaderProgram, "tex0", 0);
 							sphere.render();
@@ -185,9 +196,13 @@ int main()
 					}
 				}
 				glm::mat4 model_matrix(1);
+				// Export the identity matrix to the vertex shader
 				glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
+				// Bind the checker texture
 				texture_checker.Bind();
+				// Send the checker texture to the fragment shader
 				texture_checker.texUnit(shaderProgram, "tex0", 0);
+				// Render a ground plane at the origin using the identity matrix
 				plane.render();
 			}
 		}
