@@ -12,6 +12,7 @@
 #include <sstream>
 #include <iostream>
 
+// Prints out any openGL anomalies
 #define CHECK_GL { GLenum glStatus = glGetError(); if( glStatus != GL_NO_ERROR ) { std::cout << "File: " << __FILE__ << " " << "Line: " << __LINE__ << " " << "OpenGL error: " << openglGetErrorString( glStatus ); } }
 static std::string openglGetErrorString(GLenum status)
 {
@@ -42,28 +43,42 @@ static std::string openglGetErrorString(GLenum status)
 class Mesh
 {
 public:
+	// Constructor
 	Mesh();
+	// Destructor
 	~Mesh();
 
+	// Create renderable box
 	void createBox(float w, float h, float l);
+	// Create renderable plane
 	void createPlane(float base, float size, float uvScale = 1.0f);
+	// Create renderable sphere
 	void createSphere(float rad, uint32_t hSegs, uint32_t vSegs);
 
+	// General render function for meshes
 	void render();
+	// Clear mesh data
 	void clear();
 
 protected:
+	// General setup needed to generate, bind, and populate buffers as well as 
+	// setting the size and location of each layout.
 	void createGLObjects();
 
+	// GL_TRIANGLES by default
 	GLenum primitiveType;
+	// Number of vertices
 	unsigned int numVertices;
+	// Number of triangles
 	unsigned int numPrimitives;
 
+	// Various buffer IDs for relevant buffer functions
 	GLuint VAO_ID;
 	GLuint EBO_ID;
 	GLuint VBO_POS_ID;
 	GLuint VBO_UV_ID;
 
+	// Vectors to hold relevant information about the mesh
 	std::vector<GLuint> indices;
 	std::vector<GLfloat> verts;
 	std::vector<GLfloat> UVs;
