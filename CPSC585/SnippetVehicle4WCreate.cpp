@@ -32,6 +32,18 @@
 #include "snippetvehiclecommon/SnippetVehicleSceneQuery.h"
 
 
+//Here is a bunch of vehicle settings I found to modify, there are probably more we can find to toy with aswell.
+#define VEHICLE_ENGINE_PEAK_TORQUE 500.0f //init 500
+#define VEHICLE_ENGINE_MAX_OMEGA 600.0f //init 600
+#define VEHICLE_GEAR_SWITCH_TIME 0.5f //init 0.5
+#define VEHICLE_CLUTCH_STRENGTH 10.0f //init 10
+#define VEHICLE_HANDBREAK_MAX_TORQUE 4000.0f //init 4000
+#define VEHICLE_SUSPENSION_MAX_COMPRESSION 0.3f //init 0.3
+#define VEHICLE_SUSPENSION_MAX_DROOP 0.1f //init 0.1
+#define VEHICLE_SUSPENSION_SPRING_STRENGTH 35000.0f //init 35000
+#define VEHICLE_SUSPENSION_DAMPER_RATE 4500.0f //init 4500
+#define VEHICLE_MAX_STEER_COEFFICIENT 0.3333f //init 0.3333
+
 namespace snippetvehicle
 {
 	
@@ -82,11 +94,11 @@ void setupWheelsSimulationData
 		}
 
 		//Enable the handbrake for the rear wheels only.
-		wheels[PxVehicleDrive4WWheelOrder::eREAR_LEFT].mMaxHandBrakeTorque=4000.0f;
-		wheels[PxVehicleDrive4WWheelOrder::eREAR_RIGHT].mMaxHandBrakeTorque=4000.0f;
+		wheels[PxVehicleDrive4WWheelOrder::eREAR_LEFT].mMaxHandBrakeTorque=VEHICLE_HANDBREAK_MAX_TORQUE;
+		wheels[PxVehicleDrive4WWheelOrder::eREAR_RIGHT].mMaxHandBrakeTorque=VEHICLE_HANDBREAK_MAX_TORQUE;
 		//Enable steering for the front wheels only.
-		wheels[PxVehicleDrive4WWheelOrder::eFRONT_LEFT].mMaxSteer=PxPi*0.3333f;
-		wheels[PxVehicleDrive4WWheelOrder::eFRONT_RIGHT].mMaxSteer=PxPi*0.3333f;
+		wheels[PxVehicleDrive4WWheelOrder::eFRONT_LEFT].mMaxSteer=PxPi*VEHICLE_MAX_STEER_COEFFICIENT;
+		wheels[PxVehicleDrive4WWheelOrder::eFRONT_RIGHT].mMaxSteer=PxPi*VEHICLE_MAX_STEER_COEFFICIENT;
 	}
 
 	//Set up the tires.
@@ -111,10 +123,10 @@ void setupWheelsSimulationData
 		//Set the suspension data.
 		for(PxU32 i = 0; i < numWheels; i++)
 		{
-			suspensions[i].mMaxCompression = 0.3f;
-			suspensions[i].mMaxDroop = 0.1f;
-			suspensions[i].mSpringStrength = 35000.0f;	
-			suspensions[i].mSpringDamperRate = 4500.0f;
+			suspensions[i].mMaxCompression = VEHICLE_SUSPENSION_MAX_COMPRESSION;
+			suspensions[i].mMaxDroop = VEHICLE_SUSPENSION_MAX_DROOP;
+			suspensions[i].mSpringStrength = VEHICLE_SUSPENSION_SPRING_STRENGTH;
+			suspensions[i].mSpringDamperRate = VEHICLE_SUSPENSION_DAMPER_RATE;
 			suspensions[i].mSprungMass = suspSprungMasses[i];
 		}
 
@@ -274,18 +286,18 @@ PxVehicleDrive4W* createVehicle4W(const VehicleDesc& vehicle4WDesc, PxPhysics* p
 
 		//Engine
 		PxVehicleEngineData engine;
-		engine.mPeakTorque=500.0f;
-		engine.mMaxOmega=600.0f;//approx 6000 rpm
+		engine.mPeakTorque= VEHICLE_ENGINE_PEAK_TORQUE;
+		engine.mMaxOmega=VEHICLE_ENGINE_MAX_OMEGA;//approx 6000 rpm
 		driveSimData.setEngineData(engine);
 
 		//Gears
 		PxVehicleGearsData gears;
-		gears.mSwitchTime=0.5f;
+		gears.mSwitchTime=VEHICLE_GEAR_SWITCH_TIME;
 		driveSimData.setGearsData(gears);
 
 		//Clutch
 		PxVehicleClutchData clutch;
-		clutch.mStrength=10.0f;
+		clutch.mStrength= VEHICLE_CLUTCH_STRENGTH;
 		driveSimData.setClutchData(clutch);
 
 		//Ackermann steer accuracy

@@ -41,8 +41,6 @@ void initPhysics()
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 
-	/////////////////////////////////////////////
-
 	PxInitVehicleSDK(*gPhysics);
 	PxVehicleSetBasisVectors(PxVec3(0, 1, 0), PxVec3(0, 0, 1));
 	PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
@@ -83,18 +81,14 @@ void initPhysics()
 
 void stepPhysics(GLFWwindow* window)
 {
-
-	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
-	//incrementDrivingMode(timestep);
-
 	const float timestep = 1.0f / 60.0f;
 
-	player.handleInput(window);
+	if(state.cameraMode == CAMERA_MODE_BOUND || state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) player.handleInput(window);
+
 	updateDrivingMode();
 
 	//Update the control inputs for the vehicle.dwd
 	PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *gVehicle4W);
-
 
 	//Raycasts.
 	PxVehicleWheels* vehicles[1] = { gVehicle4W };
