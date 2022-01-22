@@ -17,9 +17,6 @@ const unsigned int height = 800;
 
 #include"Texture.h"
 #include"shader.h"
-#include"VAO.h"
-#include"VBO.h"
-#include"EBO.h"
 #include"freeCamera.h"
 
 #include "PxPhysicsAPI.h"

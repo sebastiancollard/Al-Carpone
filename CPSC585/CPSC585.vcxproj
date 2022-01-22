@@ -152,7 +152,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="freeCamera.cpp" />
-    <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -166,13 +165,10 @@
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="VAO.cpp" />
-    <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="freeCamera.h" />
     <ClInclude Include="classes.h" />
-    <ClInclude Include="EBO.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="initPhysX.h" />
     <ClInclude Include="Mesh.h" />
@@ -184,8 +180,6 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="VAO.h" />
-    <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="default.frag">
