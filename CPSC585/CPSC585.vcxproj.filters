@@ -124,11 +124,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.vert">
+    <CopyFileToFolders Include="default.vert">
       <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="default.frag">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="default.frag">
       <Filter>Resource Files\Shaders</Filter>
-    </None>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>
