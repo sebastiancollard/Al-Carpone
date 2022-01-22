@@ -59,51 +59,6 @@ public:
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) 
 			inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
 	
-		//if(glfwGetJoystickAxes(window,GLFW_JOYSTICK_1))
-		//if (glfwJoystickPresent(GLFW_JOYSTICK_1));
-		int JoystickPresent = glfwJoystickPresent(GLFW_JOYSTICK_1);
-		if (JoystickPresent == 1) 
-		{
-			int axesCount;
-			const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
-			//std::cout << count << std::endl;
 
-			/*
-			 std::cout << "Left Stick X Axis: " << axes[0] << std::endl; // tested with PS4 controller connected via micro USB cable
-			std::cout << "Left Stick Y Axis: " << axes[1] << std::endl; // tested with PS4 controller connected via micro USB cable
-			std::cout << "Right Stick X Axis: " << axes[2] << std::endl; // tested with PS4 controller connected via micro USB cable
-			std::cout << "Right Stick Y Axis: " << axes[3] << std::endl; // tested with PS4 controller connected via micro USB cable
-			std::cout << "Left Trigger/L2: " << axes[4] << std::endl; // tested with PS4 controller connected via micro USB cable
-			std::cout << "Right Trigger/R2: " << axes[5] << std::endl; // tested with PS4 controller connected via micro USB cable
-			*/
-
-			//left joystick
-			if (axes[0] < -0.25)		//left
-				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
-			if (axes[0] > 0.25)			//right
-				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
-			if (axes[1] < -0.5)			//forward
-				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);
-			if (axes[1] > 0.5)			//backward
-				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);
-
-
-
-			//int buttonCount;
-			//const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
-			//if (GLFW_PRESS == buttons[1])
-			//{
-			//	//std::cout << "Pressed" << std::endl;
-			//}
-			//else if (GLFW_RELEASE == buttons[0])
-			//{
-			//	//std::cout << "Released" << std::endl;
-			//}
-
-			//const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-			////std::cout << name << std::endl;
-
-		
-		}
 	}	
 };
