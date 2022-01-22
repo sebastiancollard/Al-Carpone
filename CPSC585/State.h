@@ -9,6 +9,7 @@
 //Stores information pertaning to the current state of the game.
 class State {
 public:
+
 	//Current time in game
 	double currTime = 0.;
 	//Previous time (time at last currTime update)
@@ -19,6 +20,9 @@ public:
 	//Number of frames since last fps update
 	unsigned int frameCount = 0;
 	unsigned int cameraMode = CAMERA_MODE_BOUND;
+
+	//If this is flipped to true, the program should exit.
+	bool terminateProgram = false;
 
 	//Used for q input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.

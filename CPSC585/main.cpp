@@ -22,7 +22,7 @@ int main()
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		// Create a GLFWwindow object of 800 by 800 pixels
-		window = glfwCreateWindow(width, height, "Output Window", NULL, NULL);
+		window = glfwCreateWindow(width, height, "Al Carpone", NULL, NULL);
 		// Error check if the window fails to create
 		if (window == NULL)
 		{
@@ -73,7 +73,7 @@ int main()
 
 
 	// Main while loop
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window) && !state.terminateProgram)
 	{
 		//Update the time and fps counter.
 		state.updateTime();
