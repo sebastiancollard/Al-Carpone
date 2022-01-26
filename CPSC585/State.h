@@ -19,7 +19,7 @@ public:
 
 	//Number of frames since last fps update
 	unsigned int frameCount = 0;
-	unsigned int cameraMode = CAMERA_MODE_UNBOUND_FREELOOK;
+	unsigned int cameraMode = CAMERA_MODE_BOUND;
 
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;

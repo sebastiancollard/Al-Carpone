@@ -2,6 +2,8 @@
 
 #include"init.h"
 
+#define M_PI 3.14159265358979323846
+float t = 0;
 
 int main()
 {
@@ -115,11 +117,12 @@ int main()
 			camera.Inputs(window);
 			//Overwrite the player inputted position with the bound 3d camera position. 
 			//Probably not the best way to do this.
-			camera.Position = player.getPos() - (player.getDir() * 10.0f) + glm::vec3(0, 5, 0);
+			camera.Position = player.getPos() - (player.getDir() * 15.0f) + glm::vec3(0, 2.5f, 0);
 		}
 		else {
 			//Update camera as third person camera behind the car
-			camera.Position = player.getPos() - (player.getDir() * 10.0f) + glm::vec3(0, 5, 0);
+			camera.Pitch = 0;
+			camera.Position = player.getPos() - (player.getDir() * 15.0f) + glm::vec3(0, 2.5f, 0);
 			camera.Front = player.getDir();
 		}
 
@@ -138,13 +141,13 @@ int main()
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(.01f));	// it's a bit too big for our scene, so scale it down
-		shaderProgram.setMat4("model", model);
-		car.Draw(shaderProgram);
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		//model = glm::scale(model, glm::vec3(.01f));	// it's a bit too big for our scene, so scale it down
+		//shaderProgram.setMat4("model", model);
+		//car.Draw(shaderProgram);
 
 
-		model = glm::scale(model, glm::vec3(100.0f));	// it's a bit too big for our scene, so scale it down
+		model = glm::scale(model, glm::vec3(0.25f));	// it's a bit too big for our scene, so scale it down
 		shaderProgram.setMat4("model", model);
 		groundPlane.Draw(shaderProgram);
 
@@ -157,7 +160,7 @@ int main()
 		{
 			const int MAX_NUM_ACTOR_SHAPES = 128;
 			PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
-			/*
+			
 			// Loop over each actor in the scene
 			for (PxU32 i = 0; i < static_cast<PxU32>(physx_actors.size()); i++)
 			{
@@ -173,7 +176,7 @@ int main()
 					const PxGeometryHolder h = shapes[j]->getGeometry();
 
 					// Generate a mat4 out of the shape position so can send it to the vertex shader
-					glm::mat4 model_matrix = glm::make_mat4(&shapePose.column0.x);
+					model = glm::make_mat4(&shapePose.column0.x);
 
 					// check what geometry type the shape is
 					if (h.any().getType() == PxGeometryType::eBOX)
@@ -188,6 +191,11 @@ int main()
 						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 						// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
 						//box.render();
+
+						// render the loaded model
+						//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+						//model = glm::scale(model, glm::vec3(.01f));	// it's a bit too big for our scene, so scale it down
+
 					}
 					else if (h.any().getType() == PxGeometryType::eSPHERE)
 					{
@@ -211,23 +219,26 @@ int main()
 						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 
 						// The first 6 shapes are the wheels followed by the chassis.
-						//if (j > 5) {
-						//	// Render a box in the same spot as the chassis with the crate texture
-						//	texture_crate.Bind();
-						//	texture_crate.texUnit(shaderProgram, "tex0", 0);
-						//	box.render();
-						//}
-						//else {
+						if (j > 5) {
+							// Render a box in the same spot as the chassis with the crate texture
+							//printf("2:\n");
+							model = glm::scale(model, glm::vec3(.01f));
+							model = glm::rotate(model, 3*(float)M_PI/2.0f, glm::vec3(0, 1, 0));
+							model = glm::translate(model, glm::vec3(0, -200, 0));
+							//t += 0.01f;
+							//printMat4(model);
+							shaderProgram.setMat4("model", model);
+							car.Draw(shaderProgram);
+						}
+						else {
 						//		Render a sphere in the same spot as the wheels with a checker texture
 						//		texture_checker.Bind();
 						//		texture_checker.texUnit(shaderProgram, "tex0", 0);
 						//		sphere.render();
-						//	}
+						}
 					}
 				}
-
 			}
-			*/
 		}
 
 		// Swap the back buffer with the front buffer
