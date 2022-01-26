@@ -151,11 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="freeCamera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="shader.cpp" />
     <ClCompile Include="SnippetVehicle4WCreate.cpp" />
     <ClCompile Include="SnippetVehicleCreate.cpp" />
     <ClCompile Include="SnippetVehicleFilterShader.cpp" />
@@ -164,38 +161,25 @@
     <ClCompile Include="SnippetVehicleTankCreate.cpp" />
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="stb.cpp" />
-    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="freeCamera.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="classes.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="initPhysX.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="miscFunctions.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="physXGeneralFunctions.h" />
     <ClInclude Include="physXVehicleFunctions.h" />
     <ClInclude Include="physXVehicleSettings.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="State.h" />
-    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="default.frag">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="default.vert">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </CopyFileToFolders>
+    <None Include="default.fs" />
+    <None Include="default.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

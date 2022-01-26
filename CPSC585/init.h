@@ -3,10 +3,11 @@
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL; }
 
 //Screen width and height. May want to change this to a dynamic value eventually.
-const unsigned int width = 800;
-const unsigned int height = 800;
+const unsigned int SCREEN_WIDTH = 800;
+const unsigned int SCREEN_HEIGHT = 800;
 
-#include"Mesh.h"
+#include<glad/glad.h>
+
 #include<iostream>
 #include<GLFW/glfw3.h>
 #include<stb/stb_image.h>
@@ -15,9 +16,12 @@ const unsigned int height = 800;
 #include<glm/gtc/type_ptr.hpp>
 #include<vector>
 
-#include"Texture.h"
+
+
 #include"shader.h"
-#include"freeCamera.h"
+#include "Model.h"
+
+
 
 #include "PxPhysicsAPI.h"
 
@@ -41,6 +45,8 @@ Player player;
 
 #include"State.h"
 State state;
+
+#include "camera.h"
 
 //Set up physx global variables
 //Should be checked over to see what actually needs to be global and what doesnt

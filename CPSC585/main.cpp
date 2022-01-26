@@ -1,4 +1,5 @@
 //Initializes the physx system and all global variables and calls other includes.
+
 #include"init.h"
 
 
@@ -22,7 +23,7 @@ int main()
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		// Create a GLFWwindow object of 800 by 800 pixels
-		window = glfwCreateWindow(width, height, "Al Carpone", NULL, NULL);
+		window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", NULL, NULL);
 		// Error check if the window fails to create
 		if (window == NULL)
 		{
@@ -37,39 +38,32 @@ int main()
 		gladLoadGL();
 		// Specify the viewport of OpenGL in the Window
 		// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
-		glViewport(0, 0, width, height);
+		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
-	
+
 	// Generates Shader object using shaders default.vert and default.frag
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader shaderProgram("default.vs", "default.fs");
 
-	// Texture
-	Texture texture_crate("textures/crate.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
-	Texture texture_checker("textures/checker.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
-
+	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+	stbi_set_flip_vertically_on_load(true);
 
 	//Create base meshes
-	std::vector<Mesh> meshes;
+	std::vector<Model> models;
 
-	Mesh box;
-	meshes.push_back(box);
-	box.createBox(2.5f, 2.f, 5.f);
+	Model bag("models/backpack/backpack.obj");
+	models.push_back(bag);
 
-	Mesh sphere;
-	meshes.push_back(sphere);
-	sphere.createSphere(0.5f, 32, 32);
-
-	Mesh plane;
-	meshes.push_back(plane);
-	plane.createPlane(0, 1000, 10);
+	//Model car("models/car/body.obj");
+	//models.push_back(car);
+	
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
+
+
 	// Creates camera object
-	freeCamera camera(width, height, glm::vec3(0.f, 2.f, 10.f));
-
-
+	Camera camera(glm::vec3(0.f, 2.f, 10.f));
 
 
 	// Main while loop
@@ -94,16 +88,16 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Tell OpenGL which Shader Program we want to use
 
-		shaderProgram.Activate();
-		
+		shaderProgram.use();
+
 		// Handle ball input
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 			createDynamic(PxTransform(
-				PxVec3(camera.Position.x, camera.Position.y, camera.Position.z)), 
-				PxSphereGeometry(4), 
-				PxVec3(camera.Orientation.x, camera.Orientation.y, camera.Orientation.z) * 175.0f
+				PxVec3(camera.Position.x, camera.Position.y, camera.Position.z)),
+				PxSphereGeometry(4),
+				PxVec3(camera.Front.x , camera.Front.y, camera.Front.z) * 175.0f
 			);
-		
+
 		//Check for special inputs (currently only camera mode change)
 		checkSpecialInputs(window);
 
@@ -121,18 +115,39 @@ int main()
 		else {
 			//Update camera as third person camera behind the car
 			camera.Position = player.getPos() - (player.getDir() * 10.0f) + glm::vec3(0, 5, 0);
-			camera.Orientation = player.getDir();
+			camera.Front = player.getDir();
 		}
 
 
+		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// don't forget to enable shader before setting uniforms
+		shaderProgram.use();
+
+		// view/projection transformations
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		shaderProgram.setMat4("projection", projection);
+		shaderProgram.setMat4("view", view);
+
+		// render the loaded model
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.0f));	// it's a bit too big for our scene, so scale it down
+		shaderProgram.setMat4("model", model);
+		bag.Draw(shaderProgram);
+
+		//printf("PITCH[%.2f] | YAW[%.2f]\nPOS<%.2f,%.2f,%.2f>\n\n", camera.Pitch, camera.Yaw,camera.Position.x,camera.Position.y,camera.Position.z);
+
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.updateMatrix(90.0f, 0.1f, 1000.0f);
+		//camera.updateMatrix(90.0f, 0.1f, 1000.0f);
 
 		// Render dynamic physx shapes
 		{
 			const int MAX_NUM_ACTOR_SHAPES = 128;
 			PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
-
+			/*
 			// Loop over each actor in the scene
 			for (PxU32 i = 0; i < static_cast<PxU32>(physx_actors.size()); i++)
 			{
@@ -140,88 +155,74 @@ int main()
 				const PxU32 nbShapes = physx_actors[i].actorPtr->getNbShapes();
 				PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
 				physx_actors[i].actorPtr->getShapes(shapes, nbShapes);
-				
+
 				for (PxU32 j = 0; j < nbShapes; j++)
 				{
 					// Get the geometry of the shape
 					const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[j], *physx_actors[i].actorPtr));
 					const PxGeometryHolder h = shapes[j]->getGeometry();
-		
+
 					// Generate a mat4 out of the shape position so can send it to the vertex shader
 					glm::mat4 model_matrix = glm::make_mat4(&shapePose.column0.x);
 
 					// check what geometry type the shape is
 					if (h.any().getType() == PxGeometryType::eBOX)
 					{
-						glActiveTexture(GL_TEXTURE0);
-						texture_crate.Bind();
+						//glActiveTexture(GL_TEXTURE0);
+						//texture_crate.Bind();
 						// This texture is also sent to the fragment shader 
-						texture_crate.texUnit(shaderProgram, "tex0", 0);
+						//texture_crate.texUnit(shaderProgram, "tex0", 0);
 						// Export camera matrix to the vertex shader
-						camera.exportMatrix(shaderProgram, "camMatrix");
+						//camera.exportMatrix(shaderProgram, "camMatrix");
 						// Export the shape's model matrix to the vertex shader
-						glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
+						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 						// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
-						box.render();
+						//box.render();
 					}
 					else if (h.any().getType() == PxGeometryType::eSPHERE)
 					{
 						// Same as eBOX
-						glActiveTexture(GL_TEXTURE0);
-						texture_checker.Bind();
-						texture_checker.texUnit(shaderProgram, "tex0", 0);
-		
-						camera.exportMatrix(shaderProgram, "camMatrix");
-						glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
+						//glActiveTexture(GL_TEXTURE0);
+						//texture_checker.Bind();
+						//texture_checker.texUnit(shaderProgram, "tex0", 0);
 
-						sphere.render();
+						//camera.exportMatrix(shaderProgram, "camMatrix");
+						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
+
+						//sphere.render();
 					}
 					else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
 						// Currently, the vehicle chassis is a convexmesh. 
-						glActiveTexture(GL_TEXTURE0);
+						//glActiveTexture(GL_TEXTURE0);
 
 						// Export camera matrix to the vertex shader
-						camera.exportMatrix(shaderProgram, "camMatrix");
+						//camera.exportMatrix(shaderProgram, "camMatrix");
 						// Export the shape's model matrix to the vertex shader
-						glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
+						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 
 						// The first 6 shapes are the wheels followed by the chassis.
-						if (j > 5) {
-							// Render a box in the same spot as the chassis with the crate texture
-							texture_crate.Bind();
-							texture_crate.texUnit(shaderProgram, "tex0", 0);
-							box.render();
-						} 
-						else {
-							// Render a sphere in the same spot as the wheels with a checker texture
-							texture_checker.Bind();
-							texture_checker.texUnit(shaderProgram, "tex0", 0);
-							sphere.render();
-						} 
+						//if (j > 5) {
+						//	// Render a box in the same spot as the chassis with the crate texture
+						//	texture_crate.Bind();
+						//	texture_crate.texUnit(shaderProgram, "tex0", 0);
+						//	box.render();
+						//}
+						//else {
+						//		Render a sphere in the same spot as the wheels with a checker texture
+						//		texture_checker.Bind();
+						//		texture_checker.texUnit(shaderProgram, "tex0", 0);
+						//		sphere.render();
+						//	}
 					}
 				}
-				glm::mat4 model_matrix(1);
-				// Export the identity matrix to the vertex shader
-				glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-				// Bind the checker texture
-				texture_checker.Bind();
-				// Send the checker texture to the fragment shader
-				texture_checker.texUnit(shaderProgram, "tex0", 0);
-				// Render a ground plane at the origin using the identity matrix
-				plane.render();
+
 			}
+			*/
 		}
-		
+
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 	}
-
-	// for each mesh created, delete it
-	for (Mesh& m : meshes) m.~Mesh();
-	
-	// Delete textures
-	texture_crate.Delete();
-	shaderProgram.Delete();
 
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
