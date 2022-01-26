@@ -45,13 +45,18 @@ int main()
 	Shader shaderProgram("default.vs", "default.fs");
 
 	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);
 
 	//Create base meshes
 	std::vector<Model> models;
 
 	Model bag("models/backpack/backpack.obj");
 	models.push_back(bag);
+
+	//Model groundPlane("models/groundplane/groundplane.fbx");
+
+	Model car("models/car/Crysler_new_yorker_1980.obj");
+	Model groundPlane("models/groundplane/groundplane.obj");
 
 	//Model car("models/car/body.obj");
 	//models.push_back(car);
@@ -134,9 +139,14 @@ int main()
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.0f));	// it's a bit too big for our scene, so scale it down
+		model = glm::scale(model, glm::vec3(.01f));	// it's a bit too big for our scene, so scale it down
 		shaderProgram.setMat4("model", model);
-		bag.Draw(shaderProgram);
+		car.Draw(shaderProgram);
+
+
+		model = glm::scale(model, glm::vec3(100.0f));	// it's a bit too big for our scene, so scale it down
+		shaderProgram.setMat4("model", model);
+		groundPlane.Draw(shaderProgram);
 
 		//printf("PITCH[%.2f] | YAW[%.2f]\nPOS<%.2f,%.2f,%.2f>\n\n", camera.Pitch, camera.Yaw,camera.Position.x,camera.Position.y,camera.Position.z);
 
