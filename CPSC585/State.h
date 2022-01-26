@@ -20,6 +20,8 @@ public:
 	//Number of frames since last fps update
 	unsigned int frameCount = 0;
 	unsigned int cameraMode = CAMERA_MODE_BOUND;
+	
+	float freeLook_theta = 0;
 
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
@@ -39,6 +41,7 @@ public:
 	void toggleCameraMode() {
 		if (cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) cameraMode = CAMERA_MODE_BOUND;
 		else cameraMode = CAMERA_MODE_UNBOUND_FREELOOK;
+		freeLook_theta = 0;
 	}
 
 };

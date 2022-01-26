@@ -1,13 +1,4 @@
-//Used for debugging
-void printMat4(glm::mat4 m) {
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			printf("%.2f ", m[i][j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-}
+
 
 //Updates the fps/ms in the window title.
 void updateTitle(GLFWwindow* window)

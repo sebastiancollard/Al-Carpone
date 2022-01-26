@@ -1,6 +1,8 @@
 
 #define PVD_HOST "127.0.0.1"	//Set this to the IP address of the system running the PhysX Visual Debugger that you want to connect to.
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL; }
+#define M_PI 3.14159265358979323846
+
 
 //Screen width and height. May want to change this to a dynamic value eventually.
 const unsigned int SCREEN_WIDTH = 800;
@@ -16,7 +18,16 @@ const unsigned int SCREEN_HEIGHT = 800;
 #include<glm/gtc/type_ptr.hpp>
 #include<vector>
 
-
+//Used for debugging
+void printMat4(glm::mat4 m) {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			printf("%.2f ", m[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
 
 #include"shader.h"
 #include "Model.h"

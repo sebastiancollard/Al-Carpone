@@ -2,7 +2,7 @@
 
 #include"init.h"
 
-#define M_PI 3.14159265358979323846
+
 float t = 0;
 
 int main()
@@ -51,11 +51,6 @@ int main()
 
 	//Create base meshes
 	std::vector<Model> models;
-
-	Model bag("models/backpack/backpack.obj");
-	models.push_back(bag);
-
-	//Model groundPlane("models/groundplane/groundplane.fbx");
 
 	Model car("models/car/Crysler_new_yorker_1980.obj");
 	Model groundPlane("models/groundplane/groundplane.obj");
@@ -108,24 +103,16 @@ int main()
 		//Check for special inputs (currently only camera mode change)
 		checkSpecialInputs(window);
 
-		//Update the camera based on its current mode
-		if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
-			//Player has full control of camera
-			camera.Inputs(window);
-		}
-		else if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) {
-			camera.Inputs(window);
-			//Overwrite the player inputted position with the bound 3d camera position. 
-			//Probably not the best way to do this.
-			camera.Position = player.getPos() - (player.getDir() * 15.0f) + glm::vec3(0, 2.5f, 0);
-		}
-		else {
+		camera.Inputs(window);
+
+		
+		if (state.cameraMode == CAMERA_MODE_BOUND) {
 			//Update camera as third person camera behind the car
-			camera.Pitch = 0;
 			camera.Position = player.getPos() - (player.getDir() * 15.0f) + glm::vec3(0, 2.5f, 0);
 			camera.Front = player.getDir();
 		}
 
+		printf("CAMERAMODE: %d\n", state.cameraMode);
 
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
