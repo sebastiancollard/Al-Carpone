@@ -2,8 +2,84 @@
 
 #include"init.h"
 
+#define CAR_CHASSIS_PATH "models/car/car_chassis.obj"
+#define CAR_LWHEEL_PATH "models/car/car_Lwheel.obj"
+#define CAR_RWHEEL_PATH "models/car/car_Rwheel.obj"
 
-float t = 0;
+enum PART
+{
+	CHASSIS = 0,
+	FLWHEEL,
+	FRWHEEL,
+	BLWHEEL,
+	BRWHEEL
+};
+
+class CarModel4W {
+public:
+	CarModel4W(Model Chassis, Model LWheel, Model RWheel) :
+		Chassis(Chassis), LWheel(LWheel), RWheel(RWheel){
+	}
+	
+	void Draw(unsigned int part, Shader& shader, glm::mat4 model_physx) {
+
+		glm::vec3 commonVerticalOffset = player.getUp() * -0.1f;
+
+		glm::vec3 chassisVerticalOffset = player.getUp() * -1.75f;
+		glm::vec3 wheelVerticalOffset = player.getUp() * 0.f;
+
+		glm::vec3 fWheelForwardOffset = player.getDir() * 0.070f;
+		glm::vec3 bWheelForwardOffset = player.getDir() * 0.55f;
+
+		
+		glm::vec3 rWheelInwardOffset = player.getRight()  * -0.2f;
+		glm::vec3 lWheelInwardOffset = -rWheelInwardOffset;
+
+		glm::mat4 model(1.0f);
+
+		if (part == CHASSIS) {
+			model = glm::translate(model, commonVerticalOffset + chassisVerticalOffset);
+			model = model * model_physx;
+			shader.setMat4("model", model);
+			Chassis.Draw(shader);
+			return;
+		}
+		else if (part == FLWHEEL) {
+			model = glm::translate(model, commonVerticalOffset + wheelVerticalOffset + fWheelForwardOffset + lWheelInwardOffset);
+			model = model * model_physx;
+			shader.setMat4("model", model);
+			LWheel.Draw(shader);
+			return;
+		}
+		else if (part == FRWHEEL) {
+			model = glm::translate(model, commonVerticalOffset + wheelVerticalOffset + fWheelForwardOffset + rWheelInwardOffset);
+			model = model * model_physx;
+			shader.setMat4("model", model);
+			RWheel.Draw(shader);
+			return;
+		}
+		else if (part == BLWHEEL) {
+			model = glm::translate(model, commonVerticalOffset + wheelVerticalOffset + bWheelForwardOffset + lWheelInwardOffset);
+			model = model * model_physx;
+			shader.setMat4("model", model);
+			LWheel.Draw(shader);
+			return;
+		}
+		else if (part == BRWHEEL) {
+			model = glm::translate(model, commonVerticalOffset + wheelVerticalOffset + bWheelForwardOffset + rWheelInwardOffset);
+			model = model * model_physx;
+			shader.setMat4("model", model);
+			RWheel.Draw(shader);
+			return;
+		}
+	}
+
+private:
+	Model Chassis;
+	Model LWheel;
+	Model RWheel;
+};
+
 
 int main()
 {
@@ -52,13 +128,23 @@ int main()
 	//Create base meshes
 	std::vector<Model> models;
 
-	Model car("models/car/Crysler_new_yorker_1980.obj");
+	Model car_chassis(CAR_CHASSIS_PATH);
+	Model car_lwheel(CAR_LWHEEL_PATH);
+	Model car_rwheel(CAR_RWHEEL_PATH);
+
+	CarModel4W car(car_chassis, car_lwheel, car_rwheel);
+
+	/*
+	std::cout << "Meshes in car : " << car.meshes.size() << std::endl;
+	std::cout << "mesh0 vertices: " << car.meshes[0].vertices.size() << "vert0: <" << 
+		car.meshes[0].vertices[0].Position.x << car.meshes[0].vertices[0].Position.y << car.meshes[0].vertices[0].Position.z <<
+		"> " << std::endl;
+	*/
 	Model groundPlane("models/groundplane/groundplane.obj");
 
 	//Model car("models/car/body.obj");
 	//models.push_back(car);
 	
-
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
@@ -112,7 +198,7 @@ int main()
 			camera.Front = player.getDir();
 		}
 
-		printf("CAMERAMODE: %d\n", state.cameraMode);
+		//printf("CAMERAMODE: %d\n", state.cameraMode);
 
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -128,20 +214,14 @@ int main()
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		//model = glm::scale(model, glm::vec3(.01f));	// it's a bit too big for our scene, so scale it down
-		//shaderProgram.setMat4("model", model);
-		//car.Draw(shaderProgram);
 
-
-		model = glm::scale(model, glm::vec3(0.25f));	// it's a bit too big for our scene, so scale it down
+		model = glm::scale(model, glm::vec3(0.25f));	
 		shaderProgram.setMat4("model", model);
 		groundPlane.Draw(shaderProgram);
 
-		//printf("PITCH[%.2f] | YAW[%.2f]\nPOS<%.2f,%.2f,%.2f>\n\n", camera.Pitch, camera.Yaw,camera.Position.x,camera.Position.y,camera.Position.z);
-
-		// Updates and exports the camera matrix to the Vertex Shader
-		//camera.updateMatrix(90.0f, 0.1f, 1000.0f);
+		//model = glm::mat4(1);
+		//shaderProgram.setMat4("model", model);
+		//car_model.Draw(shaderProgram);
 
 		// Render dynamic physx shapes
 		{
@@ -168,60 +248,38 @@ int main()
 					// check what geometry type the shape is
 					if (h.any().getType() == PxGeometryType::eBOX)
 					{
-						//glActiveTexture(GL_TEXTURE0);
-						//texture_crate.Bind();
-						// This texture is also sent to the fragment shader 
-						//texture_crate.texUnit(shaderProgram, "tex0", 0);
-						// Export camera matrix to the vertex shader
-						//camera.exportMatrix(shaderProgram, "camMatrix");
-						// Export the shape's model matrix to the vertex shader
-						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-						// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
-						//box.render();
-
-						// render the loaded model
-						//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-						//model = glm::scale(model, glm::vec3(.01f));	// it's a bit too big for our scene, so scale it down
-
+						
 					}
 					else if (h.any().getType() == PxGeometryType::eSPHERE)
 					{
-						// Same as eBOX
-						//glActiveTexture(GL_TEXTURE0);
-						//texture_checker.Bind();
-						//texture_checker.texUnit(shaderProgram, "tex0", 0);
 
-						//camera.exportMatrix(shaderProgram, "camMatrix");
-						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-
-						//sphere.render();
 					}
 					else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
-						// Currently, the vehicle chassis is a convexmesh. 
-						//glActiveTexture(GL_TEXTURE0);
 
-						// Export camera matrix to the vertex shader
-						//camera.exportMatrix(shaderProgram, "camMatrix");
-						// Export the shape's model matrix to the vertex shader
-						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-
-						// The first 6 shapes are the wheels followed by the chassis.
+						if (j == 0) {
+							car.Draw(FRWHEEL, shaderProgram, model);;
+						}
+						else if (j == 1) {
+							car.Draw(FLWHEEL, shaderProgram, model);
+						}
+						else if (j == 2) {
+							car.Draw(BRWHEEL, shaderProgram, model);
+						}
+						else if (j == 3) {
+							car.Draw(BLWHEEL, shaderProgram, model);
+						}
+						else if (j == 4) {
+							//car.Draw(FLWHEEL, shaderProgram, model);
+						}
+						else if (j == 5) {
+							//car.Draw(FLWHEEL, shaderProgram, model);
+						}
 						if (j > 5) {
-							// Render a box in the same spot as the chassis with the crate texture
-							//printf("2:\n");
-							model = glm::scale(model, glm::vec3(.01f));
-							model = glm::rotate(model, 3*(float)M_PI/2.0f, glm::vec3(0, 1, 0));
-							model = glm::translate(model, glm::vec3(0, -200, 0));
-							//t += 0.01f;
-							//printMat4(model);
-							shaderProgram.setMat4("model", model);
-							car.Draw(shaderProgram);
+							car.Draw(CHASSIS, shaderProgram, model);
 						}
 						else {
-						//		Render a sphere in the same spot as the wheels with a checker texture
-						//		texture_checker.Bind();
-						//		texture_checker.texUnit(shaderProgram, "tex0", 0);
-						//		sphere.render();
+
+							
 						}
 					}
 				}

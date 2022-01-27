@@ -36,8 +36,8 @@ public:
     glm::vec3 Right;
     glm::vec3 WorldUp;
     // euler Angles
-    float Yaw;
-    float Pitch;
+    float YawOffset;
+    float PitchOffset;
     // camera options
     float MovementSpeed;
     float MouseSensitivity;
@@ -46,35 +46,23 @@ public:
     bool firstClick = true;
 
     // constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f)) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = position;
         WorldUp = up;
-        Yaw = yaw;
-        Pitch = pitch;
-        glm::vec3 front;
-        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        front.y = sin(glm::radians(Pitch));
-        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        Front = glm::normalize(Front + front);
-        Pitch = 0;
-        Yaw = 0;
+
+        Front = glm::normalize(player.getDir());
+
         updateCameraVectors();
     }
     // constructor with scalar values
-    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
         Position = glm::vec3(posX, posY, posZ);
         WorldUp = glm::vec3(upX, upY, upZ);
-        Yaw = yaw;
-        Pitch = pitch;
-        glm::vec3 front;
-        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        front.y = sin(glm::radians(Pitch));
-        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        Front = glm::normalize(Front + front);
-        Pitch = 0;
-        Yaw = 0;
+
+        Front = glm::normalize(player.getDir());
+
         updateCameraVectors();
     }
 
@@ -92,8 +80,8 @@ public:
             Position += Front * velocity;
         if (direction == BACKWARD)
             Position -= Front * velocity;
-        if (direction == LEFT)
-            Position -= Right * velocity;
+        if (direction == LEFT)  
+            Position -= Right * velocity; 
         if (direction == RIGHT)
             Position += Right * velocity;
         if (direction == UP)
@@ -101,40 +89,7 @@ public:
         if (direction == DOWN)
             Position += -Up * velocity;
     }
-    /*
-    // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
-    {
-        xoffset *= MouseSensitivity;
-        yoffset *= MouseSensitivity;
-
-        Yaw += xoffset;
-        Pitch += yoffset;
-
-        // make sure that when pitch is out of bounds, screen doesn't get flipped
-        if (constrainPitch)
-        {
-            if (Pitch > 89.0f)
-                Pitch = 89.0f;
-            if (Pitch < -89.0f)
-                Pitch = -89.0f;
-        }
-
-        // update Front, Right and Up Vectors using the updated Euler angles
-        updateCameraVectors();
-    }
-
-    // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-    void ProcessMouseScroll(float yoffset)
-    {
-        Zoom -= (float)yoffset;
-        if (Zoom < 1.0f)
-            Zoom = 1.0f;
-        if (Zoom > 45.0f)
-            Zoom = 45.0f;
-    }
-
-    */
+ 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void Inputs(GLFWwindow* window) {
         // Handles key inputs
@@ -198,61 +153,43 @@ public:
             float rotY = MouseSensitivity * (float)(mouseY - (SCREEN_HEIGHT / 2)) / SCREEN_HEIGHT;
             float rotX = MouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
 
-            // Calculates upcoming vertical change in the Orientation
-            //glm::vec3 newFront = glm::rotate(Front, glm::radians(-rotX), glm::normalize(glm::cross(Front, Up)));
+            PitchOffset -= rotY;
+            YawOffset += rotX;
 
-            // Decides whether or not the next vertical Orientation is legal or not
-            // if (abs(glm::angle(newFront, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
-            // {
-            //     Front = newFront;
-            // }
+            if (PitchOffset > 89.0f)
+                PitchOffset = 89.0f;
+            if (PitchOffset < -89.0f)
+                PitchOffset = -89.0f;
 
-            Pitch -= rotY;
-            Yaw += rotX;
-
-            if (Pitch > 89.0f)
-                Pitch = 89.0f;
-            if (Pitch < -89.0f)
-                Pitch = -89.0f;
-
-            if (Yaw > 360.0f) Yaw -= 360.0f;
-            if (Yaw < -360.0f) Yaw += 360.0f;
+            if (YawOffset > 360.0f) YawOffset -= 360.0f;
+            if (YawOffset < -360.0f) YawOffset += 360.0f;
 
             if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) {
-                //state.freeLook_theta += rotX;
-                glm::vec4 boundVec((-player.getDir() * 15.0f + glm::vec3(0, 2.5f + Pitch, 0)),1.0f);
+                glm::vec4 boundVec((-player.getDir() * 15.0f + glm::vec3(0, 2.5f + PitchOffset, 0)),1.0f);
                 glm::mat4 rot(1.0f);
-                rot = glm::rotate(rot, Yaw, Up);
-               
-                //printMat4(rot);
+                rot = glm::rotate(rot, YawOffset, Up);
+
                 boundVec = boundVec * rot;
 
                 Position = player.getPos() + glm::vec3(boundVec.x, boundVec.y, boundVec.z);
 
-
-
-               // rot = glm::mat4(1.0f);
-               // rot = glm::rotate(rot, rotX, Up);
-
                 glm::vec4 dir(player.getDir(), 1.0f);
                 dir = dir * rot;
                 
-                //printf("Pitch:%.2f | Yaw:%.2f\noldFront<%.2f,%.2f,%.2f> -> newFront<%.2f,%.2f,%.2f>\n\n",Pitch,Yaw, Front.x, Front.y, Front.z, front.x, front.y, front.z);
-                
-
                 Front = glm::vec3(dir.x, 0, dir.z);
-
-                printf("PITCH[%.2f] | YAW[%.2F]\ndir<%.2f,%.2f,%.2f>\n\n", Pitch/M_PI, Yaw/M_PI, dir.x, dir.y, dir.z);
-               
 
                 updateCameraVectors();
             }
 
-            
-
-            //updateCameraVectors();
-            // Rotates the Orientation left and right
-            //Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
+            else if(state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
+                glm::mat4 rot(1.0f);
+                rot = glm::rotate(rot, rotX * 0.1f, glm::vec3(0, 1, 0));
+                //rot = glm::rotate(rot, -rotY * 0.1f, glm::vec3(1, 0, 0)); Unbound vertical movement is bugged :(
+                glm::vec4 front(Front, 1);
+                front = front * rot;
+                Front = glm::vec3(front.x, front.y, front.z);
+                updateCameraVectors();
+            }
 
             // Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
             glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
@@ -266,10 +203,16 @@ public:
             firstClick = true;
 
             if (state.cameraMode == CAMERA_MODE_BOUND) {
-                Pitch = 0;
-                Yaw = 0;
+                PitchOffset = 0;
+                YawOffset = 0;
+
+                Front = player.getDir();
+                updateCameraVectors();
             }
+
+            
         }
+
     }
 
 private:
@@ -284,8 +227,10 @@ private:
         //front = front * rot;
         //Front = glm::vec3(front.x, front.y, front.z);
         // also re-calculate the Right and Up vector
+        Front = glm::normalize(Front);
         Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
         Up = glm::normalize(glm::cross(Right, Front));
+        //printf("RIGHT[<%.2f,%.2f,%.2f>] | WORLDUP[<%.2f,%.2f,%.2f>]\n", Right.x, Right.y, Right.z, WorldUp.x,WorldUp.y, WorldUp.z);
     }
 };
 
