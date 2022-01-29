@@ -163,10 +163,8 @@
     <ClCompile Include="stb.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="classes.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="init.h" />
-    <ClInclude Include="initPhysX.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="miscFunctions.h" />
     <ClInclude Include="Model.h" />

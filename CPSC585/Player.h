@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <queue>
 
@@ -85,7 +87,6 @@ public:
 
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) 
 			inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
-	
 
 	}	
 };

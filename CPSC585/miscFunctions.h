@@ -1,4 +1,4 @@
-
+#pragma once
 
 //Updates the fps/ms in the window title.
 void updateTitle(GLFWwindow* window)
@@ -26,9 +26,4 @@ void checkSpecialInputs(GLFWwindow* window)
 		state.Q_isHeld = true;
 	}
 	else state.Q_isHeld = false;
-
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		if (state.cameraMode == CAMERA_MODE_BOUND) state.cameraMode = CAMERA_MODE_BOUND_FREELOOK;
-	}
-	else if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) state.cameraMode = CAMERA_MODE_BOUND;
 }

@@ -1,7 +1,7 @@
+#pragma once
+
 //Locked position and orientation. Used for third person view behind the car.
 #define CAMERA_MODE_BOUND 0
-//Locked position. Used for looking around in third person view behind the car.
-#define CAMERA_MODE_BOUND_FREELOOK 1
 //Player has full control of position and orientation of the camera, loses control of the car.
 //Used for debugging.
 #define CAMERA_MODE_UNBOUND_FREELOOK 2
@@ -21,7 +21,6 @@ public:
 	unsigned int frameCount = 0;
 	unsigned int cameraMode = CAMERA_MODE_BOUND;
 	
-	float freeLook_theta = 0;
 
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
@@ -39,9 +38,13 @@ public:
 
 	//Toggles the camera mode between bound and unbound.
 	void toggleCameraMode() {
-		if (cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) cameraMode = CAMERA_MODE_BOUND;
-		else cameraMode = CAMERA_MODE_UNBOUND_FREELOOK;
-		freeLook_theta = 0;
+		if (cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
+			cameraMode = CAMERA_MODE_BOUND;
+		}
+		else {
+			cameraMode = CAMERA_MODE_UNBOUND_FREELOOK;
+		}
+		
 	}
 
 };

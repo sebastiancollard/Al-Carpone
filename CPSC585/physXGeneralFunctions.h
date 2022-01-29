@@ -1,4 +1,4 @@
-
+#pragma once
 
 void createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
 {
@@ -83,7 +83,7 @@ void stepPhysics(GLFWwindow* window)
 {
 	const float timestep = 1.0f / 60.0f;
 
-	if(state.cameraMode == CAMERA_MODE_BOUND || state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) player.handleInput(window);
+	if(state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window);
 
 	updateDrivingMode();
 

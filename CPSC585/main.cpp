@@ -6,6 +6,11 @@
 #define CAR_LWHEEL_PATH "models/car/car_Lwheel.obj"
 #define CAR_RWHEEL_PATH "models/car/car_Rwheel.obj"
 
+#define TEST_LEVEL_PATH "models/testlevel/ai_testlevel.obj"
+
+#define NEAR_CLIPPING_PLANE 0.01f
+#define FAR_CLIPPING_PLANE 1000.f
+
 enum PART
 {
 	CHASSIS = 0,
@@ -122,9 +127,6 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vs", "default.fs");
 
-	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-	//stbi_set_flip_vertically_on_load(true);
-
 	//Create base meshes
 	std::vector<Model> models;
 
@@ -134,25 +136,19 @@ int main()
 
 	CarModel4W car(car_chassis, car_lwheel, car_rwheel);
 
-	/*
-	std::cout << "Meshes in car : " << car.meshes.size() << std::endl;
-	std::cout << "mesh0 vertices: " << car.meshes[0].vertices.size() << "vert0: <" << 
-		car.meshes[0].vertices[0].Position.x << car.meshes[0].vertices[0].Position.y << car.meshes[0].vertices[0].Position.z <<
-		"> " << std::endl;
-	*/
-	Model groundPlane("models/groundplane/groundplane.obj");
-
-	//Model car("models/car/body.obj");
-	//models.push_back(car);
-	
+	Model groundPlane(TEST_LEVEL_PATH);
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
 
 
-	// Creates camera object
-	Camera camera(glm::vec3(0.f, 2.f, 10.f));
-
+	// Creates camera pointer
+	Camera* activeCamera;
+	// Camrea can be one of these at a given time
+	BoundCamera boundCamera; // Locked in a sphere around the car
+	FreeCamera freeCamera; // Move and look freely anywhere (for debugging)
+	// Init to bound camera
+	activeCamera = &boundCamera;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window) && !state.terminateProgram)
@@ -181,24 +177,18 @@ int main()
 		// Handle ball input
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 			createDynamic(PxTransform(
-				PxVec3(camera.Position.x, camera.Position.y, camera.Position.z)),
+				PxVec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z)),
 				PxSphereGeometry(4),
-				PxVec3(camera.Front.x , camera.Front.y, camera.Front.z) * 175.0f
+				PxVec3(activeCamera->dir.x , activeCamera->dir.y, activeCamera->dir.z) * 175.0f
 			);
 
 		//Check for special inputs (currently only camera mode change)
 		checkSpecialInputs(window);
 
-		camera.Inputs(window);
+		if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
+		else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
 
-		
-		if (state.cameraMode == CAMERA_MODE_BOUND) {
-			//Update camera as third person camera behind the car
-			camera.Position = player.getPos() - (player.getDir() * 15.0f) + glm::vec3(0, 2.5f, 0);
-			camera.Front = player.getDir();
-		}
-
-		//printf("CAMERAMODE: %d\n", state.cameraMode);
+		activeCamera->handleInput(window);
 
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -207,23 +197,23 @@ int main()
 		shaderProgram.use();
 
 		// view/projection transformations
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
+		glm::mat4 view = activeCamera->GetViewMatrix();
+
+		printMat4(projection* view);
+
+		// send them to shader
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
-
-		model = glm::scale(model, glm::vec3(0.25f));	
 		shaderProgram.setMat4("model", model);
 		groundPlane.Draw(shaderProgram);
 
-		//model = glm::mat4(1);
-		//shaderProgram.setMat4("model", model);
-		//car_model.Draw(shaderProgram);
-
 		// Render dynamic physx shapes
+		
+		
 		{
 			const int MAX_NUM_ACTOR_SHAPES = 128;
 			PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
@@ -285,6 +275,7 @@ int main()
 				}
 			}
 		}
+		
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);

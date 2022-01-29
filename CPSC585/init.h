@@ -1,3 +1,4 @@
+#pragma once
 
 #define PVD_HOST "127.0.0.1"	//Set this to the IP address of the system running the PhysX Visual Debugger that you want to connect to.
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL; }
@@ -29,6 +30,10 @@ void printMat4(glm::mat4 m) {
 	printf("\n");
 }
 
+void printVec3(std::string name, glm::vec3 v) {
+	printf("%s: <%.2f, %.2f, %.2f>\n", name, v.x, v.y, v.z);
+}
+
 #include"shader.h"
 #include "Model.h"
 
@@ -57,7 +62,7 @@ Player player;
 #include"State.h"
 State state;
 
-#include "camera.h"
+#include "Camera.h"
 
 //Set up physx global variables
 //Should be checked over to see what actually needs to be global and what doesnt

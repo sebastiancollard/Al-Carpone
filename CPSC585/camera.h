@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CAMERA_H
 #define CAMERA_H
 
@@ -7,137 +8,89 @@
 
 #include <vector>
 
-// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN
-};
-
-// Default camera values
-const float YAW = -90.0f;
-const float PITCH = 0.0f;
-const float SPEED = 2.5f;
-const float SENSITIVITY = 10.f;
-const float ZOOM = 45.0f;
-
-
-// An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
-class Camera
-{
+class Camera {
 public:
-    // camera Attributes
-    glm::vec3 Position;
-    glm::vec3 Front;
-    glm::vec3 Up;
-    glm::vec3 Right;
-    glm::vec3 WorldUp;
-    // euler Angles
-    float YawOffset;
-    float PitchOffset;
-    // camera options
-    float MovementSpeed;
-    float MouseSensitivity;
-    float Zoom;
 
+    // camera Attributes
+    glm::vec3 pos;
+    glm::vec3 dir;
+    glm::vec3 up;
+    glm::vec3 right;
+    glm::vec3 worldUp;
+
+    // camera options
+   
+    float mouseSensitivity;
+    float zoom;
+
+    // prevent first click snap
     bool firstClick = true;
 
-    // constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f)) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-    {
-        Position = position;
-        WorldUp = up;
+    virtual void handleInput(GLFWwindow* window) {}
 
-        Front = glm::normalize(player.getDir());
-
-        updateCameraVectors();
+    glm::mat4 GetViewMatrix(){
+        return glm::lookAt(pos, pos + dir, up);
     }
-    // constructor with scalar values
-    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-    {
-        Position = glm::vec3(posX, posY, posZ);
-        WorldUp = glm::vec3(upX, upY, upZ);
+};
 
-        Front = glm::normalize(player.getDir());
+class FreeCamera : public Camera {
+public:
+    float movementSpeed;
+    FreeCamera() {
+        movementSpeed = 10.0f;
+        mouseSensitivity = 5.0f;
+        zoom = 60.0f;
 
-        updateCameraVectors();
-    }
+        pos = player.getPos() -player.getDir() * 15.0f + glm::vec3(0, 2.5f, 0);
+        dir = player.getDir();
 
-    // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    glm::mat4 GetViewMatrix()
-    {
-        return glm::lookAt(Position, Position + Front, Up);
+        worldUp = glm::vec3(0, 1, 0);
+
+        update();
     }
-   
-    // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime)
-    {
-        float velocity = MovementSpeed * deltaTime;
-        if (direction == FORWARD)
-            Position += Front * velocity;
-        if (direction == BACKWARD)
-            Position -= Front * velocity;
-        if (direction == LEFT)  
-            Position -= Right * velocity; 
-        if (direction == RIGHT)
-            Position += Right * velocity;
-        if (direction == UP)
-            Position += Up * velocity;
-        if (direction == DOWN)
-            Position += -Up * velocity;
-    }
- 
-    // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void Inputs(GLFWwindow* window) {
-        // Handles key inputs
+    void handleInput(GLFWwindow* window) {
+        float velocity = movementSpeed * state.timeStep;
         if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) // FORWARD
             {
-                ProcessKeyboard(FORWARD, state.timeStep);
+                pos += dir * velocity;
             }
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) // LEFT
             {
-                ProcessKeyboard(LEFT, state.timeStep);
+                pos -= right * velocity;
             }
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) // BACKWARD
             {
-                ProcessKeyboard(BACKWARD, state.timeStep);
+                pos -= dir * velocity;
             }
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) // RIGHT
             {
-                ProcessKeyboard(RIGHT, state.timeStep);
+                pos += right * velocity;
             }
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) // UP
             {
-                ProcessKeyboard(UP, state.timeStep);
+                pos += up * velocity;
             }
-            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+            if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) // DOWN
             {
-                ProcessKeyboard(DOWN, state.timeStep);
+                pos += -up * velocity;
             }
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
             {
-                //speed = 0.2f;
+                movementSpeed = 50.f;
             }
             else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
             {
-                //speed = 0.1f;
+                movementSpeed = 10.f;
             }
         }
-
         // Handles mouse inputs
-        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-        {
-         
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
             // Hides mouse cursor
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
             // Prevents camera from jumping on the first click
-            if (firstClick)
-            {
+            if (firstClick) {
                 glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
                 firstClick = false;
             }
@@ -145,51 +98,23 @@ public:
             // Stores the coordinates of the cursor
             double mouseX;
             double mouseY;
+
             // Fetches the coordinates of the cursor
             glfwGetCursorPos(window, &mouseX, &mouseY);
 
             // Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
             // and then "transforms" them into degrees 
-            float rotY = MouseSensitivity * (float)(mouseY - (SCREEN_HEIGHT / 2)) / SCREEN_HEIGHT;
-            float rotX = MouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
+            float rotY = mouseSensitivity * (float)(mouseY - (SCREEN_HEIGHT / 2)) / SCREEN_HEIGHT;
+            float rotX = mouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
 
-            PitchOffset -= rotY;
-            YawOffset += rotX;
+            glm::mat4 rot(1.0f);
+            rot = glm::rotate(rot, rotY, right);
+            rot = glm::rotate(rot, rotX, up);
+            
+            glm::vec4 dirUpdate(dir, 1.0f);
+            dirUpdate = dirUpdate * rot;
 
-            if (PitchOffset > 89.0f)
-                PitchOffset = 89.0f;
-            if (PitchOffset < -89.0f)
-                PitchOffset = -89.0f;
-
-            if (YawOffset > 360.0f) YawOffset -= 360.0f;
-            if (YawOffset < -360.0f) YawOffset += 360.0f;
-
-            if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) {
-                glm::vec4 boundVec((-player.getDir() * 15.0f + glm::vec3(0, 2.5f + PitchOffset, 0)),1.0f);
-                glm::mat4 rot(1.0f);
-                rot = glm::rotate(rot, YawOffset, Up);
-
-                boundVec = boundVec * rot;
-
-                Position = player.getPos() + glm::vec3(boundVec.x, boundVec.y, boundVec.z);
-
-                glm::vec4 dir(player.getDir(), 1.0f);
-                dir = dir * rot;
-                
-                Front = glm::vec3(dir.x, 0, dir.z);
-
-                updateCameraVectors();
-            }
-
-            else if(state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
-                glm::mat4 rot(1.0f);
-                rot = glm::rotate(rot, rotX * 0.1f, glm::vec3(0, 1, 0));
-                //rot = glm::rotate(rot, -rotY * 0.1f, glm::vec3(1, 0, 0)); Unbound vertical movement is bugged :(
-                glm::vec4 front(Front, 1);
-                front = front * rot;
-                Front = glm::vec3(front.x, front.y, front.z);
-                updateCameraVectors();
-            }
+            dir = glm::vec3(dirUpdate.x, dirUpdate.y, dirUpdate.z);
 
             // Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
             glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
@@ -198,40 +123,125 @@ public:
         {
             // Unhides cursor since camera is not looking around anymore
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
             // Makes sure the next time the camera looks around it doesn't jump
-            
             firstClick = true;
+        }
+        update();
+    }
+private:
+    void update() {
+        //Update right and up vectors according to dir
+        right = glm::normalize(glm::cross(dir, worldUp));
+        up = glm::normalize(glm::cross(right, dir));
+    }
+};
 
-            if (state.cameraMode == CAMERA_MODE_BOUND) {
-                PitchOffset = 0;
-                YawOffset = 0;
+//spherical camera
+class BoundCamera : public Camera {
+public:
 
-                Front = player.getDir();
-                updateCameraVectors();
+    float pitch; //vertical angle offset
+    float yaw; //horizontal angle offset
+
+    // constructor with vectors
+    BoundCamera() {
+        mouseSensitivity = 5.0f;
+        zoom = 60.0f;
+
+        up = player.getUp();
+        right = player.getRight();
+
+        worldUp = glm::vec3(0, 1, 0);
+
+        dir = player.getDir();
+
+        pitch = 0;
+        yaw = 0;
+
+        update();
+    }
+
+    //update pitch and yaw (in the future update zoom)
+    void handleInput(GLFWwindow* window) {
+        // Handles mouse inputs
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+            // Hides mouse cursor
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+            // Prevents camera from jumping on the first click
+            if (firstClick){
+                glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
+                firstClick = false;
             }
 
-            
+            // Stores the coordinates of the cursor
+            double mouseX;
+            double mouseY;
+
+            // Fetches the coordinates of the cursor
+            glfwGetCursorPos(window, &mouseX, &mouseY);
+
+            // Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+            // and then "transforms" them into degrees 
+            float rotY = mouseSensitivity * (float)(mouseY - (SCREEN_HEIGHT / 2)) / SCREEN_HEIGHT;
+            float rotX = mouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
+
+            //update pitch/yaw accordingly
+            pitch += rotY;
+            yaw += rotX;
+
+            //bind yaw
+            if (yaw > 2 * M_PI) yaw -= 2 * M_PI;
+            if (yaw < -2 * M_PI) yaw += 2 * M_PI;
+
+            //bind pitch
+            if (pitch > M_PI  /2.25f) pitch = M_PI / 2.25f;
+            if (pitch < -M_PI / 2.25f) pitch = -M_PI / 2.25f;
+
+            // Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
+            glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
         }
+        else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+        {
+            // Unhides cursor since camera is not looking around anymore
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
+            // Makes sure the next time the camera looks around it doesn't jump
+            firstClick = true;
+
+            //reset to cars view
+            pitch = 0;
+            yaw = 0;
+        }
+        update();
     }
-
 private:
-    // calculates the front vector from the Camera's (updated) Euler Angles
-    void updateCameraVectors()
-    {
-        // calculate the new Front vector
-        //glm::mat4 rot(1.0f);
-        //rot = glm::rotate(rot, Yaw, Up);
-        //rot = glm::rotate(rot, Pitch, Right);
-        //glm::vec4 front(Front, 1.0f);
-        //front = front * rot;
-        //Front = glm::vec3(front.x, front.y, front.z);
-        // also re-calculate the Right and Up vector
-        Front = glm::normalize(Front);
-        Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-        Up = glm::normalize(glm::cross(Right, Front));
-        //printf("RIGHT[<%.2f,%.2f,%.2f>] | WORLDUP[<%.2f,%.2f,%.2f>]\n", Right.x, Right.y, Right.z, WorldUp.x,WorldUp.y, WorldUp.z);
+    void update() {
+        // calculate the new direction vector
+        glm::mat4 rot(1.0f);
+        //rotate by pitch and yaw
+        rot = glm::rotate(rot, pitch, player.getRight());
+        rot = glm::rotate(rot, yaw, player.getUp());
+        
+        //apply rotation to dir about players direction
+        glm::vec4 transformedDir(player.getDir(), 1.0f);
+        transformedDir = transformedDir * rot;
+        //apply rotation to pos
+        glm::vec4 posOffset((-player.getDir() * 15.0f + glm::vec3(0, 2.5f, 0)), 1.0f);
+        posOffset = posOffset * rot;
+    
+        dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
+
+        //Add the offset vector to the playerpos to get the updated pos
+        glm::vec3 playerPos = player.getPos();
+        pos = glm::vec3(playerPos.x + posOffset.x, playerPos.y + posOffset.y, playerPos.z + posOffset.z);
+
+        //Update right and up vectors accordingly
+        right = glm::normalize(glm::cross(dir, worldUp)); 
+        up = glm::normalize(glm::cross(right, dir));
     }
+
 };
 
 #endif
