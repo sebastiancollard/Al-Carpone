@@ -5,6 +5,15 @@
 #define M_PI 3.14159265358979323846
 
 
+#define CAR_CHASSIS_PATH "models/car/car_chassis.obj"
+#define CAR_LWHEEL_PATH "models/car/car_Lwheel.obj"
+#define CAR_RWHEEL_PATH "models/car/car_Rwheel.obj"
+
+#define TEST_LEVEL_PATH "models/testlevel/ai_testlevel.obj"
+
+#define NEAR_CLIPPING_PLANE 0.01f
+#define FAR_CLIPPING_PLANE 1000.f
+
 //Screen width and height. May want to change this to a dynamic value eventually.
 const unsigned int SCREEN_WIDTH = 800;
 const unsigned int SCREEN_HEIGHT = 800;
@@ -76,6 +85,7 @@ PxPhysics* gPhysics = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 
+
 PxCooking* gCooking = NULL;
 
 PxMaterial* gMaterial = NULL;
@@ -105,3 +115,6 @@ std::vector<physx_actor_entity> physx_actors;
 #include"physXGeneralFunctions.h"
 //Miscelanious functions who dont have a home yet
 #include"miscFunctions.h"
+
+
+
