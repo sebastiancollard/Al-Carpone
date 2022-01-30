@@ -43,35 +43,30 @@ public:
 		glm::mat4 model(1.0f);
 
 		if (part == CHASSIS) {
-			model = glm::translate(model, commonVerticalOffset + chassisVerticalOffset);
 			model = model * model_physx;
 			shader.setMat4("model", model);
 			Chassis.Draw(shader);
 			return;
 		}
 		else if (part == FLWHEEL) {
-			model = glm::translate(model, commonVerticalOffset + wheelVerticalOffset + fWheelForwardOffset + lWheelInwardOffset);
 			model = model * model_physx;
 			shader.setMat4("model", model);
 			LWheel.Draw(shader);
 			return;
 		}
 		else if (part == FRWHEEL) {
-			model = glm::translate(model, commonVerticalOffset + wheelVerticalOffset + fWheelForwardOffset + rWheelInwardOffset);
 			model = model * model_physx;
 			shader.setMat4("model", model);
 			RWheel.Draw(shader);
 			return;
 		}
 		else if (part == BLWHEEL) {
-			model = glm::translate(model, commonVerticalOffset + wheelVerticalOffset + bWheelForwardOffset + lWheelInwardOffset);
 			model = model * model_physx;
 			shader.setMat4("model", model);
 			LWheel.Draw(shader);
 			return;
 		}
 		else if (part == BRWHEEL) {
-			model = glm::translate(model, commonVerticalOffset + wheelVerticalOffset + bWheelForwardOffset + rWheelInwardOffset);
 			model = model * model_physx;
 			shader.setMat4("model", model);
 			RWheel.Draw(shader);
@@ -126,6 +121,7 @@ int main()
 	Shader shaderProgram("default.vs", "default.fs");
 
 	//Set up physx with vehicle snippet
+	//Make sure this is called after the shader program is generated
 	initPhysics();
 
 	//Create base meshes
