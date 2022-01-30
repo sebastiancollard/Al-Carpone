@@ -195,8 +195,6 @@ int main()
 		glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 		glm::mat4 view = activeCamera->GetViewMatrix();
 
-		printMat4(projection* view);
-
 		// send them to shader
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);

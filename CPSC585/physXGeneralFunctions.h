@@ -33,23 +33,21 @@ PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, co
 
 PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
 {
-	Model level("models/testlevel/ai_testlevel.obj");
+	Model level("models/testlevel/ai_testlevel_physx_mesh.obj");
 
 	std::vector<PxVec3> model_positions;
 	std::vector<PxU32> model_indices;
 
-	std::cout << level.meshes.size() << std::endl;
-	int i = 0;
-
-	for (int i = 0; i < level.meshes.size(); i++) {
-
-		for (int j = 0; j < level.meshes[i].vertices.size(); j++)
-			model_positions.push_back(PxVec3(level.meshes[i].vertices[j].Position[0], level.meshes[i].vertices[j].Position[1], level.meshes[i].vertices[j].Position[2]));
-		for (int j = 0; j < level.meshes[i].indices.size(); j++) {
-			model_indices.push_back(level.meshes[i].indices[j]);
-		}
-
+	for (int j = 0; j < level.meshes[0].vertices.size(); j++) {
+	
+		model_positions.push_back(PxVec3(level.meshes[0].vertices[j].Position[0], level.meshes[0].vertices[j].Position[1], level.meshes[0].vertices[j].Position[2]));
 	}
+
+	for (int j = 0; j < level.meshes[0].indices.size(); j++) {
+
+		model_indices.push_back(level.meshes[0].indices[j]);
+	}
+
 	PxVec3* verts = model_positions.data();
 	PxU32* indices = model_indices.data();
 
