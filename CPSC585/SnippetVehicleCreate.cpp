@@ -39,7 +39,7 @@ namespace snippetvehicle
 {
 
 using namespace physx;
-
+/*
 PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics)
 {
 	//Add a plane to the scene.
@@ -59,7 +59,7 @@ PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial
 
 	return groundPlane;
 }
-
+*/
 static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts, PxPhysics& physics, PxCooking& cooking)
 {
 	// Create descriptor for convex mesh
