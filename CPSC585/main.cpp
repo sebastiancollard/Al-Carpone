@@ -259,17 +259,7 @@ int main()
 							car.Draw(BLWHEEL, shaderProgram, model);
 						}
 						else if (j == 4) {
-							//car.Draw(FLWHEEL, shaderProgram, model);
-						}
-						else if (j == 5) {
-							//car.Draw(FLWHEEL, shaderProgram, model);
-						}
-						if (j > 5) {
 							car.Draw(CHASSIS, shaderProgram, model);
-						}
-						else {
-
-							
 						}
 					}
 				}

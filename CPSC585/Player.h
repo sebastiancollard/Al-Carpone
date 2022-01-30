@@ -63,7 +63,7 @@ public:
 		PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
 		actorPtr->getShapes(shapes, nbShapes);
 
-		PxTransform shape(PxShapeExt::getGlobalPose(*shapes[6], *actorPtr)); // index 6 here is the box, 0 through 5 are the balls, we'll have to find a better way to do this.
+		PxTransform shape(PxShapeExt::getGlobalPose(*shapes[4], *actorPtr)); // index 6 here is the box, 0 through 5 are the balls, we'll have to find a better way to do this.
 
 		return glm::vec3(shape.p.x, shape.p.y, shape.p.z);
 	}
