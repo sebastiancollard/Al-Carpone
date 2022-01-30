@@ -88,8 +88,6 @@ private:
 
 int main()
 {
-	//Set up physx with vehicle snippet
-	initPhysics();
 
 	//Set up the GLFWwindow
 	GLFWwindow* window;
@@ -126,6 +124,9 @@ int main()
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vs", "default.fs");
+
+	//Set up physx with vehicle snippet
+	initPhysics();
 
 	//Create base meshes
 	std::vector<Model> models;

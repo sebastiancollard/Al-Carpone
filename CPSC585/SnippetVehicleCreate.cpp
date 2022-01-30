@@ -33,6 +33,7 @@
 #include "snippetvehiclecommon/SnippetVehicleFilterShader.h"
 #include "snippetvehiclecommon/SnippetVehicleTireFriction.h"
 #include "PxPhysicsAPI.h"
+#include "Model.h"
 
 namespace snippetvehicle
 {
@@ -81,38 +82,28 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
 {
-	const PxF32 x = dims.x*0.5f;
-	const PxF32 y = dims.y*0.5f;
-	const PxF32 z = dims.z*0.5f;
-	PxVec3 verts[8] =
-	{
-		PxVec3(x,y,-z), 
-		PxVec3(x,y,z),
-		PxVec3(x,-y,z),
-		PxVec3(x,-y,-z),
-		PxVec3(-x,y,-z), 
-		PxVec3(-x,y,z),
-		PxVec3(-x,-y,z),
-		PxVec3(-x,-y,-z)
-	};
+	Model chassis("models/car/car_chassis_physx.obj");
 
-	return createConvexMesh(verts,8,physics,cooking);
+	std::vector<PxVec3> positions;
+	for (Vertex& v : chassis.meshes[0].vertices)
+		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+	PxVec3* verts = positions.data();
+
+	return createConvexMesh(verts,positions.size(),physics,cooking);
 }
 
 PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking)
 {
-	PxVec3 points[2*16];
-	for(PxU32 i = 0; i < 16; i++)
-	{
-		const PxF32 cosTheta = PxCos(i*PxPi*2.0f/16.0f);
-		const PxF32 sinTheta = PxSin(i*PxPi*2.0f/16.0f);
-		const PxF32 y = radius*cosTheta;
-		const PxF32 z = radius*sinTheta;
-		points[2*i+0] = PxVec3(-width/2.0f, y, z);
-		points[2*i+1] = PxVec3(+width/2.0f, y, z);
-	}
+	Model wheel("models/car/car_Lwheel.obj");
 
-	return createConvexMesh(points,32,physics,cooking);
+	std::vector<PxVec3> positions;
+	for (Vertex& v : wheel.meshes[0].vertices)
+		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+	PxVec3* verts = positions.data();
+
+	return createConvexMesh(verts,positions.size(),physics,cooking);
 }
 
 PxRigidDynamic* createVehicleActor
