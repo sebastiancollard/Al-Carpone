@@ -154,6 +154,7 @@ public:
 
         worldUp = glm::vec3(0, 1, 0);
 
+        pos = player.getPos() - player.getDir() * 15.0f + glm::vec3(0, 2.5f, 0);
         dir = player.getDir();
 
         pitch = 0;
@@ -212,8 +213,8 @@ public:
             firstClick = true;
 
             //reset to cars view
-            pitch = 0;
-            yaw = 0;
+            //pitch = 0;
+            //yaw = 0;
             updateLocked();
         }
     }
@@ -233,7 +234,7 @@ private:
         glm::vec4 transformedDir(playerDirHorizontalProjection, 1.0f);
         transformedDir = transformedDir * rot;
         //apply rotation to pos
-        glm::vec4 posOffset((-playerDirHorizontalProjection * 15.0f + glm::vec3(0, 2.5f, 0)), 1.0f);
+        glm::vec4 posOffset((-playerDirHorizontalProjection * 15.0f + glm::vec3(0, 3.5f, 0)), 1.0f);
         posOffset = posOffset * rot;
     
         dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
@@ -251,32 +252,16 @@ private:
         // calculate the new direction vector
         glm::mat4 rot(1.0f);
 
-        //Use projection of player direction for smoother behaviour entering/exiting hills
-        glm::vec3 playerDirHorizontalProjection = glm::normalize(glm::vec3(player.getDir()[0], 0, player.getDir()[2]));
+        //std::cout << "before: " << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << std::endl;
 
-        glm::vec3 velo = player.getLinearVelocity() + glm::vec3(player.getAngularVelocity().x, 0, player.getAngularVelocity().z);
-        if (glm::length(velo) > 0 && glm::length(velo) - abs(velo.y) > 0.1f) {
-            float proportion = glm::clamp(glm::length(velo), 0.f, 20.f);
-            proportion *= 0.05f;
-            std::cout << glm::length(proportion * glm::normalize(velo)) << std::endl;
-            velo = (proportion * glm::normalize(velo)) + ((1 - proportion) * player.getDir());
-        }
-        else {
-            velo = player.getDir();
-        }
+        dir = glm::normalize((player.getPos() + glm::vec3(0, 3.5f, 0)) - pos);
+        
+        float x = 0.02f;
 
-        //apply rotation to dir about players direction
-        glm::vec4 transformedDir(velo, 1.0f);
-        transformedDir = transformedDir * rot;
-        //apply rotation to pos
-        glm::vec4 posOffset((-velo * 15.0f + glm::vec3(0, 2.5f, 0)), 1.0f);
-        posOffset = posOffset * rot;
+        pos = ((1-x)*((player.getPos() + glm::vec3(0, 3.5f, 0)) - dir * 15.f) + x*(player.getPos() + glm::vec3(0, 3.5f, 0) - player.getDir() * 15.0f));
 
-        dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
+        //std::cout << "after: " << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << std::endl;
 
-        //Add the offset vector to the playerpos to get the updated pos
-        glm::vec3 playerPos = player.getPos();
-        pos = glm::vec3(playerPos.x + posOffset.x, playerPos.y + posOffset.y, playerPos.z + posOffset.z);
 
         //Update right and up vectors accordingly
         right = glm::normalize(glm::cross(dir, worldUp));
