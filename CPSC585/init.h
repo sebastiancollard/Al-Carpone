@@ -9,8 +9,12 @@
 #define CAR_LWHEEL_PATH "models/car/car_Lwheel.obj"
 #define CAR_RWHEEL_PATH "models/car/car_Rwheel.obj"
 
+//#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
+//#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
+
 #define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
 #define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
+
 
 #define NEAR_CLIPPING_PLANE 0.01f
 #define FAR_CLIPPING_PLANE 1000.f
