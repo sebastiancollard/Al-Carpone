@@ -124,6 +124,7 @@ void initPhysics()
 	VehicleDesc vehicleDesc = initVehicleDesc();
 	gVehicle4W = createVehicle4W(vehicleDesc, gPhysics, gCooking);
 	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y * 0.5f + vehicleDesc.wheelRadius + 1.0f), 0), PxQuat(PxIdentity));
+	player.setResetPoint(startTransform);
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 
 

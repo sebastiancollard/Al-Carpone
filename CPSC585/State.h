@@ -25,9 +25,10 @@ public:
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
 
-	//Used for q input to prevent the key from being spammed.
+	//Used to check for single input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.
 	bool Q_isHeld = false;
+	bool R_isHeld = false;
 
 	//Updates the state's time-sensitive variables.
 	void updateTime() {

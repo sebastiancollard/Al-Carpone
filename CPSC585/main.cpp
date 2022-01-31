@@ -3,36 +3,6 @@
 #include"init.h"
 
 
-/*
-PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics)
-{
-	//Add a plane to the scene.
-	PxRigidStatic* groundPlane = PxCreatePlane(*physics, PxPlane(0, 1, 0, 0), *material);
-
-	//Get the plane shape so we can set query and simulation filter data.
-	PxShape* shapes[1];
-	groundPlane->getShapes(shapes, 1);
-
-	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
-	PxFilterData qryFilterData;
-	setupDrivableSurface(qryFilterData);
-	shapes[0]->setQueryFilterData(qryFilterData);
-
-	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
-	shapes[0]->setSimulationFilterData(simFilterData);
-
-	return groundPlane;
-}
-
-	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
-	gScene->addActor(*gGroundPlane);
-*/
-
-
-
-
-
 enum PART
 {
 	CHASSIS = 0,
@@ -258,7 +228,6 @@ int main()
 				}
 			}
 		}
-		
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);

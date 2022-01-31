@@ -26,4 +26,15 @@ void checkSpecialInputs(GLFWwindow* window)
 		state.Q_isHeld = true;
 	}
 	else state.Q_isHeld = false;
+
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	{
+		if (!state.R_isHeld) {
+			player.reset();
+		}
+		state.R_isHeld = true;
+	}
+	else state.R_isHeld = false;
+
+
 }

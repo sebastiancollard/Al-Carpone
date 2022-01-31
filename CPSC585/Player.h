@@ -78,8 +78,6 @@ public:
 		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)			
 			inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 																		// Set as an else if for now seeing as you normally can't accelerate frontwards/backwards at the same time...
-		
-
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		// Add left turn to the input queue if 'A' is pressed
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
@@ -89,4 +87,15 @@ public:
 			inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
 
 	}	
+
+	void setResetPoint(PxTransform t) {
+		startTransform = t;
+	}
+
+	void reset() {
+		actorPtr->setGlobalPose(startTransform);
+	}
+
+private:
+	PxTransform startTransform;
 };
