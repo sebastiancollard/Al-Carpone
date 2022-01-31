@@ -62,6 +62,9 @@ Player player;
 #include"State.h"
 State state;
 
+#include "DebugPanel.h"
+
+
 #include "Camera.h"
 
 //Set up physx global variables

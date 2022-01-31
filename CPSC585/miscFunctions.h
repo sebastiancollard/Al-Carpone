@@ -1,5 +1,9 @@
 #pragma once
 
+#include "util.h"
+
+
+
 //Updates the fps/ms in the window title.
 void updateTitle(GLFWwindow* window)
 {
@@ -18,6 +22,13 @@ void checkSpecialInputs(GLFWwindow* window)
 	}
 	
 	// Handles key inputs
+
+	// Debug Mode
+	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) {
+		toggle(state.debugMode);
+	}
+
+	// Freemode Camera
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 	{
 		if (!state.Q_isHeld) {

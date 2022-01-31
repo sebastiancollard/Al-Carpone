@@ -120,6 +120,9 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vs", "default.fs");
 
+	// DEBUG Panel
+	DebugPanel debugPanel = DebugPanel(window);
+
 	//Set up physx with vehicle snippet
 	//Make sure this is called after the shader program is generated
 	initPhysics();
@@ -179,7 +182,7 @@ int main()
 				PxVec3(activeCamera->dir.x , activeCamera->dir.y, activeCamera->dir.z) * 175.0f
 			);
 
-		//Check for special inputs (currently only camera mode change)
+		// Check for special inputs (outside car controls)
 		checkSpecialInputs(window);
 
 		if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
@@ -187,17 +190,15 @@ int main()
 
 		activeCamera->handleInput(window);
 
-		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//if (state.debugMode) 
+		debugPanel.newFrame();
 
-		// don't forget to enable shader before setting uniforms
-		shaderProgram.use();
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 		glm::mat4 view = activeCamera->GetViewMatrix();
 
-		printMat4(projection* view);
+		//printMat4(projection* view);
 
 		// send them to shader
 		shaderProgram.setMat4("projection", projection);
@@ -262,11 +263,21 @@ int main()
 				}
 			}
 		}
+
+		// DEBUG MODE
+		//if (state.debugMode) {
+			debugPanel.draw();
+		//}
+		//else if (!state.debugMode) {
+			//debugPanel.disable();
+		//}
 		
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 	}
+
+	debugPanel.cleanUp();
 
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
