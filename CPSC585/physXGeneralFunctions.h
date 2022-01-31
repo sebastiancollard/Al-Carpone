@@ -33,7 +33,7 @@ PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, co
 
 PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
 {
-	Model level("models/testlevel/ai_testlevel_physx_mesh.obj");
+	Model level(ACTIVE_LEVEL_PHYSX_MODEL_PATH);
 
 	std::vector<PxVec3> model_positions;
 	std::vector<PxU32> model_indices;

@@ -131,7 +131,7 @@ int main()
 
 	CarModel4W car(car_chassis, car_lwheel, car_rwheel);
 
-	Model groundPlane(TEST_LEVEL_PATH);
+	Model groundPlane(ACTIVE_LEVEL_TEXTURED_MODEL_PATH);
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
