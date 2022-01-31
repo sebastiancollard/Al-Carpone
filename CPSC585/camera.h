@@ -222,13 +222,16 @@ private:
         glm::mat4 rot(1.0f);
         //rotate by pitch and yaw
         rot = glm::rotate(rot, pitch, player.getRight());
-        rot = glm::rotate(rot, yaw, player.getUp());
+        rot = glm::rotate(rot, yaw, worldUp);
         
+        //Use projection of player direction for smoother behaviour entering/exiting hills
+        glm::vec3 playerDirHorizontalProjection = glm::normalize(glm::vec3(player.getDir()[0], 0, player.getDir()[2]));
+
         //apply rotation to dir about players direction
-        glm::vec4 transformedDir(player.getDir(), 1.0f);
+        glm::vec4 transformedDir(playerDirHorizontalProjection, 1.0f);
         transformedDir = transformedDir * rot;
         //apply rotation to pos
-        glm::vec4 posOffset((-player.getDir() * 15.0f + glm::vec3(0, 2.5f, 0)), 1.0f);
+        glm::vec4 posOffset((-playerDirHorizontalProjection * 15.0f + glm::vec3(0, 2.5f, 0)), 1.0f);
         posOffset = posOffset * rot;
     
         dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
