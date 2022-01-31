@@ -23,11 +23,13 @@ VehicleDesc initVehicleDesc()
 
 	VehicleDesc vehicleDesc;
 
+	PxMaterial* chassisMat = gPhysics->createMaterial(0.1f, 0.1f, 0.1f);
+
 	vehicleDesc.chassisMass = chassisMass;
 	vehicleDesc.chassisDims = chassisDims;
 	vehicleDesc.chassisMOI = chassisMOI;
 	vehicleDesc.chassisCMOffset = chassisCMOffset;
-	vehicleDesc.chassisMaterial = gMaterial;
+	vehicleDesc.chassisMaterial = chassisMat;
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_CHASSIS, COLLISION_FLAG_CHASSIS_AGAINST, 0, 0);
 
 	vehicleDesc.wheelMass = wheelMass;
