@@ -119,9 +119,9 @@ PxRigidDynamic* createVehicleActor
 	//Wheel and chassis query filter data.
 	//Optional: cars don't drive on other cars.
 	PxFilterData wheelQryFilterData;
-	setupNonDrivableSurface(wheelQryFilterData);
+	//setupNonDrivableSurface(wheelQryFilterData);
 	PxFilterData chassisQryFilterData;
-	setupNonDrivableSurface(chassisQryFilterData);
+	//setupNonDrivableSurface(chassisQryFilterData);
 
 	//Add all the wheel shapes to the actor.
 	for(PxU32 i = 0; i < numWheels; i++)
