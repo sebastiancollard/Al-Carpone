@@ -254,11 +254,13 @@ private:
 
         //std::cout << "before: " << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << std::endl;
 
-        dir = glm::normalize((player.getPos() + glm::vec3(0, 3.5f, 0)) - pos);
+        glm::vec3 verticalOffset = player.getPos() + glm::vec3(0, 3.5f, 0);
+
+        dir = glm::normalize(verticalOffset - pos);
         
         float x = 0.02f;
 
-        pos = ((1-x)*((player.getPos() + glm::vec3(0, 3.5f, 0)) - dir * 15.f) + x*(player.getPos() + glm::vec3(0, 3.5f, 0) - player.getDir() * 15.0f));
+        pos = ((1-x)*(verticalOffset - dir * 15.f) + x*(verticalOffset - player.getDir() * 15.0f));
 
         //std::cout << "after: " << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << std::endl;
 
