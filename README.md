@@ -19,7 +19,7 @@ CONTROLS:
 	Q: Toggle third-person / free camera mode.
 	Left Click (hold): Allows user to move mouse to look freely
 	E: Shoot ball (Currently does not have collisions. Will be used for collision testing)
-	F5: Toggle Debug Mode
+	F5: Toggle Debug Mode (Camera disabled while in Debug Mode)
 	ESC: Close application
 
 	THIRD PERSON VIEW:

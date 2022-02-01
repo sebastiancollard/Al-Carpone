@@ -17,11 +17,5 @@ public:
 	DebugPanel(GLFWwindow* window);
 	void cleanUp();
 
-	void newFrame();
-
 	void draw();
-	void disable();
-
-	void update();
-
 };

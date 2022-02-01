@@ -4,6 +4,7 @@
 
 DebugPanel::DebugPanel(GLFWwindow* window) {
 
+    // Initialize ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -14,20 +15,11 @@ DebugPanel::DebugPanel(GLFWwindow* window) {
 }
 
 
+// Clean up ImGui
 void DebugPanel::cleanUp() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-    std::cout << "CLEAN UP IMGUI" << std::endl;
-}
-
-
-void DebugPanel::newFrame() {
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
 }
 
 
@@ -35,22 +27,18 @@ void DebugPanel::draw() {
 
     enabled = true;
 
+    // New Frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
     // Create panel
     ImGui::Begin("Debug Panel");
-    ImGui::Text("Hello, World %d", 123);
+    //ImGui::Text("Hello, World %d", 123);
+    ImGui::Checkbox("checked", &updateValues);
     ImGui::End();
 
     // Render Panel
     ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    
-    std::cout << "DEBUG MODE" << std::endl;
-}
-
-void DebugPanel::disable() {
-    enabled = false;
-}
-
-void DebugPanel::update() {
-
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());    
 }

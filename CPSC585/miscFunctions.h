@@ -25,7 +25,7 @@ void checkSpecialInputs(GLFWwindow* window)
 
 	// Debug Mode
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) {
-		toggle(state.debugMode);
+		state.debugMode = !state.debugMode;
 	}
 
 	// Freemode Camera
