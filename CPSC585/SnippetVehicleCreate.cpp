@@ -35,6 +35,10 @@
 #include "PxPhysicsAPI.h"
 #include "Model.h"
 
+
+#define CHASSIS_PHYSX_OBJ_PATH "models/al_carpone/chassis_physx.obj"
+#define WHEEL_PHYSX_OBJ_PATH "models/al_carpone/car_Lwheel.obj"
+
 namespace snippetvehicle
 {
 
@@ -82,7 +86,7 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
 {
-	Model chassis("models/car/car_chassis_physx.obj");
+	Model chassis(CHASSIS_PHYSX_OBJ_PATH);
 
 	std::vector<PxVec3> positions;
 	for (Vertex& v : chassis.meshes[0].vertices)
@@ -95,7 +99,7 @@ PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 
 PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking)
 {
-	Model wheel("models/car/car_Lwheel.obj");
+	Model wheel(WHEEL_PHYSX_OBJ_PATH);
 
 	std::vector<PxVec3> positions;
 	for (Vertex& v : wheel.meshes[0].vertices)

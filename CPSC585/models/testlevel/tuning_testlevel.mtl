@@ -1,5 +1,5 @@
 # Blender MTL File: 'tuning_testlevel.blend'
-# Material Count: 15
+# Material Count: 14
 
 newmtl 00
 Ns 225.000000
@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 00_texture.png
+map_Kd textures\\00_texture.png
 
 newmtl 01
 Ns 225.000000
@@ -21,7 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 01_texture.png
+map_Kd textures\\01_texture.png
 
 newmtl 02
 Ns 225.000000
@@ -32,7 +32,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 02_texture.png
+map_Kd textures\\02_texture.png
 
 newmtl 03
 Ns 225.000000
@@ -43,7 +43,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 03_texture.png
+map_Kd textures\\03_texture.png
 
 newmtl 04
 Ns 225.000000
@@ -54,7 +54,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 04_texture.png
+map_Kd textures\\04_texture.png
 
 newmtl 05
 Ns 225.000000
@@ -65,7 +65,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 05_texture.png
+map_Kd textures\\05_texture.png
 
 newmtl 06
 Ns 225.000000
@@ -76,7 +76,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 06_texture.png
+map_Kd textures\\06_texture.png
 
 newmtl 07
 Ns 225.000000
@@ -87,7 +87,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 07_texture.png
+map_Kd textures\\07_texture.png
 
 newmtl 08
 Ns 225.000000
@@ -98,7 +98,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 08_texture.png
+map_Kd textures\\08_texture.png
 
 newmtl 09
 Ns 225.000000
@@ -109,7 +109,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 09_texture.png
+map_Kd textures\\09_texture.png
 
 newmtl 10
 Ns 225.000000
@@ -120,7 +120,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 10_texture.png
+map_Kd textures\\10_texture.png
 
 newmtl 11
 Ns 225.000000
@@ -131,7 +131,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 11_texture.png
+map_Kd textures\\11_texture.png
 
 newmtl 12
 Ns 225.000000
@@ -142,7 +142,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd 12_texture.png
+map_Kd textures\\12_texture.png
 
 newmtl Material.001
 Ns 225.000000
@@ -153,15 +153,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd testlevel_ground_texture.png
-
-newmtl Material.002
-Ns 225.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 2
-map_Kd black_texture.png
+map_Kd textures\\testlevel_ground_texture.png

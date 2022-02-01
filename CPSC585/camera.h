@@ -220,7 +220,7 @@ public:
     }
 private:
     void updateLook() {
-        std::cout << glm::dot(player.getLinearVelocity(), player.getDir()) << std::endl;
+        //std::cout << glm::dot(player.getLinearVelocity(), player.getDir()) << std::endl;
         // calculate the new direction vector
         glm::mat4 rot(1.0f);
         //rotate by pitch and yaw

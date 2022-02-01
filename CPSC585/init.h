@@ -5,23 +5,23 @@
 #define M_PI 3.14159265358979323846
 
 
-#define CAR_CHASSIS_PATH "models/car/car_chassis.obj"
-#define CAR_LWHEEL_PATH "models/car/car_Lwheel.obj"
-#define CAR_RWHEEL_PATH "models/car/car_Rwheel.obj"
+#define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
+#define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
+#define CAR_RWHEEL_PATH "models/al_carpone/car_Rwheel.obj"
 
-//#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
-//#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
+#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
+#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
 
-#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/ai_testlevel.obj"
-#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/ai_testlevel_physx_model.obj"
+//#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/ai_testlevel.obj"
+//#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/ai_testlevel_physx_model.obj"
 
 
 #define NEAR_CLIPPING_PLANE 0.01f
 #define FAR_CLIPPING_PLANE 1000.f
 
 //Screen width and height. May want to change this to a dynamic value eventually.
-const unsigned int SCREEN_WIDTH = 800;
-const unsigned int SCREEN_HEIGHT = 800;
+const unsigned int SCREEN_WIDTH = 1920;
+const unsigned int SCREEN_HEIGHT = 1080;
 
 #include<glad/glad.h>
 
