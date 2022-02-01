@@ -167,6 +167,7 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bank.h" />
     <ClInclude Include="freeCamera.h" />
     <ClInclude Include="classes.h" />
     <ClInclude Include="init.h" />

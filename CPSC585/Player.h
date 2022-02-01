@@ -60,5 +60,5 @@ public:
 			inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
 	
 
-	}	
+	}
 };
