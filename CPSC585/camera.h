@@ -258,7 +258,7 @@ private:
 
         dir = glm::normalize(verticalOffset - pos);
         
-        float x = 0.02f;
+        float x = float(state.timeStep * 1.2);
 
         pos = ((1-x)*(verticalOffset - dir * 15.f) + x*(verticalOffset - player.getDir() * 15.0f));
 

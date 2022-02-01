@@ -145,34 +145,107 @@ void initPhysics()
 
 void stepPhysics(GLFWwindow* window)
 {
-	const float timestep = 1.0f / 60.0f;
+	float timestep = state.timeStep; // 1.0f / 60.0f;
 
-	if(state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window);
+	while (timestep > 0) {
 
-	updateDrivingMode();
+		float substep = 1.0f / 60.0f;
 
-	//Update the control inputs for the vehicle.dwd
-	PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *gVehicle4W);
+		if (timestep < 1.0f / 60.0f) substep = timestep;
 
-	//Raycasts.
-	PxVehicleWheels* vehicles[1] = { gVehicle4W };
-	PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
-	const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
-	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window);
 
-	//Vehicle update.
-	const PxVec3 grav = gScene->getGravity();
-	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
-	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
-	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+		updateDrivingMode();
 
-	//Work out if the vehicle is in the air.
-	gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+		//Update the control inputs for the vehicle.dwd
+		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, gIsVehicleInAir, *gVehicle4W);
 
-	//Scene update.
-	gScene->simulate(timestep);
-	gScene->fetchResults(true);
+		//Raycasts.
+		PxVehicleWheels* vehicles[1] = { gVehicle4W };
+		PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+		const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
+		PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+
+		//Vehicle update.
+		const PxVec3 grav = gScene->getGravity();
+		PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
+		PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
+		PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+
+		//Work out if the vehicle is in the air.
+		gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+
+		//Scene update.
+		gScene->simulate(substep);
+		gScene->fetchResults(true);
+
+		timestep -= (1.0f / 60.0f);
+	}
+	/*
+	float timestep = state.timeStep; // 1.0f / 60.0f;
+
+	while (timestep > 1.0f / 60.0f) {
+		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window);
+
+		updateDrivingMode();
+
+		//Update the control inputs for the vehicle.dwd
+		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, 1.0f / 60.0f, gIsVehicleInAir, *gVehicle4W);
+
+		//Raycasts.
+		PxVehicleWheels* vehicles[1] = { gVehicle4W };
+		PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+		const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
+		PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+
+		//Vehicle update.
+		const PxVec3 grav = gScene->getGravity();
+		PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
+		PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
+		PxVehicleUpdates(1.0f / 60.0f, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+
+		//Work out if the vehicle is in the air.
+		gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+
+		//Scene update.
+		gScene->simulate(1.0f / 60.0f);
+		gScene->fetchResults(true);
+
+		timestep -= (1.0f / 60.0f);
+	}
+	if (timestep > 0.0f) {
+		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window);
+
+		updateDrivingMode();
+
+		//Update the control inputs for the vehicle.dwd
+		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *gVehicle4W);
+
+		//Raycasts.
+		PxVehicleWheels* vehicles[1] = { gVehicle4W };
+		PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+		const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
+		PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+
+		//Vehicle update.
+		const PxVec3 grav = gScene->getGravity();
+		PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
+		PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
+		PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+
+		//Work out if the vehicle is in the air.
+		gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+
+		//Scene update.
+		gScene->simulate(timestep);
+		gScene->fetchResults(true);
+	}
+	*/
 }
+
+/*
+	
+*/
 
 void cleanupPhysics()
 {

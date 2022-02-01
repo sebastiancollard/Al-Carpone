@@ -106,7 +106,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 
-
+	glfwSwapInterval(0);
 	// Creates camera pointer
 	Camera* activeCamera;
 	// Camrea can be one of these at a given time
@@ -120,10 +120,10 @@ int main()
 	{
 		//Update the time and fps counter.
 		state.updateTime();
-		if (state.timeStep >= 1.0f / 30.0f) {
+		if (state.timeSinceLastFpsUpdate >= 1.0f/30.0f) {
 			updateTitle(window);
 			state.prevTime = state.currTime;
-			state.frameCount = 0;
+			state.timeSinceLastFpsUpdate = 0;
 		}
 
 		// Take care of all GLFW events

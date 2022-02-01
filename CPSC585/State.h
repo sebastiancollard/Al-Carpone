@@ -15,10 +15,11 @@ public:
 	//Previous time (time at last currTime update)
 	double prevTime = 0.;
 	//The ammount of time since last time update
-	double timeStep;
+	double timeStep = 1.0f / 60.0f;
 
-	//Number of frames since last fps update
-	unsigned int frameCount = 0;
+
+	double timeSinceLastFpsUpdate = 0;
+
 	unsigned int cameraMode = CAMERA_MODE_BOUND;
 	
 
@@ -34,7 +35,8 @@ public:
 	void updateTime() {
 		currTime = glfwGetTime();
 		timeStep = currTime - prevTime;
-		++frameCount;
+		prevTime = currTime;
+		timeSinceLastFpsUpdate += timeStep;
 	}
 
 	//Toggles the camera mode between bound and unbound.

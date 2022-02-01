@@ -3,8 +3,8 @@
 //Updates the fps/ms in the window title.
 void updateTitle(GLFWwindow* window)
 {
-	std::string FPS = std::to_string((int)ceil(1. / state.timeStep * state.frameCount));
-	std::string RT = std::to_string((state.timeStep / state.frameCount) * 1000);
+	std::string FPS = std::to_string((int)ceil(1. / state.timeStep));
+	std::string RT = std::to_string((state.timeStep) * 1000);
 	std::string title = "Al Carpone / " + FPS + "FPS / " + RT + "ms";
 	glfwSetWindowTitle(window, title.c_str());
 
