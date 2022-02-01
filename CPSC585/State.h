@@ -16,6 +16,7 @@ public:
 	double prevTime = 0.;
 	//The ammount of time since last time update
 	double timeStep = 1.0f / 60.0f;
+	float simulationSpeed = 1.5f;
 
 
 	double timeSinceLastFpsUpdate = 0;

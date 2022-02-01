@@ -145,7 +145,8 @@ void initPhysics()
 
 void stepPhysics(GLFWwindow* window)
 {
-	float timestep = state.timeStep; // 1.0f / 60.0f;
+
+	float timestep = state.timeStep * state.simulationSpeed; // 1.0f / 60.0f;
 
 	while (timestep > 0) {
 
