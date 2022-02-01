@@ -70,13 +70,6 @@ using namespace snippetvehicle;
 //Vehicle tuning settings
 #include"physXVehicleSettings.h"
 
-#include"Player.h"
-Player player;
-
-#include"State.h"
-State state;
-
-#include "Camera.h"
 
 //Set up physx global variables
 //Should be checked over to see what actually needs to be global and what doesnt
@@ -97,22 +90,35 @@ PxMaterial* gMaterial = NULL;
 
 PxPvd* gPvd = NULL;
 
-VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
-PxBatchQuery* gBatchQuery = NULL;
-
-PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
-
-PxRigidStatic* gGroundPlane = NULL;
-PxVehicleDrive4W* gVehicle4W = NULL;
-
-bool gIsVehicleInAir = true;
-
 struct physx_actor_entity
 {
 	PxRigidActor* actorPtr;
 	PxU32 actorId;
 };
 std::vector<physx_actor_entity> physx_actors;
+
+VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
+PxBatchQuery* gBatchQuery = NULL;
+
+PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
+
+PxRigidStatic* gGroundPlane = NULL;
+
+
+#include"State.h"
+State state;
+
+#include"Vehicle.h"
+
+#include"Player.h"
+Player player;
+
+
+
+#include "Camera.h"
+
+std::vector<Vehicle*> activeVehicles;
+
 
 //All of the physx functions needed for the vehicle sdk
 #include"physXVehicleFunctions.h"

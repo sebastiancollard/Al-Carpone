@@ -31,6 +31,7 @@ public:
 	//This could be moved to some sort of general input class at somepoint.
 	bool Q_isHeld = false;
 	bool R_isHeld = false;
+	bool shift_isHeld = false;
 
 	//Updates the state's time-sensitive variables.
 	void updateTime() {
