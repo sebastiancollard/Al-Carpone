@@ -5,6 +5,9 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+#include<glm/gtx/rotate_vector.hpp>
+#include<glm/gtx/vector_angle.hpp>
 
 #include <vector>
 
@@ -188,21 +191,23 @@ public:
             float rotY = mouseSensitivity * (float)(mouseY - (SCREEN_HEIGHT / 2)) / SCREEN_HEIGHT;
             float rotX = mouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
 
-            //update pitch/yaw accordingly
-            pitch += rotY;
-            yaw += rotX;
+            // Calculates upcoming vertical change in the Orientation
+            up = glm::vec3(0, 1, 0);
+            glm::vec3 newOrientation = glm::rotate(dir, glm::radians(-rotY), glm::normalize(glm::cross(dir, up)));
 
-            //bind yaw
-            if (yaw > 2 * M_PI) yaw -= 2 * M_PI;
-            if (yaw < -2 * M_PI) yaw += 2 * M_PI;
+            // Decides whether or not the next vertical Orientation is legal or not
+            if (abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+            {
+                dir = newOrientation;
+            }
 
-            //bind pitch
-            if (pitch > M_PI  /2.25f) pitch = M_PI / 2.25f;
-            if (pitch < -M_PI / 2.25f) pitch = -M_PI / 2.25f;
+            // Rotates the Orientation left and right
+            dir = glm::rotate(dir, glm::radians(-rotX), up);
 
             // Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
             glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
-            updateLook();
+            pos = player.getPos() + -dir * 15.f;
+            pos += glm::vec3(0, 3.5f, 0);
         }
         else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
         {
@@ -249,10 +254,7 @@ private:
     }
 
     void updateLocked() {
-        // calculate the new direction vector
-        glm::mat4 rot(1.0f);
 
-        //std::cout << "before: " << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << std::endl;
 
         glm::vec3 verticalOffset = player.getPos() + glm::vec3(0, 3.5f, 0);
 
@@ -261,8 +263,6 @@ private:
         float x = float(state.timeStep * 1.2);
 
         pos = ((1-x)*(verticalOffset - dir * 15.f) + x*(verticalOffset - player.getDir() * 15.0f));
-
-        //std::cout << "after: " << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << std::endl;
 
 
         //Update right and up vectors accordingly
