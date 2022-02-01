@@ -149,7 +149,7 @@ public:
 
     // constructor with vectors
     BoundCamera() {
-        mouseSensitivity = 5.0f;
+        mouseSensitivity = 200.0f;
         zoom = 60.0f;
 
         up = player.getUp();
