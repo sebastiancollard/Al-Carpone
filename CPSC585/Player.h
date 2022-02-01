@@ -8,6 +8,18 @@ public:
 	PxRigidActor* actorPtr;				// Each player instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
 	std::queue<DriveMode> inputQueue;	// Input queue used to process multiple actions within a single update.
 
+	glm::vec3 getLinearVelocity() {
+		extern PxVehicleDrive4W* gVehicle4W;
+		PxVec3 velo = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
+		return glm::vec3(velo.x, velo.y, velo.z);
+	}
+
+	glm::vec3 getAngularVelocity() {
+		extern PxVehicleDrive4W* gVehicle4W;
+		PxVec3 velo = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
+		return glm::vec3(velo.x, velo.y, velo.z);
+	}
+
 	// fetch the front-facing direction of the player vehicle
 	glm::vec3 getDir() {
 		const int MAX_NUM_ACTOR_SHAPES = 128;

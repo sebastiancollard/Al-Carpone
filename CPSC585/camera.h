@@ -154,12 +154,13 @@ public:
 
         worldUp = glm::vec3(0, 1, 0);
 
+        pos = player.getPos() - player.getDir() * 15.0f + glm::vec3(0, 2.5f, 0);
         dir = player.getDir();
 
         pitch = 0;
         yaw = 0;
 
-        update();
+        updateLocked();
     }
 
     //update pitch and yaw (in the future update zoom)
@@ -201,6 +202,7 @@ public:
 
             // Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
             glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
+            updateLook();
         }
         else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
         {
@@ -211,13 +213,14 @@ public:
             firstClick = true;
 
             //reset to cars view
-            pitch = 0;
-            yaw = 0;
+            //pitch = 0;
+            //yaw = 0;
+            updateLocked();
         }
-        update();
     }
 private:
-    void update() {
+    void updateLook() {
+        std::cout << glm::dot(player.getLinearVelocity(), player.getDir()) << std::endl;
         // calculate the new direction vector
         glm::mat4 rot(1.0f);
         //rotate by pitch and yaw
@@ -231,7 +234,7 @@ private:
         glm::vec4 transformedDir(playerDirHorizontalProjection, 1.0f);
         transformedDir = transformedDir * rot;
         //apply rotation to pos
-        glm::vec4 posOffset((-playerDirHorizontalProjection * 15.0f + glm::vec3(0, 2.5f, 0)), 1.0f);
+        glm::vec4 posOffset((-playerDirHorizontalProjection * 15.0f + glm::vec3(0, 3.5f, 0)), 1.0f);
         posOffset = posOffset * rot;
     
         dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
@@ -242,6 +245,28 @@ private:
 
         //Update right and up vectors accordingly
         right = glm::normalize(glm::cross(dir, worldUp)); 
+        up = glm::normalize(glm::cross(right, dir));
+    }
+
+    void updateLocked() {
+        // calculate the new direction vector
+        glm::mat4 rot(1.0f);
+
+        //std::cout << "before: " << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << std::endl;
+
+        glm::vec3 verticalOffset = player.getPos() + glm::vec3(0, 3.5f, 0);
+
+        dir = glm::normalize(verticalOffset - pos);
+        
+        float x = 0.02f;
+
+        pos = ((1-x)*(verticalOffset - dir * 15.f) + x*(verticalOffset - player.getDir() * 15.0f));
+
+        //std::cout << "after: " << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << std::endl;
+
+
+        //Update right and up vectors accordingly
+        right = glm::normalize(glm::cross(dir, worldUp));
         up = glm::normalize(glm::cross(right, dir));
     }
 
