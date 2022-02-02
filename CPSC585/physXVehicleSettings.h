@@ -1,6 +1,5 @@
 #pragma once
 
-
 PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
 	0.0f,		0.75f,

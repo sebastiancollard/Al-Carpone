@@ -1,19 +1,10 @@
-//Used for debugging
-void printMat4(glm::mat4 m) {
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			printf("%.2f ", m[i][j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-}
+#pragma once
 
 //Updates the fps/ms in the window title.
 void updateTitle(GLFWwindow* window)
 {
-	std::string FPS = std::to_string((int)ceil(1. / state.timeStep * state.frameCount));
-	std::string RT = std::to_string((state.timeStep / state.frameCount) * 1000);
+	std::string FPS = std::to_string((int)ceil(1. / state.timeStep));
+	std::string RT = std::to_string((state.timeStep) * 1000);
 	std::string title = "Al Carpone / " + FPS + "FPS / " + RT + "ms";
 	glfwSetWindowTitle(window, title.c_str());
 
@@ -36,8 +27,14 @@ void checkSpecialInputs(GLFWwindow* window)
 	}
 	else state.Q_isHeld = false;
 
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		if (state.cameraMode == CAMERA_MODE_BOUND) state.cameraMode = CAMERA_MODE_BOUND_FREELOOK;
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	{
+		if (!state.R_isHeld) {
+			player.reset();
+		}
+		state.R_isHeld = true;
 	}
-	else if (state.cameraMode == CAMERA_MODE_BOUND_FREELOOK) state.cameraMode = CAMERA_MODE_BOUND;
+	else state.R_isHeld = false;
+
+
 }

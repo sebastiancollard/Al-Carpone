@@ -19,98 +19,98 @@
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{368112a7-0302-4e44-a1ab-8bd659d026fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Snippet">
+      <UniqueIdentifier>{57a0d353-1488-4774-8cb1-ad8de135ecf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Misc">
+      <UniqueIdentifier>{72f516a4-aee8-4876-a81d-274cf975d538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{4ba3098d-ffab-48ee-9635-80ed3de5cf0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{b30a6a30-c8fe-430d-a38c-0f5363a3558e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity">
+      <UniqueIdentifier>{98cf63d1-e8df-4319-8ec1-bc7a34559924}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="freeCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stb.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SnippetVehicle4WCreate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
     <ClCompile Include="SnippetVehicleCreate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
     <ClCompile Include="SnippetVehicleFilterShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
     <ClCompile Include="SnippetVehicleNoDriveCreate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
     <ClCompile Include="SnippetVehicleSceneQuery.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
     <ClCompile Include="SnippetVehicleTankCreate.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
     <ClCompile Include="SnippetVehicleTireFriction.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Snippet</Filter>
+    </ClCompile>
+    <ClCompile Include="stb.cpp">
+      <Filter>Resource Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Resource Files\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="classes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="init.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="miscFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="freeCamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="initPhysX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physXVehicleSettings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physXGeneralFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physXVehicleFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="physXGeneralFunctions.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="physXVehicleFunctions.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="physXVehicleSettings.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Vehicle.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="default.vert">
+    <None Include="default.fs">
       <Filter>Resource Files\Shaders</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="default.frag">
+    </None>
+    <None Include="default.vs">
       <Filter>Resource Files\Shaders</Filter>
-    </CopyFileToFolders>
+    </None>
   </ItemGroup>
 </Project>
