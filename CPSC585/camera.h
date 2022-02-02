@@ -146,6 +146,8 @@ public:
 
     float pitch; //vertical angle offset
     float yaw; //horizontal angle offset
+    float radius; //radius of sphere for camera to orbit around
+    float verticalOffset; //how much higher the camera is relative to car position
 
     glm::vec3 oldVehDir = glm::vec3(0, 0, 1);
 
@@ -164,6 +166,8 @@ public:
 
         pitch = 0;
         yaw = 0;
+        radius = 15.f;
+        verticalOffset = 3.5f;
 
         updateLocked();
     }
@@ -194,7 +198,7 @@ public:
             float rotX = mouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
 
             // Calculates upcoming vertical change in the Orientation
-            up = glm::vec3(0, 1, 0);
+            up = worldUp;
             glm::vec3 newOrientation = glm::rotate(dir, glm::radians(-rotY), glm::normalize(glm::cross(dir, up)));
 
             // Decides whether or not the next vertical Orientation is legal or not
@@ -209,7 +213,7 @@ public:
             //v-----------------------------------DISABLE IF USING KEYBOARD--------------------------------------------------------------------v
             // we also want to calculate the angle between the old vehicle direction and the new one and add to the existing rotation
             // 
-            dir = glm::rotate(dir, atan2(glm::dot(glm::cross(oldVehDir, player.getDir()), up), glm::dot(player.getDir(), oldVehDir)), up);
+            //dir = glm::rotate(dir, atan2(glm::dot(glm::cross(oldVehDir, player.getDir()), up), glm::dot(player.getDir(), oldVehDir)), up);
             // 
             //--------below 2 lines give seemingly same result, but apparently can be less accurate at times..
             //--------float angle = glm::angle(player.getDir(), oldVehDir);
@@ -220,7 +224,7 @@ public:
             glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
 
             // update position
-            pos = player.getPos() + glm::vec3(0, 3.5f, 0) + -dir * 15.f;
+            pos = player.getPos() + glm::vec3(0, verticalOffset, 0) + -dir * radius;
 
             oldVehDir = player.getDir();
         }
@@ -254,7 +258,7 @@ private:
         glm::vec4 transformedDir(playerDirHorizontalProjection, 1.0f);
         transformedDir = transformedDir * rot;
         //apply rotation to pos
-        glm::vec4 posOffset((-playerDirHorizontalProjection * 15.0f + glm::vec3(0, 3.5f, 0)), 1.0f);
+        glm::vec4 posOffset((-playerDirHorizontalProjection * radius + glm::vec3(0, verticalOffset, 0)), 1.0f);
         posOffset = posOffset * rot;
 
         dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
@@ -272,18 +276,18 @@ private:
 
 
         // get position we want the camera to look at
-        glm::vec3 verticalOffset = player.getPos() + glm::vec3(0, 3.5f, 0);
+        glm::vec3 targetPos = player.getPos() + glm::vec3(0, verticalOffset, 0);
 
         // get direction of camera
-        dir = glm::normalize(verticalOffset - pos);
+        dir = glm::normalize(targetPos - pos);
 
         // variable used for interpolation
         float x = float(state.timeStep * 1.2 * state.simulationSpeed);
-        std::cout << x << std::endl;
+        
         // get position as proportional interpolation between 2 locations on the sphere:
         // 1: closest point on sphere between the camera's current position and sphere center
         // 2: point on the sphere behind the car
-        pos = ((1 - x) * (verticalOffset - dir * 15.f) + x * (verticalOffset - player.getDir() * 15.0f));
+        pos = ((1 - x) * (targetPos - dir * radius) + x * (targetPos - player.getDir() * radius));
 
         //pos = (verticalOffset - 15.f * ((1 - x) * dir + x * player.getDir()));
         //pos = (verticalOffset - 15.f * (glm::vec3((1-x)*dir.x, (0.5f)*dir.y, (1-x)*dir.z) + glm::vec3(x*player.getDir().x, (0.5f)*player.getDir().y, x*player.getDir().z)));
@@ -291,15 +295,15 @@ private:
         std::cout << dir.y << std::endl;
 
         // update the direction after updating the position
-        dir = glm::normalize(verticalOffset - pos);
+        dir = glm::normalize(targetPos - pos);
 
         // update the camera position such that it is placed on the 
         // point of the sphere between the current camera position and the sphere center
-        float dist = glm::distance(pos, verticalOffset);
-        if (dist < 15.f)
-            pos -= (15.f - dist) * dir;
-        else if (dist > 15.f)
-            pos += (15.f - dist) * dir;
+        float dist = glm::distance(pos, targetPos);
+        if (dist < radius)
+            pos -= (radius - dist) * dir;
+        else if (dist > radius)
+            pos += (radius - dist) * dir;
 
         //Update right and up vectors accordingly
         right = glm::normalize(glm::cross(dir, worldUp));
