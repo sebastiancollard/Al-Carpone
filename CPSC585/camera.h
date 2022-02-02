@@ -281,7 +281,7 @@ public:
 
         }
 
-        radius = default_radius + radius_offset;
+        radius = 0.9f * radius + 0.1f * (radius + radius_offset);
 
     }
 private:
