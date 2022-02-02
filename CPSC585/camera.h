@@ -316,36 +316,47 @@ private:
 
     void updateLocked() {
 
-
         // get position we want the camera to look at
         glm::vec3 targetPos = player.getPos() + glm::vec3(0, verticalOffset, 0);
-
-        // get direction of camera
-        dir = glm::normalize(targetPos - pos);
 
         // variable used for interpolation
         float x = float(state.timeStep * 1.2 * state.simulationSpeed);
 
-        // get position as proportional interpolation between 2 locations on the sphere:
+        // before performing the position updated via interpolation, 
+        // make sure the starting point is still on the sphere
+        pos = targetPos - dir * radius;
+
+        // first, get HORIZONTAL position as proportional interpolation between 2 locations on the sphere:
         // 1: closest point on sphere between the camera's current position and sphere center
         // 2: point on the sphere behind the car
-        pos = ((1 - x) * (targetPos - dir * radius) + x * (targetPos - player.getDir() * radius));
+        pos = glm::vec3((1 - x) * (pos).x + x * (targetPos - player.getDir() * radius).x, pos.y, pos.z); // x-coord
+        pos = glm::vec3(pos.x, pos.y, (1 - x) * (targetPos - dir * radius).z + x * (targetPos - player.getDir() * radius).z); //z-coord
 
-        //pos = (verticalOffset - 15.f * ((1 - x) * dir + x * player.getDir()));
-        //pos = (verticalOffset - 15.f * (glm::vec3((1-x)*dir.x, (0.5f)*dir.y, (1-x)*dir.z) + glm::vec3(x*player.getDir().x, (0.5f)*player.getDir().y, x*player.getDir().z)));
-
-
-
-        // update the direction after updating the position
-        dir = glm::normalize(targetPos - pos);
-
-        // update the camera position such that it is placed on the 
-        // point of the sphere between the current camera position and the sphere center
+        // if we are farther/closer to the target than the orbit radius, then we need to place it on the sphere.
+        // instead of finding the general closest point (using the line between the camera and target) we actually 
+        // need actually need to project the camera position onto the sphere with respect to the world horizontal plane
         float dist = glm::distance(pos, targetPos);
-        if (dist < radius)
+        if (dist != radius) {
+            float heightDiff = targetPos.y - pos.y;
+            float horizontalDist = glm::distance(pos, glm::vec3(targetPos.x, pos.y, targetPos.z));
+            float crossSectionalRadius = sqrt(radius * radius - (heightDiff) * (heightDiff));
+            glm::vec3 tempDir = glm::normalize(glm::vec3(targetPos.x, targetPos.y - heightDiff, targetPos.z) - pos);
+
+            pos.x -= (crossSectionalRadius - horizontalDist) * tempDir.x;
+            pos.z -= (crossSectionalRadius - horizontalDist) * tempDir.z;
+        }
+
+        // now, update vertical position using the same interpolation
+        pos.y = (1 - x) * (targetPos - dir * radius).y + x * (targetPos - player.getDir() * radius).y; //y-coord
+
+       // update the camera position such that it is placed on the 
+       // point of the sphere between the current camera position and the sphere center 
+        dist = glm::distance(pos, targetPos);
+        if (dist != radius)
             pos -= (radius - dist) * dir;
-        else if (dist > radius)
-            pos += (radius - dist) * dir;
+
+        // update direction of camera
+        dir = glm::normalize(targetPos - pos);
 
         //Update right and up vectors accordingly
         right = glm::normalize(glm::cross(dir, worldUp));
