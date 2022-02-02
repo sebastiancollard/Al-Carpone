@@ -11,6 +11,15 @@
 
 #include <vector>
 
+//Update these as we tune
+#define CAR_MAX_VELOCITY_FORWARD 40.0f
+#define CAR_MAX_VELOCITY_BACKWARD -11.35f
+
+
+glm::vec3 getGLMvec3(PxVec3 v) {
+    return glm::vec3(v.x, v.y, v.z);
+}
+
 class Camera {
 public:
 
@@ -146,8 +155,18 @@ public:
 
     float pitch; //vertical angle offset
     float yaw; //horizontal angle offset
+
     float radius; //radius of sphere for camera to orbit around
+
+    float default_radius;
+    float radius_goal;
+
+    float radius_min_offset = -3.0f;
+    float radius_max_offset = 7.0f;
+
     float verticalOffset; //how much higher the camera is relative to car position
+
+    glm::vec3 prev_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 
     glm::vec3 oldVehDir = glm::vec3(0, 0, 1);
 
@@ -166,8 +185,13 @@ public:
 
         pitch = 0;
         yaw = 0;
-        radius = 15.f;
+
         verticalOffset = 3.5f;
+
+        default_radius = 10.0f;
+        radius = default_radius;
+
+        radius_goal = default_radius;
 
         updateLocked();
     }
@@ -241,6 +265,24 @@ public:
             //yaw = 0;
             updateLocked();
         }
+
+        glm::vec3 velocity = getGLMvec3(player.vehiclePtr->getRigidDynamicActor()->getLinearVelocity());
+        //printVec3("velocity", velocity);
+        float forwardVel = glm::dot(velocity, player.getDir());
+        //printf("forward velocity[%.2f]\n", forwardVel);
+
+        //if (forwardVel < 0) radius_goal = radius_max;
+        //else if (forwardVel > 0) radius_goal = radius_min;
+
+        float radius_offset = 0;
+        if (forwardVel > 0) radius_offset = radius_max_offset * fmin(forwardVel / CAR_MAX_VELOCITY_FORWARD, 1.0f);
+        else if (forwardVel < 0) {
+            radius_offset = radius_min_offset * fmin(forwardVel / CAR_MAX_VELOCITY_BACKWARD, 1.0f);
+
+        }
+
+        radius = default_radius + radius_offset;
+
     }
 private:
     void updateLook() {
@@ -283,7 +325,7 @@ private:
 
         // variable used for interpolation
         float x = float(state.timeStep * 1.2 * state.simulationSpeed);
-        
+
         // get position as proportional interpolation between 2 locations on the sphere:
         // 1: closest point on sphere between the camera's current position and sphere center
         // 2: point on the sphere behind the car
@@ -292,7 +334,7 @@ private:
         //pos = (verticalOffset - 15.f * ((1 - x) * dir + x * player.getDir()));
         //pos = (verticalOffset - 15.f * (glm::vec3((1-x)*dir.x, (0.5f)*dir.y, (1-x)*dir.z) + glm::vec3(x*player.getDir().x, (0.5f)*player.getDir().y, x*player.getDir().z)));
 
-        std::cout << dir.y << std::endl;
+
 
         // update the direction after updating the position
         dir = glm::normalize(targetPos - pos);
@@ -316,6 +358,29 @@ private:
 
 #endif
 /*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #pragma once
 #ifndef CAMERA_H
 #define CAMERA_H
@@ -337,7 +402,7 @@ public:
     glm::vec3 worldUp;
 
     // camera options
-   
+
     float mouseSensitivity;
     float zoom;
 
@@ -425,14 +490,14 @@ public:
             glfwGetCursorPos(window, &mouseX, &mouseY);
 
             // Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-            // and then "transforms" them into degrees 
+            // and then "transforms" them into degrees
             float rotY = mouseSensitivity * (float)(mouseY - (SCREEN_HEIGHT / 2)) / SCREEN_HEIGHT;
             float rotX = mouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
 
             glm::mat4 rot(1.0f);
             rot = glm::rotate(rot, rotY, right);
             rot = glm::rotate(rot, rotX, up);
-            
+
             glm::vec4 dirUpdate(dir, 1.0f);
             dirUpdate = dirUpdate * rot;
 
@@ -522,7 +587,7 @@ public:
             glfwGetCursorPos(window, &mouseX, &mouseY);
 
             // Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-            // and then "transforms" them into degrees 
+            // and then "transforms" them into degrees
             float rotY = mouseSensitivity * (float)(mouseY - (SCREEN_HEIGHT / 2)) / SCREEN_HEIGHT;
             float rotX = mouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
 
