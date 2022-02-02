@@ -278,8 +278,8 @@ private:
         dir = glm::normalize(verticalOffset - pos);
 
         // variable used for interpolation
-        float x = float(state.timeStep * 1.2 * 2.f);
-
+        float x = float(state.timeStep * 1.2 * state.simulationSpeed);
+        std::cout << x << std::endl;
         // get position as proportional interpolation between 2 locations on the sphere:
         // 1: closest point on sphere between the camera's current position and sphere center
         // 2: point on the sphere behind the car

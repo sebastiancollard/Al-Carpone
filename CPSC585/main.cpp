@@ -60,7 +60,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	// Creates camera pointer
 	Camera* activeCamera;
 	// Camrea can be one of these at a given time
