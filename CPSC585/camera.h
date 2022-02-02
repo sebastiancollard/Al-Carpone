@@ -27,6 +27,10 @@ public:
     bool firstClick = true;
 
     virtual void handleInput(GLFWwindow* window) {}
+    virtual float getPitch() { return 0; }
+    virtual float getPitchGoal() { return 0; }
+    virtual float getYaw() { return 0; }
+    virtual float getYawGoal() { return 0; }
 
     glm::mat4 GetViewMatrix(){
         return glm::lookAt(pos, pos + dir, up);
@@ -129,6 +133,12 @@ public:
         }
         update();
     }
+
+    float getPitch() { return 0; }
+    float getPitchGoal() { return 0; }
+    float getYaw() { return 0; }
+    float getYawGoal() { return 0; }
+
 private:
     void update() {
         //Update right and up vectors according to dir
@@ -144,6 +154,14 @@ public:
     float pitch; //vertical angle offset
     float yaw; //horizontal angle offset
 
+    float pitch_goal;
+    float yaw_goal;
+
+    float dPitch_dT = 0;
+    float dYaw_dT = 0;
+
+    float radius = 15.0f;
+    float radius_goal = radius;
     // constructor with vectors
     BoundCamera() {
         mouseSensitivity = 5.0f;
@@ -160,7 +178,7 @@ public:
         pitch = 0;
         yaw = 0;
 
-        updateLocked();
+        update();
     }
 
     //update pitch and yaw (in the future update zoom)
@@ -174,6 +192,8 @@ public:
             if (firstClick){
                 glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
                 firstClick = false;
+                pitch_goal = pitch;
+                yaw_goal = yaw;
             }
 
             // Stores the coordinates of the cursor
@@ -189,23 +209,26 @@ public:
             float rotX = mouseSensitivity * (float)(mouseX - (SCREEN_WIDTH / 2)) / SCREEN_WIDTH;
 
             //update pitch/yaw accordingly
-            pitch += rotY;
-            yaw += rotX;
+            pitch_goal += rotY;
+            yaw_goal += rotX;
 
-            //bind yaw
-            if (yaw > 2 * M_PI) yaw -= 2 * M_PI;
-            if (yaw < -2 * M_PI) yaw += 2 * M_PI;
+            //bind yaw between [-pi,pi] so that it will drift in about the more efficient angle
+            if (yaw_goal > M_PI) yaw_goal *= -1;
+            else if (yaw_goal < - M_PI) yaw_goal *= -1;
 
             //bind pitch
-            if (pitch > M_PI  /2.25f) pitch = M_PI / 2.25f;
-            if (pitch < -M_PI / 2.25f) pitch = -M_PI / 2.25f;
+            if (pitch_goal > M_PI  /2.25f) pitch_goal = M_PI / 2.25f;
+            if (pitch_goal < -M_PI / 2.25f) pitch_goal = -M_PI / 2.25f;
 
             // Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
             glfwSetCursorPos(window, (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2));
-            updateLook();
+
+            pitch = pitch_goal;
+            yaw = yaw_goal;
+
+            update();
         }
-        else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
-        {
+        else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE){
             // Unhides cursor since camera is not looking around anymore
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -213,20 +236,71 @@ public:
             firstClick = true;
 
             //reset to cars view
-            //pitch = 0;
-            //yaw = 0;
-            updateLocked();
+            pitch_goal = 0;
+            yaw_goal = 0;
+            update();
         }
     }
 private:
-    void updateLook() {
+    void update() {
+       // calculate the new direction vector
+        glm::mat4 rot(1.0f);
+        //rotate by pitch and yaw
+        rot = glm::rotate(rot, pitch, player.getRight());
+        rot = glm::rotate(rot, yaw, worldUp);
+
+        //Use projection of player direction for smoother behaviour entering/exiting hills
+        glm::vec3 playerDirHorizontalProjection = glm::normalize(glm::vec3(player.getDir()[0], 0, player.getDir()[2]));
+
+        //apply rotation to pos
+        glm::vec4 posOffset((-playerDirHorizontalProjection * 15.0f + glm::vec3(0, 3.5f, 0)), 1.0f);
+        posOffset = posOffset * rot;
+
+        //apply rotation to dir about players direction
+        glm::vec4 transformedDir(playerDirHorizontalProjection, 1.0f);
+        transformedDir = transformedDir * rot;
+
+        dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
+
+        //Add the offset vector to the playerpos to get the updated pos
+        glm::vec3 playerPos = player.getPos();
+        pos = glm::vec3(playerPos.x + posOffset.x, playerPos.y + posOffset.y, playerPos.z + posOffset.z);
+
+        if (pitch != pitch_goal || yaw != yaw_goal) {
+            //shift pitch/yaw toward the goal
+            pitch += (pitch_goal - pitch) * state.timeStep * 3.0f;
+            yaw += (yaw_goal - yaw) * state.timeStep * 3.0f;
+            //if pitch/yaw are close enough to the goal, just set them to the goal
+            if (abs(pitch - pitch_goal) < 0.001) pitch = pitch_goal;
+            if (abs(yaw - yaw_goal) < 0.001) yaw = yaw_goal;
+        }
+
+        PxVec3 angVelPx = player.vehiclePtr->getRigidDynamicActor()->getAngularVelocity();
+
+        glm::vec3 angVel(angVelPx.x, angVelPx.y, angVelPx.z);
+        printVec3("angVel",angVel);
+        yaw += angVelPx.y * state.timeStep;
+
+        //Update right and up vectors accordingly
+        right = glm::normalize(glm::cross(dir, worldUp));
+        up = glm::normalize(glm::cross(right, dir));
+    }
+
+    float getPitch() { return pitch; }
+    float getPitchGoal() { return pitch_goal; }
+    float getYaw() { return yaw; }
+    float getYawGoal() { return yaw_goal; }
+};
+
+/*
+ void updateLook() {
         //std::cout << glm::dot(player.getLinearVelocity(), player.getDir()) << std::endl;
         // calculate the new direction vector
         glm::mat4 rot(1.0f);
         //rotate by pitch and yaw
         rot = glm::rotate(rot, pitch, player.getRight());
         rot = glm::rotate(rot, yaw, worldUp);
-        
+
         //Use projection of player direction for smoother behaviour entering/exiting hills
         glm::vec3 playerDirHorizontalProjection = glm::normalize(glm::vec3(player.getDir()[0], 0, player.getDir()[2]));
 
@@ -236,7 +310,7 @@ private:
         //apply rotation to pos
         glm::vec4 posOffset((-playerDirHorizontalProjection * 15.0f + glm::vec3(0, 3.5f, 0)), 1.0f);
         posOffset = posOffset * rot;
-    
+
         dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
 
         //Add the offset vector to the playerpos to get the updated pos
@@ -244,7 +318,7 @@ private:
         pos = glm::vec3(playerPos.x + posOffset.x, playerPos.y + posOffset.y, playerPos.z + posOffset.z);
 
         //Update right and up vectors accordingly
-        right = glm::normalize(glm::cross(dir, worldUp)); 
+        right = glm::normalize(glm::cross(dir, worldUp));
         up = glm::normalize(glm::cross(right, dir));
     }
 
@@ -257,7 +331,7 @@ private:
         glm::vec3 verticalOffset = player.getPos() + glm::vec3(0, 3.5f, 0);
 
         dir = glm::normalize(verticalOffset - pos);
-        
+
         float x = float(state.timeStep * 1.2);
 
         pos = ((1-x)*(verticalOffset - dir * 15.f) + x*(verticalOffset - player.getDir() * 15.0f));
@@ -271,5 +345,6 @@ private:
     }
 
 };
+*/
 
 #endif

@@ -129,6 +129,8 @@ int main()
 		groundPlane.Draw(shaderProgram);
 
 		// Render dynamic physx shapes
+
+		printf("PITCH[%.2f] | GOAL[%.2f]\nYAW[%.2f] | GOAL[%.2f]\n\n", activeCamera->getPitch(), activeCamera->getPitchGoal(), activeCamera->getYaw(), activeCamera->getYawGoal());
 		
 		
 		{

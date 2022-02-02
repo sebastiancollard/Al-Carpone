@@ -20,8 +20,8 @@
 #define FAR_CLIPPING_PLANE 1000.f
 
 //Screen width and height. May want to change this to a dynamic value eventually.
-const unsigned int SCREEN_WIDTH = 1920;
-const unsigned int SCREEN_HEIGHT = 1080;
+const unsigned int SCREEN_WIDTH = 1920 * 0.75f;
+const unsigned int SCREEN_HEIGHT = 1080 * 0.75f;
 
 #include<glad/glad.h>
 
