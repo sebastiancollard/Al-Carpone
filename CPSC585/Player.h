@@ -5,6 +5,9 @@ class Player {
 public:
 	PxRigidActor* actorPtr;				// Each player instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
 	std::queue<DriveMode> inputQueue;	// Input queue used to process multiple actions within a single update.
+	
+	bool can_rob = false;				//If player "collides" with trigger capsule, this shoudl be set to true
+	int cash = 0;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
 	// fetch the front-facing direction of the player vehicle
 	glm::vec3 getDir() {

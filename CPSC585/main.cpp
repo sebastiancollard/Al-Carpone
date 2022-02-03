@@ -2,6 +2,8 @@
 #include"init.h"
 
 
+#define CASH_ROBBED_PER_FRAME 50	//$50 per frame for now?
+
 int main()
 {
 	//Set up physx with vehicle snippet
@@ -55,6 +57,10 @@ int main()
 	meshes.push_back(box);
 	box.createBox(2.5f, 2.f, 5.f);
 
+	Mesh building;
+	meshes.push_back(building);
+	building.createBox(bank.width, bank.height, bank.depth);
+
 	Mesh sphere;
 	meshes.push_back(sphere);
 	sphere.createSphere(0.5f, 32, 32);
@@ -104,6 +110,12 @@ int main()
 				PxVec3(camera.Orientation.x, camera.Orientation.y, camera.Orientation.z) * 175.0f
 			);
 		
+		// Handle bank robbing
+		if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (player.can_rob)) 
+			player.cash += CASH_ROBBED_PER_FRAME;	
+	
+
+
 		//Check for special inputs (currently only camera mode change)
 		checkSpecialInputs(window);
 
@@ -162,7 +174,8 @@ int main()
 						// Export the shape's model matrix to the vertex shader
 						glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 						// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
-						box.render();
+						//box.render
+						building.render();		//changed this to building mesh for now (used for the bank). The building dimensions should match the dimensions of the bank
 					}
 					else if (h.any().getType() == PxGeometryType::eSPHERE)
 					{

@@ -12,6 +12,59 @@ void createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 }
 
+void createBankActors() {
+	
+	static PxU32 counter = 0;
+	PxVec3 b_pos(bank.getPos().x, bank.height/2.f, bank.getPos().z);
+	PxVec3 dimensions(bank.width/2.f, bank.height/2.f, bank.depth/2.f);
+	
+	// Setting up a bank(rigidStatic) as a simple box for now
+	PxShape* shape = gPhysics->createShape(PxBoxGeometry(dimensions), *gMaterial);			//PxVec3 represents the half-extents (w, h, d). Put in arbitrary values for now
+	PxTransform bankPos(b_pos);																	//position of the bank
+	
+	PxRigidStatic* body = gPhysics->createRigidStatic(bankPos);									//Static as the buildung will not move
+	PxFilterData bankFilter(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);	//(I think) these should set this actor as an obstacle to the vehicle
+	
+	shape->setSimulationFilterData(bankFilter);
+	body->attachShape(*shape);
+	gScene->addActor(*body);
+	physx_actors.push_back({ body, counter++ });
+	shape->release();
+
+	bank.bankPtr = body;
+	
+	//Setting up the capsule that will act as a trigger. This is set up in "front" of the bank (will need bank position and orientation).
+	PxVec3 t_pos = b_pos;
+	switch (bank.getDir()) {
+		case 1:		//N
+			t_pos.y -= ((bank.depth / 2.f) + 5.f);		//trigger is further back in the y direction
+			break;
+		case 2:		//E
+			t_pos.x += ((bank.width / 2.f) + 5.f);		//trigger is further "right"
+			break;
+		case 3:		//S
+			t_pos.y += ((bank.depth / 2.f) + 5.f);		//trigger is further forward in the y direction
+			break;
+		case 4:		//W
+			t_pos.x += ((bank.width / 2.f) + 5.f);		//trigger is further "left"
+			break;
+	}
+
+	PxShape* capShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(bank.width), PxReal(10)), *gMaterial);	//radius and half-height of capsule as parameters
+	PxTransform triggerPos(t_pos);															//position of the trigger. Will need orientation of bank to adjust this dynamically. For now, just increase y position
+	
+	PxRigidStatic* triggerBody = gPhysics->createRigidStatic(triggerPos);		//Static as the trigger should not move
+	PxFilterData triggerFilter(0, 0, 0, 0);										//******WILL HAVE TO PLAY WITH COLLISION (no collision for now)
+	
+	capShape->setSimulationFilterData(triggerFilter);
+	triggerBody->attachShape(*capShape);
+	gScene->addActor(*triggerBody);
+	physx_actors.push_back({ triggerBody, counter++ });
+	capShape->release();
+
+	bank.triggerPtr = triggerBody;
+}
+
 void initPhysics()
 {
 	unsigned int ID = 0;
@@ -67,6 +120,8 @@ void initPhysics()
 	gScene->addActor(*gVehicle4W->getRigidDynamicActor());
 	player.actorPtr = gVehicle4W->getRigidDynamicActor();
 	physx_actors.push_back({ gVehicle4W->getRigidDynamicActor(), ID++ });
+
+	createBankActors();
 
 	//Set the vehicle to rest in first gear.
 	//Set the vehicle to use auto-gears.

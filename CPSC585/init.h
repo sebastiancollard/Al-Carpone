@@ -39,6 +39,9 @@ using namespace snippetvehicle;
 #include"Player.h"
 Player player;
 
+#include "Bank.h"
+Bank bank;
+
 #include"State.h"
 State state;
 
