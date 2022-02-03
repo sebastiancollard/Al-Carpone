@@ -170,6 +170,8 @@ public:
 
     glm::vec3 oldVehDir = glm::vec3(0, 0, 1);
 
+    bool stoppedLookingBehind = false; // used for switching between looking behind and forward
+
     // constructor with vectors
     BoundCamera() {
         mouseSensitivity = 200.0f;
@@ -199,6 +201,16 @@ public:
     //update pitch and yaw (in the future update zoom)
     void handleInput(GLFWwindow* window) {
         // Handles mouse inputs
+        
+        // check for state of C key before left mouse button to avoid camera stuttering
+        if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+            dir = -player.getDir();
+            stoppedLookingBehind = true;
+        }
+        else if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE && stoppedLookingBehind) {
+            dir = player.getDir();
+            stoppedLookingBehind = false;
+        }
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
             // Hides mouse cursor
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -265,6 +277,7 @@ public:
             //yaw = 0;
             updateLocked();
         }
+        
 
         glm::vec3 velocity = getGLMvec3(player.vehiclePtr->getRigidDynamicActor()->getLinearVelocity());
         //printVec3("velocity", velocity);
@@ -275,12 +288,19 @@ public:
         //else if (forwardVel > 0) radius_goal = radius_min;
 
         float radius_offset = 0;
-        if (forwardVel > 0) radius_offset = radius_max_offset * fmin(forwardVel / CAR_MAX_VELOCITY_FORWARD, 1.0f);
-        else if (forwardVel < 0) {
-            radius_offset = radius_min_offset * fmin(forwardVel / CAR_MAX_VELOCITY_BACKWARD, 1.0f);
 
+        float dot = glm::dot(player.getDir(), dir);
+        
+        if (forwardVel > 0) {
+            radius_offset = radius_max_offset * fmin(forwardVel / CAR_MAX_VELOCITY_FORWARD, 1.0f);
+        }
+        else if (forwardVel < 0) {
+            // when looking behind, the camera behaves better if the min offset uses CAR_MAX_VELOCITY_FORWARD instead of CAR_MAX_VELOCITY_BACKWARD in the clamp
+            // so we use the dot product to determine which one to use for the clamped value
+            radius_offset = radius_min_offset * (dot > -0.999f ? fmin(forwardVel / CAR_MAX_VELOCITY_BACKWARD, 1.0f) : fmin(forwardVel / CAR_MAX_VELOCITY_FORWARD, 1.0f));
         }
 
+        // add smoothing to radius change (mostly to address cases like hitting a wall head on)
         radius = 0.9f * radius + 0.1f * (default_radius + radius_offset);
 
     }
