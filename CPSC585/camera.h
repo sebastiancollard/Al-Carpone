@@ -304,6 +304,24 @@ public:
         radius = 0.9f * radius + 0.1f * (default_radius + radius_offset);
 
     }
+
+    // adjust camera position if objects are currently obscurring the car
+    void checkClipping(GLFWwindow* window) {
+        // get camera's target and direction
+        glm::vec3 target = player.getPos() + glm::vec3(0, verticalOffset, 0);
+        glm::vec3 direction = -glm::normalize(target - pos);
+
+        PxVec3 origin = PxVec3(target.x, target.y, target.z);
+        PxVec3 unitDir = PxVec3(direction.x, direction.y, direction.z);
+        PxRaycastBuffer hit;
+        
+        // send raycast starting at the camera target and towards the camera's position
+        bool status = gScene->raycast(origin, unitDir, PxReal(radius), hit, PxHitFlag::eMESH_BOTH_SIDES);
+        // if the raycast hit something closer than the camera, put the camera in front of it 
+        // to be able to see the car again
+        if (status) 
+            pos -= (radius - float(hit.getAnyHit(0).distance) + 0.05f) * direction;
+    }
 private:
     void updateLook() {
         //std::cout << glm::dot(player.getLinearVelocity(), player.getDir()) << std::endl;

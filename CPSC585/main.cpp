@@ -108,6 +108,7 @@ int main()
 		else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
 
 		activeCamera->handleInput(window);
+		if (activeCamera == &boundCamera) boundCamera.checkClipping(window);
 
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
