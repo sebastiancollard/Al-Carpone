@@ -1,4 +1,5 @@
-
+#pragma once
+#include "PxCustomEventCallback.h"
 
 void createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
 {
@@ -37,30 +38,33 @@ void createBankActors() {
 	PxVec3 t_pos = b_pos;
 	switch (bank.getDir()) {
 		case 1:		//N
-			t_pos.y -= ((bank.depth / 2.f) + 5.f);		//trigger is further back in the y direction
+			t_pos.y -= ((bank.depth / 2.f) + bank.width/2.f);		//trigger is further back in the y direction
 			break;
 		case 2:		//E
-			t_pos.x += ((bank.width / 2.f) + 5.f);		//trigger is further "right"
+			t_pos.x += ((bank.width / 2.f) + bank.width / 2.f);		//trigger is further "right"
 			break;
 		case 3:		//S
-			t_pos.y += ((bank.depth / 2.f) + 5.f);		//trigger is further forward in the y direction
+			t_pos.y += ((bank.depth / 2.f) + bank.width / 2.f);		//trigger is further forward in the y direction
 			break;
 		case 4:		//W
-			t_pos.x += ((bank.width / 2.f) + 5.f);		//trigger is further "left"
+			t_pos.x += ((bank.width / 2.f) + bank.width / 2.f);		//trigger is further "left"
 			break;
 	}
 
-	PxShape* capShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(bank.width), PxReal(10)), *gMaterial);	//radius and half-height of capsule as parameters
-	PxTransform triggerPos(t_pos);															//position of the trigger. Will need orientation of bank to adjust this dynamically. For now, just increase y position
+	PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(10)), *gMaterial);	//radius and half-height of capsule as parameters
+	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
+
+	PxTransform triggerPos(t_pos);											//position of the trigger.
 	
-	PxRigidStatic* triggerBody = gPhysics->createRigidStatic(triggerPos);		//Static as the trigger should not move
-	PxFilterData triggerFilter(0, 0, 0, 0);										//******WILL HAVE TO PLAY WITH COLLISION (no collision for now)
-	
-	capShape->setSimulationFilterData(triggerFilter);
-	triggerBody->attachShape(*capShape);
+	PxRigidStatic* triggerBody = gPhysics->createRigidStatic(triggerPos);
+	PxFilterData triggerFilter(COLLISION_FLAG_BANK_TRIGGER, COLLISION_FLAG_BANK_TRIGGER_AGAINST, 0, 0);
+
+	triggerShape->setSimulationFilterData(triggerFilter);
+	triggerBody->attachShape(*triggerShape);
 	gScene->addActor(*triggerBody);
 	physx_actors.push_back({ triggerBody, counter++ });
-	capShape->release();
+	triggerShape->release();
 
 	bank.triggerPtr = triggerBody;
 }
@@ -82,7 +86,17 @@ void initPhysics()
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = VehicleFilterShader;
 
+	//PxCustomEventCallback callback;
+	//sceneDesc.simulationEventCallback = &callback;
+
+
 	gScene = gPhysics->createScene(sceneDesc);
+
+	//Set the callback to the custom callback class (subclass of SimulationEventCallback -- this in Player.h for now)
+	PxCustomEventCallback callback;
+	gScene->setSimulationEventCallback(&callback);
+	
+
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 	if (pvdClient)
 	{

@@ -107,6 +107,9 @@
     <ClInclude Include="Bank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PxCustomEventCallback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="default.vert">

@@ -178,6 +178,7 @@
     <ClInclude Include="physXVehicleFunctions.h" />
     <ClInclude Include="physXVehicleSettings.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PxCustomEventCallback.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Texture.h" />

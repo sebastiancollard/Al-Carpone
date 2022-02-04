@@ -111,8 +111,13 @@ int main()
 			);
 		
 		// Handle bank robbing
-		if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (player.can_rob)) 
-			player.cash += CASH_ROBBED_PER_FRAME;	
+		if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (player.can_rob)) {
+			std::cout << "Robbing bank...." << std::endl;
+			player.cash += CASH_ROBBED_PER_FRAME;
+		}	
+		else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+			std::cout << "Cannot rob the bank right now..." << std::endl;
+		}
 	
 
 

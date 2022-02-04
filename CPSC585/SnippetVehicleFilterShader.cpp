@@ -30,6 +30,7 @@
 #include <new>
 #include "snippetvehiclecommon/SnippetVehicleFilterShader.h"
 #include "PxPhysicsAPI.h"
+#include <iostream>
 
 namespace snippetvehicle
 {
@@ -41,15 +42,34 @@ PxFilterFlags VehicleFilterShader
  PxFilterObjectAttributes attributes1, PxFilterData filterData1,
  PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
 {
-	PX_UNUSED(attributes0);
-	PX_UNUSED(attributes1);
+	//PX_UNUSED(attributes0);
+	//PX_UNUSED(attributes1);
 	PX_UNUSED(constantBlock);
 	PX_UNUSED(constantBlockSize);
+
+
 
 	if( (0 == (filterData0.word0 & filterData1.word1)) && (0 == (filterData1.word0 & filterData0.word1)) )
 		return PxFilterFlag::eSUPPRESS;
 
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	
+	
+	//NOTE: BOTH OF THE FOLLOWING IF STATEMENTS CAUSE EXCEPTIONS TO BE THROWN -- TRYING TO DETECT COLLISION WITH BANK TRIGGER
+
+	//if ((filterData0.word0 == COLLISION_FLAG_WHEEL && filterData1.word0 == COLLISION_FLAG_BANK_TRIGGER) ||
+	//	(filterData0.word0 == COLLISION_FLAG_BANK_TRIGGER && filterData1.word0 == COLLISION_FLAG_WHEEL))
+	//{
+	//	// This causes the callback event to happen
+	//	pairFlags |= PxPairFlag::eTRIGGER_DEFAULT;		//PxPairFlag::eNOTIFY_TOUCH_FOUND
+	//	std::cout << "TRIGGER_DEFAULT called";
+	//}
+
+	//if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1)) {
+	//	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;		//PxPairFlag::eNOTIFY_TOUCH_FOUND
+	//	std::cout << "TRIGGER_DEFAULT called";
+	//}
+	
 	pairFlags |= PxPairFlags(PxU16(filterData0.word2 | filterData1.word2));
 
 	return PxFilterFlags();
