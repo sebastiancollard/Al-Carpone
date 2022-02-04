@@ -14,10 +14,10 @@ void createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec
 }
 
 void createBankActors() {
-	
+	//BANK (BUILDING)
 	static PxU32 counter = 0;
-	PxVec3 b_pos(bank.getPos().x, bank.height/2.f, bank.getPos().z);
-	PxVec3 dimensions(bank.width/2.f, bank.height/2.f, bank.depth/2.f);
+	PxVec3 b_pos(bank.getPos().x, bank.getPos().y, bank.getPos().z);
+	PxVec3 dimensions(bank.getWidth()/2.f, bank.getHeight()/2.f, bank.getDepth()/2.f);
 	
 	// Setting up a bank(rigidStatic) as a simple box for now
 	PxShape* shape = gPhysics->createShape(PxBoxGeometry(dimensions), *gMaterial);			//PxVec3 represents the half-extents (w, h, d). Put in arbitrary values for now
@@ -34,24 +34,27 @@ void createBankActors() {
 
 	bank.bankPtr = body;
 	
+
+	//ROBBING TRIGGER
 	//Setting up the capsule that will act as a trigger. This is set up in "front" of the bank (will need bank position and orientation).
 	PxVec3 t_pos = b_pos;
+	t_pos.y = 0.f;							//set height to 0 so the car can actually touch it
 	switch (bank.getDir()) {
-		case 1:		//N
-			t_pos.y -= ((bank.depth / 2.f) + bank.width/2.f);		//trigger is further back in the y direction
+		case 0:		//N
+			t_pos.z -= bank.getDepth();		//trigger is further back in the y direction
 			break;
-		case 2:		//E
-			t_pos.x += ((bank.width / 2.f) + bank.width / 2.f);		//trigger is further "right"
+		case 1:		//E
+			t_pos.x += bank.getWidth();		//trigger is further "right"
 			break;
-		case 3:		//S
-			t_pos.y += ((bank.depth / 2.f) + bank.width / 2.f);		//trigger is further forward in the y direction
+		case 2:		//S
+			t_pos.z += bank.getDepth();		//trigger is further forward in the y direction
 			break;
-		case 4:		//W
-			t_pos.x += ((bank.width / 2.f) + bank.width / 2.f);		//trigger is further "left"
+		case 3:		//W
+			t_pos.x += bank.getWidth();		//trigger is further "left"
 			break;
 	}
 
-	PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(10)), *gMaterial);	//radius and half-height of capsule as parameters
+	PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
 	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 	triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
 
@@ -63,6 +66,7 @@ void createBankActors() {
 	triggerShape->setSimulationFilterData(triggerFilter);
 	triggerBody->attachShape(*triggerShape);
 	gScene->addActor(*triggerBody);
+
 	physx_actors.push_back({ triggerBody, counter++ });
 	triggerShape->release();
 
@@ -86,14 +90,9 @@ void initPhysics()
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = VehicleFilterShader;
 
-	//PxCustomEventCallback callback;
-	//sceneDesc.simulationEventCallback = &callback;
-
-
 	gScene = gPhysics->createScene(sceneDesc);
 
 	//Set the callback to the custom callback class (subclass of SimulationEventCallback -- this in Player.h for now)
-	PxCustomEventCallback callback;
 	gScene->setSimulationEventCallback(&callback);
 	
 

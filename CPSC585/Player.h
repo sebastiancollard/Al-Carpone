@@ -2,12 +2,14 @@
 #include <queue>
 
 class Player {
+private:
+	bool can_rob = false;				//If player "collides" with trigger capsule, this shoudl be set to true
+	int cash = 0;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+
+
 public:
 	PxRigidActor* actorPtr;				// Each player instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
 	std::queue<DriveMode> inputQueue;	// Input queue used to process multiple actions within a single update.
-	
-	bool can_rob = false;				//If player "collides" with trigger capsule, this shoudl be set to true
-	int cash = 0;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
 	// fetch the front-facing direction of the player vehicle
 	glm::vec3 getDir() {
@@ -61,7 +63,23 @@ public:
 
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) 
 			inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
-	
 
+	}
+
+	int getCash() { 
+		return cash; 
+	}
+	bool canRob() { 
+		return can_rob; 
+	}
+	
+	void setRob(bool b) { 
+		can_rob = b; 
+	}
+	void addCash(int amount) {
+		cash += amount;
+	}
+	void setCash(int amount) {
+		cash = amount;
 	}
 };

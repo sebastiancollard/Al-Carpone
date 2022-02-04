@@ -54,21 +54,10 @@ PxFilterFlags VehicleFilterShader
 
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
 	
-	
-	//NOTE: BOTH OF THE FOLLOWING IF STATEMENTS CAUSE EXCEPTIONS TO BE THROWN -- TRYING TO DETECT COLLISION WITH BANK TRIGGER
-
-	//if ((filterData0.word0 == COLLISION_FLAG_WHEEL && filterData1.word0 == COLLISION_FLAG_BANK_TRIGGER) ||
-	//	(filterData0.word0 == COLLISION_FLAG_BANK_TRIGGER && filterData1.word0 == COLLISION_FLAG_WHEEL))
-	//{
-	//	// This causes the callback event to happen
-	//	pairFlags |= PxPairFlag::eTRIGGER_DEFAULT;		//PxPairFlag::eNOTIFY_TOUCH_FOUND
-	//	std::cout << "TRIGGER_DEFAULT called";
-	//}
-
-	//if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1)) {
-	//	pairFlags = PxPairFlag::eTRIGGER_DEFAULT;		//PxPairFlag::eNOTIFY_TOUCH_FOUND
-	//	std::cout << "TRIGGER_DEFAULT called";
-	//}
+	//If one of the objects is a trigger, call the trigger callback
+	if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1)) {
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;		//PxPairFlag::eNOTIFY_TOUCH_FOUND
+	}
 	
 	pairFlags |= PxPairFlags(PxU16(filterData0.word2 | filterData1.word2));
 

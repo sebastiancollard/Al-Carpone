@@ -2,7 +2,7 @@
 #include"init.h"
 
 
-#define CASH_ROBBED_PER_FRAME 50	//$50 per frame for now?
+#define CASH_ROBBED_PER_FRAME 5	//$5 per frame for now?
 
 int main()
 {
@@ -59,7 +59,7 @@ int main()
 
 	Mesh building;
 	meshes.push_back(building);
-	building.createBox(bank.width, bank.height, bank.depth);
+	building.createBox(bank.getWidth(), bank.getHeight(), bank.getDepth());
 
 	Mesh sphere;
 	meshes.push_back(sphere);
@@ -74,8 +74,6 @@ int main()
 
 	// Creates camera object
 	freeCamera camera(width, height, glm::vec3(0.f, 2.f, 10.f));
-
-
 
 
 	// Main while loop
@@ -112,12 +110,9 @@ int main()
 		
 		// Handle bank robbing
 		if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (player.can_rob)) {
-			std::cout << "Robbing bank...." << std::endl;
-			player.cash += CASH_ROBBED_PER_FRAME;
+			//std::cout << "Robbing bank...." << std::endl;
+			player.addCash(CASH_ROBBED_PER_FRAME);
 		}	
-		else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-			std::cout << "Cannot rob the bank right now..." << std::endl;
-		}
 	
 
 

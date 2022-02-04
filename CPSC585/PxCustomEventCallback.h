@@ -17,11 +17,12 @@ public:
 				PxTriggerPairFlag::eREMOVED_SHAPE_OTHER))
 				continue;
 
-			if ((pairs[i].otherShape->getActor() == player.actorPtr) &&
-				(pairs[i].triggerShape->getActor() == bank.triggerPtr))
+		
+			//If it is the player and the bank trigger interacting:
+			if ((pairs[i].otherActor == player.actorPtr) &&		//bank.triggerPtr
+				(pairs[i].triggerActor == bank.triggerPtr))
 			{
-				std::cout << "collision with trigger!" << std::endl;
-				player.can_rob = true;
+				player.setRob(!player.canRob());
 			}
 		}
 	}
@@ -29,12 +30,8 @@ public:
 	void onConstraintBreak(PxConstraintInfo* constraints, PxU32 count) { PX_UNUSED(constraints); PX_UNUSED(count); }
 	void onWake(PxActor** actors, PxU32 count) { PX_UNUSED(actors); PX_UNUSED(count); }
 	void onSleep(PxActor** actors, PxU32 count) { PX_UNUSED(actors); PX_UNUSED(count); }
-
 	void onAdvance(const PxRigidBody* const*, const PxTransform*, const PxU32) {}
-	void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) {
-		std::cout << "onContact called" << std::endl;
-		PX_UNUSED((pairHeader));
-		PX_UNUSED((pairs));
-		PX_UNUSED((nbPairs));
-	}
+	void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) { PX_UNUSED((pairHeader)); PX_UNUSED((pairs)); PX_UNUSED((nbPairs)); }
 };
+
+PxCustomEventCallback callback;
