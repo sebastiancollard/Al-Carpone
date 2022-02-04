@@ -229,7 +229,7 @@ private:
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
             stbi_image_free(data);
@@ -243,4 +243,51 @@ private:
         return textureID;
     }
 };
+
+enum PART
+{
+    CHASSIS = 0,
+    FLWHEEL,
+    FRWHEEL,
+    BLWHEEL,
+    BRWHEEL
+};
+
+class CarModel4W {
+public:
+    CarModel4W(Model Chassis, Model LWheel, Model RWheel) :
+        Chassis(Chassis), LWheel(LWheel), RWheel(RWheel) {
+    }
+
+    void Draw(unsigned int part, Shader& shader, glm::mat4 model_physx) {
+        shader.setMat4("model", model_physx);
+        if (part == CHASSIS) {
+            Chassis.Draw(shader);
+            return;
+        }
+        else if (part == FLWHEEL) {
+            LWheel.Draw(shader);
+            return;
+        }
+        else if (part == FRWHEEL) {
+            RWheel.Draw(shader);
+            return;
+        }
+        else if (part == BLWHEEL) {
+            LWheel.Draw(shader);
+            return;
+        }
+        else if (part == BRWHEEL) {
+            RWheel.Draw(shader);
+            return;
+        }
+    }
+
+private:
+    Model Chassis;
+    Model LWheel;
+    Model RWheel;
+};
+
+
 #endif

@@ -23,11 +23,13 @@ VehicleDesc initVehicleDesc()
 
 	VehicleDesc vehicleDesc;
 
+	PxMaterial* chassisMat = gPhysics->createMaterial(0.1f, 0.1f, 0.1f);
+
 	vehicleDesc.chassisMass = chassisMass;
 	vehicleDesc.chassisDims = chassisDims;
 	vehicleDesc.chassisMOI = chassisMOI;
 	vehicleDesc.chassisCMOffset = chassisCMOffset;
-	vehicleDesc.chassisMaterial = gMaterial;
+	vehicleDesc.chassisMaterial = chassisMat;
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_CHASSIS, COLLISION_FLAG_CHASSIS_AGAINST, 0, 0);
 
 	vehicleDesc.wheelMass = wheelMass;
@@ -36,7 +38,7 @@ VehicleDesc initVehicleDesc()
 	vehicleDesc.wheelMOI = wheelMOI;
 	vehicleDesc.numWheels = nbWheels;
 	vehicleDesc.wheelMaterial = gMaterial;
-	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
+	vehicleDesc.wheelSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
 
 	return vehicleDesc;
 }
@@ -86,7 +88,7 @@ void updateDrivingMode()
 
 	releaseAllControls();
 
-	int queueSize = player.inputQueue.size();
+	int queueSize = (int)player.inputQueue.size();
 
 	for (int i = 0; i < queueSize; i++)
 	{
@@ -97,7 +99,7 @@ void updateDrivingMode()
 		// get total velocity of the car
 		glm::vec3 velocity;
 		{
-			PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity() + gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
+			PxVec3 vel = player.vehiclePtr->getRigidDynamicActor()->getLinearVelocity() + player.vehiclePtr->getRigidDynamicActor()->getAngularVelocity();
 			velocity = glm::vec3(vel[0], vel[1], vel[2]);
 		}
 
@@ -108,18 +110,18 @@ void updateDrivingMode()
 		if (glm::length(velocity) < 1.f && input == eDRIVE_MODE_HANDBRAKE && gasPedal) continue;
 
 		// If we want to move forward but are currently in the reverse gear...
-		if (eDRIVE_MODE_ACCEL_FORWARDS == input && gVehicle4W->mDriveDynData.getCurrentGear() == PxVehicleGearsData::eREVERSE)
+		if (eDRIVE_MODE_ACCEL_FORWARDS == input && player.vehiclePtr->mDriveDynData.getCurrentGear() == PxVehicleGearsData::eREVERSE)
 		{
 			// naturally we would switch to first gear, but first we check if the car 
 			// is going in a relatively opposite direction as its facing. If so, then we want the wheels to brake until we've reached a stop.
 			if (glm::length(velocity) > 0 && glm::dot(glm::normalize(velocity), player.getDir()) < 0) input = eDRIVE_MODE_BRAKE;
-			else gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+			else player.vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		}
-		else if (eDRIVE_MODE_ACCEL_REVERSE == input && gVehicle4W->mDriveDynData.getCurrentGear() != PxVehicleGearsData::eREVERSE) { // if we want to reverse but are currently not in the reverse gear...
+		else if (eDRIVE_MODE_ACCEL_REVERSE == input && player.vehiclePtr->mDriveDynData.getCurrentGear() != PxVehicleGearsData::eREVERSE) { // if we want to reverse but are currently not in the reverse gear...
 			// then we want to change to the reverse gear, but first we check if the car is going 
 			// relatively in the same direction as its facing. If so, then we want to brake until we've reached a stop. 
 			if (glm::length(velocity) > 0 && glm::dot(glm::normalize(velocity), player.getDir()) > 0) input = eDRIVE_MODE_BRAKE;
-			else gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+			else player.vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 		}
 
 		// Add changes from the corresponding input

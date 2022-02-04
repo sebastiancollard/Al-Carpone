@@ -1,84 +1,6 @@
 //Initializes the physx system and all global variables and calls other includes.
-
 #include"init.h"
 
-#define CAR_CHASSIS_PATH "models/car/car_chassis.obj"
-#define CAR_LWHEEL_PATH "models/car/car_Lwheel.obj"
-#define CAR_RWHEEL_PATH "models/car/car_Rwheel.obj"
-
-#define TEST_LEVEL_PATH "models/testlevel/ai_testlevel.obj"
-
-#define NEAR_CLIPPING_PLANE 0.01f
-#define FAR_CLIPPING_PLANE 1000.f
-
-enum PART
-{
-	CHASSIS = 0,
-	FLWHEEL,
-	FRWHEEL,
-	BLWHEEL,
-	BRWHEEL
-};
-
-class CarModel4W {
-public:
-	CarModel4W(Model Chassis, Model LWheel, Model RWheel) :
-		Chassis(Chassis), LWheel(LWheel), RWheel(RWheel){
-	}
-	
-	void Draw(unsigned int part, Shader& shader, glm::mat4 model_physx) {
-
-		glm::vec3 commonVerticalOffset = player.getUp() * -0.1f;
-
-		glm::vec3 chassisVerticalOffset = player.getUp() * -1.75f;
-		glm::vec3 wheelVerticalOffset = player.getUp() * 0.f;
-
-		glm::vec3 fWheelForwardOffset = player.getDir() * 0.070f;
-		glm::vec3 bWheelForwardOffset = player.getDir() * 0.55f;
-
-		
-		glm::vec3 rWheelInwardOffset = player.getRight()  * -0.2f;
-		glm::vec3 lWheelInwardOffset = -rWheelInwardOffset;
-
-		glm::mat4 model(1.0f);
-
-		if (part == CHASSIS) {
-			model = model * model_physx;
-			shader.setMat4("model", model);
-			Chassis.Draw(shader);
-			return;
-		}
-		else if (part == FLWHEEL) {
-			model = model * model_physx;
-			shader.setMat4("model", model);
-			LWheel.Draw(shader);
-			return;
-		}
-		else if (part == FRWHEEL) {
-			model = model * model_physx;
-			shader.setMat4("model", model);
-			RWheel.Draw(shader);
-			return;
-		}
-		else if (part == BLWHEEL) {
-			model = model * model_physx;
-			shader.setMat4("model", model);
-			LWheel.Draw(shader);
-			return;
-		}
-		else if (part == BRWHEEL) {
-			model = model * model_physx;
-			shader.setMat4("model", model);
-			RWheel.Draw(shader);
-			return;
-		}
-	}
-
-private:
-	Model Chassis;
-	Model LWheel;
-	Model RWheel;
-};
 
 
 int main()
@@ -136,12 +58,12 @@ int main()
 
 	CarModel4W car(car_chassis, car_lwheel, car_rwheel);
 
-	Model groundPlane(TEST_LEVEL_PATH);
+	Model groundPlane(ACTIVE_LEVEL_TEXTURED_MODEL_PATH);
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
 
-
+	glfwSwapInterval(1);
 	// Creates camera pointer
 	Camera* activeCamera;
 	// Camrea can be one of these at a given time
@@ -155,10 +77,10 @@ int main()
 	{
 		//Update the time and fps counter.
 		state.updateTime();
-		if (state.timeStep >= 1.0f / 30.0f) {
+		if (state.timeSinceLastFpsUpdate >= 1.0f/30.0f) {
 			updateTitle(window);
 			state.prevTime = state.currTime;
-			state.frameCount = 0;
+			state.timeSinceLastFpsUpdate = 0;
 		}
 
 		// Take care of all GLFW events
@@ -187,7 +109,7 @@ int main()
 
 		if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
 		else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
-
+		
 
 		// DEBUG MODE
 		if (state.debugMode) { // Camera is deactivated
@@ -195,6 +117,7 @@ int main()
 		}
 		else { 
 			activeCamera->handleInput(window);
+			if (activeCamera == &boundCamera) boundCamera.checkClipping(window);
 		}
 
 
@@ -214,6 +137,8 @@ int main()
 		groundPlane.Draw(shaderProgram);
 
 		// Render dynamic physx shapes
+
+		//printf("PITCH[%.2f] | GOAL[%.2f]\nYAW[%.2f] | GOAL[%.2f]\n\n", activeCamera->getPitch(), activeCamera->getPitchGoal(), activeCamera->getYaw(), activeCamera->getYawGoal());
 		
 		
 		{

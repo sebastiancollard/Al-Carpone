@@ -193,6 +193,7 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.fs" />

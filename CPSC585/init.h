@@ -5,9 +5,23 @@
 #define M_PI 3.14159265358979323846
 
 
+#define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
+#define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
+#define CAR_RWHEEL_PATH "models/al_carpone/car_Rwheel.obj"
+
+#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
+#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
+
+//#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/ai_testlevel.obj"
+//#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/ai_testlevel_physx_model.obj"
+
+
+#define NEAR_CLIPPING_PLANE 0.01f
+#define FAR_CLIPPING_PLANE 1000.f
+
 //Screen width and height. May want to change this to a dynamic value eventually.
-const unsigned int SCREEN_WIDTH = 800;
-const unsigned int SCREEN_HEIGHT = 800;
+const unsigned int SCREEN_WIDTH = 1920 * 0.75f;
+const unsigned int SCREEN_HEIGHT = 1080 * 0.75f;
 
 #include<glad/glad.h>
 
@@ -56,16 +70,6 @@ using namespace snippetvehicle;
 //Vehicle tuning settings
 #include"physXVehicleSettings.h"
 
-#include"Player.h"
-Player player;
-
-#include"State.h"
-State state;
-
-#include "DebugPanel.h"
-
-
-#include "Camera.h"
 
 //Set up physx global variables
 //Should be checked over to see what actually needs to be global and what doesnt
@@ -79,21 +83,12 @@ PxPhysics* gPhysics = NULL;
 PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 
+
 PxCooking* gCooking = NULL;
 
 PxMaterial* gMaterial = NULL;
 
 PxPvd* gPvd = NULL;
-
-VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
-PxBatchQuery* gBatchQuery = NULL;
-
-PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
-
-PxRigidStatic* gGroundPlane = NULL;
-PxVehicleDrive4W* gVehicle4W = NULL;
-
-bool gIsVehicleInAir = true;
 
 struct physx_actor_entity
 {
@@ -102,9 +97,35 @@ struct physx_actor_entity
 };
 std::vector<physx_actor_entity> physx_actors;
 
+VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
+PxBatchQuery* gBatchQuery = NULL;
+
+PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
+
+PxRigidStatic* gGroundPlane = NULL;
+
+
+#include"State.h"
+State state;
+
+#include"Vehicle.h"
+
+#include"Player.h"
+Player player;
+
+#include "DebugPanel.h"
+
+#include "Camera.h"
+
+std::vector<Vehicle*> activeVehicles;
+
+
 //All of the physx functions needed for the vehicle sdk
 #include"physXVehicleFunctions.h"
 //All of the physx functions needed for setup + running
 #include"physXGeneralFunctions.h"
 //Miscelanious functions who dont have a home yet
 #include"miscFunctions.h"
+
+
+
