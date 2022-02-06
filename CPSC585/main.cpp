@@ -109,7 +109,7 @@ int main()
 			);
 		
 		// Handle bank robbing
-		if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (player.can_rob)) {
+		if ((glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) && (player.canRob())) {
 			//std::cout << "Robbing bank...." << std::endl;
 			player.addCash(CASH_ROBBED_PER_FRAME);
 		}	
