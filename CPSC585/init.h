@@ -12,6 +12,10 @@
 #define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
 #define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
 
+
+#define BANK_BUILDING_PATH "models/al_carpone/bank_box.obj"
+
+
 //#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/ai_testlevel.obj"
 //#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/ai_testlevel_physx_model.obj"
 

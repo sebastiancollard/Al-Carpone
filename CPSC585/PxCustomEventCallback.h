@@ -7,8 +7,7 @@ public:
 	// Shapes which have been marked as triggers using PxShapeFlag::eTRIGGER_SHAPE will send events according to the pair flag specification in the filter shader
 	//This is a custom callback function to use when the player collides with pickups, or the trigger in front of the bank.
 	void onTrigger(PxTriggerPair* pairs, PxU32 count) {
-		std::cout << "onTrigger called" << std::endl;
-
+	
 		//starter code taken from https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/RigidBodyCollision.html
 		for (PxU32 i = 0; i < count; i++)
 		{

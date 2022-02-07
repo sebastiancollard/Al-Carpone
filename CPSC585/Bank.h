@@ -1,16 +1,16 @@
 #pragma once
 
 //These aren't really needed as constants but will keep them here for easy modification for now
-#define WIDTH	10.f
-#define DEPTH	10.f
-#define HEIGHT	20.f
+#define WIDTH	5.f
+#define DEPTH	5.f
+#define HEIGHT	10.f
 
 enum orient {N, E, S, W};	//N=1, E=2, S=3, W=4
 
 class Bank {
 private:
 	//Bank position on map (tile position?)
-	glm::vec3 pos = { 20.f, HEIGHT/2.f, 20.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
+	glm::vec3 pos = { 40.f, HEIGHT/2.f, 20.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
 
 	orient dir = N;		//Bank faces "north" by default
 

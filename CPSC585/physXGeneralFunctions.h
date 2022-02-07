@@ -36,7 +36,7 @@ void createBankActors() {
 	//BANK (BUILDING)
 	static PxU32 counter = 0;
 	PxVec3 b_pos(bank.getPos().x, bank.getPos().y, bank.getPos().z);
-	PxVec3 dimensions(bank.getWidth()/2.f, bank.getHeight()/2.f, bank.getDepth()/2.f);
+	PxVec3 dimensions(bank.getWidth(), bank.getHeight(), bank.getDepth());
 	
 	// Setting up a bank(rigidStatic) as a simple box for now
 	PxShape* shape = gPhysics->createShape(PxBoxGeometry(dimensions), *gMaterial);			//PxVec3 represents the half-extents (w, h, d). Put in arbitrary values for now
@@ -60,16 +60,16 @@ void createBankActors() {
 	t_pos.y = 0.f;							//set height to 0 so the car can actually touch it
 	switch (bank.getDir()) {
 		case 0:		//N
-			t_pos.z -= bank.getDepth();		//trigger is further back in the y direction
+			t_pos.z -= (bank.getDepth() / 2.f + 7.f);		//trigger is further back in the y direction
 			break;
 		case 1:		//E
-			t_pos.x += bank.getWidth();		//trigger is further "right"
+			t_pos.x += (bank.getDepth() / 2.f + 7.f);		//trigger is further "right"
 			break;
 		case 2:		//S
-			t_pos.z += bank.getDepth();		//trigger is further forward in the y direction
+			t_pos.z += (bank.getDepth() / 2.f + 7.f);		//trigger is further forward in the y direction
 			break;
 		case 3:		//W
-			t_pos.x += bank.getWidth();		//trigger is further "left"
+			t_pos.x -= (bank.getDepth() / 2.f + 7.f);		//trigger is further "left"
 			break;
 	}
 	PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
