@@ -70,11 +70,6 @@ using namespace snippetvehicle;
 //Vehicle tuning settings
 #include"physXVehicleSettings.h"
 
-#include"Player.h"
-Player player;
-
-#include"State.h"
-State state;
 
 //Set up physx global variables
 //Should be checked over to see what actually needs to be global and what doesnt
@@ -116,10 +111,11 @@ State state;
 #include "DebugPanel.h"
 #include"Vehicle.h"
 #include"Player.h"
-
 Player player;
+
 #include "Bank.h"
 Bank bank;
+
 std::vector<Vehicle*> activeVehicles;
 
 #include "Camera.h"
