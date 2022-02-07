@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Graphics\imgui">
       <UniqueIdentifier>{e62bfa72-fdeb-49b5-9f72-a38dcab6f44c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{5a9be743-1288-4793-9bde-643d72276936}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -99,6 +102,9 @@
     <ClCompile Include="imgui\imgui_demo.cpp">
       <Filter>Source Files\Graphics\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="physXVehicleSettings.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init.h">
@@ -117,9 +123,6 @@
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="physXVehicleFunctions.h">
-      <Filter>Header Files\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="physXVehicleSettings.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="Vehicle.h">
       <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="physXVehicleSettings.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

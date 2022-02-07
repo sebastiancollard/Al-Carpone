@@ -9,10 +9,10 @@
 class DebugPanel {
 
 public:
-
-	bool enabled = false;
+	
 	bool showPanel = false;
 	bool updateValues = false;
+	ImVec4 clear_color;
 
 	DebugPanel(GLFWwindow* window);
 	void cleanUp();

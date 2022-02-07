@@ -111,14 +111,9 @@ int main()
 		else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
 		
 
-		// DEBUG MODE
-		if (state.debugMode) { // Camera is deactivated
-			debugPanel.draw();
-		}
-		else { 
-			activeCamera->handleInput(window);
-			if (activeCamera == &boundCamera) boundCamera.checkClipping(window);
-		}
+		// Camera is disabled in DEBUG MODE
+		if (!state.debugMode) activeCamera->handleInput(window);
+		if (activeCamera == &boundCamera) boundCamera.checkClipping(window);
 
 
 		// view/projection transformations
@@ -191,6 +186,11 @@ int main()
 					}
 				}
 			}
+		}
+
+		// DEBUG MODE
+		if (state.debugMode) { // Camera is deactivated
+			debugPanel.draw();
 		}
 
 		// Swap the back buffer with the front buffer

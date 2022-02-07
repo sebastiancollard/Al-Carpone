@@ -67,9 +67,6 @@ void printVec3(std::string name, glm::vec3 v) {
 using namespace physx;
 using namespace snippetvehicle;
 
-//Vehicle tuning settings
-#include"physXVehicleSettings.h"
-
 
 //Set up physx global variables
 //Should be checked over to see what actually needs to be global and what doesnt
@@ -108,18 +105,14 @@ PxRigidStatic* gGroundPlane = NULL;
 #include"State.h"
 State state;
 
-#include"Vehicle.h"
-
-#include"Player.h"
-Player player;
-
 #include "DebugPanel.h"
+#include"Vehicle.h"
+#include"Player.h"
 
-#include "Camera.h"
-
+Player player;
 std::vector<Vehicle*> activeVehicles;
 
-
+#include "Camera.h"
 //All of the physx functions needed for the vehicle sdk
 #include"physXVehicleFunctions.h"
 //All of the physx functions needed for setup + running
