@@ -61,9 +61,8 @@ int main()
 
 	Model groundPlane(ACTIVE_LEVEL_TEXTURED_MODEL_PATH);
 
-	Mesh building;
-	meshes.push_back(building);
-	building.createBox(bank.getWidth(), bank.getHeight(), bank.getDepth());
+	//Mesh building;
+	//building.createBox(bank.getWidth(), bank.getHeight(), bank.getDepth());
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
@@ -175,15 +174,15 @@ int main()
 					if (h.any().getType() == PxGeometryType::eBOX)	//Bank is just a box for now.
 					{
 						glActiveTexture(GL_TEXTURE0);
-						texture_crate.Bind();
+						//texture_crate.Bind();
 						// This texture is also sent to the fragment shader 
-						texture_crate.texUnit(shaderProgram, "tex0", 0);
+						//texture_crate.texUnit(shaderProgram, "tex0", 0);
 						// Export camera matrix to the vertex shader
-						camera.exportMatrix(shaderProgram, "camMatrix");
+						//camera.exportMatrix(shaderProgram, "camMatrix");
 						// Export the shape's model matrix to the vertex shader
-						glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
+						//glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 						// render a box (hardcoded with same dimensions of the bank object)
-						building.render();
+						//building.render();
 					}
 					else if (h.any().getType() == PxGeometryType::eSPHERE)
 					{
