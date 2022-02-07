@@ -1,5 +1,12 @@
-#pragma once
-class Player : public Vehicle{
+#include <iostream>
+#include <queue>
+
+class Player : public Vehicle {
+private:
+	bool can_rob = false;				//If player "collides" with trigger capsule, this shoudl be set to true
+	int cash = 0;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+
+
 public:
 	
 	Player() {}
@@ -56,5 +63,23 @@ public:
 			state.shift_isHeld = false;
 		}
 		
+	}
+
+
+	int getCash() { 
+		return cash; 
+	}
+	bool canRob() { 
+		return can_rob; 
+	}
+	
+	void setRob(bool b) { 
+		can_rob = b; 
+	}
+	void addCash(int amount) {
+		cash += amount;
+	}
+	void setCash(int amount) {
+		cash = amount;
 	}
 };

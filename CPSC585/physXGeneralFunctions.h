@@ -1,4 +1,5 @@
 #pragma once
+#include "PxCustomEventCallback.h"
 
 void createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
 {
@@ -29,6 +30,65 @@ PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, co
 
 	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 	return physics.createTriangleMesh(readBuffer);
+}
+
+void createBankActors() {
+	//BANK (BUILDING)
+	static PxU32 counter = 0;
+	PxVec3 b_pos(bank.getPos().x, bank.getPos().y, bank.getPos().z);
+	PxVec3 dimensions(bank.getWidth()/2.f, bank.getHeight()/2.f, bank.getDepth()/2.f);
+	
+	// Setting up a bank(rigidStatic) as a simple box for now
+	PxShape* shape = gPhysics->createShape(PxBoxGeometry(dimensions), *gMaterial);			//PxVec3 represents the half-extents (w, h, d). Put in arbitrary values for now
+	PxTransform bankPos(b_pos);																	//position of the bank
+	
+	PxRigidStatic* body = gPhysics->createRigidStatic(bankPos);									//Static as the buildung will not move
+	PxFilterData bankFilter(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);	//(I think) these should set this actor as an obstacle to the vehicle
+	
+	shape->setSimulationFilterData(bankFilter);
+	body->attachShape(*shape);
+	gScene->addActor(*body);
+	physx_actors.push_back({ body, counter++ });
+	shape->release();
+
+	bank.bankPtr = body;
+	
+
+	//ROBBING TRIGGER
+	//Setting up the capsule that will act as a trigger. This is set up in "front" of the bank (will need bank position and orientation).
+	PxVec3 t_pos = b_pos;
+	t_pos.y = 0.f;							//set height to 0 so the car can actually touch it
+	switch (bank.getDir()) {
+		case 0:		//N
+			t_pos.z -= bank.getDepth();		//trigger is further back in the y direction
+			break;
+		case 1:		//E
+			t_pos.x += bank.getWidth();		//trigger is further "right"
+			break;
+		case 2:		//S
+			t_pos.z += bank.getDepth();		//trigger is further forward in the y direction
+			break;
+		case 3:		//W
+			t_pos.x += bank.getWidth();		//trigger is further "left"
+			break;
+	}
+	PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
+	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
+
+	PxTransform triggerPos(t_pos);											//position of the trigger.
+
+	PxRigidStatic* triggerBody = gPhysics->createRigidStatic(triggerPos);
+	PxFilterData triggerFilter(COLLISION_FLAG_BANK_TRIGGER, COLLISION_FLAG_BANK_TRIGGER_AGAINST, 0, 0);
+
+	triggerShape->setSimulationFilterData(triggerFilter);
+	triggerBody->attachShape(*triggerShape);
+	gScene->addActor(*triggerBody);
+
+	physx_actors.push_back({ triggerBody, counter++ });
+	triggerShape->release();
+
+	bank.triggerPtr = triggerBody;
 }
 
 PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
@@ -93,6 +153,11 @@ void initPhysics()
 	sceneDesc.filterShader = VehicleFilterShader;
 
 	gScene = gPhysics->createScene(sceneDesc);
+
+	//Set the callback to the custom callback class (subclass of SimulationEventCallback -- this in Player.h for now)
+	gScene->setSimulationEventCallback(&callback);
+	
+
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 	if (pvdClient)
 	{
@@ -124,13 +189,15 @@ void initPhysics()
 	player = Player(ID);
 	//Add it to the list of active vehicles
 	activeVehicles.push_back(&player);
+
+	createBankActors();
 }
 
 
 
-void stepPhysics(GLFWwindow* window)
-{
 
+	void stepPhysics(GLFWwindow* window)
+	{
 	float timestep = state.timeStep * state.simulationSpeed; // 1.0f / 60.0f;
 
 	while (timestep > 0) {
