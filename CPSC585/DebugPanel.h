@@ -12,8 +12,26 @@ public:
 	
 	bool showPanel = false;
 	bool updateValues = false;
-	ImVec4 clear_color;
 
+	// Color (currently unused)
+	ImVec4 color;
+
+	// Steer Vs Forward Speed Data
+	float* speed0;
+	float* speed5;
+	float* speed30;
+	float* speed120;
+
+	// KeySmoothing Data
+	float* key_riseRates[5];
+	float* key_fallRates[5];
+
+	// PadSmoothing Data
+	float* pad_riseRates[5];
+	float* pad_fallRates[5];
+
+
+	// Functions
 	DebugPanel(GLFWwindow* window);
 	void cleanUp();
 

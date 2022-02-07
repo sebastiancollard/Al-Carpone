@@ -87,7 +87,7 @@ int main()
 		glfwPollEvents();
 		//Simulate physics through the timestep
 		stepPhysics(window);
-
+		
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		// Clean the back buffer and depth buffer
