@@ -277,7 +277,42 @@ public:
             //yaw = 0;
             updateLocked();
         }
-        
+
+        //old version of moving camera with joystick
+        /*
+        if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+        {
+            //get controller name
+            //const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
+            //std::cout << controller_name << std::endl;
+
+            GLFWgamepadstate state;
+
+            if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+            {
+                if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) >= 0.25)
+                {
+                    float rotX = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
+                    yaw += rotX;
+                    //std::cout << "right X: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] << std::endl;
+                }
+                if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) >= 0.25)
+                {
+                    float rotY = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
+                    pitch += rotY;
+                    //std::cout << "right Y: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] << std::endl;
+                }
+
+                //bind yaw
+                if (yaw > 2 * M_PI) yaw -= 2 * M_PI;
+                if (yaw < -2 * M_PI) yaw += 2 * M_PI;
+
+                //bind pitch
+                if (pitch > M_PI / 2.25f) pitch = M_PI / 2.25f;
+                if (pitch < -M_PI / 2.25f) pitch = -M_PI / 2.25f;
+            }
+        }
+        */
 
         glm::vec3 velocity = getGLMvec3(player.vehiclePtr->getRigidDynamicActor()->getLinearVelocity());
         //printVec3("velocity", velocity);

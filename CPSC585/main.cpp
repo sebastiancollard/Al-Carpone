@@ -115,8 +115,22 @@ int main()
 			//std::cout << "Robbing bank...." << std::endl;
 			player.addCash(CASH_ROBBED_PER_FRAME);
 		}	
-	
+		if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+		{
+			//get controller name
+			//const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
+			//std::cout << controller_name << std::endl;
 
+			GLFWgamepadstate state;
+			if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+			{
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE])
+				{
+					//std::cout << "CIRCLE (xbox b, ns pro a)" << std::endl;
+					player.addCash(CASH_ROBBED_PER_FRAME);
+				}
+			}
+		}
 
 		//Check for special inputs (currently only camera mode change)
 		checkSpecialInputs(window);
