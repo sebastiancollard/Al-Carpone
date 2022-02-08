@@ -73,40 +73,40 @@ void DebugPanel::draw() {
 
         Spacing();
         if (CollapsingHeader("Steer Vs Forward Speed")) {
-            SliderFloat("Speed 0", speed0, 0, 1.0);
-            SliderFloat("Speed 5", speed5, 0, 1.0);
-            SliderFloat("Speed 30", speed30, 0, 1.0);
-            SliderFloat("Speed 120", speed120, 0, 1.0);
+            SliderFloat("Speed 0", speed0, speed_range[0], speed_range[1]);
+            SliderFloat("Speed 5", speed5, speed_range[0], speed_range[1]);
+            SliderFloat("Speed 30", speed30, speed_range[0], speed_range[1]);
+            SliderFloat("Speed 120", speed120, speed_range[0], speed_range[1]);
         }
 
         Spacing();
         if (CollapsingHeader("Key Smoothing Data")) {
-            SliderFloat("Acceleration Rise Rate", key_riseRates[0], 0.f, 10.f);
-            SliderFloat("Brake Rise Rate", key_riseRates[1], 0.f, 10.f);
-            SliderFloat("HandBrake Rise Rate", key_riseRates[2], 0.f, 10.f);
-            SliderFloat("Steer Left Rise Rate", key_riseRates[3], 0.f, 10.f);
-            SliderFloat("Steer Right Rise Rate", key_riseRates[4], 0.f, 10.f);
+            SliderFloat("Acceleration Rise Rate", key_riseRates[0], rates_range[0], rates_range[1]);
+            SliderFloat("Brake Rise Rate", key_riseRates[1], rates_range[0], rates_range[1]);
+            SliderFloat("HandBrake Rise Rate", key_riseRates[2], rates_range[0], rates_range[1]);
+            SliderFloat("Steer Left Rise Rate", key_riseRates[3], rates_range[0], rates_range[1]);
+            SliderFloat("Steer Right Rise Rate", key_riseRates[4], rates_range[0], rates_range[1]);
             Spacing();
-            SliderFloat("Acceleration Fall Rate", key_fallRates[0], 0.f, 10.f);
-            SliderFloat("Brake Fall Rate", key_fallRates[1], 0.f, 10.f);
-            SliderFloat("HandBrake Fall Rate", key_fallRates[2], 0.f, 10.f);
-            SliderFloat("Steer Left Fall Rate", key_fallRates[3], 0.f, 10.f);
-            SliderFloat("Steer Right Fall Rate", key_fallRates[4], 0.f, 10.f);
+            SliderFloat("Acceleration Fall Rate", key_fallRates[0], rates_range[0], rates_range[1]);
+            SliderFloat("Brake Fall Rate", key_fallRates[1], rates_range[0], rates_range[1]);
+            SliderFloat("HandBrake Fall Rate", key_fallRates[2], rates_range[0], rates_range[1]);
+            SliderFloat("Steer Left Fall Rate", key_fallRates[3], rates_range[0], rates_range[1]);
+            SliderFloat("Steer Right Fall Rate", key_fallRates[4], rates_range[0], rates_range[1]);
         }
 
         Spacing();
         if (CollapsingHeader("Pad Smoothing Data")) {
-            SliderFloat("Acceleration Rise Rate", pad_riseRates[0], 0.f, 10.f);
-            SliderFloat("Brake Rise Rate", pad_riseRates[1], 0.f, 10.f);
-            SliderFloat("HandBrake Rise Rate", pad_riseRates[2], 0.f, 10.f);
-            SliderFloat("Steer Left Rise Rate", pad_riseRates[3], 0.f, 10.f);
-            SliderFloat("Steer Right Rise Rate", pad_riseRates[4], 0.f, 10.f);
+            SliderFloat("Acceleration Rise Rate", pad_riseRates[0], rates_range[0], rates_range[1]);
+            SliderFloat("Brake Rise Rate", pad_riseRates[1], rates_range[0], rates_range[1]);
+            SliderFloat("HandBrake Rise Rate", pad_riseRates[2], rates_range[0], rates_range[1]);
+            SliderFloat("Steer Left Rise Rate", pad_riseRates[3], rates_range[0], rates_range[1]);
+            SliderFloat("Steer Right Rise Rate", pad_riseRates[4], rates_range[0], rates_range[1]);
             Spacing();
-            SliderFloat("Acceleration Fall Rate", pad_fallRates[0], 0.f, 10.f);
-            SliderFloat("Brake Fall Rate", pad_fallRates[1], 0.f, 10.f);
-            SliderFloat("HandBrake Fall Rate", pad_fallRates[2], 0.f, 10.f);
-            SliderFloat("Steer Left Fall Rate", pad_fallRates[3], 0.f, 10.f);
-            SliderFloat("Steer Right Fall Rate", pad_fallRates[4], 0.f, 10.f);
+            SliderFloat("Acceleration Fall Rate", pad_fallRates[0], rates_range[0], rates_range[1]);
+            SliderFloat("Brake Fall Rate", pad_fallRates[1], rates_range[0], rates_range[1]);
+            SliderFloat("HandBrake Fall Rate", pad_fallRates[2], rates_range[0], rates_range[1]);
+            SliderFloat("Steer Left Fall Rate", pad_fallRates[3], rates_range[0], rates_range[1]);
+            SliderFloat("Steer Right Fall Rate", pad_fallRates[4], rates_range[0], rates_range[1]);
         }
 
         // Display FPS

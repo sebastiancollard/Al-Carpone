@@ -8,7 +8,7 @@
 
 class DebugPanel {
 
-public:
+private:
 	
 	bool showPanel = false;
 	bool updateValues = false;
@@ -30,7 +30,11 @@ public:
 	float* pad_riseRates[5];
 	float* pad_fallRates[5];
 
+	// Rages
+	const float speed_range[2] = { 0.f, 1.f };
+	const float rates_range [2] = { 0.f, 50.f };
 
+public:
 	// Functions
 	DebugPanel(GLFWwindow* window);
 	void cleanUp();
