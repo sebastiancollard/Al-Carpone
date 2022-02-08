@@ -2,6 +2,7 @@
 #include"init.h"
 
 
+#define CASH_ROBBED_PER_FRAME 5	//$5 per frame for now?
 
 int main()
 {
@@ -59,6 +60,11 @@ int main()
 	CarModel4W car(car_chassis, car_lwheel, car_rwheel);
 
 	Model groundPlane(ACTIVE_LEVEL_TEXTURED_MODEL_PATH);
+
+	//Mesh building;
+	//building.createBox(bank.getWidth(), bank.getHeight(), bank.getDepth());
+	Model bankModel(BANK_BUILDING_PATH);
+
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
@@ -103,8 +109,16 @@ int main()
 				PxSphereGeometry(4),
 				PxVec3(activeCamera->dir.x , activeCamera->dir.y, activeCamera->dir.z) * 175.0f
 			);
+		
+		// Handle bank robbing
+		if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && (player.canRob())) {
+			//std::cout << "Robbing bank...." << std::endl;
+			player.addCash(CASH_ROBBED_PER_FRAME);
+		}	
+	
 
-		// Check for special inputs (outside car controls)
+
+		//Check for special inputs (currently only camera mode change)
 		checkSpecialInputs(window);
 
 		if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
@@ -158,9 +172,13 @@ int main()
 					model = glm::make_mat4(&shapePose.column0.x);
 
 					// check what geometry type the shape is
-					if (h.any().getType() == PxGeometryType::eBOX)
+					if (h.any().getType() == PxGeometryType::eBOX)	//Bank is just a box for now.
 					{
-						
+						//glActiveTexture(GL_TEXTURE0);
+						model = scale(model, {bank.getWidth(), bank.getHeight(), bank.getDepth()});
+						shaderProgram.setMat4("model", model);
+						bankModel.Draw(shaderProgram);
+
 					}
 					else if (h.any().getType() == PxGeometryType::eSPHERE)
 					{

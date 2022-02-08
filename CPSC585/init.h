@@ -12,6 +12,10 @@
 #define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
 #define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
 
+
+#define BANK_BUILDING_PATH "models/al_carpone/bank_box.obj"
+
+
 //#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/ai_testlevel.obj"
 //#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/ai_testlevel_physx_model.obj"
 
@@ -67,6 +71,9 @@ void printVec3(std::string name, glm::vec3 v) {
 using namespace physx;
 using namespace snippetvehicle;
 
+//Vehicle tuning settings
+#include"physXVehicleSettings.h"
+
 
 //Set up physx global variables
 //Should be checked over to see what actually needs to be global and what doesnt
@@ -108,8 +115,11 @@ State state;
 #include "DebugPanel.h"
 #include"Vehicle.h"
 #include"Player.h"
-
 Player player;
+
+#include "Bank.h"
+Bank bank;
+
 std::vector<Vehicle*> activeVehicles;
 
 #include "Camera.h"
