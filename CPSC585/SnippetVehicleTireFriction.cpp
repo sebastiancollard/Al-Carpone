@@ -31,6 +31,9 @@
 #include "snippetvehiclecommon/SnippetVehicleTireFriction.h"
 #include "PxPhysicsAPI.h"
 
+#define NORMAL_TIRE_FRICTION 10.0f //originally 1.f
+#define WORN_TIRE_FRICTION 0.1f //originally 0.1f
+
 namespace snippetvehicle
 {
 
@@ -40,7 +43,7 @@ using namespace physx;
 static PxF32 gTireFrictionMultipliers[MAX_NUM_SURFACE_TYPES][MAX_NUM_TIRE_TYPES]=
 {
 	//NORMAL,	WORN
-	{1.00f,		0.1f}//TARMAC
+	{NORMAL_TIRE_FRICTION,		WORN_TIRE_FRICTION}//TARMAC
 };
 
 PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const PxMaterial* defaultMaterial)

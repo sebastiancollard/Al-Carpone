@@ -1,5 +1,5 @@
-# Blender MTL File: 'test.blend'
-# Material Count: 17
+# Blender MTL File: 'al_carpone_model_chassis_physx.blend'
+# Material Count: 18
 
 newmtl BELT
 Ns 225.000000
@@ -65,6 +65,17 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\grey_0631.png
+
+newmtl GREY_0859
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 0.831373 0.847059 0.858824
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd textures\\GREY_0859.png
 
 newmtl GREY_0859.002
 Ns 179.999996

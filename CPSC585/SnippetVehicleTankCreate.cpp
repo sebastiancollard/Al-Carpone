@@ -166,7 +166,7 @@ PxVehicleDriveTank* createVehicleTank(const VehicleDesc& tankDesc, PxPhysics* ph
 	PxRigidDynamic* tankActor = NULL;
 	{
 		//Construct a convex mesh for a cylindrical wheel.
-		PxConvexMesh* wheelMesh = createWheelMesh(wheelWidth, wheelRadius, *physics, *cooking);
+		PxConvexMesh* wheelMesh = createWheelMesh(wheelWidth, wheelRadius, *physics, *cooking, 0);
 		//Assume all wheels are identical for simplicity.
 		PxConvexMesh* wheelConvexMeshes[PX_MAX_NB_WHEELS];
 		PxMaterial* wheelMaterials[PX_MAX_NB_WHEELS];
@@ -177,7 +177,7 @@ PxVehicleDriveTank* createVehicleTank(const VehicleDesc& tankDesc, PxPhysics* ph
 		}
 
 		//Chassis just has a single convex shape for simplicity.
-		PxConvexMesh* chassisConvexMesh = createChassisMesh(chassisDims, *physics, *cooking);
+		PxConvexMesh* chassisConvexMesh = createChassisMesh(chassisDims, *physics, *cooking, 0);
 		PxConvexMesh* chassisConvexMeshes[1] = {chassisConvexMesh};
 		PxMaterial* chassisMaterials[1] = {tankDesc.chassisMaterial};
 

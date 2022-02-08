@@ -1,23 +1,50 @@
 #pragma once
 
-VehicleDesc initVehicleDesc()
+#define AL_CARPONE_CHASSIS_MASS 1500.0f //original 1500.0f
+#define AL_CARPONE_WHEEL_MASS 20.0f //original 20.0f
+#define AL_CARPONE_CHASSIS_DIMS PxVec3(2.00344f, 1.15007f, 5.41695f)
+#define AL_CARPONE_WHEEL_RADIUS 0.3005f
+#define AL_CARPONE_WHEEL_WIDTH 0.295f
+
+
+#define POLICE_CAR_CHASSIS_MASS 1500.0f //original 1500.0f
+#define POLICE_CAR_WHEEL_MASS 20.0f //original 20.0f
+#define POLICE_CAR_CHASSIS_DIMS PxVec3(2.07574f, 1.45513, 5.62142)
+#define POLICE_CAR_WHEEL_RADIUS 0.30;//92494f
+#define POLICE_CAR_WHEEL_WIDTH 0.347541f
+ 
+
+VehicleDesc initVehicleDesc(VEHICLE_TYPE type)
 {
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1500.0f;
-	const PxVec3 chassisDims(1.99f, 1.15f, 4.94f);	// current chassis mesh has these dimensions (inspected in blender)
+	PxF32 chassisMass = AL_CARPONE_CHASSIS_MASS;
+	if (type == POLICE_CAR) chassisMass = POLICE_CAR_CHASSIS_MASS;
+
+	PxVec3 chassisDims = AL_CARPONE_CHASSIS_DIMS;	// current chassis mesh has these dimensions (inspected in blender)
+	if (type == POLICE_CAR) chassisDims = POLICE_CAR_CHASSIS_DIMS;
+
 	const PxVec3 chassisMOI
 	((chassisDims.y * chassisDims.y + chassisDims.z * chassisDims.z) * chassisMass / 12.0f,
 		(chassisDims.x * chassisDims.x + chassisDims.z * chassisDims.z) * 0.8f * chassisMass / 12.0f,
 		(chassisDims.x * chassisDims.x + chassisDims.y * chassisDims.y) * chassisMass / 12.0f);
-	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y * 0.5f + 0.65f, 0.25f);
 
+	//const PxVec3 chassisCMOffset(0.0f, -chassisDims.y * 0.5f + 0.65f, 0.25f);
+	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y * 0.5f - 1.5f, 0.25f);
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
-	const PxF32 wheelMass = 20.0f;
-	const PxF32 wheelRadius = 0.3005f;	// current wheel mesh has diameter of 0.601m (inspected in blender)
-	const PxF32 wheelWidth = 0.295f;	// and this width	(inspected in blender)
+
+	PxF32 wheelMass = AL_CARPONE_WHEEL_MASS;
+	if (type == POLICE_CAR) wheelMass = POLICE_CAR_WHEEL_MASS;
+
+	PxF32 wheelRadius = AL_CARPONE_WHEEL_RADIUS;	// current wheel mesh has diameter of 0.601m (inspected in blender)
+	if (type == POLICE_CAR)  wheelRadius = POLICE_CAR_WHEEL_RADIUS;
+
+	PxF32 wheelWidth = AL_CARPONE_WHEEL_WIDTH;	// and this width	(inspected in blender)
+	if (type == POLICE_CAR) {
+		wheelRadius = POLICE_CAR_WHEEL_WIDTH;
+	}
 	const PxF32 wheelMOI = 0.5f * wheelMass * wheelRadius * wheelRadius;
 	const PxU32 nbWheels = 4;
 
@@ -60,17 +87,17 @@ void startBrakeMode()
 
 void startTurnHardLeftMode()
 {
-	gVehicleInputData.setAnalogSteer(1.0f);
+	gVehicleInputData.setAnalogSteer(0.5f);
 }
 
 void startTurnHardRightMode()
 {
-	gVehicleInputData.setAnalogSteer(-1.0f);
+	gVehicleInputData.setAnalogSteer(-0.5f);
 }
 
 void startHandbrakeMode()
 {
-	gVehicleInputData.setAnalogHandbrake(1.0f);
+	gVehicleInputData.setAnalogHandbrake(0.5f);
 }
 
 void releaseAllControls()

@@ -60,13 +60,7 @@
     <ClCompile Include="SnippetVehicleFilterShader.cpp">
       <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
-    <ClCompile Include="SnippetVehicleNoDriveCreate.cpp">
-      <Filter>Resource Files\Snippet</Filter>
-    </ClCompile>
     <ClCompile Include="SnippetVehicleSceneQuery.cpp">
-      <Filter>Resource Files\Snippet</Filter>
-    </ClCompile>
-    <ClCompile Include="SnippetVehicleTankCreate.cpp">
       <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
     <ClCompile Include="SnippetVehicleTireFriction.cpp">
@@ -104,6 +98,12 @@
     </ClCompile>
     <ClCompile Include="physXVehicleSettings.cpp">
       <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SnippetVehicleNoDriveCreate.cpp">
+      <Filter>Resource Files\Snippet</Filter>
+    </ClCompile>
+    <ClCompile Include="SnippetVehicleTankCreate.cpp">
+      <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

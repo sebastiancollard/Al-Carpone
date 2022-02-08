@@ -25,8 +25,12 @@ void checkSpecialInputs(GLFWwindow* window)
 
 	// Debug Mode
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) {
-		state.debugMode = !state.debugMode;
+		if (!state.f5_isHeld) {
+			state.debugMode = !state.debugMode;
+		}
+		state.f5_isHeld = true;
 	}
+	else state.f5_isHeld = false;
 
 	// Freemode Camera
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
@@ -41,7 +45,9 @@ void checkSpecialInputs(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 	{
 		if (!state.R_isHeld) {
-			player.reset();
+			for (Vehicle* v : activeVehicles) {
+				v->reset();
+			}
 		}
 		state.R_isHeld = true;
 	}

@@ -12,7 +12,7 @@ public:
 	Player() {}
 
 	//Call parrent constructor
-	Player(unsigned int ID) : Vehicle(ID) {}
+	Player(VEHICLE_TYPE type) : Vehicle(type, PxVec3(0,0,0)) {}
 
 
 	// Handle all key inputs relevant to driving

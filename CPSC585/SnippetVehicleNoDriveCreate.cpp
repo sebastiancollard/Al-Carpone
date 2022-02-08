@@ -183,7 +183,7 @@ PxVehicleNoDrive* createVehicleNoDrive(const VehicleDesc& vehicleDesc, PxPhysics
 	PxRigidDynamic* vehActor = NULL;
 	{
 		//Construct a convex mesh for a cylindrical wheel.
-		PxConvexMesh* wheelMesh = createWheelMesh(wheelWidth, wheelRadius, *physics, *cooking);
+		PxConvexMesh* wheelMesh = createWheelMesh(wheelWidth, wheelRadius, *physics, *cooking, 0);
 		//Assume all wheels are identical for simplicity.
 		PxConvexMesh* wheelConvexMeshes[PX_MAX_NB_WHEELS];
 		PxMaterial* wheelMaterials[PX_MAX_NB_WHEELS];
@@ -196,7 +196,7 @@ PxVehicleNoDrive* createVehicleNoDrive(const VehicleDesc& vehicleDesc, PxPhysics
 		}
 
 		//Chassis just has a single convex shape for simplicity.
-		PxConvexMesh* chassisConvexMesh = createChassisMesh(chassisDims, *physics, *cooking);
+		PxConvexMesh* chassisConvexMesh = createChassisMesh(chassisDims, *physics, *cooking, 0);
 		PxConvexMesh* chassisConvexMeshes[1] = {chassisConvexMesh};
 		PxMaterial* chassisMaterials[1] = {vehicleDesc.chassisMaterial};
 

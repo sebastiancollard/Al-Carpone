@@ -3,6 +3,12 @@
 #include <queue>
 #include "physXVehicleSettings.h"
 
+enum VEHICLE_TYPE
+{
+	AL_CARPONE = 0,
+	POLICE_CAR
+};
+
 class Vehicle {
 public:
 
@@ -14,22 +20,22 @@ public:
 
 	Vehicle() {}
 
-	Vehicle(unsigned int ID) {
+	Vehicle(PxTransform T, VEHICLE_TYPE type) {
 		//Create a vehicle that will drive on the plane.
 
-		extern VehicleDesc initVehicleDesc();
+		extern VehicleDesc initVehicleDesc(VEHICLE_TYPE);
 		extern void startBrakeMode();
 
-		VehicleDesc vehicleDesc = initVehicleDesc();
-		vehiclePtr = createVehicle4W(vehicleDesc, gPhysics, gCooking);
-		PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y * 0.5f + vehicleDesc.wheelRadius + 1.0f), 0), PxQuat(PxIdentity));
+		VehicleDesc vehicleDesc = initVehicleDesc(type);
+		vehiclePtr = createVehicle4W(vehicleDesc, gPhysics, gCooking, type);
+		PxTransform startTransform = T;
 		setResetPoint(startTransform);
 		vehiclePtr->getRigidDynamicActor()->setGlobalPose(startTransform);
 
 
 		gScene->addActor(*vehiclePtr->getRigidDynamicActor());
 		actorPtr = vehiclePtr->getRigidDynamicActor();
-		physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), ID });
+		physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), physx_actors.back().actorId + 1 });
 
 		//Set the vehicle to rest in first gear.
 		//Set the vehicle to use auto-gears.
@@ -40,6 +46,45 @@ public:
 		startBrakeMode();
 	}
 
+	Vehicle(VEHICLE_TYPE type, PxVec3 startOffset) {
+		//Create a vehicle that will drive on the plane.
+
+		extern VehicleDesc initVehicleDesc(VEHICLE_TYPE);
+		extern void startBrakeMode();
+
+		VehicleDesc vehicleDesc = initVehicleDesc(type);
+		vehiclePtr = createVehicle4W(vehicleDesc, gPhysics, gCooking, type);
+		PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y * 0.5f + vehicleDesc.wheelRadius + 1.0f), 0) + startOffset, PxQuat(PxIdentity));
+		setResetPoint(startTransform);
+		vehiclePtr->getRigidDynamicActor()->setGlobalPose(startTransform);
+
+
+		gScene->addActor(*vehiclePtr->getRigidDynamicActor());
+		actorPtr = vehiclePtr->getRigidDynamicActor();
+		if (physx_actors.size() == 0) {
+			physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), 0 });
+		}
+		else {
+			physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), physx_actors.back().actorId + 1 });
+		}
+		
+
+		//Set the vehicle to rest in first gear.
+		//Set the vehicle to use auto-gears.
+		vehiclePtr->setToRestState();
+		vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		vehiclePtr->mDriveDynData.setUseAutoGears(true);
+
+		startBrakeMode();
+	}
+
+	PxTransform getStartTransform() {
+		return startTransform;
+	}
+
+	void moveStartPoint(PxVec3 v) {
+		startTransform.p = v;
+	}
 
 	glm::vec3 getLinearVelocity() {
 		PxVec3 velo = vehiclePtr->getRigidDynamicActor()->getLinearVelocity();

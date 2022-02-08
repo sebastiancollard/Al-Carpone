@@ -51,13 +51,24 @@ int main()
 	initPhysics();
 
 	//Create base meshes
-	std::vector<Model> models;
+	//std::vector<Model> models;
 
 	Model car_chassis(CAR_CHASSIS_PATH);
 	Model car_lwheel(CAR_LWHEEL_PATH);
 	Model car_rwheel(CAR_RWHEEL_PATH);
 
 	CarModel4W car(car_chassis, car_lwheel, car_rwheel);
+
+	//Test enemy
+	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
+	Model police_car_lwheel(POLICE_CAR_LWHEEL_PATH);
+	Model police_car_rwheel(POLICE_CAR_RWHEEL_PATH);
+
+	CarModel4W police_car(police_car_chassis, police_car_lwheel, police_car_rwheel);
+
+	Vehicle police_car_vehicle(POLICE_CAR, PxVec3(10.0f,0.0f,0.0f));
+
+	activeVehicles.push_back(&police_car_vehicle);
 
 	Model groundPlane(ACTIVE_LEVEL_TEXTURED_MODEL_PATH);
 
@@ -115,8 +126,6 @@ int main()
 			//std::cout << "Robbing bank...." << std::endl;
 			player.addCash(CASH_ROBBED_PER_FRAME);
 		}	
-	
-
 
 		//Check for special inputs (currently only camera mode change)
 		checkSpecialInputs(window);
@@ -185,21 +194,25 @@ int main()
 
 					}
 					else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
+						
+						CarModel4W* activeCar;
+						activeCar = &car;
+						if (i == 3) activeCar = &police_car;
 
 						if (j == 0) {
-							car.Draw(FRWHEEL, shaderProgram, model);;
+							activeCar->Draw(FRWHEEL, shaderProgram, model);;
 						}
 						else if (j == 1) {
-							car.Draw(FLWHEEL, shaderProgram, model);
+							activeCar->Draw(FLWHEEL, shaderProgram, model);
 						}
 						else if (j == 2) {
-							car.Draw(BRWHEEL, shaderProgram, model);
+							activeCar->Draw(BRWHEEL, shaderProgram, model);
 						}
 						else if (j == 3) {
-							car.Draw(BLWHEEL, shaderProgram, model);
+							activeCar->Draw(BLWHEEL, shaderProgram, model);
 						}
 						else if (j == 4) {
-							car.Draw(CHASSIS, shaderProgram, model);
+							activeCar->Draw(CHASSIS, shaderProgram, model);
 						}
 					}
 				}

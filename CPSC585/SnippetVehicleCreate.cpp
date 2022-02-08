@@ -39,6 +39,9 @@
 #define CHASSIS_PHYSX_OBJ_PATH "models/al_carpone/chassis_physx.obj"
 #define WHEEL_PHYSX_OBJ_PATH "models/al_carpone/car_Lwheel.obj"
 
+#define POLICE_CAR_CHASSIS_PHYSX_PATH "models/police_car/police_car_chassis_physx.obj"
+#define POLICE_CAR_WHEEL_PHYSX_PATH "models/police_car/police_car_wheel_left.obj"
+
 namespace snippetvehicle
 {
 
@@ -84,9 +87,11 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	return convexMesh;
 }
 
-PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
+PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int type)
 {
 	Model chassis(CHASSIS_PHYSX_OBJ_PATH);
+	if (type == 1) chassis = Model(POLICE_CAR_CHASSIS_PHYSX_PATH);
+	
 
 	std::vector<PxVec3> positions;
 	for (Vertex& v : chassis.meshes[0].vertices)
@@ -97,9 +102,10 @@ PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 	return createConvexMesh(verts,positions.size(),physics,cooking);
 }
 
-PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking)
+PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking,unsigned int type)
 {
 	Model wheel(WHEEL_PHYSX_OBJ_PATH);
+	if (type == 1) wheel = Model(POLICE_CAR_WHEEL_PHYSX_PATH);
 
 	std::vector<PxVec3> positions;
 	for (Vertex& v : wheel.meshes[0].vertices)

@@ -34,6 +34,7 @@ public:
 	bool Q_isHeld = false;
 	bool R_isHeld = false;
 	bool shift_isHeld = false;
+	bool f5_isHeld = false;
 
 	//Updates the state's time-sensitive variables.
 	void updateTime() {

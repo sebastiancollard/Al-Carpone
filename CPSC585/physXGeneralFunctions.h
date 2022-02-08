@@ -186,7 +186,7 @@ void initPhysics()
 	gScene->addActor(*gGroundPlane);
 
 	//Setup main player vehicle
-	player = Player(ID);
+	player = Player(AL_CARPONE);
 	//Add it to the list of active vehicles
 	activeVehicles.push_back(&player);
 
@@ -213,20 +213,26 @@ void initPhysics()
 		//Update the control inputs for the vehicle.dwd
 		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, player.vehicleInAir, *player.vehiclePtr);
 
-		//Raycasts.
-		PxVehicleWheels* vehicles[1] = { player.vehiclePtr };
-		PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
-		const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
-		PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+		for (Vehicle* v : activeVehicles) {
+			//Raycasts.
+			PxVehicleWheels* vehicles[1] = { v->vehiclePtr };
+			PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+			const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
+			PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+		
 
-		//Vehicle update.
-		const PxVec3 grav = gScene->getGravity();
-		PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
-		PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, player.vehiclePtr->mWheelsSimData.getNbWheels()} };
-		PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+			//Vehicle update.
+			const PxVec3 grav = gScene->getGravity();
+			PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
+			PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, player.vehiclePtr->mWheelsSimData.getNbWheels()} };
+			PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
 
-		//Work out if the vehicle is in the air.
-		player.vehicleInAir = player.vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+			//Work out if the vehicle is in the air.
+			v->vehicleInAir = v->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+
+		}
+
+		
 
 		//Scene update.
 		gScene->simulate(substep);

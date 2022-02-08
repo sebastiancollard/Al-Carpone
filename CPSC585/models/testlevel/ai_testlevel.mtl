@@ -1,4 +1,4 @@
-# Blender MTL File: 'ai_testlevel_physx_model.blend'
+# Blender MTL File: 'ai_testlevel.blend'
 # Material Count: 3
 
 newmtl Corner
@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd road_texture_corner.png
+map_Kd textures\\road_texture_corner.png
 
 newmtl Straight
 Ns 225.000000
@@ -21,7 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd road_texture.jpg
+map_Kd textures\\road_texture_straight.png
 
 newmtl T1
 Ns 225.000000
@@ -32,4 +32,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd road_texture_TintersectionWide.png
+map_Kd textures\\road_texture_intersection.png
