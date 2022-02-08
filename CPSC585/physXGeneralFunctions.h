@@ -57,22 +57,22 @@ void createBankActors() {
 	//ROBBING TRIGGER
 	//Setting up the capsule that will act as a trigger. This is set up in "front" of the bank (will need bank position and orientation).
 	PxVec3 t_pos = b_pos;
-	t_pos.y = 0.f;							//set height to 0 so the car can actually touch it
+	t_pos.y = t_pos.y - bank.getHeight();						//lower the trigger so it is at an appropiate height relative to the ground				
 	switch (bank.getDir()) {
 		case 0:		//N
-			t_pos.z -= (bank.getDepth() / 2.f + 7.f);		//trigger is further back in the y direction
+			t_pos.z -= (bank.getDepth() / 2.f + 6.f);		//trigger is further back in the y direction
 			break;
 		case 1:		//E
-			t_pos.x += (bank.getDepth() / 2.f + 7.f);		//trigger is further "right"
+			t_pos.x += (bank.getDepth() / 2.f + 6.f);		//trigger is further "right"
 			break;
 		case 2:		//S
-			t_pos.z += (bank.getDepth() / 2.f + 7.f);		//trigger is further forward in the y direction
+			t_pos.z += (bank.getDepth() / 2.f + 6.f);		//trigger is further forward in the y direction
 			break;
 		case 3:		//W
-			t_pos.x -= (bank.getDepth() / 2.f + 7.f);		//trigger is further "left"
+			t_pos.x -= (bank.getDepth() / 2.f + 6.f);		//trigger is further "left"
 			break;
 	}
-	PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
+	PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(3), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
 	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 	triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
 

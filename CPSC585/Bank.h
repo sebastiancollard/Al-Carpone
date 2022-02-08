@@ -10,7 +10,7 @@ enum orient {N, E, S, W};	//N=1, E=2, S=3, W=4
 class Bank {
 private:
 	//Bank position on map (tile position?)
-	glm::vec3 pos = { 40.f, HEIGHT/2.f, 20.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
+	glm::vec3 pos = { 40.f, HEIGHT/2.f + 3.5f, 20.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
 
 	orient dir = N;		//Bank faces "north" by default
 
