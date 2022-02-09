@@ -1,8 +1,55 @@
 //Initializes the physx system and all global variables and calls other includes.
 #include"init.h"
-
+#include <sstream>
+#include <string>
 
 #define CASH_ROBBED_PER_FRAME 5	//$5 per frame for now?
+
+std::vector<glm::vec3> load_positions(std::string path) {
+	std::vector<std::string> lines;
+	std::string line;
+
+	std::vector<glm::vec3> positions;
+
+	std::ifstream input(path);
+
+	if (!input.is_open()) {
+		printf("Error opening file: %s\n", path.c_str());
+		return positions;
+	}
+
+	while (getline(input, line)) {
+		if(line[0] == 'v') lines.push_back(line.substr(2));
+	}
+
+	for (std::string l : lines) {
+		std::vector<float> positions_raw;
+		std::string numberStr;
+
+		for (char c : l) {
+			if (c == ' ' && numberStr.size() > 0) {
+				float num;
+				stringstream(numberStr) >> num;
+
+				positions_raw.push_back(num);
+				numberStr.clear();
+			}
+			else numberStr.push_back(c);
+		}
+		float num;
+		stringstream(numberStr) >> num;
+
+		positions_raw.push_back(num);
+		numberStr.clear();
+
+		positions.push_back(glm::vec3(positions_raw[0], positions_raw[1], positions_raw[2]));
+		positions_raw.clear();
+	}
+
+
+
+	return positions;
+}
 
 int main()
 {
@@ -89,6 +136,11 @@ int main()
 	// Init to bound camera
 	activeCamera = &boundCamera;
 
+	std::vector<glm::vec3> light_positions = load_positions("models/testlevel/light_positions.obj");
+	for (glm::vec3 v : light_positions) {
+		//printVec3("v",v);
+	}
+
 	// Main while loop
 	while (!glfwWindowShouldClose(window) && !state.terminateProgram)
 	{
@@ -148,6 +200,13 @@ int main()
 		// send them to shader
 		shaderProgram.setMat4("projection", projection);
 		shaderProgram.setMat4("view", view);
+		
+		
+		for (int i = 0; i < light_positions.size(); i++) {
+			std::string path = "light_positions[" + std::to_string(i) + "]";
+			shaderProgram.setVec3(path.c_str(), light_positions[i]);
+		}
+		
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
@@ -197,7 +256,7 @@ int main()
 						
 						CarModel4W* activeCar;
 						activeCar = &car;
-						if (i == 3) activeCar = &police_car;
+						if (i != 0) activeCar = &police_car;
 
 						if (j == 0) {
 							activeCar->Draw(FRWHEEL, shaderProgram, model);;

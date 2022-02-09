@@ -18,11 +18,14 @@
 //#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/ai_testlevel.obj"
 //#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/ai_testlevel_physx_model.obj"
 
-#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
-#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
+//#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
+//#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
 
 //#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/city_prototype.obj"
 //#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/city_prototype_physx.obj"
+
+#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel_WLIGHTS.obj"
+#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_WLIGHTS_physx.obj"
 
 
 #define NEAR_CLIPPING_PLANE 0.01f
