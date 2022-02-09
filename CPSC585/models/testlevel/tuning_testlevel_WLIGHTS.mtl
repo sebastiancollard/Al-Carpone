@@ -11,6 +11,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\00_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 01
 Ns 225.000000
@@ -22,6 +23,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\01_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 02
 Ns 225.000000
@@ -33,6 +35,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\02_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 03
 Ns 225.000000
@@ -44,6 +47,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\03_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 04
 Ns 225.000000
@@ -55,6 +59,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\04_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 05
 Ns 225.000000
@@ -66,6 +71,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\05_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 06
 Ns 225.000000
@@ -77,6 +83,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\06_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 07
 Ns 225.000000
@@ -88,6 +95,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\07_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 08
 Ns 225.000000
@@ -99,6 +107,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\08_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 09
 Ns 225.000000
@@ -110,6 +119,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\09_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 10
 Ns 225.000000
@@ -121,6 +131,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\10_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 11
 Ns 225.000000
@@ -132,6 +143,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\11_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl 12
 Ns 225.000000
@@ -143,6 +155,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\02_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl Material.001
 Ns 225.000000
@@ -154,6 +167,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd blender_files\\textures\\testlevel_ground_texture.png
+map_Ks blender_files\\textures\\black_texture.png
 
 newmtl bank
 Ns 225.000000
@@ -165,3 +179,4 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd textures\\bank.png
+map_Ks blender_files\\textures\\black_texture.png

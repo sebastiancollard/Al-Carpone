@@ -11,6 +11,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd textures\\HAT_COLOR_2.png
+map_Ks textures\\NO_SPEC.png
 
 newmtl BLACK.002
 Ns 179.999996
@@ -109,6 +110,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd textures\\HAT_COLOR_1.png
+map_Ks textures\\NO_SPEC.png
 
 newmtl LEAF
 Ns 225.000000
@@ -120,6 +122,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd textures\\CIGAR_LEAF.jpg
+map_Ks textures\\NO_SPEC.png
 
 newmtl NAVY_BLUE.002
 Ns 179.999996
@@ -142,6 +145,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\RED.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl RED_2.002
 Ns 179.999996
@@ -153,7 +157,6 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\RED_2.png
-map_Ks textures\\RED_2.png
 
 newmtl TAN.002
 Ns 179.999996
@@ -165,6 +168,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\TAN.png
+map_Ks textures\\NO_SPEC.png
 
 newmtl TAN_2.002
 Ns 179.999996
@@ -187,6 +191,7 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd textures\\CIGAR_ASH.png
+map_Ks textures\\NO_SPEC.png
 
 newmtl WHITE.002
 Ns 179.999996

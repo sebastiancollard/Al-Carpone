@@ -35,7 +35,7 @@ void main()
 		vec3 lightDirection = normalize(light_positions[i] - crntPos);
 		vec3 viewDirection = normalize(camPos - crntPos);
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
-		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
+		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
 		specular += specAmount * specularLight;
    }
 
