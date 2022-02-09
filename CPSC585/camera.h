@@ -278,8 +278,6 @@ public:
             updateLocked();
         }
 
-        //old version of moving camera with joystick
-        /*
         if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
         {
             //get controller name
@@ -287,32 +285,36 @@ public:
             //std::cout << controller_name << std::endl;
 
             GLFWgamepadstate state;
-
             if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
             {
-                if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) >= 0.25)
+                float rotX, rotY;
+                if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) > 0.15) 
                 {
-                    float rotX = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
-                    yaw += rotX;
-                    //std::cout << "right X: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] << std::endl;
+                    rotY = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
                 }
-                if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) >= 0.25)
+                if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) > 0.15)
                 {
-                    float rotY = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
-                    pitch += rotY;
-                    //std::cout << "right Y: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] << std::endl;
+                    rotX = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
+                }
+                // Calculates upcoming vertical change in the Orientation
+                up = worldUp;
+                glm::vec3 newOrientation = glm::rotate(dir, glm::radians(-rotY), glm::normalize(glm::cross(dir, up)));
+
+                // Decides whether or not the next vertical Orientation is legal or not
+                if (abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+                {
+                    dir = newOrientation;
                 }
 
-                //bind yaw
-                if (yaw > 2 * M_PI) yaw -= 2 * M_PI;
-                if (yaw < -2 * M_PI) yaw += 2 * M_PI;
+                // Rotates the Orientation left and right
+                dir = glm::rotate(dir, glm::radians(-rotX), up);
+                // update position
+                pos = player.getPos() + glm::vec3(0, verticalOffset, 0) + -dir * radius;
 
-                //bind pitch
-                if (pitch > M_PI / 2.25f) pitch = M_PI / 2.25f;
-                if (pitch < -M_PI / 2.25f) pitch = -M_PI / 2.25f;
+                oldVehDir = player.getDir();
             }
         }
-        */
+
 
         glm::vec3 velocity = getGLMvec3(player.vehiclePtr->getRigidDynamicActor()->getLinearVelocity());
         //printVec3("velocity", velocity);
