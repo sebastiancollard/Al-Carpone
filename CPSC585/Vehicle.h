@@ -43,7 +43,7 @@ public:
 		vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		vehiclePtr->mDriveDynData.setUseAutoGears(true);
 
-		startBrakeMode();
+		//startBrakeMode();
 	}
 
 	Vehicle(VEHICLE_TYPE type, PxVec3 startOffset) {
@@ -75,7 +75,7 @@ public:
 		vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		vehiclePtr->mDriveDynData.setUseAutoGears(true);
 
-		startBrakeMode();
+		//startBrakeMode();
 	}
 
 	PxTransform getStartTransform() {

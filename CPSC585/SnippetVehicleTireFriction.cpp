@@ -31,7 +31,7 @@
 #include "snippetvehiclecommon/SnippetVehicleTireFriction.h"
 #include "PxPhysicsAPI.h"
 
-#define NORMAL_TIRE_FRICTION 10.0f //originally 1.f
+#define NORMAL_TIRE_FRICTION 1.67f //originally 1.f
 #define WORN_TIRE_FRICTION 0.1f //originally 0.1f
 
 namespace snippetvehicle

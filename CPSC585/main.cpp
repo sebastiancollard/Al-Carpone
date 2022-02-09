@@ -211,6 +211,7 @@ int main()
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
 		shaderProgram.setMat4("model", model);
+		glUniform3f(glGetUniformLocation(shaderProgram.ID, "camPos"), activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z);
 		groundPlane.Draw(shaderProgram);
 
 		// Render dynamic physx shapes

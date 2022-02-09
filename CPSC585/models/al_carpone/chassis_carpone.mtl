@@ -153,6 +153,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\RED_2.png
+map_Ks textures\\RED_2.png
 
 newmtl TAN.002
 Ns 179.999996
