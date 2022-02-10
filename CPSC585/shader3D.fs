@@ -50,12 +50,13 @@ void main()
 		vec3 viewDirection = normalize(camPos - crntPos);
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
-		specular += specAmount * specularLight;
+		specular += specAmount * specularLight / d;
    }
 
    if(shaderMode == SHADER_MODE_DIFFUSE){
 		FragColor = min((ambient + illum), 1.0f) * textureColor;
    }
+
    if(shaderMode == SHADER_MODE_FULL){
 		FragColor = min((ambient + illum), 1.0f) * textureColor + texture(texture_specular1, TexCoords).r  * specular * min((ambient + illum), 1.0f);
    }

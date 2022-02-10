@@ -42,6 +42,8 @@ public:
 	bool W_isHeld = false;
 	bool f5_isHeld = false;
 	bool shift_isHeld = false;
+	bool down_isHeld = false;
+	bool up_isHeld = false;
 	bool escape_isHeld = false;
 	
 

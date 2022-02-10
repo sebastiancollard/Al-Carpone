@@ -5,52 +5,6 @@
 
 
 
-std::vector<glm::vec3> load_positions(std::string path) {
-	std::vector<std::string> lines;
-	std::string line;
-
-	std::vector<glm::vec3> positions;
-
-	std::ifstream input(path);
-
-	if (!input.is_open()) {
-		printf("Error opening file: %s\n", path.c_str());
-		return positions;
-	}
-
-	while (getline(input, line)) {
-		if(line[0] == 'v') lines.push_back(line.substr(2));
-	}
-	 
-	for (std::string l : lines) {
-		std::vector<float> positions_raw;
-		std::string numberStr;
-
-		for (char c : l) {
-			if (c == ' ' && numberStr.size() > 0) {
-				float num;
-				stringstream(numberStr) >> num;
-
-				positions_raw.push_back(num);
-				numberStr.clear();
-			}
-			else numberStr.push_back(c);
-		}
-		float num;
-		stringstream(numberStr) >> num;
-
-		positions_raw.push_back(num);
-		numberStr.clear();
-
-		positions.push_back(glm::vec3(positions_raw[0], positions_raw[1], positions_raw[2]));
-		positions_raw.clear();
-	}
-
-
-
-	return positions;
-}
-
 int main()
 {
 
@@ -119,18 +73,9 @@ int main()
 	Model car_lwheel(CAR_LWHEEL_PATH);
 	Model car_rwheel(CAR_RWHEEL_PATH);
 
-	CarModel4W car(car_chassis, car_lwheel, car_rwheel);
+	Model press_f_to_rob("models/popups/press_f_to_rob.obj");
 
-	//Test enemy
-	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
-	Model police_car_lwheel(POLICE_CAR_LWHEEL_PATH);
-	Model police_car_rwheel(POLICE_CAR_RWHEEL_PATH);
-
-	CarModel4W police_car(police_car_chassis, police_car_lwheel, police_car_rwheel);
-
-	Vehicle police_car_vehicle(POLICE_CAR, PxVec3(10.0f,0.0f,0.0f));
-
-	activeVehicles.push_back(&police_car_vehicle);
+	CarModel4W car(car_chassis, car_lwheel, car_rwheel);;
 
 	Model* active_level;
 	std::vector<Model> levels{
@@ -167,6 +112,15 @@ int main()
 
 	std::vector<glm::vec3> light_positions = level_light_positions[0];
 
+	//Test enemy
+	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
+	Model police_car_lwheel(POLICE_CAR_LWHEEL_PATH);
+	Model police_car_rwheel(POLICE_CAR_RWHEEL_PATH);
+
+	CarModel4W police_car(police_car_chassis, police_car_lwheel, police_car_rwheel);
+
+	Vehicle* test_enemy = NULL;
+
 	// Main while loop
 	while (!glfwWindowShouldClose(window) && !state.terminateProgram)
 	{
@@ -196,11 +150,17 @@ int main()
 
 			checkMainMenuInputs(window);
 
+			while (activeVehicles.size() > 1) {
+				despawnEnemy(activeVehicles.back());
+				activeVehicles.pop_back();
+			}
+			
+
 			if (!state.mainMenu) {
+				
 				active_level = &levels[state.selectedLevel];
-
+				
 				//Remove the old level pointer and add the new
-
 				PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 				gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, state.selectedLevel);
 				
@@ -215,6 +175,12 @@ int main()
 
 				light_positions = level_light_positions[state.selectedLevel];
 
+				if (state.selectedLevel == 0) {
+					test_enemy = new Vehicle(POLICE_CAR, activeVehicles.size(), PxVec3(10.0f, 0.0f, 0.0f));
+					activeVehicles.push_back(test_enemy);
+				}
+				
+
 				for (Vehicle* v : activeVehicles) {
 					v->reset();
 				}
@@ -222,6 +188,10 @@ int main()
 			
 		}
 		else {
+			if (player.canRob()) {
+				shader2D.use();
+				press_f_to_rob.Draw(shader2D);
+			}
 			shader3D.use();
 			//Simulate physics through the timestep
 			stepPhysics(window);

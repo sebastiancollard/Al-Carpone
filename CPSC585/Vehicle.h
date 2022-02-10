@@ -13,6 +13,7 @@ class Vehicle {
 public:
 
 	bool vehicleInAir = true;
+	unsigned int ID;
 	PxRigidActor* actorPtr;	// Each vehicle instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
 	PxVehicleDrive4W* vehiclePtr;
 
@@ -20,7 +21,7 @@ public:
 
 	Vehicle() {}
 
-	Vehicle(PxTransform T, VEHICLE_TYPE type) {
+	Vehicle(VEHICLE_TYPE type, unsigned int ID,  PxTransform T): ID(ID) {
 		//Create a vehicle that will drive on the plane.
 
 		extern VehicleDesc initVehicleDesc(VEHICLE_TYPE);
@@ -35,18 +36,22 @@ public:
 
 		gScene->addActor(*vehiclePtr->getRigidDynamicActor());
 		actorPtr = vehiclePtr->getRigidDynamicActor();
-		physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), physx_actors.back().actorId + 1 });
+		if (physx_actors.size() == 0) {
+			physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), 0 });
+		}
+		else {
+			physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), physx_actors.back().actorId + 1 });
+		}
+
 
 		//Set the vehicle to rest in first gear.
 		//Set the vehicle to use auto-gears.
 		vehiclePtr->setToRestState();
 		vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		vehiclePtr->mDriveDynData.setUseAutoGears(true);
-
-		//startBrakeMode();
 	}
 
-	Vehicle(VEHICLE_TYPE type, PxVec3 startOffset) {
+	Vehicle(VEHICLE_TYPE type, unsigned int ID, PxVec3 startOffset): ID(ID) {
 		//Create a vehicle that will drive on the plane.
 
 		extern VehicleDesc initVehicleDesc(VEHICLE_TYPE);
@@ -75,7 +80,6 @@ public:
 		vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		vehiclePtr->mDriveDynData.setUseAutoGears(true);
 
-		//startBrakeMode();
 	}
 
 	PxTransform getStartTransform() {

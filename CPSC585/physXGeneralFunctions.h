@@ -237,7 +237,7 @@ void initPhysics()
 
 		//Update the control inputs for the vehicle.dwd
 		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, player.vehicleInAir, *player.vehiclePtr);
-
+		
 		for (Vehicle* v : activeVehicles) {
 			//Raycasts.
 			PxVehicleWheels* vehicles[1] = { v->vehiclePtr };
@@ -254,7 +254,6 @@ void initPhysics()
 
 			//Work out if the vehicle is in the air.
 			v->vehicleInAir = v->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
-
 		}
 
 		
