@@ -93,7 +93,14 @@ int main()
 	// DEBUG Panel
 	DebugPanel debugPanel = DebugPanel(window);
 
-	//Set up physx with vehicle snippet
+	
+	//SETUP BANK POSITION, DIMENSIONS & ORIENTATION
+	//This must be done before initPhysics(). Note that this position and orientation can also be hard-coded into the bank class if preffered.
+	bank.setPos(40.f, 0.f);
+	bank.setDir(orient::E);
+	bank.setDimensions(17.f, 17.f, 17.f);
+
+	//Set up physx with vehicle snippet:
 	//Make sure this is called after the shader program is generated
 	initPhysics();
 
@@ -118,10 +125,6 @@ int main()
 	activeVehicles.push_back(&police_car_vehicle);
 
 	Model groundPlane(ACTIVE_LEVEL_TEXTURED_MODEL_PATH);
-
-	//Mesh building;
-	//building.createBox(bank.getWidth(), bank.getHeight(), bank.getDepth());
-	Model bankModel(BANK_BUILDING_PATH);
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
@@ -175,7 +178,6 @@ int main()
 		
 		// Handle bank robbing
 		if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && (player.canRob())) {
-			//std::cout << "Robbing bank...." << std::endl;
 			player.addCash(CASH_ROBBED_PER_FRAME);
 		}	
 
@@ -241,12 +243,10 @@ int main()
 					model = glm::make_mat4(&shapePose.column0.x);
 
 					// check what geometry type the shape is
-					if (h.any().getType() == PxGeometryType::eBOX)	//Bank is just a box for now.
+					if (h.any().getType() == PxGeometryType::eBOX)
 					{
-						//glActiveTexture(GL_TEXTURE0);
-						model = scale(model, {bank.getWidth(), bank.getHeight(), bank.getDepth()});
-						shaderProgram.setMat4("model", model);
-						bankModel.Draw(shaderProgram);
+						//BANK MODEL NOT INCLUDED FOR NOW, BANK IS PART OF GROUND PLANE	
+						//Note that the trigger is also of pxGeometryType::eBox now
 
 					}
 					else if (h.any().getType() == PxGeometryType::eSPHERE)
