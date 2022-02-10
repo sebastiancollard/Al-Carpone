@@ -160,7 +160,12 @@ int main()
 	// Init to bound camera
 	activeCamera = &boundCamera;
 
-	std::vector<glm::vec3> light_positions = load_positions("models/testlevel/light_positions.obj");
+	level_light_positions.push_back(load_positions("models/tuning_testlevel/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/racetrack/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/ai_testlevel/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/city_prototype/light_positions.obj"));
+
+	std::vector<glm::vec3> light_positions = level_light_positions[0];
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window) && !state.terminateProgram)
@@ -207,6 +212,12 @@ int main()
 				PxActor** actors = (PxActor**)malloc(size);
 				gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
 				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
+
+				light_positions = level_light_positions[state.selectedLevel];
+
+				for (Vehicle* v : activeVehicles) {
+					v->reset();
+				}
 			}
 			
 		}
@@ -214,16 +225,6 @@ int main()
 			shader3D.use();
 			//Simulate physics through the timestep
 			stepPhysics(window);
-
-			// Handle ball input
-			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-				createDynamic(PxTransform(
-					PxVec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z)),
-					PxSphereGeometry(4),
-					PxVec3(activeCamera->dir.x, activeCamera->dir.y, activeCamera->dir.z) * 175.0f
-				);
-
-		
 
 			//Check for special inputs (currently only camera mode change)
 			checkSpecialInputs(window);
@@ -247,6 +248,7 @@ int main()
 			shader3D.setMat4("projection", projection);
 			shader3D.setMat4("view", view);
 
+			shader3D.setInt("numLights", light_positions.size());
 
 			for (int i = 0; i < light_positions.size(); i++) {
 				std::string path = "light_positions[" + std::to_string(i) + "]";
@@ -255,9 +257,11 @@ int main()
 
 
 			// render the loaded model
+			
 			glm::mat4 model = glm::mat4(1.0f);
 			shader3D.setMat4("model", model);
-			glUniform3f(glGetUniformLocation(shader3D.ID, "camPos"), activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z);
+			shader3D.setVec3("camPos", glm::vec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z));
+			shader3D.setInt("shaderMode", SHADER_MODE_DIFFUSE);
 			active_level->Draw(shader3D);
 
 			// Render dynamic physx shapes
@@ -299,6 +303,7 @@ int main()
 						}
 						else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
 
+							shader3D.setInt("shaderMode", SHADER_MODE_FULL);
 							CarModel4W* activeCar;
 							activeCar = &car;
 							if (i != 0) activeCar = &police_car;
@@ -318,6 +323,7 @@ int main()
 							else if (j == 4) {
 								activeCar->Draw(CHASSIS, shader3D, model);
 							}
+
 						}
 					}
 				}

@@ -51,6 +51,7 @@ const unsigned int SCREEN_HEIGHT = 1080 *0.85f;
 #include "snippetcommon/SnippetPrint.h"
 #include "snippetcommon/SnippetPVD.h"
 
+std::vector<std::vector<glm::vec3>> level_light_positions;
 
 std::vector<std::string> level_texture_paths{
 "models/tuning_testlevel/tuning_testlevel.obj",

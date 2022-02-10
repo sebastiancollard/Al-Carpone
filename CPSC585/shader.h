@@ -11,10 +11,9 @@
 #include <iostream>
 #include <glad/glad.h>
 
-enum ShaderMode {
-    REGULAR = 0,
-    RAW_TEXTURE
-};
+#define SHADER_MODE_FLAT 0
+#define SHADER_MODE_DIFFUSE 1
+#define SHADER_MODE_FULL 2
 
 class Shader
 {
