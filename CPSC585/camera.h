@@ -338,7 +338,7 @@ public:
         }
 
         // add smoothing to radius change (mostly to address cases like hitting a wall head on)
-        radius = 0.9f * radius + 0.1f * (default_radius + radius_offset);
+        radius = 0.95f * radius + 0.05f * (default_radius + radius_offset);
 
     }
 
@@ -358,6 +358,25 @@ public:
         // to be able to see the car again
         if (status) 
             pos -= (radius - float(hit.getAnyHit(0).distance) + 0.05f) * direction;
+
+        //OVERLAP TRIGGER TEST
+        //PxOverlapBuffer hit2;            // [out] Overlap results
+        //
+        //PxTransform shapePose = PxTransform(PxVec3(0, 2, 50));    // [in] initial shape pose (at distance=0)
+        ////shapePose = shapePose.transform(PxTransform(PxVec3(0, 10, 0)));
+        //float halfExtent = 5.f;
+        //physx::PxBoxGeometry box(halfExtent, halfExtent, halfExtent);
+        //physx::PxVec3 pos(0, 20, 0);
+        //physx::PxQuat orientation(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
+        //
+        //
+        //std::cout << "--------------------------- " << std::endl;
+        //if (gScene->overlap(box, shapePose, hit2, physx::PxQueryFilterData(physx::PxQueryFlag::eANY_HIT | PxQueryFlag::eDYNAMIC)))
+        //{
+        //    std::cout << "getNbAnyHits: " << hit2.getNbAnyHits() << std::endl;
+        //    std::cout << "getNbTouches: " << hit2.getNbTouches() << std::endl;
+        //    std::cout << "hasBlock: " << hit2.hasBlock << std::endl;
+        //}
     }
 private:
     void updateLook() {

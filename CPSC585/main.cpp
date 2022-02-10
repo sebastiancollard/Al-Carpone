@@ -1,8 +1,9 @@
 //Initializes the physx system and all global variables and calls other includes.
 #include"init.h"
+#include <sstream>
+#include <string>
 
 
-#define CASH_ROBBED_PER_FRAME 5	//$5 per frame for now?
 
 int main()
 {
@@ -41,25 +42,66 @@ int main()
 	}
 
 	// Generates Shader object using shaders default.vert and default.frag
-	Shader shaderProgram("default.vs", "default.fs");
+	Shader shader3D("shader3D.vs", "shader3D.fs");
+	Shader shader2D("shader2D.vs", "shader2D.fs");
 
 	// DEBUG Panel
 	DebugPanel debugPanel = DebugPanel(window);
 
-	//Set up physx with vehicle snippet
+	
+	//SETUP BANK POSITION, DIMENSIONS & ORIENTATION
+	//This must be done before initPhysics(). Note that this position and orientation can also be hard-coded into the bank class if preffered.
+	bank.setPos(40.f, 0.f);
+	bank.setDir(orient::E);
+	bank.setDimensions(17.f, 17.f, 17.f);
+
+	//Set up physx with vehicle snippet:
 	//Make sure this is called after the shader program is generated
 	initPhysics();
 
+	std::vector<Model> mainMenuModels;
+	
+	mainMenuModels.push_back(Model("models/mainMenu/0_tuning_testlevel.obj"));
+	mainMenuModels.push_back(Model("models/mainMenu/1_racetrack.obj"));
+	mainMenuModels.push_back(Model("models/mainMenu/2_ai_testlevel.obj"));
+	mainMenuModels.push_back(Model("models/mainMenu/3_city_scale_testlevel.obj"));
+
+	level_light_positions.push_back(load_positions("models/tuning_testlevel/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/racetrack/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/ai_testlevel/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/city_prototype/light_positions.obj"));
+
+
 	//Create base meshes
-	std::vector<Model> models;
+	//std::vector<Model> models;
 
 	Model car_chassis(CAR_CHASSIS_PATH);
 	Model car_lwheel(CAR_LWHEEL_PATH);
 	Model car_rwheel(CAR_RWHEEL_PATH);
 
-	CarModel4W car(car_chassis, car_lwheel, car_rwheel);
+	Model press_f_to_rob("models/popups/press_f_to_rob.obj");
 
-	Model groundPlane(ACTIVE_LEVEL_TEXTURED_MODEL_PATH);
+	CarModel4W car(car_chassis, car_lwheel, car_rwheel);;
+
+	Model* active_level;
+	std::vector<Model> levels{
+		Model(level_texture_paths[0]),
+		Model(level_texture_paths[1]),
+		Model(level_texture_paths[2]),
+		Model(level_texture_paths[3])
+	};
+	
+	//Test enemy
+	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
+	Model police_car_lwheel(POLICE_CAR_LWHEEL_PATH);
+	Model police_car_rwheel(POLICE_CAR_RWHEEL_PATH);
+
+	CarModel4W police_car(police_car_chassis, police_car_lwheel, police_car_rwheel);
+
+	Vehicle* test_enemy = NULL;
+
+
+	active_level = &levels[0];
 
 	//Mesh building;
 	//building.createBox(bank.getWidth(), bank.getHeight(), bank.getDepth());
@@ -78,6 +120,11 @@ int main()
 	// Init to bound camera
 	activeCamera = &boundCamera;
 
+	
+	std::vector<glm::vec3> light_positions = level_light_positions[0];
+
+	
+
 	// Main while loop
 	while (!glfwWindowShouldClose(window) && !state.terminateProgram)
 	{
@@ -91,140 +138,180 @@ int main()
 
 		// Take care of all GLFW events
 		glfwPollEvents();
-		//Simulate physics through the timestep
-		stepPhysics(window);
-		
+
+
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Tell OpenGL which Shader Program we want to use
 
-		shaderProgram.use();
+	
+		//Check if in the main menu
+		if (state.mainMenu) {
+			//Draw the menu
+			shader2D.use();
+			mainMenuModels[state.selectedMainMenuOption].Draw(shader2D);
 
-		// Handle ball input
-		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-			createDynamic(PxTransform(
-				PxVec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z)),
-				PxSphereGeometry(4),
-				PxVec3(activeCamera->dir.x , activeCamera->dir.y, activeCamera->dir.z) * 175.0f
-			);
-		
-		// Handle bank robbing
-		if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && (player.canRob())) {
-			//std::cout << "Robbing bank...." << std::endl;
-			player.addCash(CASH_ROBBED_PER_FRAME);
-		}	
-		if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
-		{
-			//get controller name
-			//const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
-			//std::cout << controller_name << std::endl;
+			checkMainMenuInputs(window);
 
-			GLFWgamepadstate state;
-			if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
-			{
-				if (state.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE])
-				{
-					//std::cout << "CIRCLE (xbox b, ns pro a)" << std::endl;
-					player.addCash(CASH_ROBBED_PER_FRAME);
+			//Despawn any additional active vehicles (enemies)
+			while (activeVehicles.size() > 1) {
+				despawnEnemy(activeVehicles.back());
+				activeVehicles.pop_back();
+			}
+			
+			//If exiting the main menu
+			if (!state.mainMenu) {
+				//Setup level
+
+				active_level = &levels[state.selectedLevel];
+				
+				//Remove the old level pointer and add the new
+				PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+				gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, state.selectedLevel);
+				
+				gScene->removeActor(*activeLevelActorPtr);
+				
+				gScene->addActor(*gGroundPlane);
+
+				PxU32 size = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) * sizeof(PxActor*);
+				PxActor** actors = (PxActor**)malloc(size);
+				gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
+				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
+
+				light_positions = level_light_positions[state.selectedLevel];
+
+				if (state.selectedLevel == 0) {
+					test_enemy = new Vehicle(POLICE_CAR, activeVehicles.size(), PxVec3(10.0f, 0.0f, 0.0f));
+					activeVehicles.push_back(test_enemy);
+				}
+				
+				//Reset active vehicles
+				for (Vehicle* v : activeVehicles) {
+					v->reset();
 				}
 			}
-		}
-
-		//Check for special inputs (currently only camera mode change)
-		checkSpecialInputs(window);
-
-		if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
-		else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
-		
-
-		// Camera is disabled in DEBUG MODE
-		if (!state.debugMode) activeCamera->handleInput(window);
-		if (activeCamera == &boundCamera) boundCamera.checkClipping(window);
-
-
-		// view/projection transformations
-		glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
-		glm::mat4 view = activeCamera->GetViewMatrix();
-
-		//printMat4(projection* view);
-
-		// send them to shader
-		shaderProgram.setMat4("projection", projection);
-		shaderProgram.setMat4("view", view);
-
-		// render the loaded model
-		glm::mat4 model = glm::mat4(1.0f);
-		shaderProgram.setMat4("model", model);
-		groundPlane.Draw(shaderProgram);
-
-		// Render dynamic physx shapes
-
-		//printf("PITCH[%.2f] | GOAL[%.2f]\nYAW[%.2f] | GOAL[%.2f]\n\n", activeCamera->getPitch(), activeCamera->getPitchGoal(), activeCamera->getYaw(), activeCamera->getYawGoal());
-		
-		
-		{
-			const int MAX_NUM_ACTOR_SHAPES = 128;
-			PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
 			
-			// Loop over each actor in the scene
-			for (PxU32 i = 0; i < static_cast<PxU32>(physx_actors.size()); i++)
+		}
+		else {
+			//Tell player if they can rob
+			if (player.canRob()) {
+				shader2D.use();
+				press_f_to_rob.Draw(shader2D);
+			}
+			shader3D.use();
+			//Simulate physics through the timestep
+			stepPhysics(window);
+
+			//Check for special inputs (currently only camera mode change)
+			checkSpecialInputs(window);
+
+			if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
+			else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
+
+
+			// Camera is disabled in DEBUG MODE
+			if (!state.debugMode) activeCamera->handleInput(window);
+			if (activeCamera == &boundCamera) boundCamera.checkClipping(window);
+
+
+			// view/projection transformations
+			glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
+			glm::mat4 view = activeCamera->GetViewMatrix();
+
+			//printMat4(projection* view);
+
+			// send them to shader
+			shader3D.setMat4("projection", projection);
+			shader3D.setMat4("view", view);
+
+			shader3D.setInt("numLights", light_positions.size());
+
+			for (int i = 0; i < light_positions.size(); i++) {
+				std::string path = "light_positions[" + std::to_string(i) + "]";
+				shader3D.setVec3(path.c_str(), light_positions[i]);
+			}
+
+
+			// render the loaded model
+			
+			glm::mat4 model = glm::mat4(1.0f);
+			shader3D.setMat4("model", model);
+			shader3D.setVec3("camPos", glm::vec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z));
+			shader3D.setInt("shaderMode", SHADER_MODE_DIFFUSE);
+			active_level->Draw(shader3D);
+
+			// Render dynamic physx shapes
+
+
 			{
-				// Fetch the number of shapes that make up the actor
-				const PxU32 nbShapes = physx_actors[i].actorPtr->getNbShapes();
-				PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
-				physx_actors[i].actorPtr->getShapes(shapes, nbShapes);
+				const int MAX_NUM_ACTOR_SHAPES = 128;
+				PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
 
-				for (PxU32 j = 0; j < nbShapes; j++)
+				// Loop over each actor in the scene
+				for (PxU32 i = 0; i < static_cast<PxU32>(physx_actors.size()); i++)
 				{
-					// Get the geometry of the shape
-					const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[j], *physx_actors[i].actorPtr));
-					const PxGeometryHolder h = shapes[j]->getGeometry();
+					// Fetch the number of shapes that make up the actor
+					const PxU32 nbShapes = physx_actors[i].actorPtr->getNbShapes();
+					PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
+					physx_actors[i].actorPtr->getShapes(shapes, nbShapes);
 
-					// Generate a mat4 out of the shape position so can send it to the vertex shader
-					model = glm::make_mat4(&shapePose.column0.x);
+					for (PxU32 j = 0; j < nbShapes; j++)
+					{
+						// Get the geometry of the shape
+						const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[j], *physx_actors[i].actorPtr));
+						const PxGeometryHolder h = shapes[j]->getGeometry();
+
+						// Generate a mat4 out of the shape position so can send it to the vertex shader
+						model = glm::make_mat4(&shapePose.column0.x);
 
 					// check what geometry type the shape is
-					if (h.any().getType() == PxGeometryType::eBOX)	//Bank is just a box for now.
+					if (h.any().getType() == PxGeometryType::eBOX)
 					{
-						//glActiveTexture(GL_TEXTURE0);
-						model = scale(model, {bank.getWidth(), bank.getHeight(), bank.getDepth()});
-						shaderProgram.setMat4("model", model);
-						bankModel.Draw(shaderProgram);
+						//BANK MODEL NOT INCLUDED FOR NOW, BANK IS PART OF GROUND PLANE	
+						//Note that the trigger is also of pxGeometryType::eBox now
 
-					}
-					else if (h.any().getType() == PxGeometryType::eSPHERE)
-					{
+						}
+						else if (h.any().getType() == PxGeometryType::eSPHERE)
+						{
 
-					}
-					else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
+						}
+						else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
 
-						if (j == 0) {
-							car.Draw(FRWHEEL, shaderProgram, model);;
-						}
-						else if (j == 1) {
-							car.Draw(FLWHEEL, shaderProgram, model);
-						}
-						else if (j == 2) {
-							car.Draw(BRWHEEL, shaderProgram, model);
-						}
-						else if (j == 3) {
-							car.Draw(BLWHEEL, shaderProgram, model);
-						}
-						else if (j == 4) {
-							car.Draw(CHASSIS, shaderProgram, model);
+							shader3D.setInt("shaderMode", SHADER_MODE_FULL);
+							CarModel4W* activeCar;
+							activeCar = &car;
+							if (i != 0) activeCar = &police_car;
+
+							if (j == 0) {
+								activeCar->Draw(FRWHEEL, shader3D, model);;
+							}
+							else if (j == 1) {
+								activeCar->Draw(FLWHEEL, shader3D, model);
+							}
+							else if (j == 2) {
+								activeCar->Draw(BRWHEEL, shader3D, model);
+							}
+							else if (j == 3) {
+								activeCar->Draw(BLWHEEL, shader3D, model);
+							}
+							else if (j == 4) {
+								activeCar->Draw(CHASSIS, shader3D, model);
+							}
+
 						}
 					}
 				}
 			}
-		}
 
-		// DEBUG MODE
-		if (state.debugMode) { // Camera is deactivated
-			debugPanel.draw();
-		}
+			// DEBUG MODE
+			if (state.debugMode) { // Camera is deactivated
+				debugPanel.draw();
+			}
 
+		}
+		
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 	}

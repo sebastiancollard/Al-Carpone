@@ -60,13 +60,7 @@
     <ClCompile Include="SnippetVehicleFilterShader.cpp">
       <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
-    <ClCompile Include="SnippetVehicleNoDriveCreate.cpp">
-      <Filter>Resource Files\Snippet</Filter>
-    </ClCompile>
     <ClCompile Include="SnippetVehicleSceneQuery.cpp">
-      <Filter>Resource Files\Snippet</Filter>
-    </ClCompile>
-    <ClCompile Include="SnippetVehicleTankCreate.cpp">
       <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
     <ClCompile Include="SnippetVehicleTireFriction.cpp">
@@ -104,6 +98,12 @@
     </ClCompile>
     <ClCompile Include="physXVehicleSettings.cpp">
       <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SnippetVehicleNoDriveCreate.cpp">
+      <Filter>Resource Files\Snippet</Filter>
+    </ClCompile>
+    <ClCompile Include="SnippetVehicleTankCreate.cpp">
+      <Filter>Resource Files\Snippet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,18 +176,24 @@
     <ClInclude Include="physXVehicleSettings.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Bank.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PxCustomEventCallback.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bank.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.fs">
+    <None Include="shader3D.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="default.vs">
+    <None Include="shader3D.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shader2D.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shader2D.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -183,9 +183,7 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
-     <ClInclude Include="Bank.h" />
-    <ClInclude Include="freeCamera.h" />
-    <ClInclude Include="classes.h" />
+    <ClInclude Include="Bank.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="miscFunctions.h" />
@@ -201,8 +199,10 @@
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.fs" />
-    <None Include="default.vs" />
+    <None Include="shader2D.fs" />
+    <None Include="shader2D.vs" />
+    <None Include="shader3D.fs" />
+    <None Include="shader3D.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

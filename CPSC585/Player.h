@@ -12,7 +12,7 @@ public:
 	Player() {}
 
 	//Call parrent constructor
-	Player(unsigned int ID) : Vehicle(ID) {}
+	Player(VEHICLE_TYPE type) : Vehicle(type, 0, PxVec3(0,0,0)) {}
 
 
 	// Handle all key inputs relevant to driving
@@ -134,7 +134,7 @@ public:
 		return cash; 
 	}
 	bool canRob() { 
-		return can_rob; 
+		return can_rob && state.selectedLevel == 0; 
 	}
 	
 	void setRob(bool b) { 

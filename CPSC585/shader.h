@@ -11,6 +11,10 @@
 #include <iostream>
 #include <glad/glad.h>
 
+#define SHADER_MODE_FLAT 0
+#define SHADER_MODE_DIFFUSE 1
+#define SHADER_MODE_FULL 2
+
 class Shader
 {
 public:
@@ -161,6 +165,9 @@ public:
     void setMat4(const std::string& name, const glm::mat4& mat) const
     {
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    }
+    void setShaderMode(unsigned int mode) {
+        glUniform1ui(glGetUniformLocation(ID, "shaderMode"), mode);   
     }
 
 private:

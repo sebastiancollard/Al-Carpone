@@ -36,10 +36,20 @@ void createBankActors() {
 	//BANK (BUILDING)
 	static PxU32 counter = 0;
 	PxVec3 b_pos(bank.getPos().x, bank.getPos().y, bank.getPos().z);
-	PxVec3 dimensions(bank.getWidth(), bank.getHeight(), bank.getDepth());
+	
+	float bank_half_width, bank_half_depth; 
+	if ((bank.getDir() == orient::N) || (bank.getDir() == orient::S)) {		//if bank is facing east or west, we shoudl swap the width and depth dimensions of the bank "hitbox"
+		bank_half_width = bank.getWidth() / 2.f;
+		bank_half_depth = bank.getDepth() / 2.f;
+	}
+	else {
+		bank_half_width = bank.getDepth() / 2.f;
+		bank_half_depth = bank.getWidth() / 2.f;
+	}
+	PxVec3 dimensions(bank_half_width, bank.getHeight()/2.f, bank_half_depth);			//PxVec3 represents the half-extents (half-w, half-h, half-d).
 	
 	// Setting up a bank(rigidStatic) as a simple box for now
-	PxShape* shape = gPhysics->createShape(PxBoxGeometry(dimensions), *gMaterial);			//PxVec3 represents the half-extents (w, h, d). Put in arbitrary values for now
+	PxShape* shape = gPhysics->createShape(PxBoxGeometry(dimensions), *gMaterial);
 	PxTransform bankPos(b_pos);																	//position of the bank
 	
 	PxRigidStatic* body = gPhysics->createRigidStatic(bankPos);									//Static as the buildung will not move
@@ -53,26 +63,34 @@ void createBankActors() {
 
 	bank.bankPtr = body;
 	
-
 	//ROBBING TRIGGER
 	//Setting up the capsule that will act as a trigger. This is set up in "front" of the bank (will need bank position and orientation).
 	PxVec3 t_pos = b_pos;
-	t_pos.y = t_pos.y - bank.getHeight();						//lower the trigger so it is at an appropiate height relative to the ground				
+	t_pos.y = 0.f;															//set height to 0 so the car can actually touch it
+	float trigger_half_depth = 7.f;
+	float trigger_half_width;
 	switch (bank.getDir()) {
 		case 0:		//N
-			t_pos.z -= (bank.getDepth() / 2.f + 6.f);		//trigger is further back in the y direction
+			t_pos.z += (bank_half_depth + trigger_half_depth);		//trigger is further back in the z direction (higher z)
+			trigger_half_width = bank.getWidth() / 2.f;
 			break;
 		case 1:		//E
-			t_pos.x += (bank.getDepth() / 2.f + 6.f);		//trigger is further "right"
+			t_pos.x -= (bank_half_depth + trigger_half_depth);		//trigger is further "right" (x dir)
+			trigger_half_width = trigger_half_depth;				//swap width and depth
+			trigger_half_depth = bank.getWidth() / 2.f;
 			break;
 		case 2:		//S
-			t_pos.z += (bank.getDepth() / 2.f + 6.f);		//trigger is further forward in the y direction
+			t_pos.z -= (bank_half_depth + trigger_half_depth);		//trigger is further forward in the z direction (smaller z)
+			trigger_half_width = bank.getWidth() / 2.f;
 			break;
 		case 3:		//W
-			t_pos.x -= (bank.getDepth() / 2.f + 6.f);		//trigger is further "left"
+			t_pos.x += (bank_half_depth + trigger_half_depth);		//trigger is further "left" (x dir)
+			trigger_half_width = trigger_half_depth;				//swap width and depth
+			trigger_half_depth = bank.getWidth() / 2.f;
 			break;
 	}
-	PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(3), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
+	//PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
+	PxShape* triggerShape = gPhysics->createShape(PxBoxGeometry(PxVec3(trigger_half_width, 2.f, trigger_half_depth)), *gMaterial);
 	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 	triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
 
@@ -91,9 +109,9 @@ void createBankActors() {
 	bank.triggerPtr = triggerBody;
 }
 
-PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
+PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection)
 {
-	Model level(ACTIVE_LEVEL_PHYSX_MODEL_PATH);
+	Model level(level_physx_paths[state.selectedLevel]);
 
 	std::vector<PxVec3> model_positions;
 	std::vector<PxU32> model_indices;
@@ -113,11 +131,11 @@ PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 
 	return createTriangleMesh(verts,model_positions.size(), indices, model_indices.size() / 3, physics, cooking);
 }
-PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics, PxCooking* cooking)
+PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics, PxCooking* cooking, unsigned int selection)
 {
 	//Add a plane to the scene.
 
-	PxTriangleMeshGeometry levelMesh = createLevelMesh(PxVec3(0, 0, 0), *physics, *cooking);
+	PxTriangleMeshGeometry levelMesh = createLevelMesh(PxVec3(0, 0, 0), *physics, *cooking, selection);
 	const PxTriangleMeshGeometry* levelGeometry(&levelMesh);
 
 	PxShape* levelShape = physics->createShape(*levelGeometry, *material);
@@ -182,11 +200,18 @@ void initPhysics()
 
 	//Create a plane to drive on.
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking);
+	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 0);
 	gScene->addActor(*gGroundPlane);
+	
+
+	PxU32 size = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) * sizeof(PxActor*);
+	PxActor** actors = (PxActor**)malloc(size);
+	gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
+	activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
+	
 
 	//Setup main player vehicle
-	player = Player(ID);
+	player = Player(AL_CARPONE);
 	//Add it to the list of active vehicles
 	activeVehicles.push_back(&player);
 
@@ -212,21 +237,26 @@ void initPhysics()
 
 		//Update the control inputs for the vehicle.dwd
 		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, player.vehicleInAir, *player.vehiclePtr);
+		
+		for (Vehicle* v : activeVehicles) {
+			//Raycasts.
+			PxVehicleWheels* vehicles[1] = { v->vehiclePtr };
+			PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+			const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
+			PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+		
 
-		//Raycasts.
-		PxVehicleWheels* vehicles[1] = { player.vehiclePtr };
-		PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
-		const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
-		PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+			//Vehicle update.
+			const PxVec3 grav = gScene->getGravity();
+			PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
+			PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, player.vehiclePtr->mWheelsSimData.getNbWheels()} };
+			PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
 
-		//Vehicle update.
-		const PxVec3 grav = gScene->getGravity();
-		PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
-		PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, player.vehiclePtr->mWheelsSimData.getNbWheels()} };
-		PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+			//Work out if the vehicle is in the air.
+			v->vehicleInAir = v->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+		}
 
-		//Work out if the vehicle is in the air.
-		player.vehicleInAir = player.vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+		
 
 		//Scene update.
 		gScene->simulate(substep);

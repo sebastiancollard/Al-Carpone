@@ -39,31 +39,14 @@
 #define CHASSIS_PHYSX_OBJ_PATH "models/al_carpone/chassis_physx.obj"
 #define WHEEL_PHYSX_OBJ_PATH "models/al_carpone/car_Lwheel.obj"
 
+#define POLICE_CAR_CHASSIS_PHYSX_PATH "models/police_car/police_car_chassis_physx.obj"
+#define POLICE_CAR_WHEEL_PHYSX_PATH "models/police_car/police_car_wheel_left.obj"
+
 namespace snippetvehicle
 {
 
 using namespace physx;
-/*
-PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics)
-{
-	//Add a plane to the scene.
-	PxRigidStatic* groundPlane = PxCreatePlane(*physics, PxPlane(0,1,0,0), *material);
 
-	//Get the plane shape so we can set query and simulation filter data.
-	PxShape* shapes[1];
-	groundPlane->getShapes(shapes, 1);
-
-	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
-	PxFilterData qryFilterData;
-	setupDrivableSurface(qryFilterData);
-	shapes[0]->setQueryFilterData(qryFilterData);
-
-	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
-	shapes[0]->setSimulationFilterData(simFilterData);
-
-	return groundPlane;
-}
-*/
 static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts, PxPhysics& physics, PxCooking& cooking)
 {
 	// Create descriptor for convex mesh
@@ -84,9 +67,11 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	return convexMesh;
 }
 
-PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
+PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int type)
 {
 	Model chassis(CHASSIS_PHYSX_OBJ_PATH);
+	if (type == 1) chassis = Model(POLICE_CAR_CHASSIS_PHYSX_PATH);
+	
 
 	std::vector<PxVec3> positions;
 	for (Vertex& v : chassis.meshes[0].vertices)
@@ -97,9 +82,10 @@ PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 	return createConvexMesh(verts,positions.size(),physics,cooking);
 }
 
-PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking)
+PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking,unsigned int type)
 {
 	Model wheel(WHEEL_PHYSX_OBJ_PATH);
+	if (type == 1) wheel = Model(POLICE_CAR_WHEEL_PHYSX_PATH);
 
 	std::vector<PxVec3> positions;
 	for (Vertex& v : wheel.meshes[0].vertices)
