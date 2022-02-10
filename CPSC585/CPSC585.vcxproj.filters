@@ -184,10 +184,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.fs">
+    <None Include="shader3D.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="default.vs">
+    <None Include="shader3D.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shader2D.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shader2D.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

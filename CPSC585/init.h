@@ -15,25 +15,13 @@
 
 #define BANK_BUILDING_PATH "models/al_carpone/bank_box.obj"
 
-//#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/ai_testlevel.obj"
-//#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/ai_testlevel_physx_model.obj"
-
-//#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel.obj"
-//#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_physx_model.obj"
-
-//#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/city_prototype.obj"
-//#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/city_prototype_physx.obj"
-
-#define ACTIVE_LEVEL_TEXTURED_MODEL_PATH "models/testlevel/tuning_testlevel_WLIGHTS.obj"
-#define ACTIVE_LEVEL_PHYSX_MODEL_PATH "models/testlevel/tuning_testlevel_WLIGHTS_physx.obj"
-
 
 #define NEAR_CLIPPING_PLANE 0.01f
 #define FAR_CLIPPING_PLANE 1000.f
 
 //Screen width and height. May want to change this to a dynamic value eventually.
-const unsigned int SCREEN_WIDTH = 1920;// *0.75f;
-const unsigned int SCREEN_HEIGHT = 1080;// *0.75f;
+const unsigned int SCREEN_WIDTH = 1920 *0.85f;
+const unsigned int SCREEN_HEIGHT = 1080 *0.85f;
 
 #include<glad/glad.h>
 
@@ -62,6 +50,23 @@ const unsigned int SCREEN_HEIGHT = 1080;// *0.75f;
 
 #include "snippetcommon/SnippetPrint.h"
 #include "snippetcommon/SnippetPVD.h"
+
+
+std::vector<std::string> level_texture_paths{
+"models/tuning_testlevel/tuning_testlevel.obj",
+"models/racetrack/racetrack.obj",
+"models/ai_testlevel/ai_testlevel.obj",
+"models/city_prototype/city_prototype.obj" 
+};
+
+
+std::vector<std::string> level_physx_paths{
+"models/tuning_testlevel/tuning_testlevel_physx.obj",
+"models/racetrack/racetrack_physx.obj",
+"models/ai_testlevel/ai_testlevel_physx.obj",
+"models/city_prototype/city_prototype_physx.obj"
+};
+
 
 using namespace physx;
 using namespace snippetvehicle;
@@ -120,6 +125,7 @@ PxBatchQuery* gBatchQuery = NULL;
 PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 
 PxRigidStatic* gGroundPlane = NULL;
+PxActor* activeLevelActorPtr = NULL;
 
 
 #include"State.h"

@@ -13,15 +13,73 @@ void updateTitle(GLFWwindow* window)
 	glfwSetWindowTitle(window, title.c_str());
 
 }
+
+//Checks for special inputs that would alter the state, and updates state accordingly
+void checkMainMenuInputs(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		if (!state.escape_isHeld) {
+			state.terminateProgram = true;
+		}
+		state.escape_isHeld = true;
+		return;
+	}
+	else {
+		state.escape_isHeld = false;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+		state.mainMenu = false;
+		state.selectedLevel = state.selectedMainMenuOption;
+		state.selectedMainMenuOption = 0;
+		return;
+	}
+
+	// Handles key inputs
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		if (!state.S_isHeld) {
+			state.selectedMainMenuOption = (state.selectedMainMenuOption + 1) % 4;
+		}
+		state.S_isHeld = true;
+		return;
+	}
+	else state.S_isHeld = false;
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		if (!state.W_isHeld) {
+
+			state.selectedMainMenuOption = (state.selectedMainMenuOption - 1) % 4;
+		}
+		state.W_isHeld = true;
+		return;
+	}
+	else state.W_isHeld = false;
+
+
+
+
+}
+#define CASH_ROBBED_PER_FRAME 5	//$5 per frame for now?
+
 //Checks for special inputs that would alter the state, and updates state accordingly
 void checkSpecialInputs(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		state.terminateProgram = true;
+		if (!state.escape_isHeld) {
+			state.mainMenu = true;
+		}
+		state.escape_isHeld = true;
 		return;
 	}
+	else {
+		state.escape_isHeld = false;
+	}
 	
-	// Handles key inputs
+	// Handle bank robbing
+	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && (player.canRob())) {
+		//std::cout << "Robbing bank...." << std::endl;
+		player.addCash(CASH_ROBBED_PER_FRAME);
+	}
 
 	// Debug Mode
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) {

@@ -91,9 +91,9 @@ void createBankActors() {
 	bank.triggerPtr = triggerBody;
 }
 
-PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
+PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection)
 {
-	Model level(ACTIVE_LEVEL_PHYSX_MODEL_PATH);
+	Model level(level_physx_paths[state.selectedLevel]);
 
 	std::vector<PxVec3> model_positions;
 	std::vector<PxU32> model_indices;
@@ -113,11 +113,11 @@ PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 
 	return createTriangleMesh(verts,model_positions.size(), indices, model_indices.size() / 3, physics, cooking);
 }
-PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics, PxCooking* cooking)
+PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics, PxCooking* cooking, unsigned int selection)
 {
 	//Add a plane to the scene.
 
-	PxTriangleMeshGeometry levelMesh = createLevelMesh(PxVec3(0, 0, 0), *physics, *cooking);
+	PxTriangleMeshGeometry levelMesh = createLevelMesh(PxVec3(0, 0, 0), *physics, *cooking, selection);
 	const PxTriangleMeshGeometry* levelGeometry(&levelMesh);
 
 	PxShape* levelShape = physics->createShape(*levelGeometry, *material);
@@ -182,8 +182,15 @@ void initPhysics()
 
 	//Create a plane to drive on.
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking);
+	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 0);
 	gScene->addActor(*gGroundPlane);
+	
+
+	PxU32 size = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) * sizeof(PxActor*);
+	PxActor** actors = (PxActor**)malloc(size);
+	gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
+	activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
+	
 
 	//Setup main player vehicle
 	player = Player(AL_CARPONE);

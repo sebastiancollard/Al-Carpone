@@ -29,12 +29,21 @@ public:
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
 
+	bool mainMenu = true;
+	unsigned int selectedMainMenuOption = 0;
+
+	unsigned int selectedLevel = 0;
+
 	//Used to check for single input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.
 	bool Q_isHeld = false;
 	bool R_isHeld = false;
-	bool shift_isHeld = false;
+	bool S_isHeld = false;
+	bool W_isHeld = false;
 	bool f5_isHeld = false;
+	bool shift_isHeld = false;
+	bool escape_isHeld = false;
+	
 
 	//Updates the state's time-sensitive variables.
 	void updateTime() {
