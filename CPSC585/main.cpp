@@ -66,6 +66,12 @@ int main()
 	mainMenuModels.push_back(Model("models/mainMenu/2_ai_testlevel.obj"));
 	mainMenuModels.push_back(Model("models/mainMenu/3_city_scale_testlevel.obj"));
 
+	level_light_positions.push_back(load_positions("models/tuning_testlevel/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/racetrack/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/ai_testlevel/light_positions.obj"));
+	level_light_positions.push_back(load_positions("models/city_prototype/light_positions.obj"));
+
+
 	//Create base meshes
 	//std::vector<Model> models;
 
@@ -85,6 +91,15 @@ int main()
 		Model(level_texture_paths[3])
 	};
 	
+	//Test enemy
+	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
+	Model police_car_lwheel(POLICE_CAR_LWHEEL_PATH);
+	Model police_car_rwheel(POLICE_CAR_RWHEEL_PATH);
+
+	CarModel4W police_car(police_car_chassis, police_car_lwheel, police_car_rwheel);
+
+	Vehicle* test_enemy = NULL;
+
 
 	active_level = &levels[0];
 
@@ -105,21 +120,10 @@ int main()
 	// Init to bound camera
 	activeCamera = &boundCamera;
 
-	level_light_positions.push_back(load_positions("models/tuning_testlevel/light_positions.obj"));
-	level_light_positions.push_back(load_positions("models/racetrack/light_positions.obj"));
-	level_light_positions.push_back(load_positions("models/ai_testlevel/light_positions.obj"));
-	level_light_positions.push_back(load_positions("models/city_prototype/light_positions.obj"));
-
+	
 	std::vector<glm::vec3> light_positions = level_light_positions[0];
 
-	//Test enemy
-	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
-	Model police_car_lwheel(POLICE_CAR_LWHEEL_PATH);
-	Model police_car_rwheel(POLICE_CAR_RWHEEL_PATH);
-
-	CarModel4W police_car(police_car_chassis, police_car_lwheel, police_car_rwheel);
-
-	Vehicle* test_enemy = NULL;
+	
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window) && !state.terminateProgram)
@@ -143,21 +147,24 @@ int main()
 		// Tell OpenGL which Shader Program we want to use
 
 	
-
+		//Check if in the main menu
 		if (state.mainMenu) {
+			//Draw the menu
 			shader2D.use();
 			mainMenuModels[state.selectedMainMenuOption].Draw(shader2D);
 
 			checkMainMenuInputs(window);
 
+			//Despawn any additional active vehicles (enemies)
 			while (activeVehicles.size() > 1) {
 				despawnEnemy(activeVehicles.back());
 				activeVehicles.pop_back();
 			}
 			
-
+			//If exiting the main menu
 			if (!state.mainMenu) {
-				
+				//Setup level
+
 				active_level = &levels[state.selectedLevel];
 				
 				//Remove the old level pointer and add the new
@@ -180,7 +187,7 @@ int main()
 					activeVehicles.push_back(test_enemy);
 				}
 				
-
+				//Reset active vehicles
 				for (Vehicle* v : activeVehicles) {
 					v->reset();
 				}
@@ -188,6 +195,7 @@ int main()
 			
 		}
 		else {
+			//Tell player if they can rob
 			if (player.canRob()) {
 				shader2D.use();
 				press_f_to_rob.Draw(shader2D);
@@ -235,8 +243,6 @@ int main()
 			active_level->Draw(shader3D);
 
 			// Render dynamic physx shapes
-
-			//printf("PITCH[%.2f] | GOAL[%.2f]\nYAW[%.2f] | GOAL[%.2f]\n\n", activeCamera->getPitch(), activeCamera->getPitchGoal(), activeCamera->getYaw(), activeCamera->getYawGoal());
 
 
 			{
