@@ -70,7 +70,7 @@ public:
 		return cash; 
 	}
 	bool canRob() { 
-		return can_rob; 
+		return can_rob && state.selectedLevel == 0; 
 	}
 	
 	void setRob(bool b) { 

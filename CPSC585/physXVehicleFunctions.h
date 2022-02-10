@@ -35,10 +35,6 @@ VehicleDesc initVehicleDesc(VEHICLE_TYPE type)
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
 
-	if (type == POLICE_CAR) std::cout << "POLICE CAR: " << std::endl;
-	else std::cout << "THIEF CAR: " << std::endl;
-	std::cout << chassisCMOffset.y << std::endl;
-
 	PxF32 wheelMass = AL_CARPONE_WHEEL_MASS;
 	if (type == POLICE_CAR) wheelMass = POLICE_CAR_WHEEL_MASS;
 
