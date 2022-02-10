@@ -1,18 +1,18 @@
 #pragma once
 
 //These aren't really needed as constants but will keep them here for easy modification for now
-#define WIDTH	5.f
-#define DEPTH	5.f
-#define HEIGHT	10.f
+#define WIDTH	1.f
+#define DEPTH	1.f
+#define HEIGHT	1.f
 
-enum orient {N, E, S, W};	//N=1, E=2, S=3, W=4
+enum orient {N, E, S, W};	//N=1, E=2, S=3, W=4		North is positive z direction of global coordinates
 
 class Bank {
 private:
 	//Bank position on map (tile position?)
-	glm::vec3 pos = { 40.f, HEIGHT/2.f, 20.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
+	glm::vec3 pos = { 0.f, HEIGHT/2.f, 0.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
 
-	orient dir = N;		//Bank faces "north" by default
+	orient dir = S;		//Bank faces "south" by default
 
 	float depth = DEPTH;	//y axis
 	float height = HEIGHT;	//z axis
@@ -68,7 +68,7 @@ public:
 		height = h;
 		
 		//y (vertical) position is set as height/2 so that the building is always on the ground
-		pos.y = h / 2.f;
+		pos.y = height / 2.f;
 	}
 
 
