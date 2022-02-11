@@ -55,6 +55,7 @@ CONTROLS:
 		R: Restart 
 		C: Look behind
 		F: Rob bank (When in range)
+		Shift: Boost (Might be a powerup eventually, but for now it's just for fun while testing)
 
 	THIRD PERSON VIEW:
 		W: Accelerate forward
