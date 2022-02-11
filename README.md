@@ -31,9 +31,11 @@ which we will then use as a template to build cleaner geometry/textures overtop 
 
 TO RUN STANDALONE:
 
-	1) Extract AlCarpone.zip to create the 'Release' folder
+	1) Download archive at https://drive.google.com/file/d/1LUCBrEu6DQXOc6_SU52aRY_-NU2eY3Cp/view?usp=sharing
+
+	2) Extract AlCarpone.zip to create the 'Release' folder
 	
-	2) Run Release/CPSC585.exe
+	3) Run Release/CPSC585.exe
 	
 CONTROLS:
 
