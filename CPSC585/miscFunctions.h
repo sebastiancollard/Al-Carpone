@@ -145,9 +145,7 @@ std::vector<glm::vec3> load_positions(std::string path) {
 		return positions;
 	}
 
-	while (getline(input, line)) {
-		if (line[0] == 'v') lines.push_back(line.substr(2));
-	}
+	while (getline(input, line)) if (line[0] == 'v' && line[1] == ' ') lines.push_back(line.substr(2));
 
 	for (std::string l : lines) {
 		std::vector<float> positions_raw;

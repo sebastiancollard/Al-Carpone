@@ -64,7 +64,7 @@ void main()
 		vec3 viewDirection = normalize(camPos - crntPos);
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
-		specular += specAmount * specularLight;
+		specular += specAmount * specularLight / (d*d);
    }
 
    if (shaderMode == SHADER_MODE_DIFFUSE) {
@@ -73,7 +73,7 @@ void main()
 
    if (shaderMode == SHADER_MODE_FULL) {
 		vec4 textureSpec = texture(texture_specular1, TexCoords);
-		FragColor = min((ambient + illum), 1.0f) * textureColor + vec4(texture(skybox, R).rgb, 1.0) * textureSpec;
+		FragColor = min((ambient + illum), 1.0f) * textureColor + vec4(texture(skybox, R).rgb, 1.0) * textureSpec * 0.5f + textureSpec * specular * min(illum + ambient, 1.0f);
    }
   
 }
