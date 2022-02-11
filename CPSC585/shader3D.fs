@@ -43,7 +43,7 @@ void main()
    float specular = 0;
 
    vec3 I = normalize(FragPos.xyz - camPos);
-   vec3 R = reflect(I, normalize(Normal).xyz);
+   vec3 R = reflect(I, normalize(Normal.xyz));
 
 
    //Get light contributions
@@ -61,7 +61,7 @@ void main()
 		vec3 viewDirection = normalize(camPos - crntPos);
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
-		specular += specAmount * specularLight / d;
+		specular += specAmount * specularLight;
    }
 
 
@@ -70,7 +70,7 @@ void main()
    }
 
    if(shaderMode == SHADER_MODE_FULL){
-		FragColor = min((ambient + illum), 1.0f) * textureColor + texture(texture_specular1, TexCoords).r  * specular * min((ambient + illum), 1.0f);
+		FragColor = min((ambient + illum), 1.0f) * textureColor + vec4(texture(skybox, R).rgb, 1.0);
    }
   
 }

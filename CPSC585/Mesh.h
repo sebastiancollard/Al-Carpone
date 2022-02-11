@@ -92,7 +92,7 @@ public:
             //ADDING SKYBOX
             if (name == "cubemap") {
                 glUniform1i(glGetUniformLocation(shader.ID, "skybox"), i);
-                glBindTexture(GL_TEXTURE_2D, textures[i].id);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, textures[i].id);
             }
             else {
                 // now set the sampler to the correct texture unit
