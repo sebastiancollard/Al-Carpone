@@ -182,6 +182,9 @@
     <ClInclude Include="Bank.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader3D.fs">
@@ -194,6 +197,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="shader2D.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="skybox.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="skybox.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

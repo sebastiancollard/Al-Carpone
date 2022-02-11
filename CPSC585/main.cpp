@@ -1,7 +1,5 @@
-//Initializes the physx system and all global variables and calls other includes.
+ //Initializes the physx system and all global variables and calls other includes.
 #include"init.h"
-#include <sstream>
-#include <string>
 
 
 
@@ -44,6 +42,8 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shader3D("shader3D.vs", "shader3D.fs");
 	Shader shader2D("shader2D.vs", "shader2D.fs");
+
+	Skybox skybox;
 
 	// DEBUG Panel
 	DebugPanel debugPanel = DebugPanel(window);
@@ -195,6 +195,18 @@ int main()
 			
 		}
 		else {
+
+			// view/projection transformations
+
+			glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
+
+			// view/projection transformations
+			glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
+			skybox.Draw(projection, view);
+
+
+			view = activeCamera->GetViewMatrix();
+
 			//Tell player if they can rob
 			if (player.canRob()) {
 				shader2D.use();
@@ -216,9 +228,6 @@ int main()
 			if (activeCamera == &boundCamera) boundCamera.checkClipping(window);
 
 
-			// view/projection transformations
-			glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
-			glm::mat4 view = activeCamera->GetViewMatrix();
 
 			//printMat4(projection* view);
 
@@ -235,7 +244,7 @@ int main()
 
 
 			// render the loaded model
-			
+
 			glm::mat4 model = glm::mat4(1.0f);
 			shader3D.setMat4("model", model);
 			shader3D.setVec3("camPos", glm::vec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z));
@@ -266,11 +275,11 @@ int main()
 						// Generate a mat4 out of the shape position so can send it to the vertex shader
 						model = glm::make_mat4(&shapePose.column0.x);
 
-					// check what geometry type the shape is
-					if (h.any().getType() == PxGeometryType::eBOX)
-					{
-						//BANK MODEL NOT INCLUDED FOR NOW, BANK IS PART OF GROUND PLANE	
-						//Note that the trigger is also of pxGeometryType::eBox now
+						// check what geometry type the shape is
+						if (h.any().getType() == PxGeometryType::eBOX)
+						{
+							//BANK MODEL NOT INCLUDED FOR NOW, BANK IS PART OF GROUND PLANE	
+							//Note that the trigger is also of pxGeometryType::eBox now
 
 						}
 						else if (h.any().getType() == PxGeometryType::eSPHERE)
@@ -310,8 +319,8 @@ int main()
 				debugPanel.draw();
 			}
 
+
 		}
-		
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 	}

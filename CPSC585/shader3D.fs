@@ -11,8 +11,12 @@ in vec3 crntPos;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
+uniform samplerCube skybox;
 
 uniform int shaderMode;
+
+
+
 #define SHADER_MODE_FLAT 0
 #define SHADER_MODE_DIFFUSE 1
 #define SHADER_MODE_FULL 2
@@ -24,6 +28,7 @@ uniform vec3 camPos;
 
 
 float ambient = 0.15f;
+
 
 void main()
 {    
@@ -37,7 +42,13 @@ void main()
    float illum = 0;
    float specular = 0;
 
-   for(int i = 0; i < numLights; i++){
+   vec3 I = normalize(FragPos.xyz - camPos);
+   vec3 R = reflect(I, normalize(Normal).xyz);
+
+
+   //Get light contributions
+    for(int i = 0; i < numLights; i++){
+		// diffuse
 		vec4 lPos = vec4(light_positions[i], 1.0f);
 		vec4 lDir = FragPos - lPos;
 		float d = length(lPos - FragPos);
@@ -52,6 +63,7 @@ void main()
 		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
 		specular += specAmount * specularLight / d;
    }
+
 
    if(shaderMode == SHADER_MODE_DIFFUSE){
 		FragColor = min((ambient + illum), 1.0f) * textureColor;

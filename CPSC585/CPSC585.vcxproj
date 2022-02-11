@@ -194,6 +194,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PxCustomEventCallback.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Vehicle.h" />
@@ -203,6 +204,8 @@
     <None Include="shader2D.vs" />
     <None Include="shader3D.fs" />
     <None Include="shader3D.vs" />
+    <None Include="skybox.fs" />
+    <None Include="skybox.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

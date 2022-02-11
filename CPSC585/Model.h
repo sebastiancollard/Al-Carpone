@@ -10,7 +10,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
+#include <stb/stb_image.h>
 #include "Mesh.h"
 #include "shader.h"
 
@@ -20,7 +20,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <stb/stb_image.h>
+
 using namespace std;
 
 class Model
@@ -38,6 +38,8 @@ public:
     Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
         loadModel(path);
+
+
     }
 
     // draws the model, and thus all its meshes
@@ -166,8 +168,57 @@ private:
         std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
+        //ADDING SKYBOX
+        Texture skybox;
+        skybox.id = loadCubemap();
+        skybox.type = "cubemap";
+        skybox.path = "models/skybox/...";
+        textures.push_back(skybox);
+        textures_loaded.push_back(skybox);
+
+
         // return a mesh object created from the extracted mesh data
         return Mesh(vertices, indices, textures);
+    }
+
+    unsigned int loadCubemap() {
+        std::vector<std::string> faces{
+            "models/skybox/right0.jpg",
+            "models/skybox/left0.jpg",
+            "models/skybox/top0.jpg",
+            "models/skybox/bottom0.jpg",
+            "models/skybox/front0.jpg",
+            "models/skybox/back0.jpg"
+        };
+
+        unsigned int textureID;
+        glGenTextures(1, &textureID);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+        int width, height, nrChannels;
+        for (unsigned int i = 0; i < faces.size(); i++)
+        {
+            unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+            if (data)
+            {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                    0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+                );
+                stbi_image_free(data);
+            }
+            else
+            {
+                std::cout << "Cubemap tex failed to load at path: " << faces[i] << std::endl;
+                stbi_image_free(data);
+            }
+        }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        return textureID;
     }
 
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
