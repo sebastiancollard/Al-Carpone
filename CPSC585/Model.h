@@ -170,13 +170,16 @@ private:
         std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
-        //ADDING SKYBOX
-        Texture skybox;
-        skybox.id = loadCubemap();
-        skybox.type = "cubemap";
-        skybox.path = "models/skybox/...";
-        textures.push_back(skybox);
-        textures_loaded.push_back(skybox);
+        if (specularMaps.size() > 0) {
+            //ADDING SKYBOX
+            Texture skybox;
+            skybox.id = loadCubemap();
+            skybox.type = "cubemap";
+            skybox.path = "models/skybox/...";
+            textures.push_back(skybox);
+            textures_loaded.push_back(skybox);
+        }
+        
 
 
         // return a mesh object created from the extracted mesh data

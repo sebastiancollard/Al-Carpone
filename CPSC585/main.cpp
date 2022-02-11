@@ -242,9 +242,6 @@ int main()
 				shader3D.setVec3(path.c_str(), light_positions[i]);
 			}
 
-			//glUniform1i(glGetUniformLocation(shader3D.ID, "skybox"), 10);
-			//glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.cubemapTexture);
-
 			// render the loaded model
 
 			glm::mat4 model = glm::mat4(1.0f);
