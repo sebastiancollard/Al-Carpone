@@ -30,16 +30,9 @@ to generate a cityscape from satellite images. We plan to use this to get a gene
 which we will then use as a template to build cleaner geometry/textures overtop of. 
 
 TO RUN STANDALONE:
-
-	Run either:
-		CPSC585-G3/x64/Debug/CPSC585.exe
-		or
-		CPSC585-G3/x64/Release/CPSC585.exe
+	1) Extract AlCarpone.zip to create the 'Release' folder
+	2) Run Release/CPSC585.exe
 	
-	NOTE: 
-	      	Debug is very slow, especially when loading into Tuning Testlevel, 
-	     	we recommend using Release.
-
 CONTROLS:
 
 	MAIN MENU:
