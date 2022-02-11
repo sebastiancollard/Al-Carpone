@@ -5,48 +5,11 @@
 
 int main()
 {
-
-	//Set up the GLFWwindow
-	GLFWwindow* window;
-	{
-		// Initialize GLFW
-		glfwInit();
-
-		// Tell GLFW what version of OpenGL we are using 
-		// In this case we are using OpenGL 3.3
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		// Tell GLFW we are using the CORE profile
-		// So that means we only have the modern functions
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		// Create a GLFWwindow object of 800 by 800 pixels
-		window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", NULL, NULL);
-		// Error check if the window fails to create
-		if (window == NULL)
-		{
-			std::cout << "Failed to create GLFW window" << std::endl;
-			glfwTerminate();
-			exit(-1);
-		}
-		// Introduce the window into the current context
-		glfwMakeContextCurrent(window);
-
-		//Load GLAD so it configures OpenGL
-		gladLoadGL();
-		// Specify the viewport of OpenGL in the Window
-		// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
-		glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	}
-
-	// Generates Shader object using shaders default.vert and default.frag
-	Shader shader3D("shader3D.vs", "shader3D.fs");
-	Shader shader2D("shader2D.vs", "shader2D.fs");
-
+	GraphicsSystem graphics;
 	Skybox skybox;
 
 	// DEBUG Panel
-	DebugPanel debugPanel = DebugPanel(window);
+	DebugPanel debugPanel = DebugPanel(graphics.window);
 
 	
 	//SETUP BANK POSITION, DIMENSIONS & ORIENTATION
@@ -110,8 +73,13 @@ int main()
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
-
 	glfwSwapInterval(1);
+
+
+	//////////////////////////
+	// CAMERAS 
+	//////////////////////////
+
 	// Creates camera pointer
 	Camera* activeCamera;
 	// Camrea can be one of these at a given time
@@ -126,12 +94,12 @@ int main()
 	
 
 	// Main while loop
-	while (!glfwWindowShouldClose(window) && !state.terminateProgram)
+	while (!glfwWindowShouldClose(graphics.window) && !state.terminateProgram)
 	{
 		//Update the time and fps counter.
 		state.updateTime();
 		if (state.timeSinceLastFpsUpdate >= 1.0f/30.0f) {
-			updateTitle(window);
+			updateTitle(graphics.window);
 			state.prevTime = state.currTime;
 			state.timeSinceLastFpsUpdate = 0;
 		}
@@ -150,10 +118,10 @@ int main()
 		//Check if in the main menu
 		if (state.mainMenu) {
 			//Draw the menu
-			shader2D.use();
-			mainMenuModels[state.selectedMainMenuOption].Draw(shader2D);
+			graphics.shader2D->use();
+			mainMenuModels[state.selectedMainMenuOption].Draw(*graphics.shader2D);
 
-			checkMainMenuInputs(window);
+			checkMainMenuInputs(graphics.window);
 
 			//Despawn any additional active vehicles (enemies)
 			while (activeVehicles.size() > 1) {
@@ -209,46 +177,43 @@ int main()
 
 			//Tell player if they can rob
 			if (player.canRob()) {
-				shader2D.use();
-				press_f_to_rob.Draw(shader2D);
+				graphics.shader2D->use();
+				press_f_to_rob.Draw(*graphics.shader2D);
 			}
-			shader3D.use();
+			graphics.shader3D->use();
 			//Simulate physics through the timestep
-			stepPhysics(window);
+			stepPhysics(graphics.window);
 
 			//Check for special inputs (currently only camera mode change)
-			checkSpecialInputs(window);
+			checkSpecialInputs(graphics.window);
 
 			if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
 			else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
 
 
 			// Camera is disabled in DEBUG MODE
-			if (!state.debugMode) activeCamera->handleInput(window);
-			if (activeCamera == &boundCamera) boundCamera.checkClipping(window);
+			if (!state.debugMode) activeCamera->handleInput(graphics.window);
+			if (activeCamera == &boundCamera) boundCamera.checkClipping(graphics.window);
 
-
-
-			//printMat4(projection* view);
 
 			// send them to shader
-			shader3D.setMat4("projection", projection);
-			shader3D.setMat4("view", view);
+			graphics.shader3D->setMat4("projection", projection);
+			graphics.shader3D->setMat4("view", view);
 
-			shader3D.setInt("numLights", light_positions.size());
+			graphics.shader3D->setInt("numLights", light_positions.size());
 
 			for (int i = 0; i < light_positions.size(); i++) {
 				std::string path = "light_positions[" + std::to_string(i) + "]";
-				shader3D.setVec3(path.c_str(), light_positions[i]);
+				graphics.shader3D->setVec3(path.c_str(), light_positions[i]);
 			}
 
 			// render the loaded model
 
 			glm::mat4 model = glm::mat4(1.0f);
-			shader3D.setMat4("model", model);
-			shader3D.setVec3("camPos", glm::vec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z));
-			shader3D.setInt("shaderMode", SHADER_MODE_DIFFUSE);
-			active_level->Draw(shader3D);
+			graphics.shader3D->setMat4("model", model);
+			graphics.shader3D->setVec3("camPos", glm::vec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z));
+			graphics.shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
+			active_level->Draw(*graphics.shader3D);
 
 			// Render dynamic physx shapes
 
@@ -287,25 +252,25 @@ int main()
 						}
 						else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
 
-							shader3D.setInt("shaderMode", SHADER_MODE_DIFFUSE);
+							graphics.shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
 							CarModel4W* activeCar;
 							activeCar = &car;
 							if (i != 0) activeCar = &police_car;
 
 							if (j == 0) {
-								activeCar->Draw(FRWHEEL, shader3D, model);;
+								activeCar->Draw(FRWHEEL, *graphics.shader3D, model);;
 							}
 							else if (j == 1) {
-								activeCar->Draw(FLWHEEL, shader3D, model);
+								activeCar->Draw(FLWHEEL, *graphics.shader3D, model);
 							}
 							else if (j == 2) {
-								activeCar->Draw(BRWHEEL, shader3D, model);
+								activeCar->Draw(BRWHEEL, *graphics.shader3D, model);
 							}
 							else if (j == 3) {
-								activeCar->Draw(BLWHEEL, shader3D, model);
+								activeCar->Draw(BLWHEEL, *graphics.shader3D, model);
 							}
 							else if (j == 4) {
-								activeCar->Draw(CHASSIS, shader3D, model);
+								activeCar->Draw(CHASSIS, *graphics.shader3D, model);
 							}
 
 						}
@@ -320,17 +285,11 @@ int main()
 
 
 		}
-		// Swap the back buffer with the front buffer
-		glfwSwapBuffers(window);
+		graphics.swapBuffers();
 	}
 
 	debugPanel.cleanUp();
-
-	// Delete window before ending the program
-	glfwDestroyWindow(window);
-	// Terminate GLFW before ending the program
-	glfwTerminate();
-
+	graphics.cleanup();
 	cleanupPhysics();
 
 	return EXIT_SUCCESS;

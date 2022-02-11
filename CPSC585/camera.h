@@ -10,6 +10,7 @@
 #include<glm/gtx/vector_angle.hpp>
 
 #include <vector>
+#include "constants.h"
 
 //Update these as we tune
 #define CAR_MAX_VELOCITY_FORWARD 40.0f

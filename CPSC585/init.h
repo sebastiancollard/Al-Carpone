@@ -19,10 +19,6 @@
 #define NEAR_CLIPPING_PLANE 0.01f
 #define FAR_CLIPPING_PLANE 1000.f
 
-//Screen width and height. May want to change this to a dynamic value eventually.
-const unsigned int SCREEN_WIDTH = 1920 *0.85f;
-const unsigned int SCREEN_HEIGHT = 1080 *0.85f;
-
 #include<glad/glad.h>
 
 #include<iostream>
@@ -33,10 +29,10 @@ const unsigned int SCREEN_HEIGHT = 1080 *0.85f;
 #include<glm/gtc/type_ptr.hpp>
 #include<vector>
 
+#include "GraphicsSystem.h"
 
-
-#include "shader.h"
 #include "Model.h"
+#include "shader.h"
 #include "Skybox.h"
 
 

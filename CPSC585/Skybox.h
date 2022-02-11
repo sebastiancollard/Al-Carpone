@@ -1,4 +1,7 @@
 #pragma once
+#include <glm/glm.hpp>
+#include<stb/stb_image.h>
+#include "shader.h"
 
 class Skybox {
 public:
