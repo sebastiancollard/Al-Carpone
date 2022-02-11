@@ -23,7 +23,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\BLACK.png
-map_Ks textures\\NO_SPEC.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl GREY_0035.002
 Ns 179.999996
@@ -35,6 +35,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\GREY_0035.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl GREY_03.002
 Ns 179.999996
@@ -46,6 +47,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\GREY_03.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl GREY_0408.002
 Ns 179.999996
@@ -57,6 +59,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\GREY_0408.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl GREY_0631.002
 Ns 179.999996
@@ -68,6 +71,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\grey_0631.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl GREY_0859
 Ns 179.999996
@@ -79,6 +83,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\GREY_0859.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl GREY_0859.002
 Ns 179.999996
@@ -90,6 +95,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\GREY_0859.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl GREY_0906.002
 Ns 179.999996
@@ -101,6 +107,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\GREY_0906.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl HAT
 Ns 201.040110
@@ -136,6 +143,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\NAVY_BLUE.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl RED.003
 Ns 179.999996
@@ -159,6 +167,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\RED_2.png
+map_Ks textures\\FULL_SPEC.png
 
 newmtl TAN.002
 Ns 179.999996
@@ -182,6 +191,7 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\TAN_2.png
+map_Ks textures\\NO_SPEC.png
 
 newmtl TIP
 Ns 225.000000
@@ -205,3 +215,4 @@ Ni 1.450000
 d 1.000000
 illum 1
 map_Kd textures\\WHITE.png
+map_Ks textures\\FULL_SPEC.png

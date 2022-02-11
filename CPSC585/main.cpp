@@ -242,6 +242,8 @@ int main()
 				shader3D.setVec3(path.c_str(), light_positions[i]);
 			}
 
+			//glUniform1i(glGetUniformLocation(shader3D.ID, "skybox"), 10);
+			//glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.cubemapTexture);
 
 			// render the loaded model
 
@@ -288,7 +290,7 @@ int main()
 						}
 						else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
 
-							shader3D.setInt("shaderMode", SHADER_MODE_FULL);
+							shader3D.setInt("shaderMode", SHADER_MODE_DIFFUSE);
 							CarModel4W* activeCar;
 							activeCar = &car;
 							if (i != 0) activeCar = &police_car;

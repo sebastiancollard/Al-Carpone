@@ -3,13 +3,14 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 in vec4 FragPos;
-in vec4 Normal;
+in vec3 Normal;
 in mat4 Transform;
 in vec3 crntPos;
 
 #define MAX_NR_LIGHTS 128
 
 uniform sampler2D texture_diffuse1;
+uniform int specLoaded;
 uniform sampler2D texture_specular1;
 uniform samplerCube skybox;
 
@@ -34,6 +35,8 @@ void main()
 {    
    vec4 textureColor =  texture(texture_diffuse1, TexCoords);
  
+  
+
    if(shaderMode == SHADER_MODE_FLAT){
 		  FragColor = textureColor;
 		  return;
@@ -43,7 +46,7 @@ void main()
    float specular = 0;
 
    vec3 I = normalize(FragPos.xyz - camPos);
-   vec3 R = reflect(I, normalize(Normal.xyz));
+   vec3 R = reflect(I, normalize(Normal));
 
 
    //Get light contributions
@@ -52,11 +55,11 @@ void main()
 		vec4 lPos = vec4(light_positions[i], 1.0f);
 		vec4 lDir = FragPos - lPos;
 		float d = length(lPos - FragPos);
-		illum +=  2.5f * abs(dot(lDir, Normal)) / (d*d);
+		illum +=  2.5f * abs(dot(lDir, vec4(Normal, 1.0))) / (d*d);
 
 		// specular lighting
-		vec3 normal = normalize(vec3(Normal.x, Normal.y, Normal.z));
-		float specularLight = 0.25f;
+		vec3 normal = normalize(Normal);
+		float specularLight = 0.9f;
 		vec3 lightDirection = normalize(light_positions[i] - crntPos);
 		vec3 viewDirection = normalize(camPos - crntPos);
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
@@ -64,13 +67,13 @@ void main()
 		specular += specAmount * specularLight;
    }
 
-
-   if(shaderMode == SHADER_MODE_DIFFUSE){
+   if (shaderMode == SHADER_MODE_DIFFUSE) {
 		FragColor = min((ambient + illum), 1.0f) * textureColor;
    }
 
-   if(shaderMode == SHADER_MODE_FULL){
-		FragColor = min((ambient + illum), 1.0f) * textureColor + vec4(texture(skybox, R).rgb, 1.0);
+   if (shaderMode == SHADER_MODE_FULL) {
+		vec4 textureSpec = texture(texture_specular1, TexCoords);
+		FragColor = min((ambient + illum), 1.0f) * textureColor + vec4(texture(skybox, R).rgb, 1.0) * textureSpec;
    }
   
 }

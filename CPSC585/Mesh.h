@@ -60,7 +60,6 @@ public:
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
-
         // now that we have all the required data, set the vertex buffers and its attribute pointers.
         setupMesh();
     }
@@ -82,8 +81,10 @@ public:
             string name = textures[i].type;
             if (name == "texture_diffuse")
                 number = std::to_string(diffuseNr++);
-            else if (name == "texture_specular")
+            else if (name == "texture_specular") {
                 number = std::to_string(specularNr++); // transfer unsigned int to string
+                shader.setInt("shaderMode", SHADER_MODE_FULL);
+            }
             else if (name == "texture_normal")
                 number = std::to_string(normalNr++); // transfer unsigned int to string
             else if (name == "texture_height")
