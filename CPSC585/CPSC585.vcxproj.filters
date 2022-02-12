@@ -46,6 +46,12 @@
     <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{5a9be743-1288-4793-9bde-643d72276936}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameLogic">
+      <UniqueIdentifier>{53ee5498-a00c-4c6d-8c00-924b215c4c11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameLogic">
+      <UniqueIdentifier>{355afb03-5210-492d-b730-98c743a12527}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,15 +117,15 @@
     <ClCompile Include="constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Source Files\GameLogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="miscFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -145,9 +151,6 @@
     </ClInclude>
     <ClInclude Include="DebugPanel.h">
       <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="util.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\Graphics\imgui</Filter>
@@ -182,9 +185,6 @@
     <ClInclude Include="physXVehicleSettings.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="PxCustomEventCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Bank.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
@@ -196,6 +196,12 @@
     </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="PxCustomEventCallback.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

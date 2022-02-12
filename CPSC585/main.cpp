@@ -99,7 +99,7 @@ int main()
 		//Update the time and fps counter.
 		state.updateTime();
 		if (state.timeSinceLastFpsUpdate >= 1.0f/30.0f) {
-			updateTitle(graphics.window);
+			graphics.updateTitle(state, player);
 			state.prevTime = state.currTime;
 			state.timeSinceLastFpsUpdate = 0;
 		}

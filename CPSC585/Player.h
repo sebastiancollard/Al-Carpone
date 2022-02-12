@@ -1,5 +1,13 @@
+#pragma once
+
+#include<glad/glad.h>
+#include<GLFW/glfw3.h>
+#include<glm/glm.hpp>
+#include <vector>
 #include <iostream>
 #include <queue>
+#include "State.h"
+#include "Vehicle.h"
 
 class Player : public Vehicle {
 private:
@@ -16,7 +24,7 @@ public:
 
 
 	// Handle all key inputs relevant to driving
-	void handleInput(GLFWwindow* window)
+	void handleInput(GLFWwindow* window, State& state)
 	{
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
@@ -134,7 +142,7 @@ public:
 		return cash; 
 	}
 	bool canRob() { 
-		return can_rob && state.selectedLevel == 0; 
+		return can_rob; 
 	}
 	
 	void setRob(bool b) { 

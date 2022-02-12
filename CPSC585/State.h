@@ -1,4 +1,13 @@
 #pragma once
+#include "Player.h"
+
+
+/*
+GameState containing most of the important variables
+*/
+
+
+//MENU
 
 //Locked position and orientation. Used for third person view behind the car.
 #define CAMERA_MODE_BOUND 0
@@ -10,32 +19,32 @@
 class State {
 public:
 
-	//Current time in game
-	double currTime = 0.;
-	//Previous time (time at last currTime update)
-	double prevTime = 0.;
-	//The ammount of time since last time update
-	double timeStep = 1.0f / 60.0f;
+	// Game Objects
+	Player* player;
+
+
+	// TIME
+	double currTime = 0.;			//Current time in game
+	double prevTime = 0.;			//Previous time (time at last currTime update)
+	double timeStep = 1.0f / 60.0f;	//The ammount of time since last time update
 	float simulationSpeed = 2.f;
-
-
 	double timeSinceLastFpsUpdate = 0;
 
+	// CAMERA
 	unsigned int cameraMode = CAMERA_MODE_BOUND;
-
-	//Debug Window
-	bool debugMode = false;
 
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
 
+	// Menus and Windows
+	bool debugMode = false;			//Debug Window
 	bool mainMenu = true;
 	unsigned int selectedMainMenuOption = 0;
 
 	unsigned int selectedLevel = 0;
 
 	//Used to check for single input to prevent the key from being spammed.
-	//This could be moved to some sort of general input class at somepoint.
+	//TODO: This could be moved to some sort of general input class at somepoint.
 	bool Q_isHeld = false;
 	bool R_isHeld = false;
 	bool S_isHeld = false;
@@ -47,22 +56,10 @@ public:
 	bool escape_isHeld = false;
 	
 
-	//Updates the state's time-sensitive variables.
-	void updateTime() {
-		currTime = glfwGetTime();
-		timeStep = currTime - prevTime;
-		prevTime = currTime;
-		timeSinceLastFpsUpdate += timeStep;
-	}
+	
+	State();
 
-	//Toggles the camera mode between bound and unbound.
-	void toggleCameraMode() {
-		if (cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
-			cameraMode = CAMERA_MODE_BOUND;
-		}
-		else {
-			cameraMode = CAMERA_MODE_UNBOUND_FREELOOK;
-		}
-	}
+	void updateTime();			//Updates the state's time-sensitive variables.
+	void toggleCameraMode();	//Toggles the camera mode between bound and unbound.
 
 };

@@ -5,7 +5,8 @@
 
 #include "shader.h"
 #include "Skybox.h"
-
+#include "Player.h"
+#include "State.h"
 
 class GraphicsSystem {
 
@@ -23,4 +24,5 @@ public:
 	void swapBuffers();
 	void cleanup();
 
+	void updateTitle(State& state, Player& player);
 };
