@@ -1,5 +1,12 @@
 #pragma once
+
+#include "physXVehicleFunctions.h"
 #include "PxCustomEventCallback.h"
+
+
+using namespace physx;
+
+
 
 void createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0))
 {
@@ -12,6 +19,8 @@ void createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec
 
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 }
+
+
 PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices32, const PxU32 numTris, PxPhysics& physics, PxCooking& cooking) {
 	PxTriangleMeshDesc meshDesc;
 	meshDesc.points.count = numVerts;
@@ -31,6 +40,7 @@ PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, co
 	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 	return physics.createTriangleMesh(readBuffer);
 }
+
 
 void createBankActors() {
 	//BANK (BUILDING)
@@ -109,6 +119,7 @@ void createBankActors() {
 	bank.triggerPtr = triggerBody;
 }
 
+
 PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection)
 {
 	std::vector<std::string> level_physx_paths{
@@ -138,6 +149,8 @@ PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 
 	return createTriangleMesh(verts,model_positions.size(), indices, model_indices.size() / 3, physics, cooking);
 }
+
+
 PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics, PxCooking* cooking, unsigned int selection)
 {
 	//Add a plane to the scene.
@@ -160,6 +173,13 @@ PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial
 
 	return groundPlane;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// INITIALIZE PHYSICS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void initPhysics()
 {
 	unsigned int ID = 0;
@@ -220,7 +240,7 @@ void initPhysics()
 	//Setup main player vehicle
 	player = Player(0);
 	//Add it to the list of active vehicles
-	activeVehicles.push_back(&player);
+	state.activeVehicles.push_back(&player);
 
 	createBankActors();
 }
@@ -228,8 +248,8 @@ void initPhysics()
 
 
 
-	void stepPhysics(GLFWwindow* window)
-	{
+void stepPhysics(GLFWwindow* window)
+{
 	float timestep = state.timeStep * state.simulationSpeed; // 1.0f / 60.0f;
 
 	while (timestep > 0) {
@@ -240,12 +260,12 @@ void initPhysics()
 
 		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window,state);
 
-		updateDrivingMode();
+		updateDrivingMode(player);
 
 		//Update the control inputs for the vehicle.dwd
 		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, player.vehicleInAir, *player.vehiclePtr);
 		
-		for (Vehicle* v : activeVehicles) {
+		for (Vehicle* v : state.activeVehicles) {
 			//Raycasts.
 			PxVehicleWheels* vehicles[1] = { v->vehiclePtr };
 			PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);

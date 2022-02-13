@@ -1,9 +1,16 @@
 #pragma once
+#include<glad/glad.h>
+#include<GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <vector>
+
+#include "GraphicsSystem.h"
 #include "Model.h"
+#include "State.h"
 
 static class MainMenu {
+
+	unsigned int selectedOption = 0;
 
 public:
 
@@ -17,6 +24,7 @@ public:
 
 	MainMenu();
 	void changeLevel(int level);
-
+	void drawMenu(GraphicsSystem& graphics, State& state);
+	void handleInputs(GLFWwindow* window, State& state);
 
 };

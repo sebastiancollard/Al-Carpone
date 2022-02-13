@@ -1,5 +1,12 @@
 #pragma once
 
+#include "snippetvehiclecommon/SnippetVehicleFilterShader.h"
+#include "snippetvehiclecommon/SnippetVehicleCreate.h"
+#include "physx_globals.h"
+#include "Vehicle.h"
+#include "Player.h"
+
+
 #define AL_CARPONE_CHASSIS_MASS 1500.0f //original 1500.0f
 #define AL_CARPONE_WHEEL_MASS 20.0f //original 20.0f
 #define AL_CARPONE_CHASSIS_DIMS PxVec3(2.00344f, 1.15007f, 5.41695f)
@@ -14,8 +21,12 @@
 #define POLICE_CAR_WHEEL_WIDTH 0.347541f
  
 
+using namespace physx;
+using namespace snippetvehicle;
+
 VehicleDesc initVehicleDesc(VEHICLE_TYPE type)
 {
+
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
@@ -70,6 +81,7 @@ VehicleDesc initVehicleDesc(VEHICLE_TYPE type)
 	return vehicleDesc;
 }
 
+
 void startAccelerateForwardsMode()
 {
 	gVehicleInputData.setAnalogAccel(1.0f);
@@ -109,7 +121,7 @@ void releaseAllControls()
 }
 
 
-void updateDrivingMode()
+void updateDrivingMode(Player& player)
 {
 	bool gasPedal = false;
 
@@ -176,4 +188,16 @@ void updateDrivingMode()
 			break;
 		};
 	}
+}
+
+
+void despawnEnemy(Vehicle* enemy) {
+	gScene->removeActor(*enemy->actorPtr);
+	for (int i = 0; i < physx_actors.size(); i++) {
+		if (physx_actors[i].actorPtr == enemy->actorPtr) {
+			physx_actors.erase(physx_actors.begin() + i);
+			return;
+		}
+	}
+	delete(enemy);
 }

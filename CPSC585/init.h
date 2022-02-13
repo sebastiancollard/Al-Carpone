@@ -78,6 +78,7 @@ State state;
 #include "MainMenu.h"
 #include "UI.h"
 
+// Entities
 #include"Vehicle.h"
 #include"Player.h"
 #include "PoliceCar.h"
@@ -86,11 +87,9 @@ Player player;
 #include "Bank.h"
 Bank bank;
 
-std::vector<Vehicle*> activeVehicles;
+
 
 #include "Camera.h"
-//All of the physx functions needed for the vehicle sdk
-#include"physXVehicleFunctions.h"
 //All of the physx functions needed for setup + running
 #include"physXGeneralFunctions.h"
 //Miscelanious functions who dont have a home yet

@@ -40,7 +40,15 @@ GraphicsSystem::GraphicsSystem() {
 	// Generates Shader object using shaders default.vert and default.frag
 	shader3D = std::shared_ptr<Shader>(new Shader("shader3D.vs", "shader3D.fs"));
 	shader2D = std::shared_ptr<Shader>(new Shader("shader2D.vs", "shader2D.fs"));
+
+	skybox = new Skybox();
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BUFFERS
+////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 void GraphicsSystem::clearBuffer() {
@@ -70,4 +78,21 @@ void GraphicsSystem::cleanup() {
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program
 	glfwTerminate();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// OTHER FUNCTIONS
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//Updates the fps/ms in the window title.
+void GraphicsSystem::updateTitle(State& state, Player& player)
+{
+	std::string FPS = std::to_string((int)ceil(1. / state.timeStep));
+	std::string RT = std::to_string((state.timeStep) * 1000);
+	std::string title = "Al Carpone / " + FPS + "FPS / " + RT + "ms / PLAYER CASH: $" + std::to_string(player.getCash());
+	glfwSetWindowTitle(window, title.c_str());
+
 }

@@ -8,7 +8,6 @@ int main()
 	cout << "Initializing Graphics..." << endl;
 
 	GraphicsSystem graphics; //Must be called first ALWAYS
-	Skybox skybox; //TODO no home yet. Maybe a leve class? 
 
 	// Initialize Windows
 	DebugPanel debugPanel(graphics.window);
@@ -23,15 +22,11 @@ int main()
 
 
 	// Initialize Models
-	player.createModel();
-	PoliceCar police_car;
-	police_car.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
+	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
 	bank.createModel();
+	PoliceCar police_car;
+	police_car.createModel();
 
-
-	//Test enemy
-	Vehicle* test_enemy = NULL;
-	
 
 	graphics.enableDepthBuffer();
 
@@ -42,46 +37,30 @@ int main()
 	Camera* activeCamera = &boundCamera;
 
 
-	// Main while loop
+	// Main loop
 	while (!glfwWindowShouldClose(graphics.window) && !state.terminateProgram)
 	{
-		//Update the time and fps counter.
+		// Update the time and fps counter.
 		state.updateTime();
 		if (state.timeSinceLastFpsUpdate >= 1.0f/30.0f) {
-			updateTitle(graphics.window);
+			graphics.updateTitle(state, player);
 			state.prevTime = state.currTime;
 			state.timeSinceLastFpsUpdate = 0;
 		}
 
-		// Take care of all GLFW events
-		glfwPollEvents();
-
-
-		// Specify the color of the background
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		// Clean the back buffer and depth buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// Tell OpenGL which Shader Program we want to use
+		
+		glfwPollEvents();			// Take care of all GLFW events
+		graphics.clearBuffer();
 
 	
-		//Check if in the main menu
-		//TODO move to MainMenu.cpp
+		// Check if in the main menu
 		if (state.mainMenu) {
 			//Draw the menu
-			graphics.shader2D->use();
-			mainMenu.level_models[state.selectedMainMenuOption].Draw(*graphics.shader2D);
-
-			checkMainMenuInputs(graphics.window);
-
-			//Despawn any additional active vehicles (enemies)
-			while (activeVehicles.size() > 1) {
-				despawnEnemy(activeVehicles.back());
-				activeVehicles.pop_back();
-			}
+			mainMenu.drawMenu(graphics, state);
 			
-			//If exiting the main menu
+			// If exiting the main menu
 			if (!state.mainMenu) {
-				//Setup level
+				// Setup level
 
 				mainMenu.changeLevel(state.selectedLevel);
 				
@@ -99,12 +78,11 @@ int main()
 				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
 
 				if (state.selectedLevel == 0) {
-					test_enemy = new Vehicle(POLICE_CAR, activeVehicles.size(), PxVec3(10.0f, 0.0f, 0.0f));
-					activeVehicles.push_back(test_enemy);
+					state.activeVehicles.push_back(&police_car);
 				}
 				
 				//Reset active vehicles
-				for (Vehicle* v : activeVehicles) {
+				for (Vehicle* v : state.activeVehicles) {
 					v->reset();
 				}
 			}
@@ -118,7 +96,7 @@ int main()
 
 			// view/projection transformations
 			glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
-			skybox.Draw(projection, view);
+			graphics.skybox->Draw(projection, view);
 
 
 			view = activeCamera->GetViewMatrix();
@@ -230,8 +208,6 @@ int main()
 			if (state.debugMode) { // Camera is deactivated
 				debugPanel.draw();
 			}
-
-
 		}
 		graphics.swapBuffers();
 	}
