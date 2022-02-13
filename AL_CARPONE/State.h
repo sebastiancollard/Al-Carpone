@@ -31,7 +31,7 @@ public:
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
 
-	std::vector<Vehicle*> activeVehicles;
+	std::vector<Vehicle*> activeVehicles = {};
 
 	//Used to check for single input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.

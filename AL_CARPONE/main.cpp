@@ -99,6 +99,7 @@ int main()
 				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
 
 				if (state.selectedLevel == 0) {
+					if (police_car.actorPtr == NULL) police_car = PoliceCar(1);
 					state.activeVehicles.push_back(&police_car);
 				}
 				
