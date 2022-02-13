@@ -22,45 +22,24 @@ int main()
 	initPhysics();
 
 
-	cout << "Physics done" << endl;
-
+	// Initialize Models
 	player.createModel();
-
-	cout << "Player model done" << endl;
 	PoliceCar police_car;
-	cout << "Police Car done" << endl;
 	police_car.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
+	bank.createModel();
 
-	cout << "creating models done" << endl;
 
-
-	
 	//Test enemy
 	Vehicle* test_enemy = NULL;
-
-
-	//Mesh building;
-	//building.createBox(bank.getWidth(), bank.getHeight(), bank.getDepth());
-	Model bankModel(BANK_BUILDING_PATH);
+	
 
 	graphics.enableDepthBuffer();
 
-	cout << "bank done" << endl;
 
-	//////////////////////////
-	// CAMERAS 
-	//////////////////////////
-
-	// Creates camera pointer
-	Camera* activeCamera;
-	// Camrea can be one of these at a given time
-	BoundCamera boundCamera; // Locked in a sphere around the car
-	FreeCamera freeCamera; // Move and look freely anywhere (for debugging)
-	// Init to bound camera
-	activeCamera = &boundCamera;
-
-	
-	std::vector<glm::vec3> light_positions = mainMenu.level_light_positions[0];
+	// Active camera can be one of [bound/free] at a given time
+	BoundCamera boundCamera;	// Locked in a sphere around the car
+	FreeCamera freeCamera;		// Move and look freely anywhere (for debugging)
+	Camera* activeCamera = &boundCamera;
 
 
 	// Main while loop
@@ -86,6 +65,7 @@ int main()
 
 	
 		//Check if in the main menu
+		//TODO move to MainMenu.cpp
 		if (state.mainMenu) {
 			//Draw the menu
 			graphics.shader2D->use();
@@ -117,8 +97,6 @@ int main()
 				PxActor** actors = (PxActor**)malloc(size);
 				gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
 				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
-
-				light_positions = mainMenu.level_light_positions[state.selectedLevel];
 
 				if (state.selectedLevel == 0) {
 					test_enemy = new Vehicle(POLICE_CAR, activeVehicles.size(), PxVec3(10.0f, 0.0f, 0.0f));
@@ -170,11 +148,11 @@ int main()
 			graphics.shader3D->setMat4("projection", projection);
 			graphics.shader3D->setMat4("view", view);
 
-			graphics.shader3D->setInt("numLights", light_positions.size());
+			graphics.shader3D->setInt("numLights", mainMenu.light_positions->size());
 
-			for (int i = 0; i < light_positions.size(); i++) {
+			for (int i = 0; i < mainMenu.light_positions->size(); i++) {
 				std::string path = "light_positions[" + std::to_string(i) + "]";
-				graphics.shader3D->setVec3(path.c_str(), light_positions[i]);
+				graphics.shader3D->setVec3(path.c_str(), (*mainMenu.light_positions)[i]);
 			}
 
 			// render the loaded model

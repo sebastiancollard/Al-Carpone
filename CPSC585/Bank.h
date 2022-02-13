@@ -4,10 +4,12 @@
 #define WIDTH	1.f
 #define DEPTH	1.f
 #define HEIGHT	1.f
+#define BANK_BUILDING_PATH "models/al_carpone/bank_box.obj"
 
 enum orient {N, E, S, W};	//N=1, E=2, S=3, W=4		North is positive z direction of global coordinates
 
 class Bank {
+
 private:
 	//Bank position on map (tile position?)
 	glm::vec3 pos = { 0.f, HEIGHT/2.f, 0.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
@@ -23,11 +25,18 @@ public:
 	PxRigidActor* bankPtr;				//Would like to make these actors private, however they are not provate for player. Thought it would be best to keep it the same to avoid confusion.
 	PxRigidActor* triggerPtr;
 
+	Model* model;
+
+
 	Bank() {
 		//SETUP BANK POSITION, DIMENSIONS & ORIENTATION
 		setPos(40.f, 0.f);
 		setDir(orient::E);
 		setDimensions(17.f, 17.f, 17.f);
+	}
+
+	void createModel() {
+		model = new Model(BANK_BUILDING_PATH);
 	}
 
 	glm::vec3 getPos() {

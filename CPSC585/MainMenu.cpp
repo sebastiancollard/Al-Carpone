@@ -29,10 +29,11 @@ MainMenu::MainMenu() {
 		Model("models/city_prototype/city_prototype.obj")
 	};
 
-	active_level = &levels[0];
+	changeLevel(0);
 }
 
 
 void MainMenu::changeLevel(int level) {
 	active_level = &levels[level];
+	light_positions = &level_light_positions[level];
 }

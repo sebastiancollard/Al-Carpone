@@ -5,12 +5,6 @@
 #define M_PI 3.14159265358979323846
 
 
-
-
-
-#define BANK_BUILDING_PATH "models/al_carpone/bank_box.obj"
-
-
 #define NEAR_CLIPPING_PLANE 0.01f
 #define FAR_CLIPPING_PLANE 1000.f
 
@@ -42,14 +36,6 @@
 
 #include "snippetcommon/SnippetPrint.h"
 #include "snippetcommon/SnippetPVD.h"
-
-
-std::vector<std::string> level_texture_paths{
-"models/tuning_testlevel/tuning_testlevel.obj",
-"models/racetrack/racetrack.obj",
-"models/ai_testlevel/ai_testlevel.obj",
-"models/city_prototype/city_prototype.obj" 
-};
 
 
 
