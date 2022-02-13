@@ -175,6 +175,7 @@
     <ClCompile Include="SnippetVehicleTankCreate.cpp" />
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="stb.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -206,6 +207,7 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="UI.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>

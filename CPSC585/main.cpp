@@ -5,23 +5,24 @@
 
 int main()
 {
-	GraphicsSystem graphics;
-	Skybox skybox;
+	GraphicsSystem graphics; //Must be called first ALWAYS
+	Skybox skybox; //TODO no home yet. Maybe a leve class? 
 
-	// DEBUG Panel
+	// Initialize Windows
 	DebugPanel debugPanel(graphics.window);
-
+	MainMenu mainMenu;
+	UI ui;
 
 	//Set up physx with vehicle snippet:
 	//Make sure this is called after the shader program is generated
 	initPhysics();
 
-	MainMenu mainMenu;
+	
 	player.createModel();
 	PoliceCar police_car;
-	police_car.createModel(); //If player is moved here as well, we can create model in constructors instead.
+	police_car.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
 
-	Model press_f_to_rob("models/popups/press_f_to_rob.obj");
+	
 
 	Model* active_level;
 	std::vector<Model> levels{
@@ -151,7 +152,7 @@ int main()
 			//Tell player if they can rob
 			if (player.canRob()) {
 				graphics.shader2D->use();
-				press_f_to_rob.Draw(*graphics.shader2D);
+				ui.press_f_to_rob->Draw(*graphics.shader2D);
 			}
 			graphics.shader3D->use();
 			//Simulate physics through the timestep

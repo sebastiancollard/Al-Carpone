@@ -82,46 +82,15 @@ void printVec3(std::string name, PxVec3 v) {
 // Physx Globals
 #include "physx_globals.h"
 
-/*
-//Set up physx global variables
-//Should be checked over to see what actually needs to be global and what doesnt
-
-PxDefaultAllocator gAllocator;
-PxDefaultErrorCallback gErrorCallback;
-
-PxFoundation* gFoundation = NULL;
-PxPhysics* gPhysics = NULL;
-
-PxDefaultCpuDispatcher* gDispatcher = NULL;
-PxScene* gScene = NULL;
-
-
-PxCooking* gCooking = NULL;
-
-PxMaterial* gMaterial = NULL;
-
-PxPvd* gPvd = NULL;
-
-struct physx_actor_entity
-{
-	PxRigidActor* actorPtr;
-	PxU32 actorId;
-};
-std::vector<physx_actor_entity> physx_actors;
-
-VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
-PxBatchQuery* gBatchQuery = NULL;
-
-PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
-
-PxRigidStatic* gGroundPlane = NULL;
-PxActor* activeLevelActorPtr = NULL;
-*/
 
 #include"State.h"
 State state;
 
+// Window elements
 #include "DebugPanel.h"
+#include "MainMenu.h"
+#include "UI.h"
+
 #include"Vehicle.h"
 #include"Player.h"
 #include "PoliceCar.h"
@@ -139,7 +108,7 @@ std::vector<Vehicle*> activeVehicles;
 #include"physXGeneralFunctions.h"
 //Miscelanious functions who dont have a home yet
 #include"miscFunctions.h"
-#include "MainMenu.h"
+
 
 
 
