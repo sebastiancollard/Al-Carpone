@@ -1,5 +1,4 @@
 #include "MainMenu.h"
-#include "physXVehicleFunctions.h"
 #include "physx_globals.h"
 #include "util.h" //load_positions
 
@@ -42,6 +41,20 @@ void MainMenu::changeLevel(int level) {
 ////////////////////////////////////////////////////////////////////////
 // DRAW MAIN MENU
 ////////////////////////////////////////////////////////////////////////
+
+
+// TODO temporary solution. must move to physics system
+void despawnEnemy(Vehicle* enemy) {
+	gScene->removeActor(*enemy->actorPtr);
+	for (int i = 0; i < physx_actors.size(); i++) {
+		if (physx_actors[i].actorPtr == enemy->actorPtr) {
+			physx_actors.erase(physx_actors.begin() + i);
+			return;
+		}
+	}
+	delete(enemy);
+}
+
 
 
 void MainMenu::drawMenu(GraphicsSystem& graphics, State& state) {

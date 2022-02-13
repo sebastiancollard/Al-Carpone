@@ -135,6 +135,15 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Bank.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init.h">
@@ -148,9 +157,6 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="physXGeneralFunctions.h">
-      <Filter>Header Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="physXVehicleFunctions.h">
       <Filter>Header Files\Physics</Filter>
@@ -203,9 +209,6 @@
     <ClInclude Include="physXVehicleSettings.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="PxCustomEventCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Bank.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
@@ -232,6 +235,12 @@
     </ClInclude>
     <ClInclude Include="UI.h">
       <Filter>Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PxCustomEventCallback.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

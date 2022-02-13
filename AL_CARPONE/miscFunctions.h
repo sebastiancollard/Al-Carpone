@@ -8,7 +8,7 @@
 #define CASH_ROBBED_PER_FRAME 5	//$5 per frame for now?
 
 //Checks for special inputs that would alter the state, and updates state accordingly
-void checkSpecialInputs(GLFWwindow* window)
+void checkSpecialInputs(GLFWwindow* window, State& state, Player& player)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {

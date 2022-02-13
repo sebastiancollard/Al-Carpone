@@ -3,8 +3,22 @@
 
 
 
+
+#define NEAR_CLIPPING_PLANE 0.01f
+#define FAR_CLIPPING_PLANE 1000.f
+
+namespace sv = snippetvehicle;
+
 int main()
 {
+	// TODO clean up
+	State state;
+	Player player;
+	Bank bank;
+
+
+
+
 	cout << "Initializing Graphics..." << endl;
 
 	GraphicsSystem graphics; //Must be called first ALWAYS
@@ -13,12 +27,20 @@ int main()
 	DebugPanel debugPanel(graphics.window);
 	MainMenu mainMenu;
 	UI ui;
-
+	 
 	cout << "Initalizing Physics..." << endl;
 
 	//Set up physx with vehicle snippet:
 	//Make sure this is called after the shader program is generated
-	initPhysics();
+	PhysicsSystem physics(state, player, bank);
+
+	//TODO Cleanup
+	//Setup main player vehicle
+	player = Player(0);
+	//Add it to the list of active vehicles
+	state.activeVehicles.push_back(&player);
+
+	bank.createActors();
 
 
 	// Initialize Models
@@ -32,8 +54,8 @@ int main()
 
 
 	// Active camera can be one of [bound/free] at a given time
-	BoundCamera boundCamera;	// Locked in a sphere around the car
-	FreeCamera freeCamera;		// Move and look freely anywhere (for debugging)
+	BoundCamera boundCamera(player, state);	// Locked in a sphere around the car
+	FreeCamera freeCamera(player);		// Move and look freely anywhere (for debugging)
 	Camera* activeCamera = &boundCamera;
 
 
@@ -65,8 +87,8 @@ int main()
 				mainMenu.changeLevel(state.selectedLevel);
 				
 				//Remove the old level pointer and add the new
-				PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-				gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, state.selectedLevel);
+				PxFilterData groundPlaneSimFilterData(sv::COLLISION_FLAG_GROUND, sv::COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+				gGroundPlane = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, state.selectedLevel);
 				
 				gScene->removeActor(*activeLevelActorPtr);
 				
@@ -108,17 +130,17 @@ int main()
 			}
 			graphics.shader3D->use();
 			//Simulate physics through the timestep
-			stepPhysics(graphics.window);
+			physics.step(graphics.window);
 
 			//Check for special inputs (currently only camera mode change)
-			checkSpecialInputs(graphics.window);
+			checkSpecialInputs(graphics.window, state, player);
 
 			if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
 			else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
 
 
 			// Camera is disabled in DEBUG MODE
-			if (!state.debugMode) activeCamera->handleInput(graphics.window);
+			if (!state.debugMode) activeCamera->handleInput(graphics.window, state);
 			if (activeCamera == &boundCamera) boundCamera.checkClipping(graphics.window);
 
 
@@ -214,7 +236,7 @@ int main()
 
 	debugPanel.cleanUp();
 	graphics.cleanup();
-	cleanupPhysics();
+	physics.cleanup();
 
 	return EXIT_SUCCESS;
 }

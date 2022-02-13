@@ -1,29 +1,31 @@
 #pragma once
 
-//These aren't really needed as constants but will keep them here for easy modification for now
-#define WIDTH	1.f
-#define DEPTH	1.f
-#define HEIGHT	1.f
+#include "glm/glm.hpp"
+#include "PxPhysicsAPI.h"
+#include "Model.h"
+
 #define BANK_BUILDING_PATH "models/al_carpone/bank_box.obj"
 
+
 enum orient {N, E, S, W};	//N=1, E=2, S=3, W=4		North is positive z direction of global coordinates
+
 
 class Bank {
 
 private:
 	//Bank position on map (tile position?)
-	glm::vec3 pos = { 0.f, HEIGHT/2.f, 0.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
+	glm::vec3 pos = { 0.f, height/2.f, 0.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
 
 	orient dir = S;		//Bank faces "south" by default
 
-	float depth = DEPTH;	//y axis
-	float height = HEIGHT;	//z axis
-	float width = WIDTH;	//x axis
+	float depth = 1.f;	//y axis
+	float height = 1.f;	//z axis
+	float width = 1.f;	//x axis
 
 public:
 	//physX bank actor and trigger actor
-	PxRigidActor* bankPtr;				//Would like to make these actors private, however they are not provate for player. Thought it would be best to keep it the same to avoid confusion.
-	PxRigidActor* triggerPtr;
+	physx::PxRigidActor* bankPtr;				//Would like to make these actors private, however they are not provate for player. Thought it would be best to keep it the same to avoid confusion.
+	physx::PxRigidActor* triggerPtr;
 
 	Model* model;
 
@@ -38,6 +40,8 @@ public:
 	void createModel() {
 		model = new Model(BANK_BUILDING_PATH);
 	}
+
+	void createActors();
 
 	glm::vec3 getPos() {
 		return pos;

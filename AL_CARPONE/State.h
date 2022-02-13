@@ -1,7 +1,10 @@
 #pragma once
 
-#include "Vehicle.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <vector>
+#include "Vehicle.h"
+
 
 //Locked position and orientation. Used for third person view behind the car.
 #define CAMERA_MODE_BOUND 0
@@ -12,7 +15,6 @@
 //Stores information pertaning to the current state of the game.
 class State {
 public:
-
 	
 	double currTime = 0.;				//Current time in game
 	double prevTime = 0.;				//Previous time (time at last currTime update)

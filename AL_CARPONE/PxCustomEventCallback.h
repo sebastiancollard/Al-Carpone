@@ -1,9 +1,23 @@
 #pragma once
 #include <iostream>
+#include "State.h"
+#include "Player.h"
+#include "Bank.h"
 
-class PxCustomEventCallback : public physx::PxSimulationEventCallback {
+using namespace physx;
+
+//TODO CLEAN UP LATER
+class PxCustomEventCallback : public PxSimulationEventCallback {
+
+private:
+	State& state; 
+	Player& player; 
+	Bank& bank;
 	
 public:
+
+	PxCustomEventCallback(State& s, Player& p, Bank& b) : state(s), player(p), bank(b) {}
+
 	// Shapes which have been marked as triggers using PxShapeFlag::eTRIGGER_SHAPE will send events according to the pair flag specification in the filter shader
 	//This is a custom callback function to use when the player collides with pickups, or the trigger in front of the bank.
 	void onTrigger(PxTriggerPair* pairs, PxU32 count) {
@@ -33,4 +47,4 @@ public:
 	void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) { PX_UNUSED((pairHeader)); PX_UNUSED((pairs)); PX_UNUSED((nbPairs)); }
 };
 
-PxCustomEventCallback callback;
+

@@ -21,6 +21,8 @@
 #define POLICE_CAR_WHEEL_WIDTH 0.347541f
  
 
+//TODO move these to physics System
+
 using namespace physx;
 using namespace snippetvehicle;
 
@@ -191,13 +193,3 @@ void updateDrivingMode(Player& player)
 }
 
 
-void despawnEnemy(Vehicle* enemy) {
-	gScene->removeActor(*enemy->actorPtr);
-	for (int i = 0; i < physx_actors.size(); i++) {
-		if (physx_actors[i].actorPtr == enemy->actorPtr) {
-			physx_actors.erase(physx_actors.begin() + i);
-			return;
-		}
-	}
-	delete(enemy);
-}
