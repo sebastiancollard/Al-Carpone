@@ -47,7 +47,7 @@ int main()
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
 	bank.createModel();
 	PoliceCar police_car;
-	police_car.createModel();
+	
 
 	graphics.enableDepthBuffer();
 
@@ -99,7 +99,10 @@ int main()
 				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
 
 				if (state.selectedLevel == 0) {
-					if (police_car.actorPtr == NULL) police_car = PoliceCar(1);
+					if (police_car.actorPtr == NULL) {
+						police_car = PoliceCar(1);
+						police_car.createModel();
+					}
 					state.activeVehicles.push_back(&police_car);
 				}
 				
