@@ -10,17 +10,13 @@ PoliceCar Entity Class
 */
 
 class PoliceCar : public Vehicle {
-private:
-	bool can_rob = false;				//If player "collides" with trigger capsule, this shoudl be set to true
-	int cash = 0;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
-
 
 public:
 
+	PoliceCar() {}
+
 	// Call parent constructor
-	PoliceCar() : Vehicle(VEHICLE_TYPE::POLICE_CAR, 1, physx::PxVec3(0, 0, 0)) {
-		//TODO: Change ID?
-	}
+	PoliceCar(int ID) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVec3(0, 0, 0)) {}
 
 
 	// Must be called after graphics system is initalized!

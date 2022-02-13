@@ -5,6 +5,8 @@
 
 int main()
 {
+	cout << "Initializing Graphics..." << endl;
+
 	GraphicsSystem graphics; //Must be called first ALWAYS
 	Skybox skybox; //TODO no home yet. Maybe a leve class? 
 
@@ -13,7 +15,7 @@ int main()
 	MainMenu mainMenu;
 	UI ui;
 
-	cout << "Windows done" << endl;
+	cout << "Initalizing Physics..." << endl;
 
 	//Set up physx with vehicle snippet:
 	//Make sure this is called after the shader program is generated
@@ -23,10 +25,13 @@ int main()
 	cout << "Physics done" << endl;
 
 	player.createModel();
+
+	cout << "Player model done" << endl;
 	PoliceCar police_car;
+	cout << "Police Car done" << endl;
 	police_car.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
 
-	
+	cout << "creating models done" << endl;
 
 
 	
@@ -40,7 +45,7 @@ int main()
 
 	graphics.enableDepthBuffer();
 
-
+	cout << "bank done" << endl;
 
 	//////////////////////////
 	// CAMERAS 
