@@ -13,41 +13,33 @@ int main()
 	MainMenu mainMenu;
 	UI ui;
 
+	cout << "Windows done" << endl;
+
 	//Set up physx with vehicle snippet:
 	//Make sure this is called after the shader program is generated
 	initPhysics();
 
-	
+
+	cout << "Physics done" << endl;
+
 	player.createModel();
 	PoliceCar police_car;
 	police_car.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
 
 	
 
-	Model* active_level;
-	std::vector<Model> levels{
-		Model(level_texture_paths[0]),
-		Model(level_texture_paths[1]),
-		Model(level_texture_paths[2]),
-		Model(level_texture_paths[3])
-	};
+
 	
 	//Test enemy
-
-
 	Vehicle* test_enemy = NULL;
 
-
-	active_level = &levels[0];
 
 	//Mesh building;
 	//building.createBox(bank.getWidth(), bank.getHeight(), bank.getDepth());
 	Model bankModel(BANK_BUILDING_PATH);
 
-	// Enables the Depth Buffer
-	glEnable(GL_DEPTH_TEST);
+	graphics.enableDepthBuffer();
 
-	glfwSwapInterval(1);
 
 
 	//////////////////////////
@@ -65,7 +57,6 @@ int main()
 	
 	std::vector<glm::vec3> light_positions = mainMenu.level_light_positions[0];
 
-	
 
 	// Main while loop
 	while (!glfwWindowShouldClose(graphics.window) && !state.terminateProgram)
@@ -107,7 +98,7 @@ int main()
 			if (!state.mainMenu) {
 				//Setup level
 
-				active_level = &levels[state.selectedLevel];
+				mainMenu.changeLevel(state.selectedLevel);
 				
 				//Remove the old level pointer and add the new
 				PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
@@ -150,7 +141,7 @@ int main()
 			view = activeCamera->GetViewMatrix();
 
 			//Tell player if they can rob
-			if (player.canRob()) {
+			if (player.canRob(state)) {
 				graphics.shader2D->use();
 				ui.press_f_to_rob->Draw(*graphics.shader2D);
 			}
@@ -187,7 +178,7 @@ int main()
 			graphics.shader3D->setMat4("model", model);
 			graphics.shader3D->setVec3("camPos", glm::vec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z));
 			graphics.shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
-			active_level->Draw(*graphics.shader3D);
+			mainMenu.active_level->Draw(*graphics.shader3D);
 
 			// Render dynamic physx shapes
 

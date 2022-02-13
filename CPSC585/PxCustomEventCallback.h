@@ -21,7 +21,7 @@ public:
 			if ((pairs[i].otherActor == player.actorPtr) &&		//bank.triggerPtr
 				(pairs[i].triggerActor == bank.triggerPtr))
 			{
-				player.setRob(!player.canRob());
+				player.setRob(!player.canRob(state));
 			}
 		}
 	}

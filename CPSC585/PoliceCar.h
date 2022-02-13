@@ -4,11 +4,10 @@
 #include "Vehicle.h"
 #include "Model.h"
 
-
-
-
-
-
+/*
+PoliceCar Entity Class
+ - Used for containing Car Model, Transformation, and AI
+*/
 
 class PoliceCar : public Vehicle {
 private:
@@ -18,10 +17,10 @@ private:
 
 public:
 
-	PoliceCar() {}
-
-	//Call parrent constructor
-	PoliceCar(VEHICLE_TYPE type) : Vehicle(type, 0, physx::PxVec3(0, 0, 0)) {}
+	// Call parent constructor
+	PoliceCar() : Vehicle(VEHICLE_TYPE::POLICE_CAR, 1, physx::PxVec3(0, 0, 0)) {
+		//TODO: Change ID?
+	}
 
 
 	// Must be called after graphics system is initalized!

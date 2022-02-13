@@ -15,9 +15,10 @@
 #define FAR_CLIPPING_PLANE 1000.f
 
 #include<glad/glad.h>
+#include<GLFW/glfw3.h>
 
 #include<iostream>
-#include<GLFW/glfw3.h>
+
 #include<stb/stb_image.h>
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>

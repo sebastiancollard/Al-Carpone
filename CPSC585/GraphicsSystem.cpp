@@ -52,6 +52,13 @@ void GraphicsSystem::clearBuffer() {
 }
 
 
+void GraphicsSystem::enableDepthBuffer() {
+	// Enables the Depth Buffer
+	glEnable(GL_DEPTH_TEST);
+	glfwSwapInterval(1);
+}
+
+
 void GraphicsSystem::swapBuffers() {
 	// Swap the back buffer with the front buffer
 	glfwSwapBuffers(window);

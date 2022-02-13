@@ -91,7 +91,7 @@ void checkSpecialInputs(GLFWwindow* window)
 	}
 	
 	// Handle bank robbing
-	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && (player.canRob())) {
+	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && (player.canRob(state))) {
 		//std::cout << "Robbing bank...." << std::endl;
 		player.addCash(CASH_ROBBED_PER_FRAME);
 	}

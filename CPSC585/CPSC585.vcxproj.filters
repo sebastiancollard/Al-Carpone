@@ -81,9 +81,6 @@
     <ClCompile Include="glad.c">
       <Filter>Resource Files\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="DebugPanel.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui_draw.cpp">
       <Filter>Source Files\Graphics\imgui</Filter>
     </ClCompile>
@@ -129,8 +126,14 @@
     <ClCompile Include="physx_globals.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="UI.cpp">
+    <ClCompile Include="DebugPanel.cpp">
       <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Vehicle.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

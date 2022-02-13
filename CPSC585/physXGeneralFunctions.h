@@ -218,7 +218,7 @@ void initPhysics()
 	
 
 	//Setup main player vehicle
-	player = Player(AL_CARPONE);
+	player = Player(0);
 	//Add it to the list of active vehicles
 	activeVehicles.push_back(&player);
 
@@ -238,7 +238,7 @@ void initPhysics()
 
 		if (timestep < 1.0f / 60.0f) substep = timestep;
 
-		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window);
+		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window,state);
 
 		updateDrivingMode();
 

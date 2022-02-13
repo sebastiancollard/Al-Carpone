@@ -166,6 +166,7 @@
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="physXVehicleSettings.cpp" />
     <ClCompile Include="physx_globals.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PoliceCar.cpp" />
     <ClCompile Include="SnippetVehicle4WCreate.cpp" />
     <ClCompile Include="SnippetVehicleCreate.cpp" />
@@ -175,7 +176,7 @@
     <ClCompile Include="SnippetVehicleTankCreate.cpp" />
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="stb.cpp" />
-    <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />

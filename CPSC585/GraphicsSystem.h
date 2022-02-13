@@ -19,6 +19,7 @@ public:
 	//Skybox skybox;
 
 	GraphicsSystem();
+	void enableDepthBuffer();
 	void clearBuffer();
 	void swapBuffers();
 	void cleanup();
