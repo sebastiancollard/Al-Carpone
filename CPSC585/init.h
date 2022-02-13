@@ -5,9 +5,7 @@
 #define M_PI 3.14159265358979323846
 
 
-#define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
-#define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
-#define CAR_RWHEEL_PATH "models/al_carpone/car_Rwheel.obj"
+
 
 #define POLICE_CAR_CHASSIS_PATH "models/police_car/police_car_chassis.obj"
 #define POLICE_CAR_LWHEEL_PATH "models/police_car/police_car_wheel_left.obj"
@@ -47,7 +45,6 @@
 #include "snippetcommon/SnippetPrint.h"
 #include "snippetcommon/SnippetPVD.h"
 
-std::vector<std::vector<glm::vec3>> level_light_positions;
 
 std::vector<std::string> level_texture_paths{
 "models/tuning_testlevel/tuning_testlevel.obj",
@@ -57,12 +54,7 @@ std::vector<std::string> level_texture_paths{
 };
 
 
-std::vector<std::string> level_physx_paths{
-"models/tuning_testlevel/tuning_testlevel_physx.obj",
-"models/racetrack/racetrack_physx.obj",
-"models/ai_testlevel/ai_testlevel_physx.obj",
-"models/city_prototype/city_prototype_physx.obj"
-};
+
 
 
 using namespace physx;

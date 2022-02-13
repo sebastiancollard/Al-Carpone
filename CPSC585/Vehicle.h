@@ -16,6 +16,7 @@ public:
 	unsigned int ID;
 	PxRigidActor* actorPtr;	// Each vehicle instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
 	PxVehicleDrive4W* vehiclePtr;
+	CarModel4W* car;
 
 	std::queue<DriveMode> inputQueue;	// Input queue used to process multiple actions within a single update.
 
@@ -171,4 +172,5 @@ public:
 
 protected:
 	PxTransform startTransform;
+	
 };

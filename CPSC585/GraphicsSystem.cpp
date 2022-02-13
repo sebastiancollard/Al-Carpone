@@ -10,7 +10,6 @@ GraphicsSystem::GraphicsSystem() {
 
 	// Initialize GLFW
 	glfwInit();
-	cout << 0 << endl;
 
 	// Tell GLFW what version of OpenGL we are using 
 	// In this case we are using OpenGL 3.3
@@ -39,11 +38,8 @@ GraphicsSystem::GraphicsSystem() {
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Generates Shader object using shaders default.vert and default.frag
-	cout << 1 << endl;
 	shader3D = std::shared_ptr<Shader>(new Shader("shader3D.vs", "shader3D.fs"));
-	cout << 2 << endl;
 	shader2D = std::shared_ptr<Shader>(new Shader("shader2D.vs", "shader2D.fs"));
-	cout << 3 << endl;
 }
 
 

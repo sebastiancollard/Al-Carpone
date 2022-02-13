@@ -1,5 +1,13 @@
+#pragma once
+
 #include <iostream>
 #include <queue>
+
+#define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
+#define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
+#define CAR_RWHEEL_PATH "models/al_carpone/car_Rwheel.obj"
+
+
 
 class Player : public Vehicle {
 private:
@@ -13,6 +21,17 @@ public:
 
 	//Call parrent constructor
 	Player(VEHICLE_TYPE type) : Vehicle(type, 0, PxVec3(0,0,0)) {}
+
+
+	// Must be called after graphics system is initalized!
+	void createModel() {
+
+		Model car_chassis(CAR_CHASSIS_PATH);
+		Model car_lwheel(CAR_LWHEEL_PATH);
+		Model car_rwheel(CAR_RWHEEL_PATH);
+
+		car = new CarModel4W(car_chassis, car_lwheel, car_rwheel);
+	}
 
 
 	// Handle all key inputs relevant to driving

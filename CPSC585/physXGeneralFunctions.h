@@ -111,6 +111,13 @@ void createBankActors() {
 
 PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection)
 {
+	std::vector<std::string> level_physx_paths{
+		"models/tuning_testlevel/tuning_testlevel_physx.obj",
+		"models/racetrack/racetrack_physx.obj",
+		"models/ai_testlevel/ai_testlevel_physx.obj",
+		"models/city_prototype/city_prototype_physx.obj"
+	};
+
 	Model level(level_physx_paths[state.selectedLevel]);
 
 	std::vector<PxVec3> model_positions;

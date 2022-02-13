@@ -17,18 +17,10 @@ int main()
 	initPhysics();
 
 	MainMenu mainMenu;
+	player.createModel();
 
-
-	//Create base meshes
-	//std::vector<Model> models;
-
-	Model car_chassis(CAR_CHASSIS_PATH);
-	Model car_lwheel(CAR_LWHEEL_PATH);
-	Model car_rwheel(CAR_RWHEEL_PATH);
 
 	Model press_f_to_rob("models/popups/press_f_to_rob.obj");
-
-	CarModel4W car(car_chassis, car_lwheel, car_rwheel);;
 
 	Model* active_level;
 	std::vector<Model> levels{
@@ -73,7 +65,7 @@ int main()
 	activeCamera = &boundCamera;
 
 	
-	std::vector<glm::vec3> light_positions = level_light_positions[0];
+	std::vector<glm::vec3> light_positions = mainMenu.level_light_positions[0];
 
 	
 
@@ -132,7 +124,7 @@ int main()
 				gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
 				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
 
-				light_positions = level_light_positions[state.selectedLevel];
+				light_positions = mainMenu.level_light_positions[state.selectedLevel];
 
 				if (state.selectedLevel == 0) {
 					test_enemy = new Vehicle(POLICE_CAR, activeVehicles.size(), PxVec3(10.0f, 0.0f, 0.0f));
@@ -238,7 +230,7 @@ int main()
 
 							graphics.shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
 							CarModel4W* activeCar;
-							activeCar = &car;
+							activeCar = player.car;
 							if (i != 0) activeCar = &police_car;
 
 							if (j == 0) {
