@@ -23,6 +23,12 @@ public:
 	PxRigidActor* bankPtr;				//Would like to make these actors private, however they are not provate for player. Thought it would be best to keep it the same to avoid confusion.
 	PxRigidActor* triggerPtr;
 
+	Bank() {
+		//SETUP BANK POSITION, DIMENSIONS & ORIENTATION
+		setPos(40.f, 0.f);
+		setDir(orient::E);
+		setDimensions(17.f, 17.f, 17.f);
+	}
 
 	glm::vec3 getPos() {
 		return pos;

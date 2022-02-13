@@ -9,14 +9,8 @@ int main()
 	Skybox skybox;
 
 	// DEBUG Panel
-	DebugPanel debugPanel = DebugPanel(graphics.window);
+	DebugPanel debugPanel(graphics.window);
 
-	
-	//SETUP BANK POSITION, DIMENSIONS & ORIENTATION
-	//This must be done before initPhysics(). Note that this position and orientation can also be hard-coded into the bank class if preffered.
-	bank.setPos(40.f, 0.f);
-	bank.setDir(orient::E);
-	bank.setDimensions(17.f, 17.f, 17.f);
 
 	//Set up physx with vehicle snippet:
 	//Make sure this is called after the shader program is generated
