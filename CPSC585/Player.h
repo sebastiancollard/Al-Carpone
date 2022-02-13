@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <queue>
+#include "Vehicle.h"
 
 #define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
 #define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"

@@ -18,7 +18,8 @@ int main()
 
 	MainMenu mainMenu;
 	player.createModel();
-
+	PoliceCar police_car;
+	police_car.createModel(); //If player is moved here as well, we can create model in constructors instead.
 
 	Model press_f_to_rob("models/popups/press_f_to_rob.obj");
 
@@ -31,11 +32,7 @@ int main()
 	};
 	
 	//Test enemy
-	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
-	Model police_car_lwheel(POLICE_CAR_LWHEEL_PATH);
-	Model police_car_rwheel(POLICE_CAR_RWHEEL_PATH);
 
-	CarModel4W police_car(police_car_chassis, police_car_lwheel, police_car_rwheel);
 
 	Vehicle* test_enemy = NULL;
 
@@ -231,7 +228,7 @@ int main()
 							graphics.shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
 							CarModel4W* activeCar;
 							activeCar = player.car;
-							if (i != 0) activeCar = &police_car;
+							if (i != 0) activeCar = police_car.car;
 
 							if (j == 0) {
 								activeCar->Draw(FRWHEEL, *graphics.shader3D, model);;

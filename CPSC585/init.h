@@ -7,9 +7,6 @@
 
 
 
-#define POLICE_CAR_CHASSIS_PATH "models/police_car/police_car_chassis.obj"
-#define POLICE_CAR_LWHEEL_PATH "models/police_car/police_car_wheel_left.obj"
-#define POLICE_CAR_RWHEEL_PATH "models/police_car/police_car_wheel_right.obj"
 
 #define BANK_BUILDING_PATH "models/al_carpone/bank_box.obj"
 
@@ -82,6 +79,10 @@ void printVec3(std::string name, PxVec3 v) {
 #include"physXVehicleSettings.h"
 
 
+// Physx Globals
+#include "physx_globals.h"
+
+/*
 //Set up physx global variables
 //Should be checked over to see what actually needs to be global and what doesnt
 
@@ -115,7 +116,7 @@ PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 
 PxRigidStatic* gGroundPlane = NULL;
 PxActor* activeLevelActorPtr = NULL;
-
+*/
 
 #include"State.h"
 State state;
@@ -123,6 +124,7 @@ State state;
 #include "DebugPanel.h"
 #include"Vehicle.h"
 #include"Player.h"
+#include "PoliceCar.h"
 Player player;
 
 #include "Bank.h"

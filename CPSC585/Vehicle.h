@@ -1,7 +1,12 @@
 #pragma once
 #include <iostream>
 #include <queue>
+#include <glm/glm.hpp>
 #include "physXVehicleSettings.h"
+#include "snippetvehiclecommon/SnippetVehicleCreate.h"
+#include "physx_globals.h"
+#include "Model.h"
+
 
 enum VEHICLE_TYPE
 {
@@ -13,9 +18,9 @@ class Vehicle {
 public:
 
 	bool vehicleInAir = true;
-	unsigned int ID;
-	PxRigidActor* actorPtr;	// Each vehicle instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
-	PxVehicleDrive4W* vehiclePtr;
+	unsigned int ID = -1;
+	physx::PxRigidActor* actorPtr;	// Each vehicle instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
+	physx::PxVehicleDrive4W* vehiclePtr;
 	CarModel4W* car;
 
 	std::queue<DriveMode> inputQueue;	// Input queue used to process multiple actions within a single update.
@@ -25,12 +30,12 @@ public:
 	Vehicle(VEHICLE_TYPE type, unsigned int ID,  PxTransform T): ID(ID) {
 		//Create a vehicle that will drive on the plane.
 
-		extern VehicleDesc initVehicleDesc(VEHICLE_TYPE);
+		extern snippetvehicle::VehicleDesc initVehicleDesc(VEHICLE_TYPE);
 		extern void startBrakeMode();
 
-		VehicleDesc vehicleDesc = initVehicleDesc(type);
+		snippetvehicle::VehicleDesc vehicleDesc = initVehicleDesc(type);
 		vehiclePtr = createVehicle4W(vehicleDesc, gPhysics, gCooking, type);
-		PxTransform startTransform = T;
+		physx::PxTransform startTransform = T;
 		setResetPoint(startTransform);
 		vehiclePtr->getRigidDynamicActor()->setGlobalPose(startTransform);
 
@@ -48,19 +53,19 @@ public:
 		//Set the vehicle to rest in first gear.
 		//Set the vehicle to use auto-gears.
 		vehiclePtr->setToRestState();
-		vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		vehiclePtr->mDriveDynData.forceGearChange(physx::PxVehicleGearsData::eFIRST);
 		vehiclePtr->mDriveDynData.setUseAutoGears(true);
 	}
 
-	Vehicle(VEHICLE_TYPE type, unsigned int ID, PxVec3 startOffset): ID(ID) {
+	Vehicle(VEHICLE_TYPE type, unsigned int ID, physx::PxVec3 startOffset): ID(ID) {
 		//Create a vehicle that will drive on the plane.
 
-		extern VehicleDesc initVehicleDesc(VEHICLE_TYPE);
+		extern snippetvehicle::VehicleDesc initVehicleDesc(VEHICLE_TYPE);
 		extern void startBrakeMode();
 
-		VehicleDesc vehicleDesc = initVehicleDesc(type);
+		snippetvehicle::VehicleDesc vehicleDesc = initVehicleDesc(type);
 		vehiclePtr = createVehicle4W(vehicleDesc, gPhysics, gCooking, type);
-		PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y * 0.5f + vehicleDesc.wheelRadius + 1.0f), 0) + startOffset, PxQuat(PxIdentity));
+		physx::PxTransform startTransform(physx::PxVec3(0, (vehicleDesc.chassisDims.y * 0.5f + vehicleDesc.wheelRadius + 1.0f), 0) + startOffset, physx::PxQuat(PxIdentity));
 		setResetPoint(startTransform);
 		vehiclePtr->getRigidDynamicActor()->setGlobalPose(startTransform);
 

@@ -165,6 +165,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="physXVehicleSettings.cpp" />
+    <ClCompile Include="physx_globals.cpp" />
+    <ClCompile Include="PoliceCar.cpp" />
     <ClCompile Include="SnippetVehicle4WCreate.cpp" />
     <ClCompile Include="SnippetVehicleCreate.cpp" />
     <ClCompile Include="SnippetVehicleFilterShader.cpp" />
@@ -197,7 +199,9 @@
     <ClInclude Include="physXGeneralFunctions.h" />
     <ClInclude Include="physXVehicleFunctions.h" />
     <ClInclude Include="physXVehicleSettings.h" />
+    <ClInclude Include="physx_globals.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PoliceCar.h" />
     <ClInclude Include="PxCustomEventCallback.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
