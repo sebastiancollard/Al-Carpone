@@ -49,7 +49,6 @@ int main()
 	PoliceCar police_car;
 	police_car.createModel();
 
-
 	graphics.enableDepthBuffer();
 
 

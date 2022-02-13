@@ -10,5 +10,5 @@ void PoliceCar::createModel() {
 	Model police_car_lwheel(POLICE_CAR_LWHEEL_PATH);
 	Model police_car_rwheel(POLICE_CAR_RWHEEL_PATH);
 
-	CarModel4W car(police_car_chassis, police_car_lwheel, police_car_rwheel);
+	car = new CarModel4W(police_car_chassis, police_car_lwheel, police_car_rwheel);
 }

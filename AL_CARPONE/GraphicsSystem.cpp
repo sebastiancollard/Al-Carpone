@@ -63,7 +63,7 @@ void GraphicsSystem::clearBuffer() {
 void GraphicsSystem::enableDepthBuffer() {
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 }
 
 
