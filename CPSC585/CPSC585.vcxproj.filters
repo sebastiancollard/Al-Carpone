@@ -46,6 +46,12 @@
     <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{5a9be743-1288-4793-9bde-643d72276936}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Windows">
+      <UniqueIdentifier>{81245b45-ad61-48fd-903e-a833e43d1d3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Windows">
+      <UniqueIdentifier>{57ba408c-6cb8-4f27-b33b-7787de6e571a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,6 +117,9 @@
     <ClCompile Include="constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init.h">
@@ -142,9 +151,6 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugPanel.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="util.h">
       <Filter>Header Files</Filter>
@@ -196,6 +202,12 @@
     </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugPanel.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

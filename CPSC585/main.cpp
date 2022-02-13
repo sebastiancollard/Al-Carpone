@@ -16,17 +16,7 @@ int main()
 	//Make sure this is called after the shader program is generated
 	initPhysics();
 
-	std::vector<Model> mainMenuModels;
-	
-	mainMenuModels.push_back(Model("models/mainMenu/0_tuning_testlevel.obj"));
-	mainMenuModels.push_back(Model("models/mainMenu/1_racetrack.obj"));
-	mainMenuModels.push_back(Model("models/mainMenu/2_ai_testlevel.obj"));
-	mainMenuModels.push_back(Model("models/mainMenu/3_city_scale_testlevel.obj"));
-
-	level_light_positions.push_back(load_positions("models/tuning_testlevel/light_positions.obj"));
-	level_light_positions.push_back(load_positions("models/racetrack/light_positions.obj"));
-	level_light_positions.push_back(load_positions("models/ai_testlevel/light_positions.obj"));
-	level_light_positions.push_back(load_positions("models/city_prototype/light_positions.obj"));
+	MainMenu mainMenu;
 
 
 	//Create base meshes
@@ -113,7 +103,7 @@ int main()
 		if (state.mainMenu) {
 			//Draw the menu
 			graphics.shader2D->use();
-			mainMenuModels[state.selectedMainMenuOption].Draw(*graphics.shader2D);
+			mainMenu.level_models[state.selectedMainMenuOption].Draw(*graphics.shader2D);
 
 			checkMainMenuInputs(graphics.window);
 
