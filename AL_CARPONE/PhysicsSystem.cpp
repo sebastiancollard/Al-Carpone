@@ -39,8 +39,7 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p, Bank& bank) : state(s), player
 	gScene = gPhysics->createScene(sceneDesc);
 
 	//Set the callback to the custom callback class (subclass of SimulationEventCallback)
-	PxCustomEventCallback callback(state, player, bank);
-	gScene->setSimulationEventCallback(&callback);
+	gScene->setSimulationEventCallback(new PxCustomEventCallback(state, player, bank));
 
 
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();

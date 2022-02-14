@@ -16,8 +16,8 @@ public:
 	GLFWwindow* window;
 	Skybox* skybox;
 
-	std::shared_ptr<Shader> shader3D;
-	std::shared_ptr<Shader> shader2D;
+	Shader* shader3D;
+	Shader* shader2D;
 
 	//Skybox skybox;
 

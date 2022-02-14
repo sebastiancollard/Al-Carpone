@@ -38,8 +38,8 @@ GraphicsSystem::GraphicsSystem() {
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Generates Shader object using shaders default.vert and default.frag
-	shader3D = std::shared_ptr<Shader>(new Shader("shader3D.vs", "shader3D.fs"));
-	shader2D = std::shared_ptr<Shader>(new Shader("shader2D.vs", "shader2D.fs"));
+	shader3D = new Shader("shader3D.vs", "shader3D.fs");
+	shader2D = new Shader("shader2D.vs", "shader2D.fs");
 
 	skybox = new Skybox();
 }
