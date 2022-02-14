@@ -46,7 +46,7 @@ void Bank::createActors() {
 	PxVec3 t_pos = b_pos;
 	t_pos.y = 0.f;															//set height to 0 so the car can actually touch it
 	float trigger_half_depth = 7.f;
-	float trigger_half_width;
+	float trigger_half_width = 0.f;
 	switch (getDir()) {
 	case 0:		//N
 		t_pos.z += (bank_half_depth + trigger_half_depth);		//trigger is further back in the z direction (higher z)
