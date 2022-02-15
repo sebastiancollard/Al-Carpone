@@ -138,4 +138,57 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state)
 	}
 	else state.up_isHeld = false;
 
+	//this part is for controller input
+	if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+	{
+		GLFWgamepadstate controlState;
+		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controlState))
+		{
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE])
+			{
+				state.terminateProgram = true;
+				//std::cout << "CIRCLE (xbox b, ns pro a)" << std::endl;
+				return;
+			}
+			
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
+			{
+				state.mainMenu = false;
+				state.selectedLevel = selectedOption;
+				selectedOption = 0;
+				return;
+				//std::cout << "CROSS (xbox a, ns pro b)" << std::endl;
+			}
+
+			if ((controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_PRESS))
+			{
+				if (!state.dpad_downisHold) {
+
+					selectedOption = (selectedOption + 1) % 4;
+				}
+				state.dpad_downisHold = true;
+				return;
+			}
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_RELEASE)
+			{
+				state.dpad_downisHold = false;
+			}
+
+			if ((controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] == GLFW_PRESS))
+			{
+				if (!state.dpad_upisHold) {
+
+					selectedOption = (selectedOption - 1) % 4;
+				}
+				state.dpad_upisHold = true;
+				return;
+			}
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] == GLFW_RELEASE)
+			{
+				state.dpad_upisHold = false;
+			}
+
+		}
+	}
+
 }

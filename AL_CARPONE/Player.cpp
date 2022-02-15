@@ -111,47 +111,42 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
 		{
 			float forwardOrbackward, leftOrRightturn;
-			forwardOrbackward = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
+			//forwardOrbackward = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
 			leftOrRightturn = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
 
-			if (forwardOrbackward >= 0.1)
+			if (state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
 			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);
+				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 				if (vehicleInAir) {
 					glm::vec3 right = getRight();
 					vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(right.x, right.y, right.z));
 				}
-				accel = true;
+				//std::cout << "left trigger: " << state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
 			}
-			if (forwardOrbackward <= -0.1)
+			if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
 			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);
+				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
 				if (vehicleInAir) {
 					glm::vec3 left = -getRight();
 					vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 				}
-				accel = true;
+				//std::cout << "right trigger: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
 			}
-			if (leftOrRightturn >= 0.5)
+			if (leftOrRightturn < -0.15)
 			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
-				if (vehicleInAir) {
-					glm::vec3 front = getDir();
-					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
-				}
-			}
-			if (leftOrRightturn <= -0.5)
-			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
+				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		
 				if (vehicleInAir) {
 					glm::vec3 back = -getDir();
 					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(back.x, back.y, back.z));
 				}
 			}
-			if (leftOrRightturn > -0.5 && leftOrRightturn < 0.5 && forwardOrbackward < 0.1 && forwardOrbackward > -0.1 && accel == true)
+			else if (leftOrRightturn > 0.15)
 			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
-				accel = false;
+				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	
+				if (vehicleInAir) {
+					glm::vec3 front = getDir();
+					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
+				}
 			}
 
 		}
