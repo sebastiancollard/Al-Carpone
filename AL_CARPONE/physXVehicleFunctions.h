@@ -131,6 +131,8 @@ void updateDrivingMode(Player& player)
 
 	int queueSize = (int)player.inputQueue.size();
 
+	unsigned int previousGear = player.vehiclePtr->mDriveDynData.getCurrentGear();
+
 	for (int i = 0; i < queueSize; i++)
 	{
 		// get and pop first element in input queue
@@ -190,6 +192,9 @@ void updateDrivingMode(Player& player)
 			break;
 		};
 	}
+
+	if (player.vehiclePtr->mDriveDynData.getCurrentGear() != previousGear) player.vehicleChangingGears = true;
+	else(player.vehicleChangingGears = false);
 }
 
 

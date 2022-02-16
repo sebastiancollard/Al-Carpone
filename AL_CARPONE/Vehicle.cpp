@@ -102,6 +102,15 @@ glm::vec3 Vehicle::getAngularVelocity() {
 	return glm::vec3(velo.x, velo.y, velo.z);
 }
 
+float Vehicle::getSpeed() {
+	return glm::dot(getLinearVelocity(), getDir());
+}
+
+float Vehicle::getSpeedRatio() {
+	float speed = getSpeed();
+	if (speed >= 0) return speed / CAR_MAX_VELOCITY_FORWARD;
+	else return speed / CAR_MAX_VELOCITY_BACKWARD;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,6 +182,14 @@ glm::vec3 Vehicle::getPos() {
 	return glm::vec3(shape.p.x, shape.p.y, shape.p.z);
 }
 
+
+bool Vehicle::isMoving() {
+	return glm::length(getLinearVelocity()) > 0.0f;
+}
+
+bool Vehicle::isChangingGears() {
+	return vehicleChangingGears;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // RESETS

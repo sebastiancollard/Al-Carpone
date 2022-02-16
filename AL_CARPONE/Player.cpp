@@ -40,6 +40,10 @@ void Player::setCash(int amount) {
 }
 
 
+bool Player::newAccelInput() {
+	return justHitW;
+}
+
 ///////////////////////////////////////////////////////////////////////
 // INPUT HANDLING
 ///////////////////////////////////////////////////////////////////////
@@ -54,9 +58,16 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			glm::vec3 left = -getRight();
 			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 		}
+
+		justHitW = !state.W_isHeld;
+		state.W_isHeld = true;
+	}
+	else{
+		state.W_isHeld = false;
+		justHitW = false;
 	}
 
-	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 		if (vehicleInAir) {
 			glm::vec3 right = getRight();

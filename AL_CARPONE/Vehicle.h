@@ -5,6 +5,8 @@
 #include "snippetvehiclecommon/SnippetVehicleCreate.h"
 #include "Model.h"
 
+#define CAR_MAX_VELOCITY_FORWARD 40.0f
+#define CAR_MAX_VELOCITY_BACKWARD -11.35f
 
 enum VEHICLE_TYPE
 {
@@ -16,6 +18,7 @@ class Vehicle {
 public:
 
 	bool vehicleInAir = true;
+	bool vehicleChangingGears;
 	unsigned int ID = -1;
 	physx::PxRigidActor* actorPtr;	// Each vehicle instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
 	physx::PxVehicleDrive4W* vehiclePtr;
@@ -35,11 +38,17 @@ public:
 	glm::vec3 getLinearVelocity();
 	glm::vec3 getAngularVelocity();
 
+	float getSpeed();
+	float getSpeedRatio();
+
 	// Fetch directions
 	glm::vec3 getDir();		// fetch the front-facing direction of the player vehicle
 	glm::vec3 getRight();	// fetch the vector pointing to the right of the vehicle
 	glm::vec3 getUp();
 	glm::vec3 getPos();		// fetch position of the vehicle chassis
+
+	bool isMoving();
+	bool isChangingGears();
 
 	// Resets
 	void setResetPoint(PxTransform t);

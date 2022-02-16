@@ -15,11 +15,13 @@
 // Systems
 #include "GraphicsSystem.h"
 #include "PhysicsSystem.h"
+#include "AudioSystem.h"
 #include "miscFunctions.h"
 
 // Window elements
 #include "DebugPanel.h"
 #include "MainMenu.h"
+#include "PauseMenu.h"
 #include "UI.h"
 
 // Game Elements
@@ -31,12 +33,6 @@
 #include "Player.h"
 #include "PoliceCar.h"
 #include "Bank.h"
-
-
-
-
-
-
 
 
 //Used for debugging

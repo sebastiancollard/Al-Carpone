@@ -8,8 +8,7 @@
 #include "physx_globals.h" //TODO remove later
 
 //Update these as we tune
-#define CAR_MAX_VELOCITY_FORWARD 40.0f
-#define CAR_MAX_VELOCITY_BACKWARD -11.35f
+
 
 
 // General Function
