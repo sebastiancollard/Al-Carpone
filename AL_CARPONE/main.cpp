@@ -100,7 +100,8 @@ int main()
 
 				if (state.selectedLevel == 0) {
 					if (police_car.actorPtr == NULL) {
-						police_car = PoliceCar(1, PxVec3(10, 0, 0));
+						police_car = PoliceCar(1);
+						police_car.moveStartPoint(PxVec3(10, 0, 0));
 						police_car.createModel();
 					}
 					state.activeVehicles.push_back(&police_car);
