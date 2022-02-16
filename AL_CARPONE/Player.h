@@ -29,7 +29,9 @@ public:
 	Player() {}
 
 	//Call parrent constructor
-	Player(int ID) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, PxVec3(0,0,0)) {}
+	Player(int ID) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, PxVec3(0, 0, 0)) {}
+
+	Player(int ID, PxVec3 startOffset) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, startOffset) {}
 
 
 	// Must be called after graphics system is initalized!
