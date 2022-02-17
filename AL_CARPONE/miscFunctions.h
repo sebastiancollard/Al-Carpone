@@ -3,7 +3,7 @@
 #define CASH_ROBBED_PER_FRAME 5	//$5 per frame for now?
 
 //Checks for special inputs that would alter the state, and updates state accordingly
-void checkSpecialInputs(GLFWwindow* window, State& state, Player& player)
+void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioSystem* audio)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
@@ -52,6 +52,13 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player)
 	}
 	else state.R_isHeld = false;
 
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
+		if (!state.M_isHeld) {
+			audio->toggleMusic();
+		}
+		state.M_isHeld = true;
+	}
+	else state.M_isHeld = false;
 
 }
 

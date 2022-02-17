@@ -137,8 +137,12 @@ int main()
 			//Simulate physics through the timestep
 			physics.step(graphics.window);
 
+			//Update the players physics variables (velocity, acceleration, jerk)
+			//Dont need to check other vehicles (yet?)
+			player.updatePhysicsVariables(state.timeStep);
+
 			//Check for special inputs (currently only camera mode change)
-			checkSpecialInputs(graphics.window, state, player);
+			checkSpecialInputs(graphics.window, state, player, &audio);
 
 			if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
 			else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;

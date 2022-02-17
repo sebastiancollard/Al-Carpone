@@ -4,7 +4,6 @@
 #include <queue>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
-
 #include "Vehicle.h"
 #include "State.h"
 
@@ -20,7 +19,8 @@ class Player : public Vehicle {
 
 private:
 
-	bool justHitW;
+	bool footIsOnGas;
+	bool footIsOnBrake;
 
 	bool can_rob = false;		//If player "collides" with trigger capsule, this shoudl be set to true
 	int cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
@@ -41,7 +41,8 @@ public:
 	// Handle all key inputs relevant to driving
 	void handleInput(GLFWwindow* window, State& state);
 
-	bool newAccelInput();
+	bool footOnGas();
+	bool footOnBrake();
 
 	// Robbing Mehcanism
 	int getCash();

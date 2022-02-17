@@ -29,7 +29,7 @@ enum GAMESTATE {
 class State {
 public:
 	
-	GAMESTATE gamestate = GAMESTATE_MAIN_MENU;
+	GAMESTATE gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 
 	// Time
 	double currTime = 0.;				
@@ -54,9 +54,11 @@ public:
 	bool R_isHeld = false;
 	bool S_isHeld = false;
 	bool W_isHeld = false;
+	bool M_isHeld = false;
 	bool f5_isHeld = false;
 	bool enter_isHeld = false;
 	bool shift_isHeld = false;
+	bool space_isHeld = false;
 	bool down_isHeld = false;
 	bool up_isHeld = false;
 	bool escape_isHeld = false;

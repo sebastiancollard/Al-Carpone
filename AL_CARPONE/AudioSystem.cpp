@@ -4,71 +4,202 @@
 AudioSystem::AudioSystem() {
 
 	VehicleSoundEngine = irrklang::createIrrKlangDevice();
+	VehicleEngineSpecificSoundEngine = irrklang::createIrrKlangDevice();
 	MusicSoundEngine = irrklang::createIrrKlangDevice();
 
-	VehicleSoundEngine->setSoundVolume(0.5f);
-	MusicSoundEngine->setSoundVolume(0.5f);
+	VehicleSoundEngine->setSoundVolume(1.0f);
+	MusicSoundEngine->setSoundVolume(musicVolume);
 
 	introPlayed = false;
 }
 
 void AudioSystem::wait() {
-	while (1) {
 
+}
+
+void AudioSystem::setMusicVolume(float volume) {
+	MusicSoundEngine->setSoundVolume(volume);
+}
+
+void AudioSystem::toggleMusic() {
+	if (MusicSoundEngine->getSoundVolume() == 0) MusicSoundEngine->setSoundVolume(musicVolume);
+	else MusicSoundEngine->setSoundVolume(0);
+}
+
+void AudioSystem::setPitchAndVolume(SOUND_SELECTION selection, float pitch, float volume) {
+	if (soundPointers[selection]) {
+		soundPointers[selection]->setPlaybackSpeed(pitch);
+		soundPointers[selection]->setVolume(volume);
 	}
 }
 
 //SOUND SETTINGS
-#define MAX_ENGINE_PITCH 1.50f
-#define MIN_ENGINE_PITCH 0.5f
 
-#define MAX_ENGINE_VOLUME 1.0f
-#define MIN_ENGINE_VOLUME 0.5f
 
-#define MAX_IDLE_VOLUME 0.7f
-#define MIN_IDLE_VOLUME 0.3f
+const float MAX_IDLE_PITCH = 1.1f;
+const float MIN_IDLE_PITCH = 0.75f;
+const float MAX_IDLE_VOLUME = 0.35f;
+const float MIN_IDLE_VOLUME = 0.03f;
 
-#define MAX_IDLE_PITCH 1.5f
-#define MIN_IDLE_PITCH 1.0f
+const float MIN_REV_PITCH = 0.75f;
+const float MAX_REV_PITCH = 1.0f;
+const float MIN_REV_VOLUME = 0.3f;
+const float MAX_REV_VOLUME = 0.7f;
 
+const float MIN_WIND_PITCH = 1.0f;
+const float MAX_WIND_PITCH = 1.5f;
+const float MIN_WIND_VOLUME = 0.05f;
+const float MAX_WIND_VOLUME = 1.5f;
+
+const float MIN_GROUND_PITCH = 1.5f;
+const float MAX_GROUND_PITCH = 2.0f;
+const float MIN_GROUND_VOLUME = 0.0f;
+const float MAX_GROUND_VOLUME = 0.2f;
+
+const float MIN_BRAKE_PITCH = 0.7f;
+const float MAX_BRAKE_PITCH = 1.3f;
+const float MIN_BRAKE_VOLUME = 0.0f;
+const float MAX_BRAKE_VOLUME = 1.25f;
+
+float revScale = 0.0f;
+float revScaleGoal = 0.0f;
+
+int gearChanged;
+
+//TO DO:
+//	MAYBE ADD EXTRA SOUND ON GEAR CHANGES
+//	ADD CRASH NOISES
+//	ADD BRAKE NOISES
+//	FIX LOUD AUDIO WHEN LOADING NEW LEVEL
+//	ADD QUIET REV WHEN REVERSING
+//	ADD GROUND SOUNDS ON TIGHT TURNS
+//	ADD THUNKS WHEN THUMPING UP/DOWN ON BUMPS (SPEED BUMP IN TUNING LEVEL TO TEST)
+
+bool footOnGas;
+
+void AudioSystem::updateEngineAudio(Player* player, float pitch, float volume) {
+
+
+	if (footOnGas) {
+		if (!player->footOnGas()) {
+
+			
+
+			stopSound(SOUND_SELECTION::REV_LOOP);
+			playENGINESound(SOUND_SELECTION::REV_DOWN, false);
+
+			if (soundPointers[SOUND_SELECTION::REV_UP] && !soundPointers[SOUND_SELECTION::REV_UP]->isFinished()) {
+				
+				
+				unsigned int revDownLength = soundPointers[SOUND_SELECTION::REV_DOWN]->getPlayLength();
+				unsigned int revUpLength = soundPointers[SOUND_SELECTION::REV_UP]->getPlayLength();
+
+				unsigned int revUpPosition = soundPointers[SOUND_SELECTION::REV_UP]->getPlayPosition();
+
+				float scale = (float)revUpPosition / (float)revUpLength;
+				
+				unsigned int posUpdate = revDownLength * (0.4 - scale);
+
+				soundPointers[SOUND_SELECTION::REV_UP]->stop();
+
+				//printf("REVDOWNLENGTH = %.2fs	REVUPPOSITION = %.2fs	POSUPDATE = %.2f\n", (float)revDownLength / 1000.0f, (float)revUpPosition / 1000.0f, (float)posUpdate/1000.0f);
+
+				soundPointers[SOUND_SELECTION::REV_DOWN]->setPlayPosition(posUpdate);
+				//This plays the revdown quieter the less far you are into the rev up.
+			}
+				
+
+			footOnGas = false;
+		}
+
+		else if (soundPointers[SOUND_SELECTION::REV_UP] && soundPointers[SOUND_SELECTION::REV_UP]->isFinished()) {
+			playENGINESound(SOUND_SELECTION::REV_LOOP, true);
+		}
+	}
+
+	else {
+		if (player->footOnGas()) {
+
+			if (soundPointers[SOUND_SELECTION::REV_DOWN] && !soundPointers[SOUND_SELECTION::REV_DOWN]->isFinished())
+				stopSound(SOUND_SELECTION::REV_DOWN);
+
+			playENGINESound(SOUND_SELECTION::REV_UP, false);
+			footOnGas = true;
+		}
+	}
+
+	setPitchAndVolume(SOUND_SELECTION::REV_UP, pitch, 1);
+	setPitchAndVolume(SOUND_SELECTION::REV_LOOP, pitch, 1);
+	setPitchAndVolume(SOUND_SELECTION::REV_DOWN, pitch, 1);
+	//To prevent clipping, have to set all to the same volume and then change the overall volume.
+	VehicleEngineSpecificSoundEngine->setSoundVolume(volume);
+
+}
 
 void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 
-	if (state->gamestate != GAMESTATE_INGAME) {
+	if (state->gamestate != GAMESTATE::GAMESTATE_INGAME) {
 		VehicleSoundEngine->stopAllSounds();
+		VehicleEngineSpecificSoundEngine->stopAllSounds();
 		return;
 	}
 
-	if (player->vehicleInAir) return; //maybe play wind sounds?
+	float speed = fmin(length(player->getLinearVelocity()), 200);
+	int gear = player->vehiclePtr->mDriveDynData.getCurrentGear();
 
-	playSound(ENGINE_LOOP, true);
+	revScaleGoal = ((gear == 0) ? 0 : (float)gear - 2.0f) / 5.0f;
+	revScale += (revScaleGoal - revScale) * (float)state->timeStep;
+
+	float pitch = MIN_REV_PITCH + revScale * (MAX_REV_PITCH - MIN_REV_PITCH);
+	float volume = MIN_REV_VOLUME + revScale * (MAX_REV_VOLUME - MIN_REV_VOLUME);
+
+	//Start all loops
+	playSound(SOUND_SELECTION::WIND_LOOP, true);
+	setPitchAndVolume(SOUND_SELECTION::WIND_LOOP,
+		MIN_WIND_PITCH + (MAX_WIND_PITCH - MIN_WIND_PITCH) * (speed / 350.0f),
+		MIN_WIND_VOLUME + (MAX_WIND_VOLUME - MIN_WIND_VOLUME) * (speed / 350.0f));
+
+	
+		
+
+
 	playSound(IDLE_LOOP, true);
+	updateEngineAudio(player, pitch, volume);
 
-	float speed = fmin(fmax(player->getSpeedRatio(), 0.0f), 1.0f); //The players speedscale [0,1] 0 means not moving, 1 means max speed.
-																	//Requires fmin/fmax [0,1] binding for when falling.
+	if (player->vehicleInAir) {
+		stopSound(SOUND_SELECTION::GROUND_SOUNDS);
+		stopSound(SOUND_SELECTION::BRAKE_LOOP);
+		return;
+	}
+	
+	playSound(SOUND_SELECTION::GROUND_SOUNDS, true);
+	setPitchAndVolume(SOUND_SELECTION::GROUND_SOUNDS,
+		MIN_GROUND_PITCH + (MAX_GROUND_PITCH - MIN_GROUND_PITCH) * (speed / 10.0f),
+		MIN_GROUND_VOLUME + (MAX_GROUND_VOLUME - MIN_GROUND_VOLUME) * (speed / 10.0f));
 
 	if (soundPointers[IDLE_LOOP]) {
-		soundPointers[IDLE_LOOP]->setVolume(MIN_IDLE_VOLUME + (MAX_IDLE_VOLUME - MIN_IDLE_VOLUME) * speed);
-		soundPointers[IDLE_LOOP]->setPlaybackSpeed(MIN_IDLE_PITCH + (MAX_IDLE_PITCH - MIN_IDLE_PITCH) * speed);
+		soundPointers[IDLE_LOOP]->setVolume(MIN_IDLE_VOLUME + (MAX_IDLE_VOLUME - MIN_IDLE_VOLUME) * revScale); // maybe make just speed based
+		soundPointers[IDLE_LOOP]->setPlaybackSpeed(MIN_IDLE_PITCH + (MAX_IDLE_PITCH - MIN_IDLE_PITCH) * revScale);
 	}
 
-	if (soundPointers[ENGINE_LOOP]) {
-		soundPointers[ENGINE_LOOP]->setPlaybackSpeed(MIN_ENGINE_PITCH + (MAX_ENGINE_PITCH - MIN_ENGINE_PITCH) * speed);
-		soundPointers[ENGINE_LOOP]->setVolume(MIN_ENGINE_VOLUME + (MAX_ENGINE_VOLUME - MIN_ENGINE_VOLUME) * speed);
+	if (gear == 1) {
+		if (!gearChanged) {
+			unsigned int random = rand() % 1;
+			//playSound(GEAR_SWITCH0 + random, false)->setVolume(0.2f); sounds bad
+		}
+		gearChanged = true;
 	}
 
-	if (player->isChangingGears()) {
-		printf("SWITCHING GEARS\n");
-		unsigned int random = rand() % 1;
-		playSound(GEAR_SWITCH0 + random, false);
-	}
+	else gearChanged = false;
 
-	if (player->newAccelInput()) {
-		printf("newAccelInput\n");
-		unsigned int random = rand() % 5;
-		playSound(REV0 + random, false);// ->setPlaybackSpeed(0.5f);
-	}
+	if (player->footOnBrake() && speed > 10.0f) {
+		pitch = MIN_BRAKE_PITCH + (MAX_BRAKE_PITCH - MIN_BRAKE_PITCH) * speed / 50.0f;
+		volume = MIN_BRAKE_VOLUME + (MAX_BRAKE_VOLUME - MIN_BRAKE_VOLUME) * speed / 50.0f;
 
+		playSound(SOUND_SELECTION::BRAKE_LOOP, true);
+		setPitchAndVolume(SOUND_SELECTION::BRAKE_LOOP, pitch, volume);
+	}
+	else stopSound(SOUND_SELECTION::BRAKE_LOOP);
 }
 
 
@@ -92,15 +223,30 @@ void AudioSystem::updateAudio(Player* player, State* state) {
 	updateMusic(state);
 	updateVehicleSounds(player, state);
 
+	VehicleEngineSpecificSoundEngine->update();
 	VehicleSoundEngine->update();
 	MusicSoundEngine->update();
 
+}
+
+void AudioSystem::stopSound(unsigned int selection) {
+	if (soundPointers[selection]) soundPointers[selection]->stop();
 }
 
 irrklang::ISound* AudioSystem::playSound(unsigned int selection, bool loop) {
 
 	if (!VehicleSoundEngine->isCurrentlyPlaying(soundPaths[selection].c_str())) {
 		irrklang::ISound* sound = VehicleSoundEngine->play2D(soundPaths[selection].c_str(), loop);
+		soundPointers[selection] = sound;
+		return sound;
+	}
+
+}
+
+irrklang::ISound* AudioSystem::playENGINESound(unsigned int selection, bool loop) {
+
+	if (!VehicleEngineSpecificSoundEngine->isCurrentlyPlaying(soundPaths[selection].c_str())) {
+		irrklang::ISound* sound = VehicleEngineSpecificSoundEngine->play2D(soundPaths[selection].c_str(), loop);
 		soundPointers[selection] = sound;
 		return sound;
 	}

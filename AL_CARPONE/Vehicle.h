@@ -1,6 +1,8 @@
 #pragma once
 #include <queue>
 #include <glm/glm.hpp>
+#include <iostream>
+#include "physx_globals.h"
 #include "physXVehicleSettings.h"
 #include "snippetvehiclecommon/SnippetVehicleCreate.h"
 #include "Model.h"
@@ -35,17 +37,21 @@ public:
 	PxTransform getStartTransform();
 	void moveStartPoint(PxVec3 v);
 
-	glm::vec3 getLinearVelocity();
-	glm::vec3 getAngularVelocity();
-
-	float getSpeed();
-	float getSpeedRatio();
 
 	// Fetch directions
 	glm::vec3 getDir();		// fetch the front-facing direction of the player vehicle
 	glm::vec3 getRight();	// fetch the vector pointing to the right of the vehicle
 	glm::vec3 getUp();
 	glm::vec3 getPos();		// fetch position of the vehicle chassis
+
+	glm::vec3 getLinearVelocity();
+	glm::vec3 getAngularVelocity();
+
+	float getForwardVelocity();
+	float getForwardAcceleration();
+	float getForwardJerk();
+
+	void updatePhysicsVariables(double);
 
 	bool isMoving();
 	bool isChangingGears();
@@ -55,6 +61,12 @@ public:
 	void reset();
 
 protected:
+	
+
+	glm::vec3 velocity;
+	glm::vec3 acceleration;
+	glm::vec3 jerk;
+
 	PxTransform startTransform;
 	
 };
