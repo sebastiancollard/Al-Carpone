@@ -143,7 +143,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state)
 			
 			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
 			{
-				state.mainMenu = false;
+				state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 				state.selectedLevel = selectedOption;
 				selectedOption = 0;
 				return;
