@@ -12,20 +12,35 @@
 //Used for debugging.
 #define CAMERA_MODE_UNBOUND_FREELOOK 2
 
+enum LEVELS {
+	LEVEL_TUNING = 0,
+	LEVEL_RACETRACK,
+	LEVEL_AITEST,
+	LEVEL_CITYSCALE
+};
+
+enum GAMESTATE {
+	GAMESTATE_MAIN_MENU,
+	GAMESTATE_PAUSE_MENU,
+	GAMESTATE_INGAME
+};
+
 //Stores information pertaning to the current state of the game.
 class State {
 public:
 	
-	double currTime = 0.;				//Current time in game
-	double prevTime = 0.;				//Previous time (time at last currTime update)
-	double timeStep = 1.0f / 60.0f;		//The ammount of time since last time update
+	GAMESTATE gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
+
+	// Time
+	double currTime = 0.;				
+	double prevTime = 0.;				
+	double timeStep = 1.0f / 60.0f;		
 	float simulationSpeed = 2.f;
 	double timeSinceLastFpsUpdate = 0;
 
 	// Modes
 	unsigned int cameraMode = CAMERA_MODE_BOUND;
 	bool debugMode = false;
-	bool mainMenu = true;
 	unsigned int selectedLevel = 0;
 
 	//If this is flipped to true, the program should exit.
@@ -39,8 +54,11 @@ public:
 	bool R_isHeld = false;
 	bool S_isHeld = false;
 	bool W_isHeld = false;
+	bool M_isHeld = false;
 	bool f5_isHeld = false;
+	bool enter_isHeld = false;
 	bool shift_isHeld = false;
+	bool space_isHeld = false;
 	bool down_isHeld = false;
 	bool up_isHeld = false;
 	bool escape_isHeld = false;

@@ -1,6 +1,5 @@
 #include "Vehicle.h"
-#include "physx_globals.h"
-#include <iostream>
+
 
 
 
@@ -102,6 +101,32 @@ glm::vec3 Vehicle::getAngularVelocity() {
 	return glm::vec3(velo.x, velo.y, velo.z);
 }
 
+float Vehicle::getForwardVelocity() {
+	return glm::dot(getLinearVelocity(), getDir());
+}
+
+float Vehicle::getForwardAcceleration() {
+	return glm::dot(acceleration, getDir());
+}
+
+float Vehicle::getForwardJerk() {
+	return glm::dot(jerk, getDir());
+}
+
+void Vehicle::updatePhysicsVariables(double dt) {
+
+	if (dt == 0) return;
+
+	glm::vec3 newVelocity = getLinearVelocity(); 
+	glm::vec3 newAcceleration = (newVelocity - velocity) / (float)dt; // a = dv/dt
+	glm::vec3 newJerk = (newAcceleration - acceleration) / (float)dt; // j = da/dt = ddv/ddt
+
+	jerk = newJerk;
+	acceleration = newAcceleration;
+	velocity = newVelocity;
+
+	//printf("dt[%.4f]	VELOCITY[%.5f]	ACCELERATION[%.5f]	JERK[%.5f]\n",(float)dt, glm::length(velocity),glm::length(acceleration),glm::length(jerk));	
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,6 +198,14 @@ glm::vec3 Vehicle::getPos() {
 	return glm::vec3(shape.p.x, shape.p.y, shape.p.z);
 }
 
+
+bool Vehicle::isMoving() {
+	return glm::length(getLinearVelocity()) > 0.0f;
+}
+
+bool Vehicle::isChangingGears() {
+	return vehicleChangingGears;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // RESETS

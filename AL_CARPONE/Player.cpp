@@ -39,6 +39,13 @@ void Player::setCash(int amount) {
 	cash = amount;
 }
 
+bool Player::footOnGas() {
+	return footIsOnGas;
+}
+
+bool Player::footOnBrake() {
+	return footIsOnBrake;
+}
 
 ///////////////////////////////////////////////////////////////////////
 // INPUT HANDLING
@@ -54,9 +61,16 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			glm::vec3 left = -getRight();
 			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 		}
+
+		state.W_isHeld = true;
+	}
+	else{
+		state.W_isHeld = false;
 	}
 
-	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+	footIsOnGas = state.W_isHeld;
+
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 		if (vehicleInAir) {
 			glm::vec3 right = getRight();
@@ -82,7 +96,11 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
+		state.space_isHeld = true;
 	}
+	else state.space_isHeld = false;
+
+	footIsOnBrake = state.space_isHeld;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld) {
 		glm::vec3 front = getDir();

@@ -43,30 +43,12 @@ void MainMenu::changeLevel(int level) {
 ////////////////////////////////////////////////////////////////////////
 
 
-// TODO temporary solution. must move to physics system
-void despawnEnemy(Vehicle* enemy) {
-	gScene->removeActor(*enemy->actorPtr);
-	for (int i = 0; i < physx_actors.size(); i++) {
-		if (physx_actors[i].actorPtr == enemy->actorPtr) {
-			physx_actors.erase(physx_actors.begin() + i);
-			return;
-		}
-	}
-	delete(enemy);
-}
-
 
 
 void MainMenu::drawMenu(GraphicsSystem& graphics, State& state) {
 	graphics.shader2D->use();
 	level_models[selectedOption].Draw(*graphics.shader2D);
 	handleInputs(graphics.window, state);
-
-	// Despawn any additional active vehicles (enemies)
-	while (state.activeVehicles.size() > 1) {
-		despawnEnemy(state.activeVehicles.back());
-		state.activeVehicles.pop_back();
-	}
 }
 
 
@@ -92,10 +74,18 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state)
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
-		state.mainMenu = false;
-		state.selectedLevel = selectedOption;
-		selectedOption = 0;
+		if (!state.enter_isHeld) {
+			state.gamestate = GAMESTATE_INGAME;
+			state.selectedLevel = selectedOption;
+			selectedOption = 0;
+		}
+		
+		state.enter_isHeld = true;
+
 		return;
+	}
+	else {
+		state.enter_isHeld = false;
 	}
 
 	// Handles key inputs
