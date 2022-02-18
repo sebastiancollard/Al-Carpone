@@ -59,7 +59,7 @@ const float MAX_GROUND_VOLUME = 0.2f;
 const float MIN_BRAKE_PITCH = 0.7f;
 const float MAX_BRAKE_PITCH = 1.3f;
 const float MIN_BRAKE_VOLUME = 0.0f;
-const float MAX_BRAKE_VOLUME = 1.25f;
+const float MAX_BRAKE_VOLUME = 0.75f;
 
 float revScale = 0.0f;
 float revScaleGoal = 0.0f;

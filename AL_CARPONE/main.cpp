@@ -30,6 +30,7 @@ int main()
 	PhysicsSystem physics(state, player, bank);
 
 	cout << "Initalizing Audio..." << endl;
+
 	AudioSystem audio;
 
 	//TODO Cleanup
