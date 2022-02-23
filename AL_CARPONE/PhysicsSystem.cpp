@@ -98,9 +98,15 @@ void PhysicsSystem::step(GLFWwindow* window)
 		updateDrivingMode(player);
 
 		//Update the control inputs for the vehicle.dwd
-		//PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, player.vehicleInAir, *player.vehiclePtr);
-		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, state.activeVehicles[1]->vehicleInAir, *state.activeVehicles[1]->vehiclePtr);
+		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, player.vehicleInAir, *player.vehiclePtr);
+		//PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, state.activeVehicles[1]->vehicleInAir, *state.activeVehicles[1]->vehiclePtr);
 		
+		for (int i = 1; i < state.activeVehicles.size(); i++) {
+			state.activeVehicles[i]->handle(window, player.getPos());
+			updateDrivingMode(*state.activeVehicles[i]);
+			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, state.activeVehicles[i]->vehicleInAir, *state.activeVehicles[i]->vehiclePtr);
+		}
+
 		for (Vehicle* v : state.activeVehicles) {
 			//Raycasts.
 			PxVehicleWheels* vehicles[1] = { v->vehiclePtr };

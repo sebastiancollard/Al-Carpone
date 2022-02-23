@@ -2,8 +2,6 @@
 
 #include <iostream>
 #include <queue>
-#include<glad/glad.h>
-#include<GLFW/glfw3.h>
 #include "Vehicle.h"
 #include "State.h"
 

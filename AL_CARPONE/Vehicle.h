@@ -1,5 +1,7 @@
 #pragma once
 #include <queue>
+#include<glad/glad.h>
+#include<GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <iostream>
 #include "physx_globals.h"
@@ -37,6 +39,8 @@ public:
 	PxTransform getStartTransform();
 	void moveStartPoint(PxVec3 v);
 
+	// Handle all key inputs relevant to driving
+	virtual void handle(GLFWwindow* window, glm::vec3 playerPos) { std::cout << "not overriding" << std::endl; }
 
 	// Fetch directions
 	glm::vec3 getDir();		// fetch the front-facing direction of the player vehicle
