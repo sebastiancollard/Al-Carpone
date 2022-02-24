@@ -1,7 +1,9 @@
 #pragma once
 #include "Ability.h"
+#include "Timer.h"
 
 enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided this was more of a nice-to-have
+	NONE,
 	CAMOUFLAGE,
 	TOMATO,
 	DONUT,
@@ -12,15 +14,15 @@ class PowerUp : public Ability {
 private:
 	POWER_TYPE type;		//which type of power-up
 	
-	float total_duration;		//total duration of the ability (permanent for upgrades?)	//may want to change to time_t depending
-								//how we want to implement the timer/ update it per frame
-	float timeElapsed;			//total elapsed time of the activated ability
+	Timer timer;
+	float duration_sec;		//total duration of the ability (permanent for upgrades?)	
+							//If something has a total duration of 0, then it will last infitnitely
 
 public:
-	PowerUp(POWER_TYPE power_type, float duration) {
-		type = power_type;
-		total_duration = duration;
-	}
+	PowerUp(Player p);
+	PowerUp(POWER_TYPE power_type, Player p);
+	PowerUp(POWER_TYPE power_type, Player p, float duration);
+
 	void activate();
 	void deactivate();
 	void update();

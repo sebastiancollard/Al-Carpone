@@ -183,6 +183,7 @@
     <ClCompile Include="SnippetVehicleTankCreate.cpp" />
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="stb.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Upgrade.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
@@ -220,6 +221,7 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Upgrade.h" />
     <ClInclude Include="util.h" />

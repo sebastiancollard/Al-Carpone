@@ -39,6 +39,20 @@ void Player::setCash(int amount) {
 	cash = amount;
 }
 
+///////////////////////////////////////////////////////////////////////
+// POWER-UP FUNCTIONS
+///////////////////////////////////////////////////////////////////////
+void Player::setDetectable(bool b) {
+	detectable = b;
+}
+bool Player::isDetectable() {
+	return detectable;
+}
+void Player::equipNewPower(POWER_TYPE type, float duration) {
+	equippedPower = PowerUp(type, player, duration);
+}
+
+
 bool Player::footOnGas() {
 	return footIsOnGas;
 }
@@ -168,6 +182,11 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			}
 
 		}
+	}
+
+	//ABILITY CONTROLS (POWER-UPS)
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		equippedPower.usePower();		//Does nothing atm
 	}
 
 }

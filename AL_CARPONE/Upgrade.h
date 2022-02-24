@@ -12,9 +12,8 @@ private:
 	UPGRADE_TYPE type;			//which type of upgrade
 
 public:
-	Upgrade(UPGRADE_TYPE power_type) {
-		type = power_type;
-	}
+	Upgrade(UPGRADE_TYPE power_type, Player player);
+
 	void activate() {};
 	void deactivate() {};
 

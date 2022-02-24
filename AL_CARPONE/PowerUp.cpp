@@ -1,22 +1,51 @@
 #include "PowerUp.h"
 
+//Constructors
+PowerUp::PowerUp(Player p) {
+	type = POWER_TYPE::NONE;
+	player = p;
+}
+PowerUp::PowerUp(POWER_TYPE power_type, Player p) {
+	type = power_type;
+	player = p;
+	duration_sec = 0.f;
+}
+
+
+PowerUp::PowerUp(POWER_TYPE power_type, Player p, float duration) {
+
+	type = power_type;
+	player = p;
+	duration_sec = duration;
+	timer.reset();
+}
+
+
+//public functions
 void PowerUp::activate() {
 	isActive = true;
-	timeElapsed = 0.f;
+	timer.reset();
 	if (type == CAMOUFLAGE) {
-		//TODO: render player undetectable to enemies (set some flag?)
+		player.setDetectable(false);
 	}
 
 }
 
 void PowerUp::deactivate() {
 	isActive = false;
+	if (type == CAMOUFLAGE) {
+		player.setDetectable(true);
+	}
 }
 
 void PowerUp::update() {
-	//TODO: increment time elapsed and deactivate power-up if time is up.
+	if (duration_sec > 0.f) {
+		timer.tick();
+		if(timer.getDeltaTime() > duration_sec) {
+			deactivate();
+		}
+	}
 }
-	
 	
 //This should be triggered when the player pressed some "use ability" button for the throwable/placeable items.
 void PowerUp::usePower() {
@@ -30,6 +59,9 @@ void PowerUp::usePower() {
 			break;
 		case SPIKE_TRAP:
 			//player places spike trap
+			break;
+		default:
+			//Do nothing
 			break;
 		}
 	}

@@ -1,5 +1,11 @@
 #include "Upgrade.h"
 
+Upgrade::Upgrade(UPGRADE_TYPE power_type, Player p) {
+	type = power_type;
+	player = p;
+}
+
+
 void Upgrade::activate() {
 	isActive = true;
 	switch (type) {
