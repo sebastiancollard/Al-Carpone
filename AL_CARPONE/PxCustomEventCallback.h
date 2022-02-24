@@ -33,7 +33,7 @@ public:
 		
 			//If it is the player and the bank trigger interacting:
 			if ((pairs[i].otherActor == player.actorPtr) &&		//bank.triggerPtr
-				(pairs[i].triggerActor == bank.triggerPtr))
+				(pairs[i].triggerActor == bank.trigger.ptr))
 			{
 				player.setRob(!player.canRob(state));
 			}

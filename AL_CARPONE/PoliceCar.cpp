@@ -5,6 +5,8 @@
 #define POLICE_CAR_LWHEEL_PATH "models/police_car/police_car_wheel_left.obj"
 #define POLICE_CAR_RWHEEL_PATH "models/police_car/police_car_wheel_right.obj"
 
+#define MAX_IDLE_TIME 20 //20 seconds?
+
 void PoliceCar::createModel() {
 
 	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
@@ -15,18 +17,63 @@ void PoliceCar::createModel() {
 }
 
 void PoliceCar::handle(GLFWwindow* window, glm::vec3 playerPos) {
+
+	switch (state) {
+		case AISTATE::IDLE:
+			break;
+
+		case AISTATE::PATROL:
+			patrol(window);
+			break;
+
+		case AISTATE::CHASE:
+			chase(window, playerPos);
+			break;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// HANDLE AI STATES
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Stop for MAX_IDLE_TIME seconds before continuing to patrol
+void PoliceCar::idle() {
+
+	// Just started (might need to move this elsewhere
+	if (idleTime == 0) idleTime = MAX_IDLE_TIME;
+
+	idleTime--; // TODO change to seconds instead
+
+	if (idleTime == 0) state = AISTATE::PATROL;
+}
+
+
+
+// Go forward until reached a node (intersection) and then randomly choose a direction
+// If reached a dead end, back up and go back
+void PoliceCar::patrol(GLFWwindow* window) {
+	// TODO
+	// Speed is slower here
+}
+
+
+// AI only goes forward atm
+// TODO: respawn if stuck
+// TODO: follow player's last pos before an intersection instead
+void PoliceCar::chase(GLFWwindow* window, glm::vec3 playerPos) {
+
 	inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);
 	glm::vec3 dir = playerPos - this->getPos();
 	float temp = atan2(glm::dot(glm::cross(this->getDir(), dir), glm::vec3(0.f, 1.f, 0.f)), glm::dot(dir, this->getDir()));
 	if (temp < 0) {
 		//std::cout << "right" << std::endl;
 		if (temp < -0.1f)
-		inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
+			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
 	}
 	else {
 		//std::cout << "left" << std::endl;
 		if (temp > 0.1f)
 			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
 	}
-
 }

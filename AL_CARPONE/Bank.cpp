@@ -9,14 +9,14 @@ using namespace physx;
 using namespace snippetvehicle;
 
 
-//TODO move to physics system
+//TODO cleanup
+// TODO move some to physics system
 void Bank::createActors() {
 	//BANK (BUILDING)
-	static PxU32 counter = 0;
 	PxVec3 b_pos(getPos().x, getPos().y, getPos().z);
 
 	float bank_half_width, bank_half_depth;
-	if ((getDir() == orient::N) || (getDir() == orient::S)) {		//if bank is facing east or west, we shoudl swap the width and depth dimensions of the bank "hitbox"
+	if ((getDir() == ORIENT::N) || (getDir() == ORIENT::S)) {		//if bank is facing east or west, we should swap the width and depth dimensions of the bank "hitbox"
 		bank_half_width = getWidth() / 2.f;
 		bank_half_depth = getDepth() / 2.f;
 	}
@@ -36,7 +36,8 @@ void Bank::createActors() {
 	shape->setSimulationFilterData(bankFilter);
 	body->attachShape(*shape);
 	gScene->addActor(*body);
-	physx_actors.push_back({ body, counter++ });
+	if (physx_actors.size() == 0) physx_actors.push_back({ body, 0 });
+	else physx_actors.push_back({ body, physx_actors.back().actorId + 1 });
 	shape->release();
 
 	bankPtr = body;
@@ -48,41 +49,26 @@ void Bank::createActors() {
 	float trigger_half_depth = 7.f;
 	float trigger_half_width = 0.f;
 	switch (getDir()) {
-	case 0:		//N
-		t_pos.z += (bank_half_depth + trigger_half_depth);		//trigger is further back in the z direction (higher z)
-		trigger_half_width = getWidth() / 2.f;
-		break;
-	case 1:		//E
-		t_pos.x -= (bank_half_depth + trigger_half_depth);		//trigger is further "right" (x dir)
-		trigger_half_width = trigger_half_depth;				//swap width and depth
-		trigger_half_depth = getWidth() / 2.f;
-		break;
-	case 2:		//S
-		t_pos.z -= (bank_half_depth + trigger_half_depth);		//trigger is further forward in the z direction (smaller z)
-		trigger_half_width = getWidth() / 2.f;
-		break;
-	case 3:		//W
-		t_pos.x += (bank_half_depth + trigger_half_depth);		//trigger is further "left" (x dir)
-		trigger_half_width = trigger_half_depth;				//swap width and depth
-		trigger_half_depth = getWidth() / 2.f;
-		break;
+		case ORIENT::N:		//N
+			t_pos.z += (bank_half_depth + trigger_half_depth);		//trigger is further back in the z direction (higher z)
+			trigger_half_width = getWidth() / 2.f;
+			break;
+		case ORIENT::E:		//E
+			t_pos.x -= (bank_half_depth + trigger_half_depth);		//trigger is further "right" (x dir)
+			trigger_half_width = trigger_half_depth;				//swap width and depth
+			trigger_half_depth = getWidth() / 2.f;
+			break;
+		case ORIENT::S:		//S
+			t_pos.z -= (bank_half_depth + trigger_half_depth);		//trigger is further forward in the z direction (smaller z)
+			trigger_half_width = getWidth() / 2.f;
+			break;
+		case ORIENT::W:		//W
+			t_pos.x += (bank_half_depth + trigger_half_depth);		//trigger is further "left" (x dir)
+			trigger_half_width = trigger_half_depth;				//swap width and depth
+			trigger_half_depth = getWidth() / 2.f;
+			break;
 	}
 	//PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
 	PxShape* triggerShape = gPhysics->createShape(PxBoxGeometry(PxVec3(trigger_half_width, 2.f, trigger_half_depth)), *gMaterial);
-	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
-	triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
-
-	PxTransform triggerPos(t_pos);											//position of the trigger.
-
-	PxRigidStatic* triggerBody = gPhysics->createRigidStatic(triggerPos);
-	PxFilterData triggerFilter(COLLISION_FLAG_BANK_TRIGGER, COLLISION_FLAG_BANK_TRIGGER_AGAINST, 0, 0);
-
-	triggerShape->setSimulationFilterData(triggerFilter);
-	triggerBody->attachShape(*triggerShape);
-	gScene->addActor(*triggerBody);
-
-	physx_actors.push_back({ triggerBody, counter++ });
-	triggerShape->release();
-
-	triggerPtr = triggerBody;
+	trigger = BoxTrigger(true, trigger_half_width* 2, 4.f, trigger_half_depth*2, t_pos);
 }

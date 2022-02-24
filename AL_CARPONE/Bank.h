@@ -3,11 +3,12 @@
 #include "glm/glm.hpp"
 #include "PxPhysicsAPI.h"
 #include "Model.h"
+#include "BoxTrigger.h"
 
 #define BANK_BUILDING_PATH "models/al_carpone/bank_box.obj"
 
 
-enum orient {N, E, S, W};	//N=1, E=2, S=3, W=4		North is positive z direction of global coordinates
+enum class ORIENT {N, E, S, W};	//N=1, E=2, S=3, W=4		North is positive z direction of global coordinates
 
 
 class Bank {
@@ -16,7 +17,7 @@ private:
 	//Bank position on map (tile position?)
 	glm::vec3 pos = { 0.f, height/2.f, 0.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
 
-	orient dir = S;		//Bank faces "south" by default
+	ORIENT dir = ORIENT::S;		//Bank faces "south" by default
 
 	float depth = 1.f;	//y axis
 	float height = 1.f;	//z axis
@@ -25,7 +26,7 @@ private:
 public:
 	//physX bank actor and trigger actor
 	physx::PxRigidActor* bankPtr;				//Would like to make these actors private, however they are not provate for player. Thought it would be best to keep it the same to avoid confusion.
-	physx::PxRigidActor* triggerPtr;
+	BoxTrigger trigger;
 
 	Model* model;
 
@@ -33,7 +34,7 @@ public:
 	Bank() {
 		//SETUP BANK POSITION, DIMENSIONS & ORIENTATION
 		setPos(40.f, 0.f);
-		setDir(orient::E);
+		setDir(ORIENT::E);
 		setDimensions(17.f, 17.f, 17.f);
 	}
 
@@ -47,7 +48,7 @@ public:
 		return pos;
 	}
 
-	orient getDir() {
+	ORIENT getDir() {
 		return dir;
 	}
 
@@ -77,7 +78,7 @@ public:
 		pos.z = z;
 	}
 	
-	void setDir(orient direction) {
+	void setDir(ORIENT direction) {
 		dir = direction;
 	}
 

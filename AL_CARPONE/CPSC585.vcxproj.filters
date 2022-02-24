@@ -162,6 +162,9 @@
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="BoxTrigger.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -265,6 +268,9 @@
     </ClInclude>
     <ClInclude Include="PauseMenu.h">
       <Filter>Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxTrigger.h">
+      <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
