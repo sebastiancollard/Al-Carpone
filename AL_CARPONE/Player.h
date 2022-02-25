@@ -61,5 +61,6 @@ public:
 	bool isDetectable();
 	void setDetectable(bool can_detect);
 	void equipNewPower(POWER_TYPE type, float duration);
+	PowerUp getPower();
 
 };

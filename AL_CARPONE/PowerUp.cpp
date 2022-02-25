@@ -2,7 +2,8 @@
 
 //Constructors
 PowerUp::PowerUp(Player p) {
-	type = POWER_TYPE::NONE;
+	//type = POWER_TYPE::NONE;
+	type = POWER_TYPE::TOMATO;	//just for testing for now
 	player = p;
 }
 PowerUp::PowerUp(POWER_TYPE power_type, Player p) {
@@ -22,7 +23,7 @@ PowerUp::PowerUp(POWER_TYPE power_type, Player p, float duration) {
 
 
 //public functions
-void PowerUp::activate() {
+void PowerUp::activateTimed() {
 	isActive = true;
 	timer.reset();
 	if (type == CAMOUFLAGE) {
@@ -31,7 +32,7 @@ void PowerUp::activate() {
 
 }
 
-void PowerUp::deactivate() {
+void PowerUp::deactivateTimed() {
 	isActive = false;
 	if (type == CAMOUFLAGE) {
 		player.setDetectable(true);
@@ -52,7 +53,9 @@ void PowerUp::usePower() {
 	if (isActive) {
 		switch (type) {
 		case TOMATO:
-			//player to throws tomato
+			model_path = TOMATO_PATH;
+			throw_item = true;
+			std::cout << "Using tomato power!" << std::endl;
 			break;
 		case DONUT:
 			//player to throws donut
@@ -66,3 +69,8 @@ void PowerUp::usePower() {
 		}
 	}
 }
+
+std::string PowerUp::getModelPath() {
+	return model_path;
+}
+

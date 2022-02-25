@@ -52,6 +52,10 @@ void Player::equipNewPower(POWER_TYPE type, float duration) {
 	equippedPower = PowerUp(type, player, duration);
 }
 
+PowerUp Player::getPower() {
+	return equippedPower;
+}
+
 
 bool Player::footOnGas() {
 	return footIsOnGas;
@@ -124,6 +128,13 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
 		state.shift_isHeld = false;
 	}
+
+	//ABILITY CONTROLS (POWER-UPS)
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		std::cout << "User pressed E" << std::endl;
+		equippedPower.usePower();		//Does nothing atm
+	}
+
 	/*
 	this part handles controller input,
 	line "std::cout << controller_name << std::endl;" will print out the current input controller's name
@@ -184,9 +195,5 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		}
 	}
 
-	//ABILITY CONTROLS (POWER-UPS)
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		equippedPower.usePower();		//Does nothing atm
-	}
 
 }

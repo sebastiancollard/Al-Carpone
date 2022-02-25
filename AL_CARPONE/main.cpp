@@ -119,6 +119,7 @@ int main()
 				for (Vehicle* v : state.activeVehicles) {
 					v->reset();
 				}
+
 			}
 			
 		}
@@ -151,6 +152,17 @@ int main()
 			// Camera is disabled in DEBUG MODE
 			if (!state.debugMode) activeCamera->handleInput(graphics.window, state);
 			if (activeCamera == &boundCamera) boundCamera.checkClipping(graphics.window);
+
+			//Check if player has thrown an item (used a tomato or donut powerup) --> temporary parameters, just wanted to test tomato
+			//if (player.getPower().throw_item) {
+			//	printf("Creating an item to throw!\n");
+			//	physics.createDynamic(PxTransform(
+			//		PxVec3(boundCamera.pos.x, boundCamera.pos.y, boundCamera.pos.z)),
+			//		PxSphereGeometry(4),
+			//		PxVec3(boundCamera.dir.x, boundCamera.dir.y, boundCamera.dir.z) * 175.0f
+			//	);
+
+			//}
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car);
 
@@ -238,7 +250,11 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{
+					//Model item = Model(player->getPower().getModelPath());
 
+					//Shader& shader = *graphics->shader3D;
+					//shader.setMat4("model", model);
+					//item.Draw(*graphics->shader3D);
 				}
 				else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
 
