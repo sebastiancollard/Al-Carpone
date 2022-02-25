@@ -9,7 +9,6 @@
 #include "PowerUp.h"
 
 
-
 /*
 Player Entity Class
  - Used for containing Car Model, Transformation, and car inputs
@@ -29,8 +28,8 @@ private:
 	bool can_rob = false;		//If player "collides" with trigger capsule, this shoudl be set to true
 	int cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
-	PowerUp equippedPower = PowerUp(player);		//Can only equip one power-up at a time FOR NOW (for simplicity if there is only one "use power-up" trigger)
-	//std::vector<Upgrade> upgrades; 
+	PowerUp equippedPower =  PowerUp();
+
 
 public:
 
@@ -60,7 +59,6 @@ public:
 	//Power-up related mechanisms
 	bool isDetectable();
 	void setDetectable(bool can_detect);
-	void equipNewPower(POWER_TYPE type, float duration);
 	PowerUp getPower();
-
+	void usePower();
 };

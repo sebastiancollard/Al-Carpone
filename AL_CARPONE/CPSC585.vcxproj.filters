@@ -168,9 +168,6 @@
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="Upgrade.cpp">
-      <Filter>Source Files\Entity\Abilities</Filter>
-    </ClCompile>
     <ClCompile Include="PowerUp.cpp">
       <Filter>Source Files\Entity\Abilities</Filter>
     </ClCompile>
@@ -281,13 +278,7 @@
     <ClInclude Include="PauseMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Ability.h">
-      <Filter>Header Files\Entity\Abilities</Filter>
-    </ClInclude>
     <ClInclude Include="PowerUp.h">
-      <Filter>Header Files\Entity\Abilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Upgrade.h">
       <Filter>Header Files\Entity\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">

@@ -1,6 +1,5 @@
 #include "Player.h"
 
-
 #define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
 #define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
 #define CAR_RWHEEL_PATH "models/al_carpone/car_Rwheel.obj"
@@ -48,12 +47,19 @@ void Player::setDetectable(bool b) {
 bool Player::isDetectable() {
 	return detectable;
 }
-void Player::equipNewPower(POWER_TYPE type, float duration) {
-	equippedPower = PowerUp(type, player, duration);
-}
 
 PowerUp Player::getPower() {
 	return equippedPower;
+}
+
+void Player::usePower() {
+	if (equippedPower.getType() == CAMOUFLAGE) {
+		equippedPower.activateTimed();
+		detectable = false;			//nowhere is this reset to true atm, must check to see if player is detectable AND if their ability is active
+	}
+	else {
+		equippedPower.dropOrThrow();
+	}
 }
 
 
@@ -129,10 +135,9 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		state.shift_isHeld = false;
 	}
 
-	//ABILITY CONTROLS (POWER-UPS)
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		std::cout << "User pressed E" << std::endl;
-		equippedPower.usePower();		//Does nothing atm
+		std::cout << "USER PRESSED E\n";
+		usePower();
 	}
 
 	/*

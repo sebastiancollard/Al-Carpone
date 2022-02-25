@@ -184,11 +184,9 @@
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Upgrade.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ability.h" />
     <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="constants.h" />
@@ -223,7 +221,6 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UI.h" />
-    <ClInclude Include="Upgrade.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>
