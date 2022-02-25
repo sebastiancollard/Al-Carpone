@@ -69,6 +69,6 @@ void Bank::createActors() {
 			break;
 	}
 	//PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
-	PxShape* triggerShape = gPhysics->createShape(PxBoxGeometry(PxVec3(trigger_half_width, 2.f, trigger_half_depth)), *gMaterial);
+	//PxShape* triggerShape = gPhysics->createShape(PxBoxGeometry(PxVec3(trigger_half_width, 2.f, trigger_half_depth)), *gMaterial);
 	trigger = BoxTrigger(true, trigger_half_width* 2, 4.f, trigger_half_depth*2, t_pos);
 }

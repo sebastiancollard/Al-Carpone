@@ -13,6 +13,10 @@ using namespace snippetvehicle;
 
 BoxTrigger::BoxTrigger(bool is_static, float width, float height, float depth, PxVec3 t_pos) {
 
+	std::cout << "TRIGGER BOX CREATED" << std::endl;
+	std::cout << t_pos.x << ", " << t_pos.y << ", " << t_pos.z << std::endl;
+
+
 	// TODO: for now, capsule is not handled
 	// 
 	// BOX = (a/2, b/2, c/2) where a,b,c are the sides of the box
@@ -28,27 +32,29 @@ BoxTrigger::BoxTrigger(bool is_static, float width, float height, float depth, P
 	PxTransform triggerPos(pos);											// position of the trigger.
 
 	if (is_static) {
-		PxRigidStatic* triggerBody = gPhysics->createRigidStatic(triggerPos);
-		triggerBody->attachShape(*triggerShape);
-		gScene->addActor(*triggerBody);
-		physx_actors.push_back({ triggerBody, physx_actors.back().actorId + 1 });
-		triggerShape->release();
-		ptr = triggerBody;
+		ptr = gPhysics->createRigidStatic(triggerPos);
 	}
 	else {
-		PxRigidDynamic* triggerBody = gPhysics->createRigidDynamic(triggerPos);
-		triggerBody->attachShape(*triggerShape);
-		gScene->addActor(*triggerBody);
-		physx_actors.push_back({ triggerBody, physx_actors.back().actorId + 1 });
-		triggerShape->release();
-		ptr = triggerBody;
+		ptr = gPhysics->createRigidDynamic(triggerPos);
 	}
+
+	ptr->attachShape(*triggerShape);
+	gScene->addActor(*ptr);
+	physx_actors.push_back({ ptr, physx_actors.back().actorId + 1 });
+	triggerShape->release();
 }
 
 
 
 void BoxTrigger::setPos(PxVec3 new_pos) {
 	pos = new_pos;
+	// TODO
+	//void PxRigidBody::setLinearVelocity(const PxVec3 & linVel, bool autowake);
+	//void PxRigidBody::setAngularVelocity(const PxVec3 & angVel, bool autowake);
+}
+
+void BoxTrigger::setModel() {
+	model = new Model();
 }
 
 

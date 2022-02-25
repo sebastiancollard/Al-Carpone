@@ -3,6 +3,7 @@
 #include "State.h"
 #include "Player.h"
 #include "Bank.h"
+#include "PoliceCar.h"
 
 using namespace physx;
 
@@ -22,6 +23,9 @@ public:
 	//This is a custom callback function to use when the player collides with pickups, or the trigger in front of the bank.
 	void onTrigger(PxTriggerPair* pairs, PxU32 count) {
 	
+
+		std::cout << state.activeVehicles.size() << std::endl;
+
 		//starter code taken from https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/RigidBodyCollision.html
 		for (PxU32 i = 0; i < count; i++)
 		{
@@ -32,10 +36,22 @@ public:
 
 		
 			//If it is the player and the bank trigger interacting:
-			if ((pairs[i].otherActor == player.actorPtr) &&		//bank.triggerPtr
-				(pairs[i].triggerActor == bank.trigger.ptr))
+			if (pairs[i].otherActor == player.actorPtr)
 			{
-				player.setRob(!player.canRob(state));
+				if (pairs[i].triggerActor == bank.trigger.ptr) { //bank.triggerPtr
+					player.setRob(!player.canRob(state));
+				}
+
+				// Headlights
+				else { 
+					for (int i = 1; i < state.activeVehicles.size(); i++) {
+						if (pairs[i].triggerActor == ((PoliceCar*)state.activeVehicles[i])->headlights->ptr) {
+							std::cout << "HEALIGHTS!!!" << std::endl;
+						}
+					}
+					std::cout << state.activeVehicles.size() << std::endl;
+				}
+				
 			}
 		}
 	}

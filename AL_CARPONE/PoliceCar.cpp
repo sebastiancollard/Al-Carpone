@@ -7,6 +7,19 @@
 
 #define MAX_IDLE_TIME 20 //20 seconds?
 
+
+
+
+PoliceCar::PoliceCar(int ID) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVec3(10.0f, 0, 0)) {
+
+	// Make Headlights
+	auto pos = getPos();
+	physx::PxVec3 t_pos = physx::PxVec3(pos.x+10.f, 0, pos.z);
+	headlights = new BoxTrigger(false, 5.f, 4.f, 5.f, t_pos); //TODO needs tuning later
+}
+
+
+
 void PoliceCar::createModel() {
 
 	Model police_car_chassis(POLICE_CAR_CHASSIS_PATH);
@@ -30,6 +43,11 @@ void PoliceCar::handle(GLFWwindow* window, glm::vec3 playerPos) {
 			chase(window, playerPos);
 			break;
 	}
+
+	// Move Headlights with car
+	auto pos = getPos();
+	physx::PxVec3 t_pos = physx::PxVec3(pos.x+10.f, 0, pos.z);
+	headlights->setPos(t_pos);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

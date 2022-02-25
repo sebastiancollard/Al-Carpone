@@ -23,12 +23,12 @@ class PoliceCar : public Vehicle {
 public:
 
 	AISTATE state = AISTATE::PATROL;
-	BoxTrigger* headlights = NULL; //TODO not initialized
+	BoxTrigger* headlights;
 
 	PoliceCar() {}
 
 	// Call parent constructor
-	PoliceCar(int ID) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVec3(10.0f, 0, 0)) {}
+	PoliceCar(int ID);
 
 	void handle(GLFWwindow* window, glm::vec3 playerPos);
 
