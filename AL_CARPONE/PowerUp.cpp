@@ -18,16 +18,16 @@ PowerUp::PowerUp(POWER_TYPE power_type, float duration) {
 
 //public functions
 void PowerUp::activateTimed() {
-	isActive = true;
+	activated = true;
 	timer.reset();
 }
 
 void PowerUp::deactivateTimed() {
-	isActive = false;
+	activated = false;
 }
 
 void PowerUp::updateTimed() {
-	if ((duration_sec > 0.f) && (isActive)) {
+	if ((duration_sec > 0.f) && (activated)) {
 		timer.tick();
 		if(timer.getDeltaTime() > duration_sec) {
 			deactivateTimed();
@@ -37,27 +37,40 @@ void PowerUp::updateTimed() {
 	
 //This should be triggered when the player pressed some "use ability" button for the throwable/placeable items.
 void PowerUp::dropOrThrow() {
-	switch (type) {
-	case TOMATO:
-		model_path = TOMATO_PATH;
-		throw_item = true;
-		std::cout << "Using tomato power!" << std::endl;
-		break;
-	case DONUT:
-		//player to throws donut
-		model_path = DONUT_PATH;
-		throw_item = true;
-		std::cout << "Using doughnut power!" << std::endl;
-		break;
-	case SPIKE_TRAP:
-		model_path = SPIKE_PATH;
-		drop_item = true;
-		std::cout << "Using spike power!" << std::endl;
-		break;
-	default:
-		//Do nothing
-		break;
+	if (!activated) {
+		switch (type) {
+		case TOMATO:
+			model_path = TOMATO_PATH;
+			throw_item = true;
+			activated = true;
+			std::cout << "Using tomato power!" << std::endl;
+			break;
+		case DONUT:
+			//player to throws donut
+			model_path = DONUT_PATH;
+			throw_item = true;
+			activated = true;
+			std::cout << "Using doughnut power!" << std::endl;
+			break;
+		case SPIKE_TRAP:
+			model_path = SPIKE_PATH;
+			drop_item = true;
+			activated = true;
+			std::cout << "Using spike power!" << std::endl;
+			break;
+		default:
+			//Do nothing
+			break;
+		}
 	}
+}
+
+void PowerUp::stopThrow() {
+	throw_item = false;
+}
+
+void PowerUp::stopDrop() {
+	drop_item = false;
 }
 
 POWER_TYPE PowerUp::getType() {
@@ -69,7 +82,7 @@ void PowerUp::setType(POWER_TYPE t) {
 	
 	duration_sec = 0.f;
 	
-	isActive = false;
+	activated = false;
 	throw_item = false;
 	drop_item = false;
 }

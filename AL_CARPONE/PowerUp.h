@@ -3,8 +3,8 @@
 #include <iostream>
 
 #define TOMATO_PATH "models/powerups/tomato.obj"
-#define DONUT_PATH "models/powerups/tomato.obj"		//TO CHANGE
-#define SPIKE_PATH "models/powerups/tomato.obj"
+#define DONUT_PATH "models/powerups/doughnut.obj"		//TO CHANGE
+#define SPIKE_PATH "models/powerups/spike.obj"
 
 enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided this was more of a nice-to-have
 	NONE,
@@ -16,13 +16,13 @@ enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided t
 
 class PowerUp {
 private:
-	POWER_TYPE type = TOMATO;		//which type of power-up
+	POWER_TYPE type = DONUT;		//which type of power-up
 	std::string model_path;			//set to tomato path automatically for testing
 	
 	Timer timer;			
 	float duration_sec = 0.f;		//total duration of the ability (permanent for upgrades?)	
 									//If something has a total duration of 0, then it will last infitnitely
-	bool isActive = false;			//atm, isActive only affects timed abilities (such as camouflage)
+	bool activated = false;			//affects timed abilities, but also checks to make sure we only throw one donut, etc. at a time
 
 public:
 	bool throw_item = false;
@@ -40,6 +40,8 @@ public:
 	POWER_TYPE getType();
 	void setType(POWER_TYPE t);		//resets appropriate variables and changes the power type
 	void setDuration(float d);		//sets the timer duration if it needs to be changed
+	void stopThrow();
+	void stopDrop();
 	std::string getModelPath();
 
 };

@@ -59,6 +59,6 @@ public:
 	//Power-up related mechanisms
 	bool isDetectable();
 	void setDetectable(bool can_detect);
-	PowerUp getPower();
+	PowerUp* getPower();
 	void usePower();
 };

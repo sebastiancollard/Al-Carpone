@@ -48,8 +48,8 @@ bool Player::isDetectable() {
 	return detectable;
 }
 
-PowerUp Player::getPower() {
-	return equippedPower;
+PowerUp* Player::getPower() {
+	return &equippedPower;
 }
 
 void Player::usePower() {
