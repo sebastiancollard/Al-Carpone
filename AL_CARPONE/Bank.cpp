@@ -20,7 +20,7 @@ void Bank::createActors() {
 	PxVec3 b_pos(730.000000, 32.841965, -430.000000);
 
 	float bank_half_width, bank_half_depth;
-	if ((getDir() == orient::N) || (getDir() == orient::S)) {		//if bank is facing east or west, we shoudl swap the width and depth dimensions of the bank "hitbox"
+	if ((getDir() == ORIENT::N) || (getDir() == ORIENT::S)) {		//if bank is facing east or west, we shoudl swap the width and depth dimensions of the bank "hitbox"
 		bank_half_width = getWidth() / 2.f;
 		bank_half_depth = getDepth() / 2.f;
 	}
@@ -52,41 +52,25 @@ void Bank::createActors() {
 	float trigger_half_depth = 40.f;
 	float trigger_half_width = 40.f;
 	switch (getDir()) {
-	case 0:		//N
+	case ORIENT::N:		//N
 		t_pos.z += 5 * (bank_half_depth + trigger_half_depth);		//trigger is further back in the z direction (higher z)
 		trigger_half_width = 5 * getWidth() / 2.f;
 		break;
-	case 1:		//E
+	case ORIENT::E:		//E
 		t_pos.x -= 5 * (bank_half_depth + trigger_half_depth);		//trigger is further "right" (x dir)
 		trigger_half_width = trigger_half_depth;				//swap width and depth
 		trigger_half_depth = 5 * getWidth() / 2.f;
 		break;
-	case 2:		//S
+	case ORIENT::S:		//S
 		t_pos.z -= 5 * (bank_half_depth + trigger_half_depth);		//trigger is further forward in the z direction (smaller z)
 		trigger_half_width = 5 * getWidth() / 2.f;
 		break;
-	case 3:		//W
+	case ORIENT::W:		//W
 		t_pos.x += 5 * (bank_half_depth + trigger_half_depth);		//trigger is further "left" (x dir)
 		trigger_half_width = trigger_half_depth;				//swap width and depth
 		trigger_half_depth = 5 * getWidth() / 2.f;
 		break;
 	}
 	//PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
-	PxShape* triggerShape = gPhysics->createShape(PxBoxGeometry(PxVec3(trigger_half_width, 2.f, trigger_half_depth)), *gMaterial);
-	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
-	triggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
-
-	PxTransform triggerPos(t_pos);											//position of the trigger.
-
-	PxRigidStatic* triggerBody = gPhysics->createRigidStatic(triggerPos);
-	PxFilterData triggerFilter(COLLISION_FLAG_BANK_TRIGGER, COLLISION_FLAG_BANK_TRIGGER_AGAINST, 0, 0);
-
-	triggerShape->setSimulationFilterData(triggerFilter);
-	triggerBody->attachShape(*triggerShape);
-	gScene->addActor(*triggerBody);
-
-	physx_actors.push_back({ triggerBody, counter++ });
-	triggerShape->release();
-
-	triggerPtr = triggerBody;
+	trigger = BoxTrigger(true, trigger_half_width*2, 2.f, trigger_half_depth*2, t_pos);
 }

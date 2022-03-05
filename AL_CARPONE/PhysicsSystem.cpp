@@ -93,14 +93,19 @@ void PhysicsSystem::step(GLFWwindow* window)
 
 		if (timestep < 1.0f / 60.0f) substep = timestep;
 
-		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
-
-		updateDrivingMode(player);
-
-		//Update the control inputs for the vehicle.dwd
-		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, player.vehicleInAir, *player.vehiclePtr);
-
 		for (Vehicle* v : state.activeVehicles) {
+
+			//Update the control inputs for the vehicle.dwd
+			if (v == &player) {
+				if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
+			}
+			else {
+				v->handle(window, player.getPos());
+			}
+			updateDrivingMode(*v);
+			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, v->vehicleInAir, *v->vehiclePtr);
+
+
 			//Raycasts.
 			PxVehicleWheels* vehicles[1] = { v->vehiclePtr };
 			PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
