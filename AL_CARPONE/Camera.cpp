@@ -22,7 +22,7 @@ glm::vec3 getGLMvec3(PxVec3 v) {
 
 
 FreeCamera::FreeCamera(Player& p) : player(p) {
-    movementSpeed = 10.0f;
+    movementSpeed = 50.0f;
     mouseSensitivity = 5.0f;
     zoom = 60.0f;
 
@@ -71,11 +71,11 @@ void FreeCamera::handleInput(GLFWwindow* window, State& state) {
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         {
-            movementSpeed = 50.f;
+            movementSpeed = 500.f;
         }
         else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
         {
-            movementSpeed = 10.f;
+            movementSpeed = 50.f;
         }
     }
     // Handles mouse inputs

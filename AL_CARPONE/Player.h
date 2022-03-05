@@ -23,7 +23,7 @@ private:
 	bool footIsOnBrake;
 
 	bool can_rob = false;		//If player "collides" with trigger capsule, this shoudl be set to true
-	int cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+	double cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
 
 public:
@@ -48,6 +48,7 @@ public:
 	int getCash();
 	bool canRob(State& state);
 	void setRob(bool b);
-	void addCash(int amount);
-	void setCash(int amount);
+	void addCash(double amount);
+	void setCash(double amount);
+	void setPos(PxTransform T);
 };

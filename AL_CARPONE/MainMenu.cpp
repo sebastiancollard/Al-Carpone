@@ -6,27 +6,25 @@
 
 MainMenu::MainMenu() {
 
-	level_models = { 
-		Model("models/mainMenu/0_tuning_testlevel.obj"),
-		Model("models/mainMenu/1_racetrack.obj"),
-		Model("models/mainMenu/2_ai_testlevel.obj"),
-		Model("models/mainMenu/3_city_scale_testlevel.obj")
+	loadingMapScreen = Model("models/mainMenu/LOADINGMAP.obj");
+
+	selectionScreens = { 
+		Model("models/mainMenu/0_PLAYGAME.obj"),
+		Model("models/mainMenu/1_TUNINGTESTLEVEL.obj"),
+		Model("models/mainMenu/2_RACETRACK.obj"),
+		Model("models/mainMenu/3_OPTIONS.obj")
 	};
 
 	level_light_positions = {
+		load_positions("models/map/light_positions.obj"),
 		load_positions("models/tuning_testlevel/light_positions.obj"),
-		load_positions("models/racetrack/light_positions.obj"),
-		load_positions("models/ai_testlevel/light_positions.obj"),
-		load_positions("models/city_prototype/light_positions.obj")
+		load_positions("models/racetrack/light_positions.obj")
 	};
-
 	levels = {
+		Model("models/map/map.obj"),
 		Model("models/tuning_testlevel/tuning_testlevel.obj"),
-		Model("models/racetrack/racetrack.obj"),
-		Model("models/ai_testlevel/ai_testlevel.obj"),
-		Model("models/city_prototype/city_prototype.obj")
+		Model("models/racetrack/racetrack.obj")
 	};
-
 	changeLevel(0);
 }
 
@@ -36,22 +34,20 @@ void MainMenu::changeLevel(int level) {
 	light_positions = &level_light_positions[level];
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////
 // DRAW MAIN MENU
 ////////////////////////////////////////////////////////////////////////
 
-
-
-
 void MainMenu::drawMenu(GraphicsSystem& graphics, State& state) {
 	graphics.shader2D->use();
-	level_models[selectedOption].Draw(*graphics.shader2D);
+	selectionScreens[selectedOption].Draw(*graphics.shader2D);
 	handleInputs(graphics.window, state);
 }
 
-
+void MainMenu::drawLoadingScreen(GraphicsSystem& graphics) {
+	graphics.shader2D->use();
+	loadingMapScreen.Draw(*graphics.shader2D);
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -75,6 +71,12 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state)
 
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
 		if (!state.enter_isHeld) {
+			//Options menu not handled yet.
+			if (selectedOption == 3) {
+				state.enter_isHeld = true;
+				return;
+			}
+
 			state.gamestate = GAMESTATE_INGAME;
 			state.selectedLevel = selectedOption;
 			selectedOption = 0;

@@ -15,6 +15,9 @@ void Player::createModel() {
 	car = new CarModel4W(car_chassis, car_lwheel, car_rwheel);
 }
 
+void Player::setPos(PxTransform T) {
+	vehiclePtr->getRigidDynamicActor()->setGlobalPose(T);
+}
 
 ///////////////////////////////////////////////////////////////////////
 // ROBING FUNCTIONS
@@ -26,16 +29,16 @@ int Player::getCash() {
 	return cash;
 }
 bool Player::canRob(State& state) {
-	return can_rob && state.selectedLevel == 0;
+	return can_rob && state.selectedLevel == LEVELS::LEVEL_MAIN;
 }
 
 void Player::setRob(bool b) {
 	can_rob = b;
 }
-void Player::addCash(int amount) {
+void Player::addCash(double amount) {
 	cash += amount;
 }
-void Player::setCash(int amount) {
+void Player::setCash(double amount) {
 	cash = amount;
 }
 
@@ -97,6 +100,11 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
 		state.space_isHeld = true;
+
+		//PxTransform t = vehiclePtr->getRigidDynamicActor()->getGlobalPose();
+		
+		//printf("p: %f, %f, %f\nq: %f, %f, %f, %f\n", t.p.x, t.p.y, t.p.z, t.q.x, t.q.y, t.q.z, t.q.w);
+	
 	}
 	else state.space_isHeld = false;
 

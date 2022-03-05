@@ -18,9 +18,13 @@ int main()
 	GraphicsSystem graphics; //Must be called first ALWAYS
 
 	// Initialize Windows
+	cout << "	Debug Panel..." << endl;
 	DebugPanel debugPanel(graphics.window);
+	cout << "	Main Menu..." << endl;
 	MainMenu mainMenu;
+	cout << "	Pause Menu..." << endl;
 	PauseMenu pauseMenu;
+	cout << "	UI..." << endl;
 	UI ui;
 	 
 	cout << "Initalizing Physics..." << endl;
@@ -81,7 +85,7 @@ int main()
 		if (state.gamestate == GAMESTATE_MAIN_MENU) {
 			//Draw the menu
 			mainMenu.drawMenu(graphics, state);
-
+			
 			// Despawn any additional active vehicles (enemies)
 			while (state.activeVehicles.size() > 1) {
 				despawnEnemy(state.activeVehicles.back());
@@ -91,9 +95,23 @@ int main()
 			
 			// If exiting the main menu
 			if (state.gamestate == GAMESTATE_INGAME) {
-				
+
+				graphics.clearBuffer();
+				mainMenu.drawLoadingScreen(graphics);
+				graphics.swapBuffers();
+
 				// Setup level
 				mainMenu.changeLevel(state.selectedLevel);
+				
+				if (state.selectedLevel == LEVELS::LEVEL_MAIN) {
+					
+					PxTransform T(PxVec3(250.f, 2.0f, -90.f));
+					T.q = PxQuat(0.000010, 0.999808, 0.000475, -0.019572);
+					player.setResetPoint(T);
+				}
+				else {
+					player.setResetPoint(PxTransform(PxVec3(0,0,0)));
+				}
 
 				//Remove the old level pointer and add the new
 				PxFilterData groundPlaneSimFilterData(sv::COLLISION_FLAG_GROUND, sv::COLLISION_FLAG_GROUND_AGAINST, 0, 0);

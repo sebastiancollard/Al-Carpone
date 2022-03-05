@@ -7,6 +7,7 @@
 #include "snippetvehiclecommon/SnippetVehicleCreate.h"
 #include "Model.h"
 
+
 #define CAR_MAX_VELOCITY_FORWARD 40.0f
 #define CAR_MAX_VELOCITY_BACKWARD -11.35f
 
@@ -18,6 +19,8 @@ enum VEHICLE_TYPE
 
 class Vehicle {
 public:
+
+	//void handle(State);
 
 	bool vehicleInAir = true;
 	bool vehicleChangingGears;

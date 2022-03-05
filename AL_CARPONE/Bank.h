@@ -38,7 +38,7 @@ public:
 	}
 
 	void createModel() {
-		model = new Model(BANK_BUILDING_PATH);
+		//model = new Model(BANK_BUILDING_PATH);
 	}
 
 	void createActors();
