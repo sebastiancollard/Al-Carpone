@@ -250,9 +250,16 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 				// check what geometry type the shape is
 				if (h.any().getType() == PxGeometryType::eBOX)
 				{
-					//BANK MODEL NOT INCLUDED FOR NOW, BANK IS PART OF GROUND PLANE	
-					//Note that the trigger is also of pxGeometryType::eBox now
-
+					glActiveTexture(GL_TEXTURE0);
+					//texture_crate.Bind();
+					// This texture is also sent to the fragment shader 
+					//texture_crate.texUnit(shaderProgram, "tex0", 0);
+					// Export camera matrix to the vertex shader
+					//camera.exportMatrix(shaderProgram, "camMatrix");
+					// Export the shape's model matrix to the vertex shader
+					glUniformMatrix4fv(glGetUniformLocation(graphics->shader3D->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+					// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
+					police_car->headlights->draw();
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{
@@ -280,7 +287,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					else if (j == 4) {
 						activeCar->Draw(CHASSIS, *graphics->shader3D, model);
 					}
-
 				}
 			}
 		}

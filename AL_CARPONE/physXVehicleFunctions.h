@@ -123,26 +123,26 @@ void releaseAllControls()
 }
 
 
-void updateDrivingMode(Player& player)
+void updateDrivingMode(Vehicle& vehicle)
 {
 	bool gasPedal = false;
 
 	releaseAllControls();
 
-	int queueSize = (int)player.inputQueue.size();
+	int queueSize = (int)vehicle.inputQueue.size();
 
-	unsigned int previousGear = player.vehiclePtr->mDriveDynData.getCurrentGear();
+	unsigned int previousGear = vehicle.vehiclePtr->mDriveDynData.getCurrentGear();
 
 	for (int i = 0; i < queueSize; i++)
 	{
 		// get and pop first element in input queue
-		DriveMode input = player.inputQueue.front();
-		player.inputQueue.pop();
+		DriveMode input = vehicle.inputQueue.front();
+		vehicle.inputQueue.pop();
 
 		// get total velocity of the car
 		glm::vec3 velocity;
 		{
-			PxVec3 vel = player.vehiclePtr->getRigidDynamicActor()->getLinearVelocity() + player.vehiclePtr->getRigidDynamicActor()->getAngularVelocity();
+			PxVec3 vel = vehicle.vehiclePtr->getRigidDynamicActor()->getLinearVelocity() + vehicle.vehiclePtr->getRigidDynamicActor()->getAngularVelocity();
 			velocity = glm::vec3(vel[0], vel[1], vel[2]);
 		}
 
@@ -153,18 +153,18 @@ void updateDrivingMode(Player& player)
 		if (glm::length(velocity) < 1.f && input == eDRIVE_MODE_HANDBRAKE && gasPedal) continue;
 
 		// If we want to move forward but are currently in the reverse gear...
-		if (eDRIVE_MODE_ACCEL_FORWARDS == input && player.vehiclePtr->mDriveDynData.getCurrentGear() == PxVehicleGearsData::eREVERSE)
+		if (eDRIVE_MODE_ACCEL_FORWARDS == input && vehicle.vehiclePtr->mDriveDynData.getCurrentGear() == PxVehicleGearsData::eREVERSE)
 		{
 			// naturally we would switch to first gear, but first we check if the car 
 			// is going in a relatively opposite direction as its facing. If so, then we want the wheels to brake until we've reached a stop.
-			if (glm::length(velocity) > 0 && glm::dot(glm::normalize(velocity), player.getDir()) < 0) input = eDRIVE_MODE_BRAKE;
-			else player.vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+			if (glm::length(velocity) > 0 && glm::dot(glm::normalize(velocity), vehicle.getDir()) < 0) input = eDRIVE_MODE_BRAKE;
+			else vehicle.vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		}
-		else if (eDRIVE_MODE_ACCEL_REVERSE == input && player.vehiclePtr->mDriveDynData.getCurrentGear() != PxVehicleGearsData::eREVERSE) { // if we want to reverse but are currently not in the reverse gear...
+		else if (eDRIVE_MODE_ACCEL_REVERSE == input && vehicle.vehiclePtr->mDriveDynData.getCurrentGear() != PxVehicleGearsData::eREVERSE) { // if we want to reverse but are currently not in the reverse gear...
 			// then we want to change to the reverse gear, but first we check if the car is going 
 			// relatively in the same direction as its facing. If so, then we want to brake until we've reached a stop. 
-			if (glm::length(velocity) > 0 && glm::dot(glm::normalize(velocity), player.getDir()) > 0) input = eDRIVE_MODE_BRAKE;
-			else player.vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+			if (glm::length(velocity) > 0 && glm::dot(glm::normalize(velocity), vehicle.getDir()) > 0) input = eDRIVE_MODE_BRAKE;
+			else vehicle.vehiclePtr->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 		}
 
 		// Add changes from the corresponding input
@@ -193,8 +193,8 @@ void updateDrivingMode(Player& player)
 		};
 	}
 
-	if (player.vehiclePtr->mDriveDynData.getCurrentGear() != previousGear) player.vehicleChangingGears = true;
-	else(player.vehicleChangingGears = false);
+	if (vehicle.vehiclePtr->mDriveDynData.getCurrentGear() != previousGear) vehicle.vehicleChangingGears = true;
+	else(vehicle.vehicleChangingGears = false);
 }
 
 

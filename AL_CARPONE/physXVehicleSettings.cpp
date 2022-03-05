@@ -5,6 +5,7 @@
 
 using namespace physx;
 
+//TODO needs to be different per vehicle type
 PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
 	0.0f,		0.75f,
