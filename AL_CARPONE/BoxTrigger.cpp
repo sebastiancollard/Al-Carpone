@@ -11,7 +11,8 @@ using namespace snippetvehicle;
 
 
 
-BoxTrigger::BoxTrigger(bool is_static, float width, float height, float depth, PxVec3 t_pos) {
+BoxTrigger::BoxTrigger(bool is_static, float width, float height, float depth, PxVec3 t_pos) :
+	w(width), h(height), l(depth) {
 
 	std::cout << "TRIGGER BOX CREATED" << std::endl;
 	std::cout << t_pos.x << ", " << t_pos.y << ", " << t_pos.z << std::endl;
@@ -38,10 +39,14 @@ BoxTrigger::BoxTrigger(bool is_static, float width, float height, float depth, P
 		ptr = gPhysics->createRigidDynamic(triggerPos);
 	}
 
+
 	ptr->attachShape(*triggerShape);
 	gScene->addActor(*ptr);
 	physx_actors.push_back({ ptr, physx_actors.back().actorId + 1 });
 	triggerShape->release();
+
+
+	setModel(); //render shape
 }
 
 
@@ -54,7 +59,14 @@ void BoxTrigger::setPos(PxVec3 new_pos) {
 }
 
 void BoxTrigger::setModel() {
-	model = new Model();
+	primitive = new Primitive();
+	primitive->createBox(w, h, l);
+}
+
+void BoxTrigger::draw() {
+	if (primitive != NULL) {
+		primitive->render();
+	}
 }
 
 

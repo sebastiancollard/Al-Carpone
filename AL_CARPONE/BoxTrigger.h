@@ -2,14 +2,16 @@
 
 #include "glm/glm.hpp"
 #include "PxPhysicsAPI.h"
-#include "Model.h"
+#include "Primitive.h"
 
 
 class BoxTrigger {
 private:
+
+	float w, h, l;
 	physx::PxVec3 pos = {0.f, 0.f, 0.f};
 	physx::PxShape* triggerShape = NULL;
-	Model* model = NULL;
+	Primitive* primitive = NULL;
 
 public:
 
@@ -20,6 +22,7 @@ public:
 
 	void setPos(physx::PxVec3 pos);
 	void setModel();
+	void draw();
 	void disableShapeInSceneQueryTests();
 	void enableShapeInSceneQueryTests();
 

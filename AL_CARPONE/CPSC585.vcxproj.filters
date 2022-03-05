@@ -165,6 +165,9 @@
     <ClCompile Include="BoxTrigger.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -271,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="BoxTrigger.h">
       <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -175,6 +175,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PoliceCar.cpp" />
     <ClCompile Include="BoxTrigger.cpp" />
+    <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="SnippetVehicle4WCreate.cpp" />
     <ClCompile Include="SnippetVehicleCreate.cpp" />
     <ClCompile Include="SnippetVehicleFilterShader.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="physx_globals.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PoliceCar.h" />
+    <ClInclude Include="Primitive.h" />
     <ClInclude Include="PxCustomEventCallback.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
