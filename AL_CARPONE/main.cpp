@@ -242,7 +242,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					glUniformMatrix4fv(glGetUniformLocation(graphics->shader3D->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 					// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
 					police_car->headlights->draw();
-
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{
@@ -270,7 +269,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					else if (j == 4) {
 						activeCar->Draw(CHASSIS, *graphics->shader3D, model);
 					}
-
 				}
 			}
 		}

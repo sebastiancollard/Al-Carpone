@@ -24,7 +24,7 @@ public:
 	void onTrigger(PxTriggerPair* pairs, PxU32 count) {
 	
 
-		std::cout << state.activeVehicles.size() << std::endl;
+		std::cout << "TRIGGER ACTIVATED" << std::endl;
 
 		//starter code taken from https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/RigidBodyCollision.html
 		for (PxU32 i = 0; i < count; i++)
@@ -44,12 +44,13 @@ public:
 
 				// Headlights
 				else { 
+					std::cout << "Probably headlights" << std::endl;
 					for (int i = 1; i < state.activeVehicles.size(); i++) {
 						if (pairs[i].triggerActor == ((PoliceCar*)state.activeVehicles[i])->headlights->ptr) {
 							std::cout << "HEALIGHTS!!!" << std::endl;
+							// TODO Never reaches here :'(
 						}
 					}
-					std::cout << state.activeVehicles.size() << std::endl;
 				}
 				
 			}

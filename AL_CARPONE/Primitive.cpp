@@ -2,6 +2,8 @@
 #include "glm/glm.hpp"
 
 
+//TODO needs checking and cleaning
+
 // Prints out any openGL anomalies
 #define CHECK_GL { GLenum glStatus = glGetError(); if( glStatus != GL_NO_ERROR ) { std::cout << "File: " << __FILE__ << " " << "Line: " << __LINE__ << " " << "OpenGL error: " << openglGetErrorString( glStatus ); } }
 static std::string openglGetErrorString(GLenum status)

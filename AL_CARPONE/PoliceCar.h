@@ -22,7 +22,7 @@ class PoliceCar : public Vehicle {
 
 public:
 
-	AISTATE state = AISTATE::PATROL;
+	AISTATE state = AISTATE::CHASE;
 	BoxTrigger* headlights;
 
 	PoliceCar() {}

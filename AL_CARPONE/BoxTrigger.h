@@ -21,6 +21,7 @@ public:
 	BoxTrigger(bool is_static, float width, float height, float depth, physx::PxVec3 pos);
 
 	void setPos(physx::PxVec3 pos);
+	void addJoint(physx::PxRigidActor* actor0, const physx::PxTransform & startTransform0);
 	void setModel();
 	void draw();
 	void disableShapeInSceneQueryTests();

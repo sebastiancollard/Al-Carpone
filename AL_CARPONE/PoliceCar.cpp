@@ -10,12 +10,13 @@
 
 
 
-PoliceCar::PoliceCar(int ID) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVec3(10.0f, 0, 0)) {
+PoliceCar::PoliceCar(int ID) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVec3(10.f, 0, 0)) {
 
 	// Make Headlights
-	auto pos = getPos();
-	physx::PxVec3 t_pos = physx::PxVec3(pos.x+10.f, 0, pos.z);
-	headlights = new BoxTrigger(false, 5.f, 4.f, 5.f, t_pos); //TODO needs tuning later
+	auto pos = getPos() + glm::vec3(0, 0, 5.f);
+	physx::PxVec3 t_pos = physx::PxVec3(pos.x, 0, pos.z);
+	headlights = new BoxTrigger(false, 5.f, 4.f, 5.f, t_pos); // TODO is_static = false doesn't work?
+	headlights->addJoint(actorPtr, startTransform);
 }
 
 

@@ -17,9 +17,6 @@ BoxTrigger::BoxTrigger(bool is_static, float width, float height, float depth, P
 	std::cout << "TRIGGER BOX CREATED" << std::endl;
 	std::cout << t_pos.x << ", " << t_pos.y << ", " << t_pos.z << std::endl;
 
-
-	// TODO: for now, capsule is not handled
-	// 
 	// BOX = (a/2, b/2, c/2) where a,b,c are the sides of the box
 	triggerShape = gPhysics->createShape(PxBoxGeometry(PxVec3(width/2, height/2, depth/2)), *gMaterial);
 	triggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
@@ -45,10 +42,13 @@ BoxTrigger::BoxTrigger(bool is_static, float width, float height, float depth, P
 	physx_actors.push_back({ ptr, physx_actors.back().actorId + 1 });
 	triggerShape->release();
 
-
 	setModel(); //render shape
 }
 
+
+void BoxTrigger::addJoint(PxRigidActor* actor0, const PxTransform& startTransform0) {
+	PxFixedJointCreate(*gPhysics, actor0, startTransform0, ptr, PxTransform(pos));
+}
 
 
 void BoxTrigger::setPos(PxVec3 new_pos) {
