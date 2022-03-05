@@ -136,7 +136,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		std::cout << "USER PRESSED E\n";
 		usePower();
 	}
 

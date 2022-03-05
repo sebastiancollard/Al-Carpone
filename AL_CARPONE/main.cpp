@@ -155,21 +155,24 @@ int main()
 
 			//Check if player has thrown an item (used a tomato or donut powerup) --> temporary parameters, just wanted to test tomato
 			if (player.getPower()->throw_item) {			//PLAYER THROWS ITEM
-				printf("Creating an item to throw!\n");
-				
 				player.getPower()->stopThrow();
-				player.getPower()->setType(NONE);
+				player.getPower()->setType(NONE);	
 
-				physics.createDynamic(PxTransform(
-					PxVec3(boundCamera.pos.x, boundCamera.pos.y, boundCamera.pos.z)),
-					PxSphereGeometry(1),
-					PxVec3(boundCamera.dir.x, boundCamera.dir.y, boundCamera.dir.z) * 100.0f
+				physics.createDynamicItem(PxTransform(
+					//PxVec3(boundCamera.pos.x, boundCamera.pos.y, boundCamera.pos.z)),
+					PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
+					PxSphereGeometry(1.0),			//would like to change this to box or smthn. We will have to adjust renderAll function first
+					PxVec3(boundCamera.dir.x, boundCamera.dir.y, boundCamera.dir.z) * 70.0f
 				);
 			} else if (player.getPower()->drop_item) {		//PLAYER DROPS SPIKE TRAP
-				//printf("Creating an item to drop!\n");
+				player.getPower()->stopDrop();
+				player.getPower()->setType(NONE);
 
-				//player.getPower()->stopDrop();
-				//player.getPower()->setType(NONE);
+				physics.createDynamicItem(PxTransform(
+					PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
+					PxSphereGeometry(1.0),			//would like to change this to box or smthn. We will have to adjust renderAll function first
+					PxVec3((-boundCamera.dir.x), boundCamera.dir.y, (-boundCamera.dir.z)) * 15.0f
+				);
 
 			}
 
@@ -227,8 +230,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	mainMenu->active_level->Draw(*graphics->shader3D);
 
 	// Render dynamic physx shapes
-
-
 	{
 		const int MAX_NUM_ACTOR_SHAPES = 128;
 		PxShape* shapes[MAX_NUM_ACTOR_SHAPES];

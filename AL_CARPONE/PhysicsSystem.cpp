@@ -173,8 +173,25 @@ void PhysicsSystem::cleanup()
 void PhysicsSystem::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
 {
 	static PxU32 dynamicCounter = 0;
-
+	
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
+	dynamic->setAngularDamping(0.5f);
+	dynamic->setLinearVelocity(velocity);
+	gScene->addActor(*dynamic);
+
+	physx_actors.push_back({ dynamic, dynamicCounter++ });
+}
+
+void PhysicsSystem::createDynamicItem(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
+{
+	static PxU32 dynamicCounter = 0;
+
+	PxShape* shape = gPhysics->createShape(geometry, *gMaterial);
+	PxFilterData filter(COLLISION_FLAG_ITEM, COLLISION_FLAG_ITEM_AGAINST, 0, 0);
+	shape->setSimulationFilterData(filter);
+
+	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, *shape, 10.0f);
+
 	dynamic->setAngularDamping(0.5f);
 	dynamic->setLinearVelocity(velocity);
 	gScene->addActor(*dynamic);
