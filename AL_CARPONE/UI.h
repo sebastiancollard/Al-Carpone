@@ -9,6 +9,7 @@ public:
 	Model* press_f_to_rob;
 
 	UI() {
-		press_f_to_rob = new Model("models/popups/press_f_to_rob.obj");
+		//press_f_to_rob = new Model("models/popups/press_f_to_rob.obj");
+		press_f_to_rob = new Model("models/ChooseItem/itemchoose.obj");
 	}
 };

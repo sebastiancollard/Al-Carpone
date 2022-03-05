@@ -37,6 +37,15 @@ public:
 			{
 				player.setRob(!player.canRob(state));
 			}
+			//////////////////
+			//test triggar ptr
+			/////////////////
+			if ((pairs[i].otherActor == player.actorPtr) &&		//bank.triggerPtr
+				(pairs[i].triggerActor == bank.testTriggerPtr))
+			{
+				player.setRob(!player.canRob(state));
+			}
+			
 		}
 	}
 	
