@@ -25,6 +25,7 @@ private:
 	bool can_rob = false;		//If player "collides" with trigger capsule, this shoudl be set to true
 	double cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
+	double cashRateMultiplier = 5;
 
 public:
 
@@ -43,6 +44,8 @@ public:
 
 	bool footOnGas();
 	bool footOnBrake();
+
+	bool canExit(State& state);
 
 	// Robbing Mehcanism
 	int getCash();

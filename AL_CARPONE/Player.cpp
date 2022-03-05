@@ -50,6 +50,12 @@ bool Player::footOnBrake() {
 	return footIsOnBrake;
 }
 
+
+bool Player::canExit(State& state) {
+	//Check that in exit triggerbox and that player cash > exit requirement
+	return cash > 10.0f;
+}
+
 ///////////////////////////////////////////////////////////////////////
 // INPUT HANDLING
 ///////////////////////////////////////////////////////////////////////
@@ -101,14 +107,19 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
 		state.space_isHeld = true;
 
-		//PxTransform t = vehiclePtr->getRigidDynamicActor()->getGlobalPose();
-		
-		//printf("p: %f, %f, %f\nq: %f, %f, %f, %f\n", t.p.x, t.p.y, t.p.z, t.q.x, t.q.y, t.q.z, t.q.w);
-	
 	}
 	else state.space_isHeld = false;
 
 	footIsOnBrake = state.space_isHeld;
+
+	// Handle interactions
+	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
+		if (canRob(state)) addCash(cashRateMultiplier * state.timeStep);
+		else if (canExit(state)) printf("YOU WIN!");
+
+		state.f_isHeld = true;
+	}
+	else state.f_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld) {
 		glm::vec3 front = getDir();

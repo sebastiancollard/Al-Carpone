@@ -55,6 +55,7 @@ public:
 	bool W_isHeld = false;
 	bool M_isHeld = false;
 	bool f5_isHeld = false;
+	bool f_isHeld = false;
 	bool enter_isHeld = false;
 	bool shift_isHeld = false;
 	bool space_isHeld = false;
