@@ -50,7 +50,7 @@ void DebugPanel::cleanUp() {
 }
 
 
-void DebugPanel::draw() {
+void DebugPanel::draw(Player& player) {
 
     using namespace ImGui;
 
@@ -107,6 +107,15 @@ void DebugPanel::draw() {
             SliderFloat("HandBrake Fall Rate", pad_fallRates[2], rates_range[0], rates_range[1]);
             SliderFloat("Steer Left Fall Rate", pad_fallRates[3], rates_range[0], rates_range[1]);
             SliderFloat("Steer Right Fall Rate", pad_fallRates[4], rates_range[0], rates_range[1]);
+        }
+
+        // Display Player Position
+        Spacing();
+        if (CollapsingHeader("Player Position")) {
+            glm::vec3 pos = player.getPos();
+            Text("X: %.3f", pos.x);
+            Text("Y: %.3f", pos.y);
+            Text("Z: %.3f", pos.z);
         }
 
         // Display FPS

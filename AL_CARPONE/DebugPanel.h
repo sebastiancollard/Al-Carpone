@@ -5,6 +5,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "Player.h"
 
 class DebugPanel {
 
@@ -39,5 +40,5 @@ public:
 	DebugPanel(GLFWwindow* window);
 	void cleanUp();
 
-	void draw();
+	void draw(Player& player);
 };

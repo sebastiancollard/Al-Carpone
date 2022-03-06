@@ -6,11 +6,16 @@
 #include "State.h"
 
 
+// For compiler not to complain
+class State;
+
 
 /*
 Player Entity Class
  - Used for containing Car Model, Transformation, and car inputs
 */
+
+
 
 
 class Player : public Vehicle {
@@ -20,7 +25,6 @@ private:
 	bool footIsOnGas;
 	bool footIsOnBrake;
 
-	bool can_rob = false;		//If player "collides" with trigger capsule, this shoudl be set to true
 	double cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
 
@@ -44,8 +48,6 @@ public:
 
 	// Robbing Mehcanism
 	int getCash();
-	bool canRob(State& state);
-	void setRob(bool b);
 	void addCash(double amount);
 	void setCash(double amount);
 	void setPos(PxTransform T);

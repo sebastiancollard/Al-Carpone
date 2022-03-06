@@ -13,7 +13,8 @@ using namespace physx;
 using namespace snippetvehicle;
 
 
-
+//TODO add generic trigger
+//PxShape* triggerShape = gPhysics->createShape(PxCapsuleGeometry(PxReal(5), PxReal(2.5)), *gMaterial);	//radius and half-height of capsule as parameters
 
 BoxTrigger::BoxTrigger(bool is_static, float width, float height, float depth, PxVec3 t_pos) :
 	w(width), h(height), l(depth) {

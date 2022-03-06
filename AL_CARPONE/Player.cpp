@@ -28,13 +28,6 @@ void Player::setPos(PxTransform T) {
 int Player::getCash() {
 	return cash;
 }
-bool Player::canRob(State& state) {
-	return can_rob && state.selectedLevel == LEVELS::LEVEL_MAIN;
-}
-
-void Player::setRob(bool b) {
-	can_rob = b;
-}
 void Player::addCash(double amount) {
 	cash += amount;
 }

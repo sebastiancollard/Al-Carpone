@@ -2,8 +2,8 @@
 #include <iostream>
 #include "State.h"
 #include "Player.h"
-#include "Bank.h"
 #include "PoliceCar.h"
+#include "Building.h"
 
 using namespace physx;
 
@@ -13,11 +13,10 @@ class PxCustomEventCallback : public PxSimulationEventCallback {
 private:
 	State& state; 
 	Player& player; 
-	Bank& bank;
 	
 public:
 
-	PxCustomEventCallback(State& s, Player& p, Bank& b) : state(s), player(p), bank(b) {}
+	PxCustomEventCallback(State& s, Player& p) : state(s), player(p) {}
 
 	// Shapes which have been marked as triggers using PxShapeFlag::eTRIGGER_SHAPE will send events according to the pair flag specification in the filter shader
 	//This is a custom callback function to use when the player collides with pickups, or the trigger in front of the bank.
@@ -35,25 +34,41 @@ public:
 				continue;
 
 		
-			//If it is the player and the bank trigger interacting:
+			// Player's interactions
 			if (pairs[i].otherActor == player.actorPtr)
 			{
-				if (pairs[i].triggerActor == bank.trigger.ptr) { //bank.triggerPtr
-					player.setRob(!player.canRob(state));
+				// Buildings (bank, cornerstores, etc)
+				for (Building* b : state.buildings) {
+					if (pairs[i].triggerActor == b->trigger->ptr) {
+						b->isInRange = !b->isInRange; // Set boolean value
+						std::cout << "BUILDING IN RANGE!!!" << std::endl;
+					}
 				}
 
 				// Headlights
-				else { 
-					std::cout << "Probably headlights" << std::endl;
-					for (int i = 1; i < state.activeVehicles.size(); i++) {
-						if (pairs[i].triggerActor == ((PoliceCar*)state.activeVehicles[i])->headlights->ptr) {
+				for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
+
+					if (v == state.activeVehicles[0]) { // This is player -> skip
+						continue;
+					}
+
+					else {
+						PoliceCar* popo;
+
+						try {
+							popo = (PoliceCar*)v; // Just in case
+						}
+						catch (exception e) {
+							std::cerr << "Couldn't cast vehicle to PoliceCar: " << e.what() << std::endl;
+							continue;
+						}
+						
+						if (pairs[i].triggerActor == popo->headlights->ptr) {
 							std::cout << "HEALIGHTS!!!" << std::endl;
-							//((PoliceCar*)state.activeVehicles[i])->state = AISTATE::CHASE;
-							// TODO Never reaches here :'(
+							popo->state = AISTATE::CHASE;
 						}
 					}
 				}
-				
 			}
 		}
 	}

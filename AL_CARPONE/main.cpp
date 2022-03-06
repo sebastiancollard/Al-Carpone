@@ -11,7 +11,6 @@ int main()
 	// TODO clean up
 	State state;
 	Player player;
-	Bank bank;
 
 	cout << "Initializing Graphics..." << endl;
 
@@ -31,7 +30,7 @@ int main()
 
 	//Set up physx with vehicle snippet:
 	//Make sure this is called after the shader program is generated
-	PhysicsSystem physics(state, player, bank);
+	PhysicsSystem physics(state, player);
 
 	cout << "Initalizing Audio..." << endl;
 
@@ -43,12 +42,13 @@ int main()
 	//Add it to the list of active vehicles
 	state.activeVehicles.push_back(&player);
 
-	bank.createActors();
+	// Build list of buildings
+	Bank bank;
+	state.buildings.push_back(&bank);
 
 
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
-	bank.createModel();
 	PoliceCar police_car1;
 	PoliceCar police_car2;
 	PoliceCar police_car3;
@@ -197,7 +197,7 @@ int main()
 
 			// DEBUG MODE
 			if (state.debugMode) { // Camera is deactivated
-				debugPanel.draw();
+				debugPanel.draw(player);
 			}
 		}
 		graphics.swapBuffers();
@@ -221,7 +221,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	view = activeCamera->GetViewMatrix();
 
 	//Tell player if they can rob
-	if (player->canRob(*state)) {
+	if (state->buildings[0]->isInRange) {
 		graphics->shader2D->use();
 		ui->press_f_to_rob->Draw(*graphics->shader2D);
 	}
@@ -273,16 +273,13 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 				// check what geometry type the shape is
 				if (h.any().getType() == PxGeometryType::eBOX)
 				{
+					// Can only render all boxes as one rn
 					glActiveTexture(GL_TEXTURE0);
-					//texture_crate.Bind();
-					// This texture is also sent to the fragment shader 
-					//texture_crate.texUnit(shaderProgram, "tex0", 0);
-					// Export camera matrix to the vertex shader
-					//camera.exportMatrix(shaderProgram, "camMatrix");
-					// Export the shape's model matrix to the vertex shader
 					glUniformMatrix4fv(glGetUniformLocation(graphics->shader3D->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-					// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
-					police_car->headlights->draw();
+					//police_car->headlights->draw();
+					state->buildings[0]->trigger->draw();
+					//TODO adjust bank trigger size
+
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{

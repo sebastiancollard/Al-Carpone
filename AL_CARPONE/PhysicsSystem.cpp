@@ -20,7 +20,7 @@ using namespace snippetvehicle;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-PhysicsSystem::PhysicsSystem(State& s, Player& p, Bank& bank) : state(s), player(p)
+PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 {
 	unsigned int ID = 0;
 	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
@@ -40,7 +40,7 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p, Bank& bank) : state(s), player
 	gScene = gPhysics->createScene(sceneDesc);
 
 	//Set the callback to the custom callback class (subclass of SimulationEventCallback)
-	gScene->setSimulationEventCallback(new PxCustomEventCallback(state, player, bank));
+	gScene->setSimulationEventCallback(new PxCustomEventCallback(state, player));
 
 
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();

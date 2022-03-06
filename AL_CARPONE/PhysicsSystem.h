@@ -3,7 +3,6 @@
 #include "PxPhysicsAPI.h"
 #include "State.h"
 #include "Player.h"
-#include "Bank.h"
 
 using namespace physx;
 
@@ -18,7 +17,7 @@ private:
 
 public:
 
-	PhysicsSystem(State& s, Player& p, Bank& bank);
+	PhysicsSystem(State& s, Player& p);
 
 	void step(GLFWwindow* window);
 	void cleanup();

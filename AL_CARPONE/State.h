@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include "Vehicle.h"
+#include "Building.h"
 
 
 //Locked position and orientation. Used for third person view behind the car.
@@ -11,6 +12,11 @@
 //Player has full control of position and orientation of the camera, loses control of the car.
 //Used for debugging.
 #define CAMERA_MODE_UNBOUND_FREELOOK 2
+
+
+// For compiler not to complain
+class Building;
+
 
 enum LEVELS {
 	LEVEL_MAIN = 0,
@@ -23,6 +29,9 @@ enum GAMESTATE {
 	GAMESTATE_PAUSE_MENU,
 	GAMESTATE_INGAME
 };
+
+
+
 
 //Stores information pertaning to the current state of the game.
 class State {
@@ -45,7 +54,8 @@ public:
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
 
-	std::vector<Vehicle*> activeVehicles = {};
+	std::vector<Vehicle*> activeVehicles = {};  // Player = [0], PoliceCars = [1:]
+	std::vector<Building*> buildings = {};		// Bank = [0], OtherBuildings = [1:]
 
 	//Used to check for single input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.

@@ -189,6 +189,7 @@
   <ItemGroup>
     <ClInclude Include="BoxTrigger.h" />
     <ClInclude Include="AudioSystem.h" />
+    <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="DebugPanel.h" />

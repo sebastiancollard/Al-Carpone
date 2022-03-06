@@ -1,6 +1,12 @@
 #pragma once
 
-#define CASH_ROBBED_PER_FRAME 5	//$5 per frame for now?
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "State.h"
+#include "Player.h"
+#include "AudioSystem.h"
+
 
 //Checks for special inputs that would alter the state, and updates state accordingly
 void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioSystem* audio)
@@ -16,11 +22,13 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 		state.escape_isHeld = false;
 	}
 	
-	// Handle bank robbing
-	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && (player.canRob(state))) {
-		//std::cout << "Robbing bank...." << std::endl;
-		player.addCash((double)CASH_ROBBED_PER_FRAME * state.timeStep);
-		//printf("ADDING %f TO PLAYERS CASH\n", (double)CASH_ROBBED_PER_FRAME * state.timeStep);
+	// Handle any building triggerfunction (rob, get powerup, etc)
+	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
+		for (Building* b : state.buildings) {
+			if (b->isInRange) {
+				b->triggerFunction(player, state);
+			}
+		}
 	}
 
 	// Debug Mode
