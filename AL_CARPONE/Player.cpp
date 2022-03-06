@@ -53,6 +53,7 @@ PowerUp* Player::getPower() {
 }
 
 void Player::usePower() {
+	//std:cout << equippedPower.getType() << std::endl;
 	if (equippedPower.getType() == CAMOUFLAGE) {
 		equippedPower.activateTimed();
 		detectable = false;	
@@ -153,6 +154,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 		usePower();
+		
 	}
 
 	/*
