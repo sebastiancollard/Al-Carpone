@@ -59,22 +59,22 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 			{
 			case 0:
 				player.getPower()->setType(TOMATO);
-				player.getPower()->setDuration(3.0f);
+				player.getPower()->setDuration(15.0f);
 				cout<<"Tomato 0" << endl;
 				break;
 			case 1:
 				player.getPower()->setType(DONUT);
-				player.getPower()->setDuration(3.0f);
+				player.getPower()->setDuration(15.0f);
 				cout << "Donut 1" << endl;
 				break;
 			case 2:
 				player.getPower()->setType(SPIKE_TRAP);
-				player.getPower()->setDuration(3.0f);
+				player.getPower()->setDuration(15.0f);
 				cout << "spike_trap 2" << endl;
 				break;
 			case 3:
 				player.getPower()->setType(CAMOUFLAGE);
-				player.getPower()->setDuration(3.0f);
+				player.getPower()->setDuration(15.0f);
 				cout << "camouflag 3" << endl;
 				break;
 			}

@@ -347,13 +347,15 @@ void despawnItem()
 			PxRigidActor* ptr = simple_renderables[i].actorPtr;
 			simple_renderables.erase(simple_renderables.begin() + i);	//erase from simple_renderables
 
-			for (int i = 0; i < physx_actors.size(); i++) 
+			printf("Erasing item...\n");
+			i = i - 1;
+
+			for (int j = 0; j < physx_actors.size(); j++) 
 			{		
-				if (physx_actors[i].actorPtr == ptr) 
+				if (physx_actors[j].actorPtr == ptr) 
 				{
-					printf("ERASING\n");
-					physx_actors.erase(physx_actors.begin() + i);		//erase from physx_actors
-					return;
+					physx_actors.erase(physx_actors.begin() + j);		//erase from physx_actors
+					break;
 				}
 			}
 		}
@@ -369,14 +371,14 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 			actor = physics->createDynamicItem(PxTransform(
 				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxBoxGeometry(0.3, 0.2, 0.3),	//donut is box
-				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 50.0f
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
 			);
 		}
 		else {
 			actor = physics->createDynamicItem(PxTransform(
 				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-				PxSphereGeometry(1.0),			//tomato is sphere
-				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 50.0f
+				PxSphereGeometry(0.5),			//tomato is sphere
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
 		}
 		Model model = Model(player->getPower()->getModelPath());
@@ -390,7 +392,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		PxRigidDynamic* actor = physics->createDynamicItem(PxTransform(
 			PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxBoxGeometry(1.2, 0.3, 0.3),		//spike trap is box
-			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f
+			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);
 		
 		Model model = Model(player->getPower()->getModelPath());
