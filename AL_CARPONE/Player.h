@@ -28,8 +28,9 @@ private:
 	bool can_rob = false;		//If player "collides" with trigger capsule, this shoudl be set to true
 	int cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
-	PowerUp equippedPower =  PowerUp();
 
+	PowerUp equippedPower =  PowerUp();
+	bool can_choosePowerTool = false;
 
 public:
 
@@ -61,4 +62,6 @@ public:
 	void setDetectable(bool can_detect);
 	PowerUp* getPower();
 	void usePower();
+	bool canChooseTool(State& state);
+	void setChooseTool(bool b);
 };

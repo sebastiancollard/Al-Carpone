@@ -284,6 +284,9 @@
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="SelectItem.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader3D.fs">

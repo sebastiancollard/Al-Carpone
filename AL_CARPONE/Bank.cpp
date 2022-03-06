@@ -94,7 +94,7 @@ void Bank::createActors() {
 	testtriggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 	testtriggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
 
-	PxTransform testtriggerPos(PxVec3(1.0f,0.0f,1.0f));											//position of the trigger.
+	PxTransform testtriggerPos(PxVec3(10.f,0.0f,3.0f));											//position of the trigger.
 
 	PxRigidStatic* testtriggerBody = gPhysics->createRigidStatic(testtriggerPos);
 	PxFilterData testtriggerFilter(COLLISION_FLAG_BANK_TRIGGER, COLLISION_FLAG_BANK_TRIGGER_AGAINST, 0, 0);
