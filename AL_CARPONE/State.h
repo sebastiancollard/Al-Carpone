@@ -22,8 +22,11 @@ enum LEVELS {
 enum GAMESTATE {
 	GAMESTATE_MAIN_MENU,
 	GAMESTATE_PAUSE_MENU,
-	GAMESTATE_INGAME
+	GAMESTATE_INGAME,
+	GAMESTATE_CORNERSTORE
 };
+
+
 
 //Stores information pertaning to the current state of the game.
 class State {
@@ -62,6 +65,7 @@ public:
 	bool down_isHeld = false;
 	bool up_isHeld = false;
 	bool escape_isHeld = false;
+	bool space_cornerStore_isHeld = false;
 	//CONTROLLER input
 	bool dpad_downisHold = false;
 	bool dpad_upisHold = false;

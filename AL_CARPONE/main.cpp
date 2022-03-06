@@ -41,6 +41,7 @@ int main()
 
 	bank.createActors();
 
+	SelectItem selectItem;
 
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
@@ -133,6 +134,13 @@ int main()
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, &police_car);
 		}
 		///////////////////////////////////////////////////////////////
+		//corner store
+		///////////////////////////////////////////////////////////////
+		else if (state.gamestate == GAMESTATE_CORNERSTORE) 
+		{
+			selectItem.drawMenu(graphics, state);
+		}
+		///////////////////////////////////////////////////////////////
 		//INGAME
 		///////////////////////////////////////////////////////////////
 		else {	
@@ -152,6 +160,19 @@ int main()
 			// Camera is disabled in DEBUG MODE
 			if (!state.debugMode) activeCamera->handleInput(graphics.window, state);
 			if (activeCamera == &boundCamera) boundCamera.checkClipping(graphics.window);
+
+			///////////////////////////////////////////////////////////////
+			//corner store
+			///////////////////////////////////////////////////////////////
+			if (player.canChooseTool(state))
+			{
+				graphics.shader2D->use();
+				ui.Item->Draw(*graphics.shader2D);
+				if ((glfwGetKey(graphics.window, GLFW_KEY_SPACE) == GLFW_PRESS) ) {	
+					state.gamestate = GAMESTATE_CORNERSTORE;
+				}
+			}
+			
 
 			//Check if player has thrown an item (used a tomato or donut powerup) --> temporary parameters, just wanted to test tomato
 			if (player.getPower()->throw_item) {			//PLAYER THROWS ITEM
@@ -208,13 +229,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 		graphics->shader2D->use();
 		ui->press_f_to_rob->Draw(*graphics->shader2D);
 	}
-	//able to display tool select menu when collision with trigger
-	//but will need to implement input handle
-	if (player->canChooseTool(*state)) 
-	{
-		graphics->shader2D->use();
-		ui->Item->Draw(*graphics->shader2D);
-	}
+
 
 	graphics->shader3D->use();
 	// send them to shader

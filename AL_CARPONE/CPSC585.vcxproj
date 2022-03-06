@@ -175,6 +175,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PoliceCar.cpp" />
     <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="SelectItem.cpp" />
     <ClCompile Include="SnippetVehicle4WCreate.cpp" />
     <ClCompile Include="SnippetVehicleCreate.cpp" />
     <ClCompile Include="SnippetVehicleFilterShader.cpp" />

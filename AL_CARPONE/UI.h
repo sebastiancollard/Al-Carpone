@@ -12,6 +12,7 @@ public:
 
 	UI() {
 		press_f_to_rob = new Model("models/popups/press_f_to_rob.obj");
-		Item = new Model("models/ChooseItem/base.obj");
+		Item = new Model("models/ChooseItem/pressSPACE.obj");
+		//Item = new Model("models/ChooseItem/base.obj");
 	}
 };

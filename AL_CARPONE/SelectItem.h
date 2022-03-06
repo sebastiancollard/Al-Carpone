@@ -1,14 +1,25 @@
 #pragma once
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <vector>
 
-#include "UI.h"
 #include "PowerUp.h"
 #include "Player.h"
+#include "GraphicsSystem.h"
+#include "State.h"
 
-class SelectItem 
+static class SelectItem 
 {
-	SelectItem(Player player) 
-	{
-	}
+	unsigned int selection = 0;
+
+public:
+	std::vector<Model> Select_Item_Pics;
 	
-	
+	Model* active_selection;
+
+	SelectItem();
+	void changeItem(int item);
+	void drawMenu(GraphicsSystem& graphics, State& state);
+	void handleInputs(GLFWwindow* window, State& state);
 };
+
