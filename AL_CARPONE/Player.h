@@ -62,6 +62,7 @@ public:
 	void setDetectable(bool can_detect);
 	PowerUp* getPower();
 	void usePower();
+	void updatePower();
 	bool canChooseTool(State& state);
 	void setChooseTool(bool b);
 };

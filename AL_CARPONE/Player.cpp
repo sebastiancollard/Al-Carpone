@@ -55,10 +55,19 @@ PowerUp* Player::getPower() {
 void Player::usePower() {
 	if (equippedPower.getType() == CAMOUFLAGE) {
 		equippedPower.activateTimed();
-		detectable = false;			//nowhere is this reset to true atm, must check to see if player is detectable AND if their ability is active
+		detectable = false;	
 	}
 	else {
 		equippedPower.dropOrThrow();
+	}
+}
+
+void Player::updatePower() {
+	equippedPower.updateTimed();
+
+	if (equippedPower.shouldDespawn()) {
+		if (equippedPower.getType() == CAMOUFLAGE)
+			detectable = true;
 	}
 }
 

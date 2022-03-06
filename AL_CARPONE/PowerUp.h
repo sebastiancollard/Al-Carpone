@@ -16,13 +16,14 @@ enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided t
 
 class PowerUp {
 private:
-	POWER_TYPE type = SPIKE_TRAP;		//which type of power-up
+	POWER_TYPE type = CAMOUFLAGE;		//which type of power-up
 	std::string model_path;			//set to tomato path automatically for testing
 	
 	Timer timer;			
-	float duration_sec = 0.f;		//total duration of the ability (permanent for upgrades?)	
+	float duration_sec = 15.f;		//total duration of the ability (permanent for upgrades?)	duration of 0 does not use the timer (permanent)
 									//If something has a total duration of 0, then it will last infitnitely
-	bool activated = false;			//affects timed abilities, but also checks to make sure we only throw one donut, etc. at a time
+	bool power_used = false;		//to make sure we only throw one donut, etc. at a time
+	bool timer_active = false;		//for timed abilities
 
 public:
 	bool throw_item = false;
@@ -43,5 +44,6 @@ public:
 	void stopThrow();
 	void stopDrop();
 	std::string getModelPath();
+	bool shouldDespawn();
 
 };

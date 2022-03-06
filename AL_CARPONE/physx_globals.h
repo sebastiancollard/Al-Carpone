@@ -36,6 +36,7 @@ extern std::vector<physx_actor_entity> physx_actors;
 struct simple_renderable_object {
 	PxRigidActor* actorPtr;
 	Model model;
+	std::string name;
 };
 extern std::vector<simple_renderable_object> simple_renderables;
 

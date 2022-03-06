@@ -5,6 +5,8 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, PoliceCar*);
 extern void despawnEnemy(Vehicle*);
+extern void despawnItem();
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
 
 int main()
 {
@@ -151,6 +153,13 @@ int main()
 			//Dont need to check other vehicles (yet?)
 			player.updatePhysicsVariables(state.timeStep);
 
+			//updateItem/Powerup information
+			player.updatePower();
+			if (player.getPower()->shouldDespawn()) {
+				despawnItem();
+				player.getPower()->setType(NONE);
+			}
+
 			//Check for special inputs (currently only camera mode change)
 			checkSpecialInputs(graphics.window, state, player, &audio);
 
@@ -173,42 +182,8 @@ int main()
 				}
 			}
 
-			//Check if player has thrown an item (used a tomato or donut powerup) --> temporary parameters, just wanted to test tomato
-			if (player.getPower()->throw_item) {			//PLAYER THROWS ITEM
-				player.getPower()->stopThrow();
-				PxRigidDynamic* actor;
-
-				if (player.getPower()->getType() == DONUT) {
-					actor = physics.createDynamicItem(PxTransform(
-						PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
-						PxBoxGeometry(0.3, 0.15, 0.3),	//donut is box
-						PxVec3(boundCamera.dir.x, boundCamera.dir.y, boundCamera.dir.z) * 50.0f
-					);
-				}
-				else {
-					actor = physics.createDynamicItem(PxTransform(
-						PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
-						PxSphereGeometry(1.0),		//tomoato is sphere
-						PxVec3(boundCamera.dir.x, boundCamera.dir.y, boundCamera.dir.z) * 50.0f
-					);
-				}
-				Model model = Model(player.getPower()->getModelPath());
-				simple_renderables.push_back({ actor, model });
-				player.getPower()->setType(NONE);
-
-			} else if (player.getPower()->drop_item) {		//PLAYER DROPS SPIKE TRAP
-				player.getPower()->stopDrop();
-				
-				PxRigidDynamic* actor = physics.createDynamicItem(PxTransform(
-					PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
-					PxBoxGeometry(1.2, 0.3, 0.3),
-					PxVec3((-boundCamera.dir.x), boundCamera.dir.y, (-boundCamera.dir.z)) * 8.0f
-				);
-				Model model = Model(player.getPower()->getModelPath());
-				simple_renderables.push_back({ actor, model });
-				player.getPower()->setType(NONE);
-
-			}
+			//Check if player has thrown an item (used a tomato or donut powerup)
+			checkForItemActions(&player, &boundCamera, &physics);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car);
 
@@ -319,7 +294,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 				}
 			}
 			//Instead of cycling through all physx actors, this cycles through those that have been added to the 
-			//renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
+			//sinple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
 			//with that actor. Is very similar to the above for loop.
 			//Future TODO: for more complex objects, add ability to have multiple models per object (like the cars)
 			for (auto object : simple_renderables) {
@@ -353,4 +328,62 @@ void despawnEnemy(Vehicle* enemy) {
 		}
 	}
 	delete(enemy);
+}
+
+void despawnItem() {
+
+	for (int i = 0; i < simple_renderables.size(); i++) {
+		if (simple_renderables[i].name == "powerup") {
+			PxRigidActor* ptr = simple_renderables[i].actorPtr;
+			simple_renderables.erase(simple_renderables.begin() + i);	//erase from simple_renderables
+
+			for (int i = 0; i < physx_actors.size(); i++) {		
+				if (physx_actors[i].actorPtr == ptr) {
+					printf("ERASING\n");
+					physx_actors.erase(physx_actors.begin() + i);		//erase from physx_actors
+					return;
+				}
+			}
+		}
+	}
+}
+
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics) {
+	if (player->getPower()->throw_item) {			//PLAYER THROWS ITEM
+		player->getPower()->stopThrow();
+		PxRigidDynamic* actor;
+
+		if (player->getPower()->getType() == DONUT) {
+			actor = physics->createDynamicItem(PxTransform(
+				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
+				PxBoxGeometry(0.3, 0.2, 0.3),	//donut is box
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 50.0f
+			);
+		}
+		else {
+			actor = physics->createDynamicItem(PxTransform(
+				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
+				PxSphereGeometry(1.0),			//tomato is sphere
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 50.0f
+			);
+		}
+		Model model = Model(player->getPower()->getModelPath());
+		simple_renderables.push_back({ actor, model, "powerup"});
+		//player->getPower()->setType(NONE);
+
+	}
+	else if (player->getPower()->drop_item) {		//PLAYER DROPS SPIKE TRAP
+		player->getPower()->stopDrop();
+
+		PxRigidDynamic* actor = physics->createDynamicItem(PxTransform(
+			PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
+			PxBoxGeometry(1.2, 0.3, 0.3),		//spike trap is box
+			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f
+		);
+		
+		Model model = Model(player->getPower()->getModelPath());
+		simple_renderables.push_back({ actor, model , "powerup" });
+		//player->getPower()->setType(NONE);
+
+	}
 }
