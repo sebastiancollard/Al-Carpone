@@ -14,6 +14,8 @@ private:
 	State& state;
 	Player& player;
 
+	std::vector<std::vector<glm::vec3>> ai_paths = {};
+
 public:
 
 	PhysicsSystem(State& s, Player& p, Bank& bank);

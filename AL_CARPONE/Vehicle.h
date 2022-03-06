@@ -27,6 +27,8 @@ public:
 	bool vehicleInAir = true;
 	bool vehicleChangingGears;
 	unsigned int ID = -1;
+	unsigned int targetIndex = 0;
+
 	physx::PxRigidActor* actorPtr;	// Each vehicle instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
 	physx::PxVehicleDrive4W* vehiclePtr;
 	CarModel4W* car;

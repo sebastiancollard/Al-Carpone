@@ -49,7 +49,10 @@ int main()
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
 	bank.createModel();
-	PoliceCar police_car;
+	PoliceCar police_car1;
+	PoliceCar police_car2;
+	PoliceCar police_car3;
+	PoliceCar police_car4;
 	
 
 	graphics.enableDepthBuffer();
@@ -112,6 +115,26 @@ int main()
 					PxTransform T(PxVec3(250.f, 2.0f, -90.f));
 					T.q = PxQuat(0.000010, 0.999808, 0.000475, -0.019572);
 					player.setResetPoint(T);
+
+					police_car1 = PoliceCar(1);
+					police_car1.moveStartPoint(PxVec3(559.949, 31.3, -360.091));
+					police_car1.createModel();
+					state.activeVehicles.push_back(&police_car1);
+
+					police_car2 = PoliceCar(2);
+					police_car2.moveStartPoint(PxVec3(419.948730, 21.455765, -60.534622));
+					police_car2.createModel();
+					state.activeVehicles.push_back(&police_car2);
+					
+					police_car3 = PoliceCar(3);
+					police_car3.moveStartPoint(PxVec3(100.000031, 0.299998, -220.079498));
+					police_car3.createModel();
+					state.activeVehicles.push_back(&police_car3);
+					
+					police_car4 = PoliceCar(4);
+					police_car4.moveStartPoint(PxVec3(-99.999969, 0.299998, -220.079498));
+					police_car4.createModel();
+					state.activeVehicles.push_back(&police_car4);
 				}
 				else {
 					player.setResetPoint(PxTransform(PxVec3(0,0,0)));
@@ -132,9 +155,9 @@ int main()
 
 				if (state.selectedLevel == LEVEL_TUNING) {
 					//spawn police car on tuning level
-					police_car = PoliceCar(1);
-					police_car.createModel();
-					state.activeVehicles.push_back(&police_car);
+					police_car1 = PoliceCar(1);
+					police_car1.createModel();
+					state.activeVehicles.push_back(&police_car1);
 				}
 				
 				//Reset active vehicles
@@ -151,7 +174,7 @@ int main()
 			pauseMenu.handleInputs(graphics.window, state);
 			pauseMenu.drawPauseMenu(graphics, state);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, &police_car);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, &police_car1);
 		}
 		///////////////////////////////////////////////////////////////
 		//INGAME
@@ -174,7 +197,7 @@ int main()
 			if (!state.debugMode) activeCamera->handleInput(graphics.window, state);
 			if (activeCamera == &boundCamera) boundCamera.checkClipping(graphics.window);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car1);
 
 			// DEBUG MODE
 			if (state.debugMode) { // Camera is deactivated
