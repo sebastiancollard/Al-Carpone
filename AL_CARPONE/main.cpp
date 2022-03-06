@@ -226,6 +226,14 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 	graphics->shader3D->setInt("numLights", mainMenu->light_positions->size());
 
+	////////////////////////////
+	//test for loading 3d item//
+	////////////////////////////
+	//if (player->canChooseTool(*state))
+	//{
+	//	Model("models/powerups/TomatoBeef.obj").Draw(*graphics->shader3D);
+	//}
+
 	for (int i = 0; i < mainMenu->light_positions->size(); i++) {
 		std::string path = "light_positions[" + std::to_string(i) + "]";
 		graphics->shader3D->setVec3(path.c_str(), (*mainMenu->light_positions)[i]);
