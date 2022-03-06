@@ -182,7 +182,7 @@ void PhysicsSystem::createDynamic(const PxTransform& t, const PxGeometry& geomet
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 }
 
-void PhysicsSystem::createDynamicItem(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
+PxRigidDynamic* PhysicsSystem::createDynamicItem(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
 {
 	static PxU32 dynamicCounter = 0;
 
@@ -197,6 +197,7 @@ void PhysicsSystem::createDynamicItem(const PxTransform& t, const PxGeometry& ge
 	gScene->addActor(*dynamic);
 
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
+	return dynamic;
 }
 
 

@@ -2,6 +2,7 @@
 #include "snippetvehiclecommon/SnippetVehicleSceneQuery.h"
 #include "PxPhysicsAPI.h"
 #include <vector>
+#include "Model.h"
 
 using namespace physx;
 
@@ -31,6 +32,12 @@ struct physx_actor_entity
 	PxU32 actorId;
 };
 extern std::vector<physx_actor_entity> physx_actors;
+
+struct simple_renderable_object {
+	PxRigidActor* actorPtr;
+	Model model;
+};
+extern std::vector<simple_renderable_object> simple_renderables;
 
 extern snippetvehicle::VehicleSceneQueryData* gVehicleSceneQueryData;
 extern PxBatchQuery* gBatchQuery;
