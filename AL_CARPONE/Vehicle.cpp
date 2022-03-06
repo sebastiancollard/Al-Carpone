@@ -218,6 +218,7 @@ void Vehicle::setResetPoint(PxTransform t) {
 
 
 void Vehicle::reset() {
+	targetIndex = 0;
 	actorPtr->setGlobalPose(startTransform);
 	vehiclePtr->getRigidDynamicActor()->setAngularVelocity(PxVec3(0, 0, 0));
 	vehiclePtr->getRigidDynamicActor()->setLinearVelocity(PxVec3(0, 0, 0));

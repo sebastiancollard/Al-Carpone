@@ -122,6 +122,10 @@ void releaseAllControls()
 	gVehicleInputData.setAnalogHandbrake(0.0f);
 }
 
+void startPatrolForwardsMode() {
+	gVehicleInputData.setAnalogAccel(0.625f);
+}
+
 
 void updateDrivingMode(Vehicle& vehicle)
 {
@@ -189,6 +193,9 @@ void updateDrivingMode(Vehicle& vehicle)
 			startBrakeMode();
 			break;
 		case eDRIVE_MODE_NONE:
+			break;
+		case eDRIVE_MODE_PATROL_FORWARDS:
+			startPatrolForwardsMode();
 			break;
 		};
 	}

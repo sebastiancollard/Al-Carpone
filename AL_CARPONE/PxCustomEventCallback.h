@@ -48,6 +48,7 @@ public:
 					for (int i = 1; i < state.activeVehicles.size(); i++) {
 						if (pairs[i].triggerActor == ((PoliceCar*)state.activeVehicles[i])->headlights->ptr) {
 							std::cout << "HEALIGHTS!!!" << std::endl;
+							((PoliceCar*)state.activeVehicles[i])->state = AISTATE::CHASE;
 							// TODO Never reaches here :'(
 						}
 					}

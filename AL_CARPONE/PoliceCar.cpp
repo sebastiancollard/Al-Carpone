@@ -30,18 +30,18 @@ void PoliceCar::createModel() {
 	car = new CarModel4W(police_car_chassis, police_car_lwheel, police_car_rwheel);
 }
 
-void PoliceCar::handle(GLFWwindow* window, glm::vec3 playerPos) {
+void PoliceCar::handle(GLFWwindow* window, glm::vec3 targetPos) {
 
 	switch (state) {
 		case AISTATE::IDLE:
 			break;
-
+	
 		case AISTATE::PATROL:
-			patrol(window);
+			patrol(window, targetPos);
 			break;
-
+	
 		case AISTATE::CHASE:
-			chase(window, playerPos);
+			chase(window, targetPos);
 			break;
 	}
 
@@ -71,9 +71,20 @@ void PoliceCar::idle() {
 
 // Go forward until reached a node (intersection) and then randomly choose a direction
 // If reached a dead end, back up and go back
-void PoliceCar::patrol(GLFWwindow* window) {
-	// TODO
-	// Speed is slower here
+void PoliceCar::patrol(GLFWwindow* window, glm::vec3 targetPos) {
+	inputQueue.push(DriveMode::eDRIVE_MODE_PATROL_FORWARDS);
+	glm::vec3 dir = targetPos - this->getPos();
+	float temp = atan2(glm::dot(glm::cross(this->getDir(), dir), glm::vec3(0.f, 1.f, 0.f)), glm::dot(dir, this->getDir()));
+	if (temp < 0) {
+		//std::cout << "right" << std::endl;
+		if (temp < -0.05f)
+			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
+	}
+	else {
+		//std::cout << "left" << std::endl;
+		if (temp > 0.05f)
+			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
+	}
 }
 
 
@@ -87,12 +98,12 @@ void PoliceCar::chase(GLFWwindow* window, glm::vec3 playerPos) {
 	float temp = atan2(glm::dot(glm::cross(this->getDir(), dir), glm::vec3(0.f, 1.f, 0.f)), glm::dot(dir, this->getDir()));
 	if (temp < 0) {
 		//std::cout << "right" << std::endl;
-		if (temp < -0.1f)
+		if (temp < -0.05f)
 			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
 	}
 	else {
 		//std::cout << "left" << std::endl;
-		if (temp > 0.1f)
+		if (temp > 0.05f)
 			inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
 	}
 }
