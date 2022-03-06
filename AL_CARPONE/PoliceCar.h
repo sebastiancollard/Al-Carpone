@@ -22,7 +22,7 @@ class PoliceCar : public Vehicle {
 
 public:
 
-	AISTATE state = AISTATE::CHASE;
+	AISTATE state = AISTATE::PATROL;
 	BoxTrigger* headlights;
 
 	PoliceCar() {}
@@ -30,7 +30,7 @@ public:
 	// Call parent constructor
 	PoliceCar(int ID);
 
-	void handle(GLFWwindow* window, glm::vec3 playerPos);
+	void handle(GLFWwindow* window, glm::vec3 targetPos);
 
 	// Must be called after graphics system is initalized!
 	void createModel();
@@ -40,7 +40,7 @@ private:
 	float idleTime = 0;
 
 	void idle();
-	void patrol(GLFWwindow* window);
+	void patrol(GLFWwindow* window, glm::vec3 targetPos);
 	void chase(GLFWwindow* window, glm::vec3 playerPos);
 
 };
