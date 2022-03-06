@@ -26,6 +26,7 @@ PxMaterial* gMaterial = NULL;
 PxPvd* gPvd = NULL;
 
 std::vector<physx_actor_entity> physx_actors;
+std::vector<simple_renderable_object> simple_renderables;
 
 snippetvehicle::VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
 PxBatchQuery* gBatchQuery = NULL;

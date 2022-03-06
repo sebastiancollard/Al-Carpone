@@ -176,23 +176,37 @@ int main()
 			//Check if player has thrown an item (used a tomato or donut powerup) --> temporary parameters, just wanted to test tomato
 			if (player.getPower()->throw_item) {			//PLAYER THROWS ITEM
 				player.getPower()->stopThrow();
-				player.getPower()->setType(NONE);	
+				PxRigidDynamic* actor;
 
-				physics.createDynamicItem(PxTransform(
-					//PxVec3(boundCamera.pos.x, boundCamera.pos.y, boundCamera.pos.z)),
-					PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
-					PxSphereGeometry(1.0),			//would like to change this to box or smthn. We will have to adjust renderAll function first
-					PxVec3(boundCamera.dir.x, boundCamera.dir.y, boundCamera.dir.z) * 70.0f
-				);
-			} else if (player.getPower()->drop_item) {		//PLAYER DROPS SPIKE TRAP
-				player.getPower()->stopDrop();
+				if (player.getPower()->getType() == DONUT) {
+					actor = physics.createDynamicItem(PxTransform(
+						PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
+						PxBoxGeometry(0.3, 0.15, 0.3),	//donut is box
+						PxVec3(boundCamera.dir.x, boundCamera.dir.y, boundCamera.dir.z) * 50.0f
+					);
+				}
+				else {
+					actor = physics.createDynamicItem(PxTransform(
+						PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
+						PxSphereGeometry(1.0),		//tomoato is sphere
+						PxVec3(boundCamera.dir.x, boundCamera.dir.y, boundCamera.dir.z) * 50.0f
+					);
+				}
+				Model model = Model(player.getPower()->getModelPath());
+				simple_renderables.push_back({ actor, model });
 				player.getPower()->setType(NONE);
 
-				physics.createDynamicItem(PxTransform(
+			} else if (player.getPower()->drop_item) {		//PLAYER DROPS SPIKE TRAP
+				player.getPower()->stopDrop();
+				
+				PxRigidDynamic* actor = physics.createDynamicItem(PxTransform(
 					PxVec3(player.getPos().x, (player.getPos().y + 0.8), player.getPos().z)),
-					PxSphereGeometry(1.0),			//would like to change this to box or smthn. We will have to adjust renderAll function first
-					PxVec3((-boundCamera.dir.x), boundCamera.dir.y, (-boundCamera.dir.z)) * 15.0f
+					PxBoxGeometry(1.2, 0.3, 0.3),
+					PxVec3((-boundCamera.dir.x), boundCamera.dir.y, (-boundCamera.dir.z)) * 8.0f
 				);
+				Model model = Model(player.getPower()->getModelPath());
+				simple_renderables.push_back({ actor, model });
+				player.getPower()->setType(NONE);
 
 			}
 
@@ -275,17 +289,9 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 				// check what geometry type the shape is
 				if (h.any().getType() == PxGeometryType::eBOX)
 				{
-					//BANK MODEL NOT INCLUDED FOR NOW, BANK IS PART OF GROUND PLANE	
-					//Note that the trigger is also of pxGeometryType::eBox now
-
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{
-					Model item = Model(player->getPower()->getModelPath());
-
-					Shader& shader = *graphics->shader3D;
-					shader.setMat4("model", model);
-					item.Draw(*graphics->shader3D);
 				}
 				else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
 
@@ -311,6 +317,25 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					}
 
 				}
+			}
+			//Instead of cycling through all physx actors, this cycles through those that have been added to the 
+			//renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
+			//with that actor. Is very similar to the above for loop.
+			//Future TODO: for more complex objects, add ability to have multiple models per object (like the cars)
+			for (auto object : simple_renderables) {
+
+				const PxU32 nbShapes = object.actorPtr->getNbShapes();
+				object.actorPtr->getShapes(shapes, nbShapes);
+
+				//assumption that there is only one shape per object in renderables (currently only used for items)
+				const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *object.actorPtr));
+
+				model = glm::make_mat4(&shapePose.column0.x);
+
+				Shader& shader = *graphics->shader3D;
+				shader.setMat4("model", model);
+				object.model.Draw(*graphics->shader3D);
+
 			}
 		}
 	}
