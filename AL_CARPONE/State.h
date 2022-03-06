@@ -44,6 +44,7 @@ public:
 
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
+	bool gameWon = false;
 
 	std::vector<Vehicle*> activeVehicles = {};
 

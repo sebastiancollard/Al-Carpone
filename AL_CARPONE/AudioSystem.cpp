@@ -138,7 +138,8 @@ void AudioSystem::updateEngineAudio(Player* player, float pitch, float volume) {
 
 void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 
-	if (state->gamestate != GAMESTATE::GAMESTATE_INGAME) {
+	if (state->gamestate != GAMESTATE::GAMESTATE_INGAME || state->gameWon) {
+		//if gameWon play winsound
 		VehicleSoundEngine->stopAllSounds();
 		VehicleEngineSpecificSoundEngine->stopAllSounds();
 		return;

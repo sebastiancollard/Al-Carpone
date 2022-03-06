@@ -79,10 +79,14 @@ int main()
 		graphics.clearBuffer();
 		audio.updateAudio(&player, &state); // Update all audio elements
 
+		if (state.gameWon) {
+			mainMenu.drawWinScreen(graphics);
+		}
+
 		///////////////////////////////////////////////////////////////
 		//MAIN MENU
 		///////////////////////////////////////////////////////////////
-		if (state.gamestate == GAMESTATE_MAIN_MENU) {
+		else if (state.gamestate == GAMESTATE_MAIN_MENU) {
 			//Draw the menu
 			mainMenu.drawMenu(graphics, state);
 			
@@ -197,11 +201,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	graphics->skybox->Draw(projection, view);
 	view = activeCamera->GetViewMatrix();
 
-	//Tell player if they can rob
-	if (player->canRob(*state)) {
-		graphics->shader2D->use();
-		ui->press_f_to_rob->Draw(*graphics->shader2D);
-	}
+	ui->update(state, player, graphics);
 
 	graphics->shader3D->use();
 	// send them to shader
@@ -259,7 +259,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					// Export the shape's model matrix to the vertex shader
 					glUniformMatrix4fv(glGetUniformLocation(graphics->shader3D->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 					// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
-					police_car->headlights->draw();
+					if(!(police_car->headlights ==  nullptr)) police_car->headlights->draw();
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{

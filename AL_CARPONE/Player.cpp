@@ -53,7 +53,7 @@ bool Player::footOnBrake() {
 
 bool Player::canExit(State& state) {
 	//Check that in exit triggerbox and that player cash > exit requirement
-	return cash > 10.0f;
+	return cash > 10.0f && state.selectedLevel == LEVELS::LEVEL_MAIN;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -115,8 +115,10 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	// Handle interactions
 	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
 		if (canRob(state)) addCash(cashRateMultiplier * state.timeStep);
-		else if (canExit(state)) printf("YOU WIN!");
-
+		else if (canExit(state)) {
+			state.gameWon = true;
+			return;
+		}
 		state.f_isHeld = true;
 	}
 	else state.f_isHeld = false;
