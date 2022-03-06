@@ -2,10 +2,13 @@
 
 #include "UI.h"
 #include "PowerUp.h"
+#include "Player.h"
 
 class SelectItem 
 {
-	PowerUp t;
+	SelectItem(Player player) 
+	{
+	}
 	
 	
 };
