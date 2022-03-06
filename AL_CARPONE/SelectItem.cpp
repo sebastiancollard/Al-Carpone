@@ -26,19 +26,19 @@ void SelectItem::changeItem(int item) {
 	//active_rotate = new Model("models/powerups/TomatoBeef.obj");
 }
 
-void SelectItem::drawMenu(GraphicsSystem& graphics, State& state) {
+void SelectItem::drawMenu(GraphicsSystem& graphics, State& state, Player& player) {
 	graphics.shader2D->use();
 	Select_Item_Pics[selection].Draw(*graphics.shader2D);
 
 	//graphics.shader3D->use();
 	//rotate_item[selection].Draw(*graphics.shader3D);
 	//active_rotate->Draw(*graphics.shader3D);
-	handleInputs(graphics.window, state);
+	handleInputs(graphics.window, state, player);
 }
 
 
 //Checks for special inputs that would alter the state, and updates state accordingly
-void SelectItem::handleInputs(GLFWwindow* window, State& state)
+void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
@@ -54,7 +54,28 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state)
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
 		if (!state.enter_isHeld) {
 			//should select some item
-			std::cout << "item select" << std::endl;
+			std::cout << "select item number:"<< selection << std::endl;
+			switch (selection)
+			{
+			case 0:
+				player.getPower()->setType(TOMATO);
+				cout<<"Tomato 0" << endl;
+				break;
+			case 1:
+				player.getPower()->setType(DONUT);
+				cout << "Donut 1" << endl;
+				break;
+			case 2:
+				player.getPower()->setType(SPIKE_TRAP);
+				cout << "spike_trap 2" << endl;
+				break;
+			case 3:
+				player.getPower()->setType(CAMOUFLAGE);
+				cout << "camouflag 3" << endl;
+				break;
+			}
+			//cout << player.getPower() << endl;
+			state.gamestate = GAMESTATE_INGAME;
 		}
 
 		state.enter_isHeld = true;
@@ -69,6 +90,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state)
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		if (!state.S_isHeld) {
 			selection = (selection + 1) % 4;
+			cout << selection << endl;
 		}
 		state.S_isHeld = true;
 		return;

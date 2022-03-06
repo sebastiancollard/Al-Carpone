@@ -140,7 +140,7 @@ int main()
 		///////////////////////////////////////////////////////////////
 		else if (state.gamestate == GAMESTATE_CORNERSTORE)
 		{
-			selectItem.drawMenu(graphics, state);
+			selectItem.drawMenu(graphics, state, player);
 		}
 		///////////////////////////////////////////////////////////////
 		//INGAME
@@ -338,15 +338,19 @@ void despawnEnemy(Vehicle* enemy) {
 	delete(enemy);
 }
 
-void despawnItem() {
-
-	for (int i = 0; i < simple_renderables.size(); i++) {
-		if (simple_renderables[i].name == "powerup") {
+void despawnItem() 
+{
+	for (int i = 0; i < simple_renderables.size(); i++) 
+	{
+		if (simple_renderables[i].name == "powerup") 
+		{
 			PxRigidActor* ptr = simple_renderables[i].actorPtr;
 			simple_renderables.erase(simple_renderables.begin() + i);	//erase from simple_renderables
 
-			for (int i = 0; i < physx_actors.size(); i++) {		
-				if (physx_actors[i].actorPtr == ptr) {
+			for (int i = 0; i < physx_actors.size(); i++) 
+			{		
+				if (physx_actors[i].actorPtr == ptr) 
+				{
 					printf("ERASING\n");
 					physx_actors.erase(physx_actors.begin() + i);		//erase from physx_actors
 					return;
