@@ -62,6 +62,13 @@ void Player::usePower() {
 	}
 }
 
+bool Player::canChooseTool(State& state) {
+	return can_choosePowerTool && state.selectedLevel == 0;
+}
+
+void Player::setChooseTool(bool b) {
+	can_choosePowerTool = b;
+}
 
 bool Player::footOnGas() {
 	return footIsOnGas;

@@ -7,7 +7,6 @@
 MainMenu::MainMenu() {
 
 	level_models = { 
-		Model("models/ChooseItem/itemchoose.obj"),
 		Model("models/mainMenu/0_tuning_testlevel.obj"),
 		Model("models/mainMenu/1_racetrack.obj"),
 		Model("models/mainMenu/2_ai_testlevel.obj"),

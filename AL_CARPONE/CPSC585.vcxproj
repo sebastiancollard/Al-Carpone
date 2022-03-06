@@ -216,6 +216,7 @@
     <ClInclude Include="PoliceCar.h" />
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="PxCustomEventCallback.h" />
+    <ClInclude Include="SelectItem.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="State.h" />

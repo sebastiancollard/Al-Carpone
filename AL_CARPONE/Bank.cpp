@@ -85,4 +85,27 @@ void Bank::createActors() {
 	triggerShape->release();
 
 	triggerPtr = triggerBody;
+
+	/////////////////
+	//test///////////
+	/////////////////
+	
+	PxShape* testtriggerShape = gPhysics->createShape(PxBoxGeometry(PxVec3(trigger_half_width, 2.f, trigger_half_depth)), *gMaterial);
+	testtriggerShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+	testtriggerShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);		//This is a trigger shape.
+
+	PxTransform testtriggerPos(PxVec3(10.f,0.0f,3.0f));											//position of the trigger.
+
+	PxRigidStatic* testtriggerBody = gPhysics->createRigidStatic(testtriggerPos);
+	PxFilterData testtriggerFilter(COLLISION_FLAG_BANK_TRIGGER, COLLISION_FLAG_BANK_TRIGGER_AGAINST, 0, 0);
+
+	testtriggerShape->setSimulationFilterData(testtriggerFilter);
+	testtriggerBody->attachShape(*testtriggerShape);
+	gScene->addActor(*testtriggerBody);
+
+	physx_actors.push_back({ testtriggerBody, counter++ });
+	testtriggerShape->release();
+
+	testTriggerPtr = testtriggerBody;
+	
 }

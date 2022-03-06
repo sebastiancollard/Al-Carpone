@@ -226,6 +226,13 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 		graphics->shader2D->use();
 		ui->press_f_to_rob->Draw(*graphics->shader2D);
 	}
+	//able to display tool select menu when collision with trigger
+	//but will need to implement input handle
+	if (player->canChooseTool(*state)) 
+	{
+		graphics->shader2D->use();
+		ui->Item->Draw(*graphics->shader2D);
+	}
 
 	graphics->shader3D->use();
 	// send them to shader

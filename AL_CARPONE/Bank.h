@@ -26,6 +26,7 @@ public:
 	//physX bank actor and trigger actor
 	physx::PxRigidActor* bankPtr;				//Would like to make these actors private, however they are not provate for player. Thought it would be best to keep it the same to avoid confusion.
 	physx::PxRigidActor* triggerPtr;
+	physx::PxRigidActor* testTriggerPtr;
 
 	Model* model;
 
