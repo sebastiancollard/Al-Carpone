@@ -10,17 +10,28 @@ SelectItem::SelectItem()
 		Model("models/ChooseItem/spike_trap.obj"),
 		Model("models/ChooseItem/camouflag.obj")	
 	};
+
+	rotate_item = 
+	{
+		Model("models/powerups/tomato.obj"),
+		Model("models/powerups/doughnut.obj"),
+		Model("models/powerups/spike.obj"),
+		Model("models/powerups/spike.obj")
+	};
 	changeItem(0);
 }
 
 void SelectItem::changeItem(int item) {
 	active_selection = new Model("models/ChooseItem/base.obj");
+	active_rotate = new Model("models/powerups/tomato.obj");
 }
 
 void SelectItem::drawMenu(GraphicsSystem& graphics, State& state) {
 	graphics.shader2D->use();
 	Select_Item_Pics[selection].Draw(*graphics.shader2D);
 	//active_selection->Draw(*graphics.shader2D);
+	graphics.shader3D->use();
+	rotate_item[selection].Draw(*graphics.shader3D);
 	handleInputs(graphics.window, state);
 }
 
