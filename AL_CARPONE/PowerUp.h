@@ -16,7 +16,7 @@ enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided t
 
 class PowerUp {
 private:
-	POWER_TYPE type = SPIKE_TRAP;		//which type of power-up
+	POWER_TYPE type = TOMATO;		//which type of power-up
 	std::string model_path;			//set to tomato path automatically for testing
 	
 	Timer timer;			
