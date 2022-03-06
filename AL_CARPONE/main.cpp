@@ -172,7 +172,6 @@ int main()
 					state.gamestate = GAMESTATE_CORNERSTORE;
 				}
 			}
-			
 
 			//Check if player has thrown an item (used a tomato or donut powerup) --> temporary parameters, just wanted to test tomato
 			if (player.getPower()->throw_item) {			//PLAYER THROWS ITEM
