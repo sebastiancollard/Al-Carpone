@@ -279,7 +279,7 @@ void Primitive::createSphere(float rad, uint32_t hSegs, uint32_t vSegs)
 // setting the size and location of each layout.
 void Primitive::createGLObjects()
 {
-	// Create vertex buffer objects (VBOs) for pos and uv
+	// Create vertex buffer objects (VBOs) for origin and uv
 
 	// Generate buffer ID for the position VBO
 	glGenBuffers(1, &VBO_POS_ID);

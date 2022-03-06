@@ -330,7 +330,7 @@ void BoundCamera::checkClipping(GLFWwindow* window) {
     ////shapePose = shapePose.transform(PxTransform(PxVec3(0, 10, 0)));
     //float halfExtent = 5.f;
     //physx::PxBoxGeometry box(halfExtent, halfExtent, halfExtent);
-    //physx::PxVec3 pos(0, 20, 0);
+    //physx::PxVec3 origin(0, 20, 0);
     //physx::PxQuat orientation(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
     //
     //
@@ -358,13 +358,13 @@ void BoundCamera::updateLook() {
     //apply rotation to dir about players direction
     glm::vec4 transformedDir(playerDirHorizontalProjection, 1.0f);
     transformedDir = transformedDir * rot;
-    //apply rotation to pos
+    //apply rotation to origin
     glm::vec4 posOffset((-playerDirHorizontalProjection * radius + glm::vec3(0, verticalOffset, 0)), 1.0f);
     posOffset = posOffset * rot;
 
     dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
 
-    //Add the offset vector to the playerpos to get the updated pos
+    //Add the offset vector to the playerpos to get the updated origin
     glm::vec3 playerPos = player.getPos();
     pos = glm::vec3(playerPos.x + posOffset.x, playerPos.y + posOffset.y, playerPos.z + posOffset.z);
 

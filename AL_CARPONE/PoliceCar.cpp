@@ -16,7 +16,7 @@ PoliceCar::PoliceCar(int ID) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVe
 	float len = 10.f;
 	auto pos = getPos() + glm::vec3(0, 0, len);
 	physx::PxVec3 t_pos = physx::PxVec3(pos.x, pos.y, -pos.z);
-	headlights = new BoxTrigger(false, 5.f, 4.f, len, t_pos); 
+	headlights = new BoxTrigger(false, t_pos, 5.f, 4.f, len);
 	headlights->addJoint(actorPtr, startTransform);
 }
 
@@ -49,7 +49,6 @@ void PoliceCar::handle(GLFWwindow* window, glm::vec3 targetPos) {
 	// Move Headlights with car
 	auto pos = getPos();
 	physx::PxVec3 t_pos = physx::PxVec3(pos.x+10.f, 0, pos.z);
-	headlights->setPos(t_pos);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +90,7 @@ void PoliceCar::patrol(GLFWwindow* window, glm::vec3 targetPos) {
 
 // AI only goes forward atm
 // TODO: respawn if stuck
-// TODO: follow player's last pos before an intersection instead
+// TODO: follow player's last origin before an intersection instead ?
 void PoliceCar::chase(GLFWwindow* window, glm::vec3 playerPos) {
 
 	inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);

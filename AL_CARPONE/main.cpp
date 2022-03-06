@@ -276,9 +276,8 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					// Can only render all boxes as one rn
 					glActiveTexture(GL_TEXTURE0);
 					glUniformMatrix4fv(glGetUniformLocation(graphics->shader3D->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-					//police_car->headlights->draw();
-					state->buildings[0]->trigger->draw();
-					//TODO adjust bank trigger size
+					police_car->headlights->draw();
+					//state->buildings[0]->trigger->draw();
 
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)

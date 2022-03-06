@@ -28,7 +28,7 @@ public:
 	// Create renderable plane
 	void createPlane(float base, float size, float uvScale = 1.0f);
 	// Create renderable sphere
-	void createSphere(float rad, uint32_t hSegs, uint32_t vSegs);
+	void createSphere(float rad, uint32_t hSegs=10, uint32_t vSegs=10);
 
 	// General render function for meshes
 	void render();

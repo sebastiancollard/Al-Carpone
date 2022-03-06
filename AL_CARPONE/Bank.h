@@ -46,7 +46,7 @@ class Bank : public Building {
 
 private:
 	//Bank position on map (tile position?)
-	glm::vec3 pos = { 0.f, height/2.f, 0.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
+	glm::vec3 origin = { 0.f, height/2.f, 0.f };		//arbitrary position for now. Note that the second param is it's vertical position. This should be height/2 for it to "touch the ground".
 
 	ORIENT dir = ORIENT::S;		//Bank faces "south" by default
 
@@ -69,7 +69,7 @@ public:
 	void createActors();
 
 	glm::vec3 getPos() {
-		return pos;
+		return origin;
 	}
 
 	ORIENT getDir() {
@@ -98,8 +98,8 @@ public:
 	
 	void setPos(float x, float z) {
 		//y (vertical) position is set as height/2 so that the building is always on the ground
-		pos.x = x;
-		pos.z = z;
+		origin.x = x;
+		origin.z = z;
 	}
 	
 	void setDir(ORIENT direction) {
@@ -112,7 +112,7 @@ public:
 		height = h;
 		
 		//y (vertical) position is set as height/2 so that the building is always on the ground
-		pos.y = height / 2.f;
+		origin.y = height / 2.f;
 	}
 };
 */
