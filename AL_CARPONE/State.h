@@ -26,8 +26,6 @@ enum GAMESTATE {
 	GAMESTATE_CORNERSTORE
 };
 
-
-
 //Stores information pertaning to the current state of the game.
 class State {
 public:
@@ -58,6 +56,7 @@ public:
 	bool S_isHeld = false;
 	bool W_isHeld = false;
 	bool M_isHeld = false;
+	bool N_isHeld = false;
 	bool f5_isHeld = false;
 	bool enter_isHeld = false;
 	bool shift_isHeld = false;
@@ -65,7 +64,6 @@ public:
 	bool down_isHeld = false;
 	bool up_isHeld = false;
 	bool escape_isHeld = false;
-	bool space_cornerStore_isHeld = false;
 	//CONTROLLER input
 	bool dpad_downisHold = false;
 	bool dpad_upisHold = false;

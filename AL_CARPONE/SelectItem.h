@@ -14,8 +14,11 @@ static class SelectItem
 
 public:
 	std::vector<Model> Select_Item_Pics;
+	std::vector<Model> rotate_item;
 	
+
 	Model* active_selection;
+	Model* active_rotate;;
 
 	SelectItem();
 	void changeItem(int item);

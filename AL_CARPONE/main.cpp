@@ -136,7 +136,7 @@ int main()
 		///////////////////////////////////////////////////////////////
 		//corner store
 		///////////////////////////////////////////////////////////////
-		else if (state.gamestate == GAMESTATE_CORNERSTORE) 
+		else if (state.gamestate == GAMESTATE_CORNERSTORE)
 		{
 			selectItem.drawMenu(graphics, state);
 		}
