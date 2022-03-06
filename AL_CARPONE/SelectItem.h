@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "PowerUp.h"
-#include "Player.h"
 #include "GraphicsSystem.h"
 #include "State.h"
 
@@ -16,13 +15,14 @@ public:
 	std::vector<Model> Select_Item_Pics;
 	std::vector<Model> rotate_item;
 
+	PowerUp powerup;
 
 	Model* active_selection;
 	Model* active_rotate;;
 
 	SelectItem();
 	void changeItem(int item);
-	void drawMenu(GraphicsSystem& graphics, State& state);
-	void handleInputs(GLFWwindow* window, State& state);
+	void drawMenu(GraphicsSystem& graphics, State& state, Player& player);
+	void handleInputs(GLFWwindow* window, State& state, Player& player);
 };
 
