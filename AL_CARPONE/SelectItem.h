@@ -8,14 +8,14 @@
 #include "GraphicsSystem.h"
 #include "State.h"
 
-static class SelectItem 
+static class SelectItem
 {
 	unsigned int selection = 0;
 
 public:
 	std::vector<Model> Select_Item_Pics;
 	std::vector<Model> rotate_item;
-	
+
 
 	Model* active_selection;
 	Model* active_rotate;;

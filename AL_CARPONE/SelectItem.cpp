@@ -1,17 +1,17 @@
 #include "SelectItem.h"
 
 
-SelectItem::SelectItem() 
+SelectItem::SelectItem()
 {
-	Select_Item_Pics = 
+	Select_Item_Pics =
 	{
 		Model("models/ChooseItem/tomato.obj"),
 		Model("models/ChooseItem/donut.obj"),
 		Model("models/ChooseItem/spike_trap.obj"),
-		Model("models/ChooseItem/camouflag.obj")	
+		Model("models/ChooseItem/camouflag.obj")
 	};
 
-	rotate_item = 
+	rotate_item =
 	{
 		Model("models/powerups/tomato.obj"),
 		Model("models/powerups/doughnut.obj"),
@@ -23,15 +23,16 @@ SelectItem::SelectItem()
 
 void SelectItem::changeItem(int item) {
 	active_selection = new Model("models/ChooseItem/base.obj");
-	active_rotate = new Model("models/powerups/tomato.obj");
+	//active_rotate = new Model("models/powerups/TomatoBeef.obj");
 }
 
 void SelectItem::drawMenu(GraphicsSystem& graphics, State& state) {
 	graphics.shader2D->use();
 	Select_Item_Pics[selection].Draw(*graphics.shader2D);
-	//active_selection->Draw(*graphics.shader2D);
-	graphics.shader3D->use();
-	rotate_item[selection].Draw(*graphics.shader3D);
+
+	//graphics.shader3D->use();
+	//rotate_item[selection].Draw(*graphics.shader3D);
+	//active_rotate->Draw(*graphics.shader3D);
 	handleInputs(graphics.window, state);
 }
 
