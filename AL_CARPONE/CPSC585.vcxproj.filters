@@ -192,6 +192,9 @@
     <ClCompile Include="Exit.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="CornerStore.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -315,6 +318,9 @@
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Exit.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="CornerStore.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>

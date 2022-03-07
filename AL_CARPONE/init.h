@@ -34,6 +34,7 @@
 #include "PoliceCar.h"
 #include "Bank.h"
 #include "Exit.h"
+#include "CornerStore.h"
 
 #include "PowerUp.h"
 

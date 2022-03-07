@@ -44,11 +44,11 @@ public:
 						b->isInRange = !b->isInRange; // Set boolean value
 						std::cout << "BUILDING IN RANGE!!!" << std::endl;
 					}
-					if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr || pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) //corner store trigger area
-					{		
-						b->cornerRange = !b->cornerRange;
-						player.setChooseTool(!player.canChooseTool(state));
-					}
+					//if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr || pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) //corner store trigger area
+					//{		
+					//	b->cornerRange = !b->cornerRange;
+					//	
+					//}
 				}
 
 				// Headlights

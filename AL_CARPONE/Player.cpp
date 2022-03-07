@@ -69,7 +69,7 @@ void Player::updatePower() {
 }
 
 bool Player::canChooseTool(State& state) {
-	return can_choosePowerTool && state.selectedLevel == 0;
+	return can_choosePowerTool && state.selectedLevel == LEVELS::LEVEL_MAIN;
 }
 
 void Player::setChooseTool(bool b) {

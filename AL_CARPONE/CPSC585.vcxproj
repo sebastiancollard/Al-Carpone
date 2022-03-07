@@ -156,6 +156,7 @@
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="constants.cpp" />
+    <ClCompile Include="CornerStore.cpp" />
     <ClCompile Include="DebugPanel.cpp" />
     <ClCompile Include="Exit.cpp" />
     <ClCompile Include="glad.c" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="CornerStore.h" />
     <ClInclude Include="DebugPanel.h" />
     <ClInclude Include="Exit.h" />
     <ClInclude Include="GraphicsSystem.h" />
