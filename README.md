@@ -72,8 +72,8 @@ CONTROLLER:
 
 	MAIN MENU:
 		↑ & ↓: Change level selection
-		X (Playstation) / A (Xbox): Select highlighted level
-		O (Playstation) / B (Xbox): Close game
+		X (ps4) / A (xbox): Select highlighted level
+		O (ps4) / B (xbox): Close game
 	
 	IN GAME:
 		Left trigger: move reverse
