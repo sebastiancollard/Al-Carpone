@@ -67,3 +67,37 @@ CONTROLS:
 		S: Mode backward
 		D: Move right
 		Shift (hold): Increase movement speed
+
+CONTROLLER:
+
+	MAIN MENU:
+		↑ & ↓: Change level selection
+		X (Playstation) / A (Xbox): Select highlighted level
+		O (Playstation) / B (Xbox): Close game
+	
+	IN GAME:
+		Left trigger: move reverse
+		Right trigger: move forward
+		Left stick: controls player left or right turn
+		Options(ps4)/menu(xbox)/+(ns pro): pause menu
+		□ (ps4) / x (xbox) / y (nspro): building trigger function
+		▲ (ps4) / y (xbox) / x (nspro): reset
+		L1 (ps4): use item
+		Handbrake not yet added
+		Look behind not yet added
+		
+	PAUSE MENU:
+		↑ & ↓ ==> change selection
+		X(ps4)/A(xbox) ==> select
+		options(ps4)/menu(xbox)/+(ns pro) ==> go back to in game state
+		corner store:
+		↑ & ↓ ==> change selection
+		X(ps4) / A (xbox) ==> select
+		O (ps4) / B (xbox) ==> back to in game state
+	
+	CORNER STORE:
+		↑ & ↓: change selection
+		X (ps4) / A (xbox): select
+		O (ps4) / B (xbox): back to in game state
+		
+	
