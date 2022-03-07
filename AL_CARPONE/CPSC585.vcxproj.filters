@@ -195,6 +195,12 @@
     <ClCompile Include="CornerStore.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Upgrade.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Garage.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -321,6 +327,12 @@
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="CornerStore.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Upgrade.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Garage.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>

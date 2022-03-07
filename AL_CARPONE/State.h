@@ -104,6 +104,11 @@ public:
 	//CONTROLLER input
 	bool dpad_downisHold = false;
 	bool dpad_upisHold = false;
+	bool cross_isHeld = false;
+	bool circle_isHeld = false;
+	bool triangle_isHeld = false;
+	bool square_isHeld = false;
+	bool option_isHeld = false;
 	//Updates the state's time-sensitive variables.
 	void updateTime() {
 		currTime = glfwGetTime();

@@ -48,6 +48,9 @@ int main()
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
 
+	Garage engineGarage(0);
+	state.buildings[BUILDINGS::GARAGE1] = &engineGarage;
+	
 	CornerStore cornerStore1(PxVec3(-24.470, 0.964, -11.839));
 	state.buildings[BUILDINGS::CORNERSTORE1] = &cornerStore1;
 

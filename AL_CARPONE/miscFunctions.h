@@ -72,6 +72,59 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 	}
 	else state.M_isHeld = false;
 
+
+	//controller input
+	if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+	{
+		//get controller name
+		const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
+		//std::cout << controller_name << std::endl;
+
+		GLFWgamepadstate controller_state;
+		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controller_state))
+		{
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_START])
+			{
+				//std::cout << "start (PS4 options, XBOX menu, nspro +) " << std::endl;	//ps4 - options
+				if (!state.option_isHeld) 
+				{
+					state.gamestate = GAMESTATE_PAUSE_MENU;
+				}
+				state.option_isHeld = true;
+				return;
+			}
+			else 
+			{
+				state.option_isHeld = false;
+			}
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE])
+			{
+				//std::cout << "SQUARE (xbox x, ns pro y)" << std::endl;
+				for (Building* b : state.buildings) {
+					if (b == nullptr) continue;
+					if (b->isInRange) {
+						b->triggerFunction(player, state);
+					}
+				}
+			}
+
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE])
+			{
+				//std::cout << "TRIANGLE (xbox y, ns pro x)" << std::endl;
+				if (!state.triangle_isHeld)
+				{
+					for (Vehicle* v : state.activeVehicles)
+					{
+						v->reset();
+					}
+				}
+				state.R_isHeld = true;
+			}
+			else state.triangle_isHeld = false;
+
+			
+		}
+	}
 }
 
 
