@@ -176,6 +176,7 @@ void PoliceCar::stun(double seconds) {
 
 // Drive to given location
 void PoliceCar::driveTo(glm::vec3 targetPos) {
+	//TODO if donut is closer than target position, then set target position to donut
 
 	inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);
 	glm::vec3 dir = targetPos - this->getPos();
