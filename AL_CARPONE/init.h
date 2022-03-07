@@ -34,6 +34,7 @@
 #include "PoliceCar.h"
 #include "Bank.h"
 
+#include "PowerUp.h"
 
 //Used for debugging
 void printMat4(glm::mat4 m) {
