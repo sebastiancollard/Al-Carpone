@@ -15,6 +15,10 @@
 class Bank : public Building {
 
 	physx::PxVec3 b_pos = physx::PxVec3(490, 30, -430);	// Position currently hardcoded
+	physx::PxVec3 corner1_pos = physx::PxVec3(-24.470,0.964,-11.839);	// Position currently hardcoded
+	physx::PxVec3 corner2_pos = physx::PxVec3(242.158,0.736,-270.944);	// Position currently hardcoded
+
+
 
 	float depth = 17.f;	 //y axis
 	float height = 17.f; //z axis

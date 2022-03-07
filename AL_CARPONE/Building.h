@@ -13,7 +13,11 @@ class State;
 class Building {
 public:
 	BoxTrigger* trigger;
+	BoxTrigger* CornetStoreTrigger1;
+	BoxTrigger* CornetStoreTrigger2;
+	
 	bool isInRange = false;		// colliding with trigger 
+	bool cornerRange = false;
 
 	virtual void createTrigger() {
 		std::cout << "BUILDING: createTrigger() not overriding" << std::endl;

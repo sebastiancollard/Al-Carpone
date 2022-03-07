@@ -16,6 +16,9 @@ void Bank::createTrigger() {
 	//ROBBING TRIGGER
 	PxVec3 t_pos = b_pos;
 	trigger = new BoxTrigger(true, t_pos, 80.f, 5.f, 80.f);
+	CornetStoreTrigger1 = new BoxTrigger(true, corner1_pos, 10.f, 5.f, 10.f);
+	CornetStoreTrigger2 = new BoxTrigger(true, corner2_pos, 10.f, 5.f, 10.f);
+
 }
 
 void Bank::triggerFunction(Player& player, State& state){

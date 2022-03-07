@@ -43,6 +43,14 @@ public:
 						b->isInRange = !b->isInRange; // Set boolean value
 						std::cout << "BUILDING IN RANGE!!!" << std::endl;
 					}
+					if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr) {		//bank.triggerPtr
+						b->cornerRange = !b->cornerRange;
+						player.setChooseTool(!player.canChooseTool(state));
+					}
+					if (pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) {		//bank.triggerPtr
+						b->cornerRange = !b->cornerRange;
+						player.setChooseTool(!player.canChooseTool(state));
+					}
 				}
 
 				// Headlights
@@ -75,12 +83,12 @@ public:
 			//test triggar ptr
 			/////////////////
 			
-			if (pairs[i].otherActor == player.actorPtr) {		//bank.triggerPtr
-				//(pairs[i].triggerActor == bank.testTriggerPtr))
-			
-				//player.setRob(!player.canRob(state));
-				player.setChooseTool(!player.canChooseTool(state));
-			}
+			//if (pairs[i].otherActor == player.actorPtr) {		//bank.triggerPtr
+			//	//(pairs[i].triggerActor == bank.testTriggerPtr))
+			//
+			//	//player.setRob(!player.canRob(state));
+			//	player.setChooseTool(!player.canChooseTool(state));
+			//}
 			
 		}
 	}
