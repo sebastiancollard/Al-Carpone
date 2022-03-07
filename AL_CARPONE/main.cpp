@@ -234,7 +234,7 @@ int main()
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car1);
 
 			// DEBUG MODE
 			if (state.debugMode) { // Camera is deactivated

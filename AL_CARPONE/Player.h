@@ -55,8 +55,8 @@ public:
 	int getCash();
 	bool canRob(State& state);
 	void setRob(bool b);
-	void addCash(int amount);
-	void setCash(int amount);
+	void addCash(double amount);
+	void setCash(double amount);
 	void setPos(PxTransform T);
 	
 	//Power-up related mechanisms
