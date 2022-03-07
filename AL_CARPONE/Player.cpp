@@ -213,6 +213,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			}
 			if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
 			{
+				footIsOnGas = true;
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
 				if (vehicleInAir) {
 					glm::vec3 left = -getRight();
@@ -220,6 +221,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 				}
 				//std::cout << "right trigger: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
 			}
+			
 			if (leftOrRightturn < -0.15)
 			{
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		
