@@ -43,11 +43,8 @@ public:
 						b->isInRange = !b->isInRange; // Set boolean value
 						std::cout << "BUILDING IN RANGE!!!" << std::endl;
 					}
-					if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr) {		//bank.triggerPtr
-						b->cornerRange = !b->cornerRange;
-						player.setChooseTool(!player.canChooseTool(state));
-					}
-					if (pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) {		//bank.triggerPtr
+					if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr || pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) //corner store trigger area
+					{		
 						b->cornerRange = !b->cornerRange;
 						player.setChooseTool(!player.canChooseTool(state));
 					}
@@ -71,7 +68,7 @@ public:
 							continue;
 						}
 						
-						if (pairs[i].triggerActor == popo->headlights->ptr) {
+						if ((pairs[i].triggerActor == popo->headlights->ptr) && (player.isDetectable())) {
 							player.isSeen = !player.isSeen;
 							std::cout << player.isSeen << std::endl;
 							popo->startChase();
@@ -79,16 +76,7 @@ public:
 					}
 				}
 			}
-			//////////////////
-			//test triggar ptr
-			/////////////////
-			
-			//if (pairs[i].otherActor == player.actorPtr) {		//bank.triggerPtr
-			//	//(pairs[i].triggerActor == bank.testTriggerPtr))
-			//
-			//	//player.setRob(!player.canRob(state));
-			//	player.setChooseTool(!player.canChooseTool(state));
-			//}
+
 			
 		}
 	}
