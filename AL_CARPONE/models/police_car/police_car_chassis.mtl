@@ -1,5 +1,5 @@
-# Blender MTL File : 'police_car.blend'
-# Material Count : 5
+# Blender MTL File: 'None'
+# Material Count: 6
 
 newmtl Material.001
 Ns 225.000000
@@ -12,6 +12,17 @@ d 1.000000
 illum 2
 map_Kd textures\\crown_vic_roof_light_color.png
 map_Ks textures\\FULL_SPEC.png
+
+newmtl Material.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.950016 1.000000 0.037148
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures\\yellow.png
 
 newmtl body
 Ns 637.562503
@@ -46,7 +57,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-
 
 newmtl roof_lights
 Ns 484.000021

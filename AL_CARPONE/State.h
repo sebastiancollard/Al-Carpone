@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include "Vehicle.h"
+#include "PoliceCar.h"
 
 
 //Locked position and orientation. Used for third person view behind the car.
@@ -47,6 +48,7 @@ public:
 	bool gameWon = false;
 
 	std::vector<Vehicle*> activeVehicles = {};
+	std::vector<PoliceCar*> activePoliceVehicles = {};
 
 	//Used to check for single input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.

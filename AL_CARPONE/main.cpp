@@ -120,21 +120,25 @@ int main()
 					police_car1.moveStartPoint(PxVec3(559.949, 31.3, -360.091));
 					police_car1.createModel();
 					state.activeVehicles.push_back(&police_car1);
+					state.activePoliceVehicles.push_back(&police_car1);
 
 					police_car2 = PoliceCar(2);
 					police_car2.moveStartPoint(PxVec3(419.948730, 21.455765, -60.534622));
 					police_car2.createModel();
 					state.activeVehicles.push_back(&police_car2);
+					state.activePoliceVehicles.push_back(&police_car2);
 					
 					police_car3 = PoliceCar(3);
 					police_car3.moveStartPoint(PxVec3(100.000031, 0.299998, -220.079498));
 					police_car3.createModel();
 					state.activeVehicles.push_back(&police_car3);
+					state.activePoliceVehicles.push_back(&police_car3);
 					
 					police_car4 = PoliceCar(4);
 					police_car4.moveStartPoint(PxVec3(-99.999969, 0.299998, -220.079498));
 					police_car4.createModel();
 					state.activeVehicles.push_back(&police_car4);
+					state.activePoliceVehicles.push_back(&police_car4);
 				}
 				else {
 					player.setResetPoint(PxTransform(PxVec3(0,0,0)));

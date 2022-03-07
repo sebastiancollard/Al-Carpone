@@ -18,7 +18,8 @@ enum SOUND_SELECTION {
 	GEAR_SWITCH0,
 	GEAR_SWITCH1,
 	GROUND_SOUNDS,
-	WIND_LOOP
+	WIND_LOOP,
+	SIREN_LOOP
 	//TOTAL = 12
 };
 
@@ -27,6 +28,7 @@ public:
 	irrklang::ISoundEngine* VehicleSoundEngine;
 	irrklang::ISoundEngine* VehicleEngineSpecificSoundEngine;
 	irrklang::ISoundEngine* MusicSoundEngine;
+	irrklang::ISoundEngine* MiscSoundEngine;
 
 	AudioSystem();
 
@@ -39,6 +41,8 @@ public:
 	void updateEngineAudio(Player*, float, float);
 
 	void updateMusic(State*);
+
+	void updateMiscSounds(Player*, State*);
 
 	void setMusicVolume(float);
 
@@ -68,8 +72,16 @@ private:
 		NULL,	//GEARSWITCH0
 		NULL,	//GEARSWITCH1
 		NULL,	//GROUND_SOUNDS
-		NULL	//WIND_LOOP
+		NULL,	//WIND_LOOP
 		//TOTAL = 12
+	};
+
+	std::vector<irrklang::ISound*> policeSirenPointers = {
+		NULL,
+		NULL,
+		NULL,
+		NULL 
+		//4 Police cars
 	};
 
 	std::vector<std::string> soundPaths{
@@ -85,7 +97,8 @@ private:
 		"audio/gearswitch0.mp3",
 		"audio/gearswitch1.mp3",
 		"audio/wheelsOnGroundLOOP.wav",
-		"audio/windLOOP.wav"
+		"audio/windLOOP.wav",
+		"audio/sirenloop.wav"
 		//TOTAL = 12
 	};
 };

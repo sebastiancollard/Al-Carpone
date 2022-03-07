@@ -6,9 +6,16 @@ AudioSystem::AudioSystem() {
 	VehicleSoundEngine = irrklang::createIrrKlangDevice();
 	VehicleEngineSpecificSoundEngine = irrklang::createIrrKlangDevice();
 	MusicSoundEngine = irrklang::createIrrKlangDevice();
+	MiscSoundEngine = irrklang::createIrrKlangDevice();
 
 	VehicleSoundEngine->setSoundVolume(1.0f);
 	MusicSoundEngine->setSoundVolume(musicVolume);
+	
+	for (int i = 0; i < 4; i++) {
+		policeSirenPointers[i] = MiscSoundEngine->play3D(soundPaths[SIREN_LOOP].c_str(), irrklang::vec3df(0,0,0), true, true);
+		policeSirenPointers[i]->setVolume(3.0f);
+		policeSirenPointers[i]->setMinDistance(10.0f);
+	}
 
 	introPlayed = false;
 }
@@ -219,14 +226,54 @@ void AudioSystem::updateMusic(State* state) {
 
 }
 
+void AudioSystem::updateMiscSounds(Player* player, State* state) {
+
+	if (state->gamestate == GAMESTATE::GAMESTATE_PAUSE_MENU) {
+		for (irrklang::ISound* p : policeSirenPointers) {
+			p->setIsPaused(true);
+		}
+		return;
+	}
+
+	glm::vec3 playerPosGLM = player->getPos();
+
+	for (int i = 0; i < state->activePoliceVehicles.size(); i++) {
+
+		PoliceCar* policecar = state->activePoliceVehicles[i];
+
+		if (policecar->state == AISTATE::CHASE) {
+
+			glm::vec3 policePosGLM = policecar->getPos();
+
+			irrklang::vec3df audioPos(policePosGLM.x - playerPosGLM.x, policePosGLM.y - playerPosGLM.y, policePosGLM.z - playerPosGLM.z);
+			
+			if (policeSirenPointers[i] != NULL) {
+				policeSirenPointers[i]->setPosition(audioPos);
+				policeSirenPointers[i]->setPan(glm::dot(player->getRight(), glm::normalize(policePosGLM - playerPosGLM)));
+				policeSirenPointers[i]->setIsPaused(false);
+			}
+		
+		}
+
+		else if (policeSirenPointers[i] != NULL) {
+			policeSirenPointers[i]->setIsPaused(true);
+		}
+
+	}
+}
+
+
 void AudioSystem::updateAudio(Player* player, State* state) {
 
 	updateMusic(state);
 	updateVehicleSounds(player, state);
+	updateMiscSounds(player, state);
 
 	VehicleEngineSpecificSoundEngine->update();
 	VehicleSoundEngine->update();
 	MusicSoundEngine->update();
+	MiscSoundEngine->update();
+
 
 }
 
