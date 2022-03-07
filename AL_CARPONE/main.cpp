@@ -8,6 +8,15 @@ extern void despawnEnemy(Vehicle*);
 extern void despawnItem();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
 
+struct Character {
+	unsigned int TextureID;  // ID handle of the glyph texture
+	glm::ivec2   Size;       // Size of glyph
+	glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
+	unsigned int Advance;    // Offset to advance to next glyph
+};
+
+std::map<char, Character> Characters;
+
 int main()
 {
 	// TODO clean up
@@ -67,6 +76,83 @@ int main()
 	state.buildings[BUILDINGS::EXIT] = &exit;
 
 	SelectItem selectItem;
+
+	//////////////////
+	//test free type//
+	//////////////////
+	FT_Library FT_library;
+	if (FT_Init_FreeType(&FT_library))
+	{
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+		return -1;
+	}
+
+	FT_Face FT_face;
+	//if (FT_New_Face(FT_library, "fonts/arial.ttf", 0, &FT_face))
+	//{
+	//	std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+	//	return -1;
+	//}
+	auto error = FT_New_Face(FT_library,
+		"freeType/Blah!.ttf",
+		0,
+		&FT_face);
+	if (error == FT_Err_Unknown_File_Format)
+	{
+		cout<<"the font file could be openedand read, but it appears that its font format is unsupported"<<endl;
+	}
+	else if (error)
+	{
+		cout<<"another error code means that the font file could not be opened or read, or that it is broken"<<endl;
+	};
+	
+	//FT_Set_Pixel_Sizes(FT_face, 0, 48);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+
+	for (unsigned char c = 0; c < 128; c++)
+	{
+		// load character glyph 
+		if (FT_Load_Char(FT_face, c, FT_LOAD_RENDER))
+		{
+			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+			continue;
+		}
+		// generate texture
+		unsigned int texture;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			FT_face->glyph->bitmap.width,
+			FT_face->glyph->bitmap.rows,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			FT_face->glyph->bitmap.buffer
+		);
+		// set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// now store character for later use
+		Character character = {
+			texture,
+			glm::ivec2(FT_face->glyph->bitmap.width, FT_face->glyph->bitmap.rows),
+			glm::ivec2(FT_face->glyph->bitmap_left, FT_face->glyph->bitmap_top),
+			FT_face->glyph->advance.x
+		};
+		Characters.insert(std::pair<char, Character>(c, character));
+	}
+
+	FT_Done_Face(FT_face);
+	FT_Done_FreeType(FT_library);
+	//////////////////
+	//test free type//
+	//////////////////
 
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.

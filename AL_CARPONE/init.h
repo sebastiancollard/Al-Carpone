@@ -39,6 +39,11 @@
 
 #include "PowerUp.h"
 
+//freetype
+#include "ft2build.h"
+#include FT_FREETYPE_H  
+
+
 //Used for debugging
 void printMat4(glm::mat4 m) {
 	for (int i = 0; i < 4; i++) {
