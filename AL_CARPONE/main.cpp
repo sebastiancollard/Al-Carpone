@@ -47,6 +47,9 @@ int main()
 	// Build list of buildings
 	Bank bank;
 	state.buildings.push_back(&bank);
+	Garage engineGarage(0);
+	state.buildings.push_back(&engineGarage);
+
 
 	SelectItem selectItem;
 
@@ -322,7 +325,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					glUniformMatrix4fv(glGetUniformLocation(graphics->shader3D->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 					//state->buildings[0]->trigger->draw();
 					// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
-					//if(police_car->headlights !=  nullptr) police_car->headlights->draw();
+					if(police_car->headlights !=  nullptr) police_car->headlights->draw();
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{
