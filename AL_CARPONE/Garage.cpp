@@ -9,10 +9,10 @@ using namespace snippetvehicle;
 
 
 //TODO move to physics system
-void Garage::createTrigger() {
+void Garage::createTrigger(PxVec3 dimensions) {
 	//ROBBING TRIGGER
 	PxVec3 t_pos = position;
-	trigger = new BoxTrigger(true, t_pos, 10.f, 2.f, 10.f);
+	trigger = new BoxTrigger(true, t_pos, dimensions.x, dimensions.y, dimensions.z);
 }
 
 void Garage::triggerFunction(Player& player, State& state) {

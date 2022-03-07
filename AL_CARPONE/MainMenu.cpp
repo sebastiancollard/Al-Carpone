@@ -23,7 +23,8 @@ MainMenu::MainMenu() {
 	levels = {
 		Model("models/map/map.obj"),
 		Model("models/tuning_testlevel/tuning_testlevel.obj"),
-		Model("models/racetrack/racetrack.obj")
+		Model("models/racetrack/racetrack.obj"),
+		Model ("models/map/garage_door.obj")
 	};
 	changeLevel(0);
 }

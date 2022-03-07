@@ -46,4 +46,8 @@ extern PxBatchQuery* gBatchQuery;
 extern PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs;
 
 extern PxRigidStatic* gGroundPlane;
+extern PxRigidStatic* garageDoor;
+extern bool garageDoorOpen;
+extern bool garageDoorPrev;
+
 extern PxActor* activeLevelActorPtr;

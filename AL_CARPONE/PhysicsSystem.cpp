@@ -238,10 +238,11 @@ PxTriangleMesh* PhysicsSystem::createLevelMesh(const PxVec3 dims, PxPhysics& phy
 	std::vector<std::string> level_physx_paths{
 		"models/map/map_physx.obj",
 		"models/tuning_testlevel/tuning_testlevel_physx.obj",
-		"models/racetrack/racetrack_physx.obj"
+		"models/racetrack/racetrack_physx.obj",
+		"models/map/garage_door.obj"
 	};
 
-	Model level(level_physx_paths[state.selectedLevel]);
+	Model level(level_physx_paths[selection]);
 
 	std::vector<PxVec3> model_positions;
 	std::vector<PxU32> model_indices;

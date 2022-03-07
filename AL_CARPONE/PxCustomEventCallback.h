@@ -38,11 +38,18 @@ public:
 			if (pairs[i].otherActor == player.actorPtr)
 			{
 				// Buildings (bank, cornerstores, etc)
-				for (Building* b : state.buildings) {
-					if (b == nullptr) continue;
-					if (pairs[i].triggerActor == b->trigger->ptr) {
-						b->isInRange = !b->isInRange; // Set boolean value
-						std::cout << "BUILDING IN RANGE!!!" << std::endl;
+				for (int j = 0; j < state.buildings.size(); j++) {
+					if (state.buildings[j] == nullptr) continue;
+					if (pairs[i].triggerActor == state.buildings[j]->trigger->ptr) {
+						state.buildings[j]->isInRange = !state.buildings[j]->isInRange; // Set boolean value
+						if (state.buildings[j]->isInRange) {
+							std::cout << "BUILDING IN RANGE!!!" << std::endl;
+							if (j == 1 || j == 2 || j == 3) garageDoorOpen = true;
+						}
+						else {
+							std::cout << "BUILDING OUT OF RANGE!!!" << std::endl;
+							if (j == 1 || j == 2 || j == 3) garageDoorOpen = false;
+						} 
 					}
 					//if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr || pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) //corner store trigger area
 					//{		

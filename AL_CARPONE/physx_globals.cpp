@@ -44,4 +44,8 @@ PxBatchQuery* gBatchQuery = NULL;
 PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 
 PxRigidStatic* gGroundPlane = NULL;
+PxRigidStatic* garageDoor = NULL;
+bool garageDoorOpen = false;
+bool garageDoorPrev = false;
+
 PxActor* activeLevelActorPtr = NULL;
