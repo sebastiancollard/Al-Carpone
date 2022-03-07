@@ -19,6 +19,7 @@ public:
 		press_f_to_exit = new Model("models/popups/press_f_to_exit.obj");
 		press_f_to_enter_corner_store = new Model("models/popups/press_f_to_enter_corner_store.obj");
 	}
+	
 
 	void update(State* state, Player* player, GraphicsSystem* graphics) {
 		//Tell player if they can rob

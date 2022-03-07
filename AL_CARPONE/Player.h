@@ -27,6 +27,7 @@ private:
 	bool footIsOnGas;
 	bool footIsOnBrake;
 
+	
 
 	bool detectable = true;		//does not do anything yet. flag that specifies whether the player is detectable to enemies
 	double cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
@@ -37,6 +38,8 @@ private:
 	bool can_choosePowerTool = false;
 
 public:
+
+	Timer jailTimer;
 
 	bool isSeen = false;
 
@@ -57,6 +60,8 @@ public:
 	bool footOnBrake();
 
 	bool canExit(State& state);
+
+	void sendToJail(State& state);
 
 	// Robbing Mehcanism
 	int getCash();

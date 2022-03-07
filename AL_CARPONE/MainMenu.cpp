@@ -8,6 +8,8 @@ MainMenu::MainMenu() {
 
 	loadingMapScreen = Model("models/mainMenu/LOADINGMAP.obj");
 	gameWinScreen = Model("models/mainMenu/WINSCREEN.obj");
+	gameLoseScreen = Model("models/mainMenu/LOSESCREEN.obj");
+	jailScreen = Model("models/mainMenu/BUSTED.obj");
 
 	selectionScreens = { 
 		Model("models/mainMenu/0_PLAYGAME.obj"),
@@ -53,6 +55,18 @@ void MainMenu::drawLoadingScreen(GraphicsSystem& graphics) {
 void MainMenu::drawWinScreen(GraphicsSystem& graphics) {
 	graphics.shader2D->use();
 	gameWinScreen.Draw(*graphics.shader2D);
+}
+
+void MainMenu::drawLoseScreen(GraphicsSystem& graphics) {
+	graphics.shader2D->use();
+	gameLoseScreen.Draw(*graphics.shader2D);
+}
+
+
+
+void MainMenu::drawJailScreen(GraphicsSystem* graphics) {
+	graphics->shader2D->use();
+	jailScreen.Draw(*graphics->shader2D);
 }
 
 

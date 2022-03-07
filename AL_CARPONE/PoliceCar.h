@@ -31,6 +31,7 @@ public:
 	AISTATE ai_state = AISTATE::PATROL;
 	BoxTrigger* headlights;
 
+
 	PoliceCar() {}
 
 	// Call parent constructor
@@ -42,6 +43,7 @@ public:
 	void handle(GLFWwindow* window, Player& player, State& state);
 	void stun(double seconds = 5);
 	void startChase();
+	void hardReset();
 
 private:
 

@@ -18,6 +18,13 @@ void Player::setPos(PxTransform T) {
 	vehiclePtr->getRigidDynamicActor()->setGlobalPose(T);
 }
 
+void Player::sendToJail(State& state) {
+	printf("GO TO JAIL!\n");
+
+	state.gamestate = GAMESTATE::GAMESTATE_JAILED;
+	return;
+}
+
 ///////////////////////////////////////////////////////////////////////
 // ROBING FUNCTIONS
 ///////////////////////////////////////////////////////////////////////
