@@ -146,6 +146,7 @@ void PoliceCar::chase(GLFWwindow* window, Player& player, double timestep) {
 		std::cout << "CHASING END" << std::endl;
 		ai_state = AISTATE::PATROL;
 		reset();						//Teleport to start node
+		player.jailTimer.reset();
 	}
 }
 
@@ -156,6 +157,12 @@ void PoliceCar::chase(GLFWwindow* window, Player& player, double timestep) {
 // GENERAL FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//reset position and state
+void PoliceCar::hardReset() {
+	reset();
+	ai_state = AISTATE::PATROL;
+	chaseTime = 0;
+}
 
 // Initiate chase
 void PoliceCar::startChase() {

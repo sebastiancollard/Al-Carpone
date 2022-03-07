@@ -106,6 +106,27 @@ int main()
 		if (state.gameWon) {
 			mainMenu.drawWinScreen(graphics);
 		}
+		else if (state.gameLost) {
+			mainMenu.drawLoseScreen(graphics);
+			if (glfwGetKey(graphics.window, GLFW_KEY_F) == GLFW_PRESS) {
+				if (!state.f_isHeld) {
+					
+					player.setCash(0);
+					player.reset();
+
+					for (PoliceCar* p : state.activePoliceVehicles) {
+						p->hardReset();
+					}
+
+					state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+					state.gameLost = false;
+				}
+				state.f_isHeld = true;
+			}
+			else {
+				state.f_isHeld = false;
+			}
+		}
 
 		///////////////////////////////////////////////////////////////
 		//MAIN MENU
@@ -212,6 +233,40 @@ int main()
 			selectItem.drawMenu(graphics, state, player);
 		}
 		///////////////////////////////////////////////////////////////
+		//jail
+		///////////////////////////////////////////////////////////////
+		
+		else if (state.gamestate == GAMESTATE_JAILED)
+		{
+			mainMenu.drawJailScreen(&graphics);
+
+			if (glfwGetKey(graphics.window, GLFW_KEY_F) == GLFW_PRESS) {
+				if (!state.f_isHeld) {
+					if (player.getCash() >= 10.0f) {
+						player.setCash(player.getCash() - 10.0f);
+						//player.setPos();
+
+						PxVec3 p(190.21, 0.96, -194.67);
+						PxQuat q(-0.00, -0.71, 0.00, -0.70);
+
+						PxTransform t;
+						t.p = p;
+						t.q = q;
+
+						player.actorPtr->setGlobalPose(t);
+						
+						state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+					}
+					else state.gameLost = true;
+				}
+				state.f_isHeld = true;
+			}
+			else {
+				state.f_isHeld = false;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////
 		//INGAME
 		///////////////////////////////////////////////////////////////
 		else {	
@@ -223,6 +278,9 @@ int main()
 			//Simulate physics through the timestep
 			physics.step(graphics.window);
 
+			//PxTransform t = player.vehiclePtr->getRigidDynamicActor()->getGlobalPose();
+			//printf("POS: <%.2f,%.2f,%.2f>\n Q: <%.2f,%.2f,%.2f,%.2f>\n", t.p.x, t.p.y, t.p.z, t.q.x, t.q.y, t.q.z, t.q.w);
+
 			//Update the players physics variables (velocity, acceleration, jerk)
 			//Dont need to check other vehicles (yet?)
 			player.updatePhysicsVariables(state.timeStep);
@@ -233,6 +291,22 @@ int main()
 				despawnItem();
 				player.getPower()->setType(NONE);
 			}
+
+			//update player jail timer
+			player.jailTimer.tick();
+			if (player.isSeen) {
+				if (player.jailTimer.getDeltaTime() > 2.0f) {
+					player.sendToJail(state);
+
+					for (PoliceCar* p : state.activePoliceVehicles) {
+						p->hardReset();
+						
+					}
+				}
+			}
+				
+
+			else player.jailTimer.reset();
 
 			//Check for special inputs (currently only camera mode change)
 			checkSpecialInputs(graphics.window, state, player, &audio);
@@ -306,6 +380,8 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	graphics->shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
 	mainMenu->active_level->Draw(*graphics->shader3D);
 	if (!state->selectedLevel && !garageDoorOpen) mainMenu->levels[3].Draw(*graphics->shader3D);
+
+	
 
 	// Render dynamic physx shapes
 	{

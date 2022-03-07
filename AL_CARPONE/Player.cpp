@@ -18,6 +18,13 @@ void Player::setPos(PxTransform T) {
 	vehiclePtr->getRigidDynamicActor()->setGlobalPose(T);
 }
 
+void Player::sendToJail(State& state) {
+	printf("GO TO JAIL!\n");
+
+	state.gamestate = GAMESTATE::GAMESTATE_JAILED;
+	return;
+}
+
 ///////////////////////////////////////////////////////////////////////
 // ROBING FUNCTIONS
 ///////////////////////////////////////////////////////////////////////
@@ -171,7 +178,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 		usePower();
-		
 	}
 
 	/*
@@ -230,7 +236,11 @@ void Player::handleInput(GLFWwindow* window, State& state)
 					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
 				}
 			}
-
+			if (state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
+			{
+				//std::cout << "left bumber (L1)" << std::endl;	//ps4 L1
+				usePower();
+			}
 		}
 	}
 

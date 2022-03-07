@@ -78,9 +78,14 @@ public:
 						
 						if ((pairs[i].triggerActor == popo->headlights->ptr) && (player.isDetectable())) {
 							player.isSeen = !player.isSeen;
-							std::cout << player.isSeen << std::endl;
-							popo->startChase();
+							//std::cout << player.isSeen << std::endl;
+							if(player.isSeen) popo->startChase();
+							player.jailTimer.reset();
 						}
+
+						
+
+			
 					}
 				}
 			}

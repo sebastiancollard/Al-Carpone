@@ -31,7 +31,8 @@ enum GAMESTATE {
 	GAMESTATE_MAIN_MENU,
 	GAMESTATE_PAUSE_MENU,
 	GAMESTATE_INGAME,
-	GAMESTATE_CORNERSTORE
+	GAMESTATE_CORNERSTORE,
+	GAMESTATE_JAILED
 };
 
 enum BUILDINGS {
@@ -67,6 +68,7 @@ public:
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
 	bool gameWon = false;
+	bool gameLost = false;
 
 	std::vector<Vehicle*> activeVehicles = {};
 	std::vector<PoliceCar*> activePoliceVehicles = {};
@@ -102,6 +104,11 @@ public:
 	//CONTROLLER input
 	bool dpad_downisHold = false;
 	bool dpad_upisHold = false;
+	bool cross_isHeld = false;
+	bool circle_isHeld = false;
+	bool triangle_isHeld = false;
+	bool square_isHeld = false;
+	bool option_isHeld = false;
 	//Updates the state's time-sensitive variables.
 	void updateTime() {
 		currTime = glfwGetTime();
