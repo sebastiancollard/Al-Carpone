@@ -57,7 +57,7 @@ PoliceCar::PoliceCar(int ID) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVe
 	float len = 20.f;
 	float width = 5.f;
 	auto pos = getPos() + glm::vec3(width, 0, len);
-	physx::PxVec3 t_pos = physx::PxVec3(pos.x - width/2, pos.y, -pos.z + 3*pos.z/4);
+	physx::PxVec3 t_pos = physx::PxVec3(pos.x - width, pos.y, -pos.z + 3*pos.z/4);
 	headlights = new BoxTrigger(false, t_pos, 8.f, 2.f, len);
 	headlights->addJoint(actorPtr, startTransform);
 }

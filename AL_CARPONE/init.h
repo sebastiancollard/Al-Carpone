@@ -35,6 +35,7 @@
 #include "Bank.h"
 #include "Exit.h"
 #include "CornerStore.h"
+#include "Garage.h"
 
 #include "PowerUp.h"
 
