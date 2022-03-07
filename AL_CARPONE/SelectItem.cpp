@@ -54,36 +54,40 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
 		if (!state.enter_isHeld) {
 			//should select some item
-			std::cout << "select item number:"<< selection << std::endl;
-			switch (selection)
-			{
-			case 0:
-				player.getPower()->setType(TOMATO);
-				player.getPower()->setDuration(15.0f);
-				player.setCash(player.getCash() - 5);
-				cout<<"Tomato 0" << endl;
-				break;
-			case 1:
-				player.getPower()->setType(DONUT);
-				player.getPower()->setDuration(15.0f);
-				player.setCash(player.getCash() - 5);
-				cout << "Donut 1" << endl;
-				break;
-			case 2:
-				player.getPower()->setType(SPIKE_TRAP);
-				player.getPower()->setDuration(15.0f);
-				player.setCash(player.getCash() - 5);
-				cout << "spike_trap 2" << endl;
-				break;
-			case 3:
-				player.getPower()->setType(CAMOUFLAGE);
-				player.getPower()->setDuration(15.0f);
-				player.setCash(player.getCash() - 5);
-				cout << "camouflag 3" << endl;
-				break;
+			//std::cout << "select item number:"<< selection << std::endl;
+			int cur_cash = player.getCash();
+			if (cur_cash < 5) { return; }
+			else {
+				switch (selection)
+				{
+				case 0:
+					player.getPower()->setType(TOMATO);
+					player.getPower()->setDuration(15.0f);
+					player.setCash(cur_cash - 5);
+					cout << "Tomato 0" << endl;
+					break;
+				case 1:
+					player.getPower()->setType(DONUT);
+					player.getPower()->setDuration(15.0f);
+					player.setCash(cur_cash - 5);
+					cout << "Donut 1" << endl;
+					break;
+				case 2:
+					player.getPower()->setType(SPIKE_TRAP);
+					player.getPower()->setDuration(15.0f);
+					player.setCash(cur_cash - 5);
+					cout << "spike_trap 2" << endl;
+					break;
+				case 3:
+					player.getPower()->setType(CAMOUFLAGE);
+					player.getPower()->setDuration(15.0f);
+					player.setCash(cur_cash - 5);
+					cout << "camouflag 3" << endl;
+					break;
+				}
+				//cout << player.getPower() << endl;
+				state.gamestate = GAMESTATE_INGAME;
 			}
-			//cout << player.getPower() << endl;
-			state.gamestate = GAMESTATE_INGAME;
 		}
 
 		state.enter_isHeld = true;
@@ -159,36 +163,40 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 			{
 				if (!state.cross_isHeld) {
 					//should select some item
-					std::cout << "select item number:" << selection << std::endl;
-					switch (selection)
-					{
-					case 0:
-						player.getPower()->setType(TOMATO);
-						player.getPower()->setDuration(15.0f);
-						player.setCash(player.getCash() - 5);
-						cout << "Tomato 0" << endl;
-						break;
-					case 1:
-						player.getPower()->setType(DONUT);
-						player.getPower()->setDuration(15.0f);
-						player.setCash(player.getCash() - 5);
-						cout << "Donut 1" << endl;
-						break;
-					case 2:
-						player.getPower()->setType(SPIKE_TRAP);
-						player.getPower()->setDuration(15.0f);
-						player.setCash(player.getCash() - 5);
-						cout << "spike_trap 2" << endl;
-						break;
-					case 3:
-						player.getPower()->setType(CAMOUFLAGE);
-						player.getPower()->setDuration(15.0f);
-						player.setCash(player.getCash() - 5);
-						cout << "camouflag 3" << endl;
-						break;
+					//std::cout << "select item number:" << selection << std::endl;
+					int cur_cash = player.getCash();
+					if (cur_cash < 5) { return; }
+					else {
+						switch (selection)
+						{
+						case 0:
+							player.getPower()->setType(TOMATO);
+							player.getPower()->setDuration(15.0f);
+							player.setCash(cur_cash - 5);
+							cout << "Tomato 0" << endl;
+							break;
+						case 1:
+							player.getPower()->setType(DONUT);
+							player.getPower()->setDuration(15.0f);
+							player.setCash(cur_cash - 5);
+							cout << "Donut 1" << endl;
+							break;
+						case 2:
+							player.getPower()->setType(SPIKE_TRAP);
+							player.getPower()->setDuration(15.0f);
+							player.setCash(cur_cash - 5);
+							cout << "spike_trap 2" << endl;
+							break;
+						case 3:
+							player.getPower()->setType(CAMOUFLAGE);
+							player.getPower()->setDuration(15.0f);
+							player.setCash(cur_cash - 5);
+							cout << "camouflag 3" << endl;
+							break;
+						}
+						//cout << player.getPower() << endl;
+						state.gamestate = GAMESTATE_INGAME;
 					}
-					//cout << player.getPower() << endl;
-					state.gamestate = GAMESTATE_INGAME;
 				}
 				//std::cout << "CROSS (xbox a, ns pro b)" << std::endl;
 				state.cross_isHeld = true;
