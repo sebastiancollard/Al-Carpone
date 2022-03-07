@@ -1,6 +1,5 @@
 #include "Player.h"
 
-
 #define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
 #define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
 #define CAR_RWHEEL_PATH "models/al_carpone/car_Rwheel.obj"
@@ -35,12 +34,60 @@ void Player::setCash(double amount) {
 	cash = amount;
 }
 
+///////////////////////////////////////////////////////////////////////
+// POWER-UP FUNCTIONS
+///////////////////////////////////////////////////////////////////////
+void Player::setDetectable(bool b) {
+	detectable = b;
+}
+bool Player::isDetectable() {
+	return detectable;
+}
+
+PowerUp* Player::getPower() {
+	return &equippedPower;
+}
+
+void Player::usePower() {
+	//std:cout << equippedPower.getType() << std::endl;
+	if (equippedPower.getType() == CAMOUFLAGE) {
+		equippedPower.activateTimed();
+		detectable = false;	
+	}
+	else {
+		equippedPower.dropOrThrow();
+	}
+}
+
+void Player::updatePower() {
+	equippedPower.updateTimed();
+
+	if (equippedPower.shouldDespawn()) {
+		if (equippedPower.getType() == CAMOUFLAGE)
+			detectable = true;
+	}
+}
+
+bool Player::canChooseTool(State& state) {
+	return can_choosePowerTool && state.selectedLevel == 0;
+}
+
+void Player::setChooseTool(bool b) {
+	can_choosePowerTool = b;
+}
+
 bool Player::footOnGas() {
 	return footIsOnGas;
 }
 
 bool Player::footOnBrake() {
 	return footIsOnBrake;
+}
+
+
+bool Player::canExit(State& state) {
+	//Check that in exit triggerbox and that player cash > exit requirement
+	return cash > 10.0f && state.selectedLevel == LEVELS::LEVEL_MAIN;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -94,14 +141,27 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
 		state.space_isHeld = true;
 
-		//PxTransform t = vehiclePtr->getRigidDynamicActor()->getGlobalPose();
-		
-		//printf("p: %f, %f, %f\nq: %f, %f, %f, %f\n", t.p.x, t.p.y, t.p.z, t.q.x, t.q.y, t.q.z, t.q.w);
-	
 	}
 	else state.space_isHeld = false;
 
 	footIsOnBrake = state.space_isHeld;
+
+	// Handle interactions
+	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
+
+		for (Building* b : state.buildings) {
+			if (b->isInRange) {
+				b->triggerFunction(*this, state);
+			}
+		}
+
+		if (canExit(state)) {
+			state.gameWon = true;
+			return;
+		}
+		state.f_isHeld = true;
+	}
+	else state.f_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld) {
 		glm::vec3 front = getDir();
@@ -111,6 +171,12 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
 		state.shift_isHeld = false;
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		usePower();
+		
+	}
+
 	/*
 	this part handles controller input,
 	line "std::cout << controller_name << std::endl;" will print out the current input controller's name
@@ -170,5 +236,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 		}
 	}
+
 
 }

@@ -7,6 +7,7 @@
 MainMenu::MainMenu() {
 
 	loadingMapScreen = Model("models/mainMenu/LOADINGMAP.obj");
+	gameWinScreen = Model("models/mainMenu/WINSCREEN.obj");
 
 	selectionScreens = { 
 		Model("models/mainMenu/0_PLAYGAME.obj"),
@@ -14,7 +15,6 @@ MainMenu::MainMenu() {
 		Model("models/mainMenu/2_RACETRACK.obj"),
 		Model("models/mainMenu/3_OPTIONS.obj")
 	};
-
 	level_light_positions = {
 		load_positions("models/map/light_positions.obj"),
 		load_positions("models/tuning_testlevel/light_positions.obj"),
@@ -47,6 +47,12 @@ void MainMenu::drawMenu(GraphicsSystem& graphics, State& state) {
 void MainMenu::drawLoadingScreen(GraphicsSystem& graphics) {
 	graphics.shader2D->use();
 	loadingMapScreen.Draw(*graphics.shader2D);
+}
+
+
+void MainMenu::drawWinScreen(GraphicsSystem& graphics) {
+	graphics.shader2D->use();
+	gameWinScreen.Draw(*graphics.shader2D);
 }
 
 

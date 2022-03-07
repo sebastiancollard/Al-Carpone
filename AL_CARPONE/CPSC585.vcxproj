@@ -176,6 +176,8 @@
     <ClCompile Include="PoliceCar.cpp" />
     <ClCompile Include="BoxTrigger.cpp" />
     <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="SelectItem.cpp" />
     <ClCompile Include="SnippetVehicle4WCreate.cpp" />
     <ClCompile Include="SnippetVehicleCreate.cpp" />
     <ClCompile Include="SnippetVehicleFilterShader.cpp" />
@@ -184,6 +186,7 @@
     <ClCompile Include="SnippetVehicleTankCreate.cpp" />
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="stb.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -217,10 +220,13 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PoliceCar.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="PowerUp.h" />
     <ClInclude Include="PxCustomEventCallback.h" />
+    <ClInclude Include="SelectItem.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Vehicle.h" />

@@ -5,6 +5,8 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, PoliceCar*);
 extern void despawnEnemy(Vehicle*);
+extern void despawnItem();
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
 
 int main()
 {
@@ -46,6 +48,7 @@ int main()
 	Bank bank;
 	state.buildings.push_back(&bank);
 
+	SelectItem selectItem;
 
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
@@ -82,10 +85,14 @@ int main()
 		graphics.clearBuffer();
 		audio.updateAudio(&player, &state); // Update all audio elements
 
+		if (state.gameWon) {
+			mainMenu.drawWinScreen(graphics);
+		}
+
 		///////////////////////////////////////////////////////////////
 		//MAIN MENU
 		///////////////////////////////////////////////////////////////
-		if (state.gamestate == GAMESTATE_MAIN_MENU) {
+		else if (state.gamestate == GAMESTATE_MAIN_MENU) {
 			//Draw the menu
 			mainMenu.drawMenu(graphics, state);
 			
@@ -116,21 +123,25 @@ int main()
 					police_car1.moveStartPoint(PxVec3(559.949, 31.3, -360.091));
 					police_car1.createModel();
 					state.activeVehicles.push_back(&police_car1);
+					state.activePoliceVehicles.push_back(&police_car1);
 
 					police_car2 = PoliceCar(2);
 					police_car2.moveStartPoint(PxVec3(419.948730, 21.455765, -60.534622));
 					police_car2.createModel();
 					state.activeVehicles.push_back(&police_car2);
+					state.activePoliceVehicles.push_back(&police_car2);
 					
 					police_car3 = PoliceCar(3);
 					police_car3.moveStartPoint(PxVec3(100.000031, 0.299998, -220.079498));
 					police_car3.createModel();
 					state.activeVehicles.push_back(&police_car3);
+					state.activePoliceVehicles.push_back(&police_car3);
 					
 					police_car4 = PoliceCar(4);
 					police_car4.moveStartPoint(PxVec3(-99.999969, 0.299998, -220.079498));
 					police_car4.createModel();
 					state.activeVehicles.push_back(&police_car4);
+					state.activePoliceVehicles.push_back(&police_car4);
 				}
 				else {
 					player.setResetPoint(PxTransform(PxVec3(0,0,0)));
@@ -160,6 +171,7 @@ int main()
 				for (Vehicle* v : state.activeVehicles) {
 					v->reset();
 				}
+
 			}
 			
 		}
@@ -173,6 +185,13 @@ int main()
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, &police_car1);
 		}
 		///////////////////////////////////////////////////////////////
+		//corner store
+		///////////////////////////////////////////////////////////////
+		else if (state.gamestate == GAMESTATE_CORNERSTORE)
+		{
+			selectItem.drawMenu(graphics, state, player);
+		}
+		///////////////////////////////////////////////////////////////
 		//INGAME
 		///////////////////////////////////////////////////////////////
 		else {	
@@ -183,6 +202,13 @@ int main()
 			//Dont need to check other vehicles (yet?)
 			player.updatePhysicsVariables(state.timeStep);
 
+			//updateItem/Powerup information
+			player.updatePower();
+			if (player.getPower()->shouldDespawn()) {
+				despawnItem();
+				player.getPower()->setType(NONE);
+			}
+
 			//Check for special inputs (currently only camera mode change)
 			checkSpecialInputs(graphics.window, state, player, &audio);
 
@@ -192,6 +218,21 @@ int main()
 			// Camera is disabled in DEBUG MODE
 			if (!state.debugMode) activeCamera->handleInput(graphics.window, state);
 			if (activeCamera == &boundCamera) boundCamera.checkClipping(graphics.window);
+
+			///////////////////////////////////////////////////////////////
+			//corner store
+			///////////////////////////////////////////////////////////////
+			if (player.canChooseTool(state))
+			{
+				graphics.shader2D->use();
+				ui.Item->Draw(*graphics.shader2D);
+				if ((glfwGetKey(graphics.window, GLFW_KEY_SPACE) == GLFW_PRESS) ) {	
+					state.gamestate = GAMESTATE_CORNERSTORE;
+				}
+			}
+
+			//Check if player has thrown an item (used a tomato or donut powerup)
+			checkForItemActions(&player, &boundCamera, &physics);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car1);
 
@@ -220,11 +261,8 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	graphics->skybox->Draw(projection, view);
 	view = activeCamera->GetViewMatrix();
 
-	//Tell player if they can rob
-	if (state->buildings[0]->isInRange) {
-		graphics->shader2D->use();
-		ui->press_f_to_rob->Draw(*graphics->shader2D);
-	}
+
+	ui->update(state, player, graphics);
 
 	graphics->shader3D->use();
 	// send them to shader
@@ -232,6 +270,14 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	graphics->shader3D->setMat4("view", view);
 
 	graphics->shader3D->setInt("numLights", mainMenu->light_positions->size());
+
+	////////////////////////////
+	//test for loading 3d item//
+	////////////////////////////
+	//if (player->canChooseTool(*state))
+	//{
+	//	Model("models/powerups/TomatoBeef.obj").Draw(*graphics->shader3D);
+	//}
 
 	for (int i = 0; i < mainMenu->light_positions->size(); i++) {
 		std::string path = "light_positions[" + std::to_string(i) + "]";
@@ -247,8 +293,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	mainMenu->active_level->Draw(*graphics->shader3D);
 
 	// Render dynamic physx shapes
-
-
 	{
 		const int MAX_NUM_ACTOR_SHAPES = 128;
 		PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
@@ -276,13 +320,12 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					// Can only render all boxes as one rn
 					glActiveTexture(GL_TEXTURE0);
 					glUniformMatrix4fv(glGetUniformLocation(graphics->shader3D->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-					police_car->headlights->draw();
 					//state->buildings[0]->trigger->draw();
-
+					// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
+					//if(police_car->headlights !=  nullptr) police_car->headlights->draw();
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{
-
 				}
 				else if (h.any().getType() == PxGeometryType::eCONVEXMESH) {
 
@@ -308,6 +351,25 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					}
 				}
 			}
+			//Instead of cycling through all physx actors, this cycles through those that have been added to the 
+			//sinple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
+			//with that actor. Is very similar to the above for loop.
+			//Future TODO: for more complex objects, add ability to have multiple models per object (like the cars)
+			for (auto object : simple_renderables) {
+
+				const PxU32 nbShapes = object.actorPtr->getNbShapes();
+				object.actorPtr->getShapes(shapes, nbShapes);
+
+				//assumption that there is only one shape per object in renderables (currently only used for items)
+				const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *object.actorPtr));
+
+				model = glm::make_mat4(&shapePose.column0.x);
+
+				Shader& shader = *graphics->shader3D;
+				shader.setMat4("model", model);
+				object.model.Draw(*graphics->shader3D);
+
+			}
 		}
 	}
 }
@@ -324,4 +386,68 @@ void despawnEnemy(Vehicle* enemy) {
 		}
 	}
 	delete(enemy);
+}
+
+void despawnItem() 
+{
+	for (int i = 0; i < simple_renderables.size(); i++) 
+	{
+		if (simple_renderables[i].name == "powerup") 
+		{
+			PxRigidActor* ptr = simple_renderables[i].actorPtr;
+			simple_renderables.erase(simple_renderables.begin() + i);	//erase from simple_renderables
+
+			printf("Erasing item...\n");
+			i = i - 1;
+
+			for (int j = 0; j < physx_actors.size(); j++) 
+			{		
+				if (physx_actors[j].actorPtr == ptr) 
+				{
+					physx_actors.erase(physx_actors.begin() + j);		//erase from physx_actors
+					break;
+				}
+			}
+		}
+	}
+}
+
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics) {
+	if (player->getPower()->throw_item) {			//PLAYER THROWS ITEM
+		player->getPower()->stopThrow();
+		PxRigidDynamic* actor;
+
+		if (player->getPower()->getType() == DONUT) {
+			actor = physics->createDynamicItem(PxTransform(
+				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
+				PxBoxGeometry(0.3, 0.2, 0.3),	//donut is box
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
+			);
+		}
+		else {
+			actor = physics->createDynamicItem(PxTransform(
+				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
+				PxSphereGeometry(0.5),			//tomato is sphere
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
+			);
+		}
+		Model model = Model(player->getPower()->getModelPath());
+		simple_renderables.push_back({ actor, model, "powerup"});
+		//player->getPower()->setType(NONE);
+
+	}
+	else if (player->getPower()->drop_item) {		//PLAYER DROPS SPIKE TRAP
+		player->getPower()->stopDrop();
+
+		PxRigidDynamic* actor = physics->createDynamicItem(PxTransform(
+			PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
+			PxBoxGeometry(1.2, 0.3, 0.3),		//spike trap is box
+			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
+		);
+		
+		Model model = Model(player->getPower()->getModelPath());
+		simple_renderables.push_back({ actor, model , "powerup" });
+		//player->getPower()->setType(NONE);
+
+	}
 }

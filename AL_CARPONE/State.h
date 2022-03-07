@@ -5,6 +5,7 @@
 #include <vector>
 #include "Vehicle.h"
 #include "Building.h"
+#include "PoliceCar.h"
 
 
 //Locked position and orientation. Used for third person view behind the car.
@@ -17,6 +18,7 @@
 // For compiler not to complain
 class Building;
 class Vehicle;
+class PoliceCar;
 
 
 enum LEVELS {
@@ -28,7 +30,8 @@ enum LEVELS {
 enum GAMESTATE {
 	GAMESTATE_MAIN_MENU,
 	GAMESTATE_PAUSE_MENU,
-	GAMESTATE_INGAME
+	GAMESTATE_INGAME,
+	GAMESTATE_CORNERSTORE
 };
 
 
@@ -54,9 +57,12 @@ public:
 
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
+	bool gameWon = false;
 
-	std::vector<Vehicle*> activeVehicles = {};  // Player = [0], PoliceCars = [1:]
+	std::vector<Vehicle*> activeVehicles = {};
+	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<Building*> buildings = {};		// Bank = [0], OtherBuildings = [1:]
+
 
 	//Used to check for single input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.
@@ -65,7 +71,9 @@ public:
 	bool S_isHeld = false;
 	bool W_isHeld = false;
 	bool M_isHeld = false;
+	bool N_isHeld = false;
 	bool f5_isHeld = false;
+	bool f_isHeld = false;
 	bool enter_isHeld = false;
 	bool shift_isHeld = false;
 	bool space_isHeld = false;

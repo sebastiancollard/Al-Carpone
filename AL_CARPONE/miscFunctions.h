@@ -21,6 +21,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 	else {
 		state.escape_isHeld = false;
 	}
+
 	
 	// Handle any building triggerfunction (rob, get powerup, etc)
 	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
@@ -30,6 +31,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 			}
 		}
 	}
+
 
 	// Debug Mode
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) {

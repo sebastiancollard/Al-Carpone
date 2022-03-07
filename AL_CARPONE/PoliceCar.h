@@ -14,6 +14,10 @@ PoliceCar Entity Class
  - Used for containing Car Model, Transformation, and AI
 */
 
+class Player;
+class State;
+
+
 enum class AISTATE {
 	IDLE,
 	PATROL,

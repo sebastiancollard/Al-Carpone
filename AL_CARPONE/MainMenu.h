@@ -14,6 +14,8 @@ static class MainMenu {
 public:
 
 	Model loadingMapScreen;
+	Model gameWinScreen;
+
 	std::vector<Model> selectionScreens;
 	std::vector<std::vector<glm::vec3>> level_light_positions;
 	std::vector<Model> levels;
@@ -26,6 +28,7 @@ public:
 	void changeLevel(int level);
 	void drawMenu(GraphicsSystem& graphics, State& state);
 	void drawLoadingScreen(GraphicsSystem& graphics);
+	void drawWinScreen(GraphicsSystem&);
 	void handleInputs(GLFWwindow* window, State& state);
 
 };
