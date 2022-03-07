@@ -22,10 +22,10 @@ To get money, you must rob the bank by holding F while close to it. (see map.png
 With this money, you can visit corner stores to purchase powerups and consumables to help out. 
 - You can purchase a $5 donut to throw which will divert a police car to path to the donut and idle there for some time (Currently throwable but does nothing).
 - You can purchase a $5 spike trap which will stun any police that pass over it (Currently throwable but does nothing).
-- You can purchase camoflauge which will make you undetectable by the police for 15 seconds after activated (Currently usable but no visual indication).
+- You can purchase camouflauge which will make you undetectable by the police for 15 seconds after activated (Currently usable but no visual indication).
 Each consumable is activated by pressing E or L1 on controller.
 
-Eventually the garages will have a selection of purchasable permenant upgrades to the car (Speed, rob rate, etc).
+Eventually the garages will have a selection of purchasable permanent upgrades to the car (Speed, rob rate, etc).
 
 If you are detected by the police they will begin to chase you. If you can evade them for long enough they will return to their regular patrol state. If they 
 catch up to you and are close to you for 2 seconds you will be sent to jail to pay a $10 fine. If you cannot pay this fine you lose, and will have to restart.
