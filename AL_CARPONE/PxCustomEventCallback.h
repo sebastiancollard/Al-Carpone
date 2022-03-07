@@ -39,6 +39,7 @@ public:
 			{
 				// Buildings (bank, cornerstores, etc)
 				for (Building* b : state.buildings) {
+					if (b == nullptr) continue;
 					if (pairs[i].triggerActor == b->trigger->ptr) {
 						b->isInRange = !b->isInRange; // Set boolean value
 						std::cout << "BUILDING IN RANGE!!!" << std::endl;
@@ -75,10 +76,7 @@ public:
 			//test triggar ptr
 			/////////////////
 			
-			if (pairs[i].otherActor == player.actorPtr) {		//bank.triggerPtr
-				//(pairs[i].triggerActor == bank.testTriggerPtr))
-			
-				//player.setRob(!player.canRob(state));
+			if (pairs[i].otherActor == player.actorPtr) {		
 				player.setChooseTool(!player.canChooseTool(state));
 			}
 			

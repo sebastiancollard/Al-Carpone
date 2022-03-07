@@ -12,7 +12,6 @@ public:
 	Model* press_f_to_exit;
 	Model* Item;
 
-	BoxTrigger* exitTrigger;
 
 	UI() {
 		press_f_to_rob = new Model("models/popups/press_f_to_rob.obj");
@@ -22,12 +21,12 @@ public:
 
 	void update(State* state, Player* player, GraphicsSystem* graphics) {
 		//Tell player if they can rob
-		if (state->buildings[0]->isInRange) {
+		if (state->buildings[BUILDINGS::BANK]->isInRange) {
 			graphics->shader2D->use();
 			press_f_to_rob->Draw(*graphics->shader2D);
 		}
 
-		else if (player->canExit(*state)) {
+		else if (state->buildings[BUILDINGS::EXIT]->isInRange) {
 			graphics->shader2D->use();
 			press_f_to_exit->Draw(*graphics->shader2D);
 		}

@@ -150,15 +150,12 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
 
 		for (Building* b : state.buildings) {
+			if (b == nullptr) continue;
 			if (b->isInRange) {
 				b->triggerFunction(*this, state);
 			}
 		}
 
-		if (canExit(state)) {
-			state.gameWon = true;
-			return;
-		}
 		state.f_isHeld = true;
 	}
 	else state.f_isHeld = false;

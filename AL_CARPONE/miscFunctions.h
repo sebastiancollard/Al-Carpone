@@ -26,6 +26,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 	// Handle any building triggerfunction (rob, get powerup, etc)
 	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
 		for (Building* b : state.buildings) {
+			if (b == nullptr) continue;
 			if (b->isInRange) {
 				b->triggerFunction(player, state);
 			}

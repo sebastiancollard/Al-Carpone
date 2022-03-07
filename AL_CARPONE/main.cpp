@@ -46,7 +46,10 @@ int main()
 
 	// Build list of buildings
 	Bank bank;
-	state.buildings.push_back(&bank);
+	state.buildings[BUILDINGS::BANK] = &bank;
+
+	Exit exit;
+	state.buildings[BUILDINGS::EXIT] = &exit;
 
 	SelectItem selectItem;
 
