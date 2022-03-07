@@ -33,6 +33,8 @@
 #include "Player.h"
 #include "PoliceCar.h"
 #include "Bank.h"
+#include "Exit.h"
+#include "CornerStore.h"
 #include "Garage.h"
 
 #include "PowerUp.h"

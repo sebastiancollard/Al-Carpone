@@ -46,10 +46,19 @@ int main()
 
 	// Build list of buildings
 	Bank bank;
-	state.buildings.push_back(&bank);
-	Garage engineGarage(0);
-	state.buildings.push_back(&engineGarage);
+	state.buildings[BUILDINGS::BANK] = &bank;
 
+	Garage engineGarage(0);
+	state.buildings.[BUILDINGS::GARAGE1] = &engineGarage;
+	
+	CornerStore cornerStore1(PxVec3(-24.470, 0.964, -11.839));
+	state.buildings[BUILDINGS::CORNERSTORE1] = &cornerStore1;
+
+	CornerStore cornerStore2(PxVec3(242.158, 0.736, -270.944));
+	state.buildings[BUILDINGS::CORNERSTORE2] = &cornerStore2;
+
+	Exit exit;
+	state.buildings[BUILDINGS::EXIT] = &exit;
 
 	SelectItem selectItem;
 
@@ -222,17 +231,6 @@ int main()
 			if (!state.debugMode) activeCamera->handleInput(graphics.window, state);
 			if (activeCamera == &boundCamera) boundCamera.checkClipping(graphics.window);
 
-			///////////////////////////////////////////////////////////////
-			//corner store
-			///////////////////////////////////////////////////////////////
-			if (player.canChooseTool(state))
-			{
-				graphics.shader2D->use();
-				ui.Item->Draw(*graphics.shader2D);
-				if ((glfwGetKey(graphics.window, GLFW_KEY_SPACE) == GLFW_PRESS) ) {	
-					state.gamestate = GAMESTATE_CORNERSTORE;
-				}
-			}
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics);

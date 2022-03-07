@@ -156,8 +156,10 @@
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="constants.cpp" />
+    <ClCompile Include="CornerStore.cpp" />
     <ClCompile Include="DebugPanel.cpp" />
     <ClCompile Include="Garage.cpp" />
+    <ClCompile Include="Exit.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
@@ -197,8 +199,10 @@
     <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="CornerStore.h" />
     <ClInclude Include="DebugPanel.h" />
     <ClInclude Include="Garage.h" />
+    <ClInclude Include="Exit.h" />
     <ClInclude Include="GraphicsSystem.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />

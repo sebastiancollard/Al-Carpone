@@ -13,6 +13,7 @@ class State;
 class Building {
 public:
 	BoxTrigger* trigger;
+	
 	bool isInRange = false;		// colliding with trigger 
 
 	virtual void createTrigger() {

@@ -34,6 +34,15 @@ enum GAMESTATE {
 	GAMESTATE_CORNERSTORE
 };
 
+enum BUILDINGS {
+	BANK,
+	GARAGE1,
+	GARAGE2,
+	GARAGE3,
+	CORNERSTORE1,
+	CORNERSTORE2,
+	EXIT
+};
 
 
 
@@ -61,7 +70,17 @@ public:
 
 	std::vector<Vehicle*> activeVehicles = {};
 	std::vector<PoliceCar*> activePoliceVehicles = {};
-	std::vector<Building*> buildings = {};		// Bank = [0], OtherBuildings = [1:]
+	std::vector<Building*> buildings = 
+	{
+		NULL, //BANK
+		NULL, //GARAGE1
+		NULL, //GARAGE2
+		NULL, //GARAGE3
+		NULL, //CORNERSTORE1
+		NULL, //CORNERSTORE2
+		NULL  //EXIT
+	};
+				
 
 
 	//Used to check for single input to prevent the key from being spammed.
