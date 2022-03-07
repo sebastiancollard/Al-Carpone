@@ -60,21 +60,25 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 			case 0:
 				player.getPower()->setType(TOMATO);
 				player.getPower()->setDuration(15.0f);
+				player.setCash(player.getCash() - 5);
 				cout<<"Tomato 0" << endl;
 				break;
 			case 1:
 				player.getPower()->setType(DONUT);
 				player.getPower()->setDuration(15.0f);
+				player.setCash(player.getCash() - 5);
 				cout << "Donut 1" << endl;
 				break;
 			case 2:
 				player.getPower()->setType(SPIKE_TRAP);
 				player.getPower()->setDuration(15.0f);
+				player.setCash(player.getCash() - 5);
 				cout << "spike_trap 2" << endl;
 				break;
 			case 3:
 				player.getPower()->setType(CAMOUFLAGE);
 				player.getPower()->setDuration(15.0f);
+				player.setCash(player.getCash() - 5);
 				cout << "camouflag 3" << endl;
 				break;
 			}
@@ -161,21 +165,25 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 					case 0:
 						player.getPower()->setType(TOMATO);
 						player.getPower()->setDuration(15.0f);
+						player.setCash(player.getCash() - 5);
 						cout << "Tomato 0" << endl;
 						break;
 					case 1:
 						player.getPower()->setType(DONUT);
 						player.getPower()->setDuration(15.0f);
+						player.setCash(player.getCash() - 5);
 						cout << "Donut 1" << endl;
 						break;
 					case 2:
 						player.getPower()->setType(SPIKE_TRAP);
 						player.getPower()->setDuration(15.0f);
+						player.setCash(player.getCash() - 5);
 						cout << "spike_trap 2" << endl;
 						break;
 					case 3:
 						player.getPower()->setType(CAMOUFLAGE);
 						player.getPower()->setDuration(15.0f);
+						player.setCash(player.getCash() - 5);
 						cout << "camouflag 3" << endl;
 						break;
 					}
