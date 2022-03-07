@@ -144,6 +144,7 @@ void BoxTrigger::setModel() {
 	}
 }
 
+
 // Draw model for debugging 
 void BoxTrigger::draw() {
 	if (primitive != NULL) {

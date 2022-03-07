@@ -16,6 +16,7 @@
 
 // For compiler not to complain
 class Building;
+class Vehicle;
 
 
 enum LEVELS {

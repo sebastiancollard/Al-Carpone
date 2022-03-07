@@ -5,6 +5,8 @@
 #include "PxCustomEventCallback.h"
 #include "physx_globals.h"
 #include "util.h"
+#include "State.h"
+#include "PoliceCar.h"
 
 #define PVD_HOST "127.0.0.1"	//Set this to the IP address of the system running the PhysX Visual Debugger that you want to connect to.
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL; }
@@ -75,37 +77,6 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 	PxActor** actors = (PxActor**)malloc(size);
 	gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
 	activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
-
-	ai_paths = {
-		//BANK
-		{
-			glm::vec3(559.948730, 31.299992, -360.090973),
-			glm::vec3(419.948730, 31.299992, -360.090973),
-			glm::vec3(419.948730, 31.299992, -500.090973),
-			glm::vec3(559.948730, 31.299992, -500.090973)
-		},
-		//SUBURBS
-		{
-			glm::vec3(420.010925, 31.455765, -280.130432),
-			glm::vec3(740.010925, 31.455765, -280.130432),
-			glm::vec3(739.948730, 21.455765, -60.534622),
-			glm::vec3(419.948730, 21.455765, -60.534622)
-		},
-		//DOWNTOWN1
-		{
-			glm::vec3(100.000031, 0.299998, -220.079498),
-			glm::vec3(220.000031, 0.299998, -220.079498),
-			glm::vec3(220.000031, 0.299998, -120.079498),
-			glm::vec3(100.000031, 0.299998, -120.079498)
-		},
-		//DOWNTOWN2
-		{
-			glm::vec3(-99.999969, 0.299998, -220.079498),
-			glm::vec3(0.000031, 0.299998, -220.079498),
-			glm::vec3(0.000031, 0.299998, -60.079498),
-			glm::vec3(-99.999969, 0.299998, -60.079498)
-		}
-	};
 }
 
 
@@ -132,21 +103,7 @@ void PhysicsSystem::step(GLFWwindow* window)
 				if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
 			}
 			else {
-				// if patrolling
-				if (((PoliceCar*)state.activeVehicles[i])->state == AISTATE::PATROL) {
-					// if distance between cop car and its target is less than the threshold, switch to next target location
-					if (glm::distance(state.activeVehicles[i]->getPos(), ai_paths[i - 1][state.activeVehicles[i]->targetIndex]) < 10.f) {
-						// set target index to the next location. if we're at the end of the location list, target the first location again
-						state.activeVehicles[i]->targetIndex < ai_paths[i - 1].size() - 1 ? state.activeVehicles[i]->targetIndex++ : state.activeVehicles[i]->targetIndex = 0;
-						//std::cout << "new target: " << ai_paths[i - 1][state.activeVehicles[i]->targetIndex].x << ", " << ai_paths[i - 1][state.activeVehicles[i]->targetIndex].y << ", " << ai_paths[i - 1][state.activeVehicles[i]->targetIndex].z << std::endl;
-					}
-					// determine AI inputs
-					state.activeVehicles[i]->handle(window, ai_paths[i - 1][state.activeVehicles[i]->targetIndex]);
-				}
-				else if (((PoliceCar*)state.activeVehicles[i])->state == AISTATE::CHASE) {
-					state.activeVehicles[i]->handle(window, player.getPos());
-				}
-				// else if idle...
+				((PoliceCar*)(state.activeVehicles[i]))->handle(window, player, state);
 			}
 			updateDrivingMode(*state.activeVehicles[i]);
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, state.activeVehicles[i]->vehicleInAir, *state.activeVehicles[i]->vehiclePtr);

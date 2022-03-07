@@ -30,6 +30,8 @@ private:
 
 public:
 
+	bool isSeen = false;
+
 	Player() {}
 
 	//Call parrent constructor

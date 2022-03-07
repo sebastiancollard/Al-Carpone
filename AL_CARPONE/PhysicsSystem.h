@@ -13,8 +13,6 @@ private:
 	State& state;
 	Player& player;
 
-	std::vector<std::vector<glm::vec3>> ai_paths = {};
-
 public:
 
 	PhysicsSystem(State& s, Player& p);
@@ -27,7 +25,4 @@ public:
 	PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices32, const PxU32 numTris, PxPhysics& physics, PxCooking& cooking);
 	PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection);
 	PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics, PxCooking* cooking, unsigned int selection);
-
-
-
 };

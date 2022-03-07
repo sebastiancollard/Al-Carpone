@@ -13,6 +13,9 @@
 #define CAR_MAX_VELOCITY_FORWARD 40.0f
 #define CAR_MAX_VELOCITY_BACKWARD -11.35f
 
+
+
+
 enum VEHICLE_TYPE
 {
 	AL_CARPONE = 0,
@@ -22,7 +25,7 @@ enum VEHICLE_TYPE
 class Vehicle {
 public:
 
-	//void handle(State);
+	double speed = 1.0; // max accel [0,1]
 
 	bool vehicleInAir = true;
 	bool vehicleChangingGears;
@@ -44,9 +47,6 @@ public:
 	PxTransform getStartTransform();
 	void moveStartPoint(PxVec3 v);
 
-	// Handle all key inputs relevant to driving
-	virtual void handle(GLFWwindow* window, glm::vec3 playerPos) { std::cout << "not overriding" << std::endl; }
-
 	// Fetch directions
 	glm::vec3 getDir();		// fetch the front-facing direction of the player vehicle
 	glm::vec3 getRight();	// fetch the vector pointing to the right of the vehicle
@@ -60,6 +60,7 @@ public:
 	float getForwardAcceleration();
 	float getForwardJerk();
 
+	void updateSpeed(double);
 	void updatePhysicsVariables(double);
 
 	bool isMoving();
@@ -77,5 +78,7 @@ protected:
 	glm::vec3 jerk;
 
 	PxTransform startTransform;
+
+
 	
 };

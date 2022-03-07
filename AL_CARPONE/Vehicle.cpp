@@ -128,6 +128,10 @@ void Vehicle::updatePhysicsVariables(double dt) {
 	//printf("dt[%.4f]	VELOCITY[%.5f]	ACCELERATION[%.5f]	JERK[%.5f]\n",(float)dt, glm::length(velocity),glm::length(acceleration),glm::length(jerk));	
 }
 
+void Vehicle::updateSpeed(double newSpeed) {
+	speed = newSpeed;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Fetch Directions

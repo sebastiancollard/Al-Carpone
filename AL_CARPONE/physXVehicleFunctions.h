@@ -84,9 +84,9 @@ VehicleDesc initVehicleDesc(VEHICLE_TYPE type)
 }
 
 
-void startAccelerateForwardsMode()
+void startAccelerateForwardsMode(double speed)
 {
-	gVehicleInputData.setAnalogAccel(1.0f);
+	gVehicleInputData.setAnalogAccel(speed);
 }
 
 void startAccelerateReverseMode()
@@ -120,10 +120,6 @@ void releaseAllControls()
 	gVehicleInputData.setAnalogSteer(0.0f);
 	gVehicleInputData.setAnalogBrake(0.0f);
 	gVehicleInputData.setAnalogHandbrake(0.0f);
-}
-
-void startPatrolForwardsMode() {
-	gVehicleInputData.setAnalogAccel(0.625f);
 }
 
 
@@ -175,7 +171,7 @@ void updateDrivingMode(Vehicle& vehicle)
 		switch (input)
 		{
 		case eDRIVE_MODE_ACCEL_FORWARDS:
-			startAccelerateForwardsMode();
+			startAccelerateForwardsMode(vehicle.speed);
 			break;
 		case eDRIVE_MODE_ACCEL_REVERSE:
 			startAccelerateReverseMode();
@@ -194,10 +190,7 @@ void updateDrivingMode(Vehicle& vehicle)
 			break;
 		case eDRIVE_MODE_NONE:
 			break;
-		case eDRIVE_MODE_PATROL_FORWARDS:
-			startPatrolForwardsMode();
-			break;
-		};
+		}
 	}
 
 	if (vehicle.vehiclePtr->mDriveDynData.getCurrentGear() != previousGear) vehicle.vehicleChangingGears = true;

@@ -23,7 +23,7 @@ public:
 	void onTrigger(PxTriggerPair* pairs, PxU32 count) {
 	
 
-		std::cout << "TRIGGER ACTIVATED" << std::endl;
+		//std::cout << "TRIGGER ACTIVATED" << std::endl;
 
 		//starter code taken from https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/Manual/RigidBodyCollision.html
 		for (PxU32 i = 0; i < count; i++)
@@ -64,8 +64,9 @@ public:
 						}
 						
 						if (pairs[i].triggerActor == popo->headlights->ptr) {
-							std::cout << "HEALIGHTS!!!" << std::endl;
-							popo->state = AISTATE::CHASE;
+							player.isSeen = !player.isSeen;
+							std::cout << player.isSeen << std::endl;
+							popo->startChase();
 						}
 					}
 				}
