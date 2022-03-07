@@ -49,7 +49,7 @@ int main()
 	state.buildings[BUILDINGS::BANK] = &bank;
 
 	Garage engineGarage(0);
-	state.buildings.[BUILDINGS::GARAGE1] = &engineGarage;
+	state.buildings[BUILDINGS::GARAGE1] = &engineGarage;
 	
 	CornerStore cornerStore1(PxVec3(-24.470, 0.964, -11.839));
 	state.buildings[BUILDINGS::CORNERSTORE1] = &cornerStore1;
@@ -323,7 +323,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					glUniformMatrix4fv(glGetUniformLocation(graphics->shader3D->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 					//state->buildings[0]->trigger->draw();
 					// render a box (hardcoded with same dimensions as physx one) using the model and cam matrix
-					if(police_car->headlights !=  nullptr) police_car->headlights->draw();
+					//if(police_car->headlights !=  nullptr) police_car->headlights->draw();
 				}
 				else if (h.any().getType() == PxGeometryType::eSPHERE)
 				{
