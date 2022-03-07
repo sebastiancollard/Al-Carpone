@@ -151,13 +151,26 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state)
 			
 			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
 			{
-				state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
-				state.selectedLevel = selectedOption;
-				selectedOption = 0;
+				if (!state.cross_isHeld) 
+				{
+					if (selectedOption == 3) 
+					{
+						state.cross_isHeld = true;
+						return;
+					}
+					state.gamestate = GAMESTATE_INGAME;
+					state.selectedLevel = selectedOption;
+					selectedOption = 0;
+				}
+				state.cross_isHeld = true;
 				return;
 				//std::cout << "CROSS (xbox a, ns pro b)" << std::endl;
 			}
-
+			else 
+			{
+				state.cross_isHeld = false;
+			}
+			
 			if ((controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_PRESS))
 			{
 				if (!state.dpad_downisHold) {
