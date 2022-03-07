@@ -35,6 +35,7 @@ if (physx_actors.size() == 0) {
 	}
 */
 std::vector<physx_actor_entity> physx_actors;
+std::vector<simple_renderable_object> simple_renderables;
 
 
 snippetvehicle::VehicleSceneQueryData* gVehicleSceneQueryData = NULL;

@@ -22,7 +22,8 @@ enum LEVELS {
 enum GAMESTATE {
 	GAMESTATE_MAIN_MENU,
 	GAMESTATE_PAUSE_MENU,
-	GAMESTATE_INGAME
+	GAMESTATE_INGAME,
+	GAMESTATE_CORNERSTORE
 };
 
 //Stores information pertaning to the current state of the game.
@@ -57,6 +58,7 @@ public:
 	bool S_isHeld = false;
 	bool W_isHeld = false;
 	bool M_isHeld = false;
+	bool N_isHeld = false;
 	bool f5_isHeld = false;
 	bool f_isHeld = false;
 	bool enter_isHeld = false;
