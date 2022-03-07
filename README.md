@@ -36,11 +36,9 @@ Sidenotes:
 
 TO RUN STANDALONE:
 
-	1) Download archive at https://drive.google.com/file/d/1LUCBrEu6DQXOc6_SU52aRY_-NU2eY3Cp/view?usp=sharing
-
-	2) Extract AlCarpone.zip to create the 'Release' folder
-	
-	3) Run Release/CPSC585.exe
+	1) Download the Release.zip archive provided below
+	2) Extract Release.zip to create the 'Release' folder
+	3) Run Release/AL_CARPONE.exe
 	
 CONTROLS:
 
@@ -56,6 +54,7 @@ CONTROLS:
 		ESC: Return to menu (Level select)
 		R: Restart 
 		C: Look behind
+		E: Use item
 		F: Rob bank (When in range)
 		Shift: Boost (Might be a powerup eventually, but for now it's just for fun while testing)
 
