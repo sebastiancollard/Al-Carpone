@@ -8,8 +8,7 @@
 #include "physx_globals.h" //TODO remove later
 
 //Update these as we tune
-#define CAR_MAX_VELOCITY_FORWARD 40.0f
-#define CAR_MAX_VELOCITY_BACKWARD -11.35f
+
 
 
 // General Function
@@ -23,7 +22,7 @@ glm::vec3 getGLMvec3(PxVec3 v) {
 
 
 FreeCamera::FreeCamera(Player& p) : player(p) {
-    movementSpeed = 10.0f;
+    movementSpeed = 50.0f;
     mouseSensitivity = 5.0f;
     zoom = 60.0f;
 
@@ -72,11 +71,11 @@ void FreeCamera::handleInput(GLFWwindow* window, State& state) {
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         {
-            movementSpeed = 50.f;
+            movementSpeed = 500.f;
         }
         else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
         {
-            movementSpeed = 10.f;
+            movementSpeed = 50.f;
         }
     }
     // Handles mouse inputs
@@ -331,7 +330,7 @@ void BoundCamera::checkClipping(GLFWwindow* window) {
     ////shapePose = shapePose.transform(PxTransform(PxVec3(0, 10, 0)));
     //float halfExtent = 5.f;
     //physx::PxBoxGeometry box(halfExtent, halfExtent, halfExtent);
-    //physx::PxVec3 pos(0, 20, 0);
+    //physx::PxVec3 origin(0, 20, 0);
     //physx::PxQuat orientation(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
     //
     //
@@ -359,13 +358,13 @@ void BoundCamera::updateLook() {
     //apply rotation to dir about players direction
     glm::vec4 transformedDir(playerDirHorizontalProjection, 1.0f);
     transformedDir = transformedDir * rot;
-    //apply rotation to pos
+    //apply rotation to origin
     glm::vec4 posOffset((-playerDirHorizontalProjection * radius + glm::vec3(0, verticalOffset, 0)), 1.0f);
     posOffset = posOffset * rot;
 
     dir = glm::normalize(glm::vec3(transformedDir.x, transformedDir.y, transformedDir.z));
 
-    //Add the offset vector to the playerpos to get the updated pos
+    //Add the offset vector to the playerpos to get the updated origin
     glm::vec3 playerPos = player.getPos();
     pos = glm::vec3(playerPos.x + posOffset.x, playerPos.y + posOffset.y, playerPos.z + posOffset.z);
 

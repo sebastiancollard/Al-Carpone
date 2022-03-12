@@ -55,7 +55,7 @@ void main()
 		vec4 lPos = vec4(light_positions[i], 1.0f);
 		vec4 lDir = FragPos - lPos;
 		float d = length(lPos - FragPos);
-		illum +=  2.5f * abs(dot(lDir, vec4(Normal, 1.0))) / (d*d);
+		illum +=  15.f * abs(dot(lDir, vec4(Normal, 1.0))) / (pow(d,2.5));
 
 		// specular lighting
 		vec3 normal = normalize(Normal);

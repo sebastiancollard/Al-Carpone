@@ -15,11 +15,13 @@
 // Systems
 #include "GraphicsSystem.h"
 #include "PhysicsSystem.h"
+#include "AudioSystem.h"
 #include "miscFunctions.h"
 
 // Window elements
 #include "DebugPanel.h"
 #include "MainMenu.h"
+#include "PauseMenu.h"
 #include "UI.h"
 
 // Game Elements
@@ -31,13 +33,11 @@
 #include "Player.h"
 #include "PoliceCar.h"
 #include "Bank.h"
+#include "Exit.h"
+#include "CornerStore.h"
+#include "Garage.h"
 
-
-
-
-
-
-
+#include "PowerUp.h"
 
 //Used for debugging
 void printMat4(glm::mat4 m) {

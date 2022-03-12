@@ -2,12 +2,12 @@
 
 #include <iostream>
 #include <queue>
-#include<glad/glad.h>
-#include<GLFW/glfw3.h>
-
 #include "Vehicle.h"
 #include "State.h"
+#include "PowerUp.h"
 
+// For compiler not to complain
+class State;
 
 
 /*
@@ -16,20 +16,37 @@ Player Entity Class
 */
 
 
+
+
 class Player : public Vehicle {
 
 private:
+	
+	static Player player;		//static instance of itself
 
-	bool can_rob = false;		//If player "collides" with trigger capsule, this shoudl be set to true
-	int cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+	bool footIsOnGas;
+	bool footIsOnBrake;
 
+	
+
+	bool detectable = true;		//does not do anything yet. flag that specifies whether the player is detectable to enemies
+	double cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+
+	double cashRateMultiplier = 5;
+
+	PowerUp equippedPower =  PowerUp();
+	bool can_choosePowerTool = false;
 
 public:
+
+	Timer jailTimer;
+
+	bool isSeen = false;
 
 	Player() {}
 
 	//Call parrent constructor
-	Player(int ID) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, PxVec3(0,0,0)) {}
+	Player(int ID) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, PxVec3(0, 0, 0)) {}
 
 
 	// Must be called after graphics system is initalized!
@@ -39,11 +56,25 @@ public:
 	// Handle all key inputs relevant to driving
 	void handleInput(GLFWwindow* window, State& state);
 
+	bool footOnGas();
+	bool footOnBrake();
+
+	bool canExit(State& state);
+
+	void sendToJail(State& state);
 
 	// Robbing Mehcanism
 	int getCash();
-	bool canRob(State& state);
-	void setRob(bool b);
-	void addCash(int amount);
-	void setCash(int amount);
+	void addCash(double amount);
+	void setCash(double amount);
+	void setPos(PxTransform T);
+	
+	//Power-up related mechanisms
+	bool isDetectable();
+	void setDetectable(bool can_detect);
+	PowerUp* getPower();
+	void usePower();
+	void updatePower();
+	bool canChooseTool(State& state);
+	void setChooseTool(bool b);
 };

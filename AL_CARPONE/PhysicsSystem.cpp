@@ -4,6 +4,9 @@
 #include "physXVehicleFunctions.h"
 #include "PxCustomEventCallback.h"
 #include "physx_globals.h"
+#include "util.h"
+#include "State.h"
+#include "PoliceCar.h"
 
 #define PVD_HOST "127.0.0.1"	//Set this to the IP address of the system running the PhysX Visual Debugger that you want to connect to.
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL; }
@@ -19,7 +22,7 @@ using namespace snippetvehicle;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-PhysicsSystem::PhysicsSystem(State& s, Player& p, Bank& bank) : state(s), player(p)
+PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 {
 	unsigned int ID = 0;
 	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
@@ -39,7 +42,7 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p, Bank& bank) : state(s), player
 	gScene = gPhysics->createScene(sceneDesc);
 
 	//Set the callback to the custom callback class (subclass of SimulationEventCallback)
-	gScene->setSimulationEventCallback(new PxCustomEventCallback(state, player, bank));
+	gScene->setSimulationEventCallback(new PxCustomEventCallback(state, player));
 
 
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
@@ -93,16 +96,21 @@ void PhysicsSystem::step(GLFWwindow* window)
 
 		if (timestep < 1.0f / 60.0f) substep = timestep;
 
-		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
+		for (int i = 0; i < state.activeVehicles.size(); i++) {
 
-		updateDrivingMode(player);
+			//Update the control inputs for the vehicle.dwd
+			if (state.activeVehicles[i] == &player) {
+				if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
+			}
+			else {
+				((PoliceCar*)(state.activeVehicles[i]))->handle(window, player, state);
+			}
+			updateDrivingMode(*state.activeVehicles[i]);
+			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, state.activeVehicles[i]->vehicleInAir, *state.activeVehicles[i]->vehiclePtr);
 
-		//Update the control inputs for the vehicle.dwd
-		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, player.vehicleInAir, *player.vehiclePtr);
 
-		for (Vehicle* v : state.activeVehicles) {
 			//Raycasts.
-			PxVehicleWheels* vehicles[1] = { v->vehiclePtr };
+			PxVehicleWheels* vehicles[1] = { state.activeVehicles[i]->vehiclePtr };
 			PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
 			const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
 			PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
@@ -115,7 +123,7 @@ void PhysicsSystem::step(GLFWwindow* window)
 			PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
 
 			//Work out if the vehicle is in the air.
-			v->vehicleInAir = v->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+			state.activeVehicles[i]->vehicleInAir = state.activeVehicles[i]->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
 		}
 
 		//Scene update.
@@ -173,13 +181,31 @@ void PhysicsSystem::cleanup()
 void PhysicsSystem::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
 {
 	static PxU32 dynamicCounter = 0;
-
+	
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
 	dynamic->setAngularDamping(0.5f);
 	dynamic->setLinearVelocity(velocity);
 	gScene->addActor(*dynamic);
 
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
+}
+
+PxRigidDynamic* PhysicsSystem::createDynamicItem(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
+{
+	static PxU32 dynamicCounter = 0;
+
+	PxShape* shape = gPhysics->createShape(geometry, *gMaterial);
+	PxFilterData filter(COLLISION_FLAG_ITEM, COLLISION_FLAG_ITEM_AGAINST, 0, 0);
+	shape->setSimulationFilterData(filter);
+
+	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, *shape, 10.0f);
+
+	dynamic->setAngularDamping(0.5f);
+	dynamic->setLinearVelocity(velocity);
+	gScene->addActor(*dynamic);
+
+	physx_actors.push_back({ dynamic, dynamicCounter++ });
+	return dynamic;
 }
 
 
@@ -210,13 +236,13 @@ PxTriangleMesh* PhysicsSystem::createTriangleMesh(const PxVec3* verts, const PxU
 PxTriangleMesh* PhysicsSystem::createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection)
 {
 	std::vector<std::string> level_physx_paths{
+		"models/map/map_physx.obj",
 		"models/tuning_testlevel/tuning_testlevel_physx.obj",
 		"models/racetrack/racetrack_physx.obj",
-		"models/ai_testlevel/ai_testlevel_physx.obj",
-		"models/city_prototype/city_prototype_physx.obj"
+		"models/map/garage_door.obj"
 	};
 
-	Model level(level_physx_paths[state.selectedLevel]);
+	Model level(level_physx_paths[selection]);
 
 	std::vector<PxVec3> model_positions;
 	std::vector<PxU32> model_indices;

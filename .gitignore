@@ -360,3 +360,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+AL_CARPONE/models/map/map.obj
+AL_CARPONE/models/map/map_physx.obj

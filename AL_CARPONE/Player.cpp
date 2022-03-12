@@ -1,6 +1,5 @@
 #include "Player.h"
 
-
 #define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
 #define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
 #define CAR_RWHEEL_PATH "models/al_carpone/car_Rwheel.obj"
@@ -15,6 +14,16 @@ void Player::createModel() {
 	car = new CarModel4W(car_chassis, car_lwheel, car_rwheel);
 }
 
+void Player::setPos(PxTransform T) {
+	vehiclePtr->getRigidDynamicActor()->setGlobalPose(T);
+}
+
+void Player::sendToJail(State& state) {
+	printf("GO TO JAIL!\n");
+
+	state.gamestate = GAMESTATE::GAMESTATE_JAILED;
+	return;
+}
 
 ///////////////////////////////////////////////////////////////////////
 // ROBING FUNCTIONS
@@ -25,20 +34,68 @@ void Player::createModel() {
 int Player::getCash() {
 	return cash;
 }
-bool Player::canRob(State& state) {
-	return can_rob && state.selectedLevel == 0;
-}
-
-void Player::setRob(bool b) {
-	can_rob = b;
-}
-void Player::addCash(int amount) {
+void Player::addCash(double amount) {
 	cash += amount;
 }
-void Player::setCash(int amount) {
+void Player::setCash(double amount) {
 	cash = amount;
 }
 
+///////////////////////////////////////////////////////////////////////
+// POWER-UP FUNCTIONS
+///////////////////////////////////////////////////////////////////////
+void Player::setDetectable(bool b) {
+	detectable = b;
+}
+bool Player::isDetectable() {
+	return detectable;
+}
+
+PowerUp* Player::getPower() {
+	return &equippedPower;
+}
+
+void Player::usePower() {
+	//std:cout << equippedPower.getType() << std::endl;
+	if (equippedPower.getType() == CAMOUFLAGE) {
+		equippedPower.activateTimed();
+		detectable = false;	
+	}
+	else {
+		equippedPower.dropOrThrow();
+	}
+}
+
+void Player::updatePower() {
+	equippedPower.updateTimed();
+
+	if (equippedPower.shouldDespawn()) {
+		if (equippedPower.getType() == CAMOUFLAGE)
+			detectable = true;
+	}
+}
+
+bool Player::canChooseTool(State& state) {
+	return can_choosePowerTool && state.selectedLevel == LEVELS::LEVEL_MAIN;
+}
+
+void Player::setChooseTool(bool b) {
+	can_choosePowerTool = b;
+}
+
+bool Player::footOnGas() {
+	return footIsOnGas;
+}
+
+bool Player::footOnBrake() {
+	return footIsOnBrake;
+}
+
+
+bool Player::canExit(State& state) {
+	//Check that in exit triggerbox and that player cash > exit requirement
+	return cash > 10.0f && state.selectedLevel == LEVELS::LEVEL_MAIN;
+}
 
 ///////////////////////////////////////////////////////////////////////
 // INPUT HANDLING
@@ -54,9 +111,16 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			glm::vec3 left = -getRight();
 			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 		}
+
+		state.W_isHeld = true;
+	}
+	else{
+		state.W_isHeld = false;
 	}
 
-	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+	footIsOnGas = state.W_isHeld;
+
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 		if (vehicleInAir) {
 			glm::vec3 right = getRight();
@@ -82,7 +146,26 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
+		state.space_isHeld = true;
+
 	}
+	else state.space_isHeld = false;
+
+	footIsOnBrake = state.space_isHeld;
+
+	// Handle interactions
+	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
+
+		for (Building* b : state.buildings) {
+			if (b == nullptr) continue;
+			if (b->isInRange) {
+				b->triggerFunction(*this, state);
+			}
+		}
+
+		state.f_isHeld = true;
+	}
+	else state.f_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld) {
 		glm::vec3 front = getDir();
@@ -92,6 +175,11 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
 		state.shift_isHeld = false;
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		usePower();
+	}
+
 	/*
 	this part handles controller input,
 	line "std::cout << controller_name << std::endl;" will print out the current input controller's name
@@ -111,50 +199,52 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
 		{
 			float forwardOrbackward, leftOrRightturn;
-			forwardOrbackward = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
+			//forwardOrbackward = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
 			leftOrRightturn = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
 
-			if (forwardOrbackward >= 0.1)
+			if (state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
 			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);
+				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 				if (vehicleInAir) {
 					glm::vec3 right = getRight();
 					vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(right.x, right.y, right.z));
 				}
-				accel = true;
+				//std::cout << "left trigger: " << state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
 			}
-			if (forwardOrbackward <= -0.1)
+			if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
 			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);
+				footIsOnGas = true;
+				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
 				if (vehicleInAir) {
 					glm::vec3 left = -getRight();
 					vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 				}
-				accel = true;
+				//std::cout << "right trigger: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
 			}
-			if (leftOrRightturn >= 0.5)
+			
+			if (leftOrRightturn < -0.15)
 			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
-				if (vehicleInAir) {
-					glm::vec3 front = getDir();
-					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
-				}
-			}
-			if (leftOrRightturn <= -0.5)
-			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
+				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		
 				if (vehicleInAir) {
 					glm::vec3 back = -getDir();
 					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(back.x, back.y, back.z));
 				}
 			}
-			if (leftOrRightturn > -0.5 && leftOrRightturn < 0.5 && forwardOrbackward < 0.1 && forwardOrbackward > -0.1 && accel == true)
+			else if (leftOrRightturn > 0.15)
 			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
-				accel = false;
+				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	
+				if (vehicleInAir) {
+					glm::vec3 front = getDir();
+					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
+				}
 			}
-
+			if (state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
+			{
+				//std::cout << "left bumber (L1)" << std::endl;	//ps4 L1
+				usePower();
+			}
 		}
 	}
+
 
 }

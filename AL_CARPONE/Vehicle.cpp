@@ -1,6 +1,5 @@
 #include "Vehicle.h"
-#include "physx_globals.h"
-#include <iostream>
+#include "State.h"
 
 
 
@@ -102,6 +101,36 @@ glm::vec3 Vehicle::getAngularVelocity() {
 	return glm::vec3(velo.x, velo.y, velo.z);
 }
 
+float Vehicle::getForwardVelocity() {
+	return glm::dot(getLinearVelocity(), getDir());
+}
+
+float Vehicle::getForwardAcceleration() {
+	return glm::dot(acceleration, getDir());
+}
+
+float Vehicle::getForwardJerk() {
+	return glm::dot(jerk, getDir());
+}
+
+void Vehicle::updatePhysicsVariables(double dt) {
+
+	if (dt == 0) return;
+
+	glm::vec3 newVelocity = getLinearVelocity(); 
+	glm::vec3 newAcceleration = (newVelocity - velocity) / (float)dt; // a = dv/dt
+	glm::vec3 newJerk = (newAcceleration - acceleration) / (float)dt; // j = da/dt = ddv/ddt
+
+	jerk = newJerk;
+	acceleration = newAcceleration;
+	velocity = newVelocity;
+
+	//printf("dt[%.4f]	VELOCITY[%.5f]	ACCELERATION[%.5f]	JERK[%.5f]\n",(float)dt, glm::length(velocity),glm::length(acceleration),glm::length(jerk));	
+}
+
+void Vehicle::updateSpeed(double newSpeed) {
+	speed = newSpeed;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,11 +197,19 @@ glm::vec3 Vehicle::getPos() {
 	PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
 	actorPtr->getShapes(shapes, nbShapes);
 
-	PxTransform shape(PxShapeExt::getGlobalPose(*shapes[4], *actorPtr)); // index 6 here is the box, 0 through 5 are the balls, we'll have to find a better way to do this.
+	PxTransform shape(PxShapeExt::getGlobalPose(*shapes[4], *actorPtr)); // index 4 here is the box, 0 through 3 are the wheels, we'll have to find a better way to do this.
 
 	return glm::vec3(shape.p.x, shape.p.y, shape.p.z);
 }
 
+
+bool Vehicle::isMoving() {
+	return glm::length(getLinearVelocity()) > 0.0f;
+}
+
+bool Vehicle::isChangingGears() {
+	return vehicleChangingGears;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // RESETS
@@ -185,6 +222,7 @@ void Vehicle::setResetPoint(PxTransform t) {
 
 
 void Vehicle::reset() {
+	targetIndex = 0;
 	actorPtr->setGlobalPose(startTransform);
 	vehiclePtr->getRigidDynamicActor()->setAngularVelocity(PxVec3(0, 0, 0));
 	vehiclePtr->getRigidDynamicActor()->setLinearVelocity(PxVec3(0, 0, 0));

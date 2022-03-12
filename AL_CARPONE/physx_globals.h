@@ -2,6 +2,7 @@
 #include "snippetvehiclecommon/SnippetVehicleSceneQuery.h"
 #include "PxPhysicsAPI.h"
 #include <vector>
+#include "Model.h"
 
 using namespace physx;
 
@@ -32,10 +33,21 @@ struct physx_actor_entity
 };
 extern std::vector<physx_actor_entity> physx_actors;
 
+struct simple_renderable_object {
+	PxRigidActor* actorPtr;
+	Model model;
+	std::string name;
+};
+extern std::vector<simple_renderable_object> simple_renderables;
+
 extern snippetvehicle::VehicleSceneQueryData* gVehicleSceneQueryData;
 extern PxBatchQuery* gBatchQuery;
 
 extern PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs;
 
 extern PxRigidStatic* gGroundPlane;
+extern PxRigidStatic* garageDoor;
+extern bool garageDoorOpen;
+extern bool garageDoorPrev;
+
 extern PxActor* activeLevelActorPtr;

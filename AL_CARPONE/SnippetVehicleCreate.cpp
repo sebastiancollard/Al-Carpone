@@ -37,10 +37,10 @@
 
 
 #define CHASSIS_PHYSX_OBJ_PATH "models/al_carpone/chassis_physx.obj"
-#define WHEEL_PHYSX_OBJ_PATH "models/al_carpone/car_Lwheel.obj"
+#define WHEEL_PHYSX_OBJ_PATH "models/al_carpone/car_Lwheel_physx.obj"
 
 #define POLICE_CAR_CHASSIS_PHYSX_PATH "models/police_car/police_car_chassis_physx.obj"
-#define POLICE_CAR_WHEEL_PHYSX_PATH "models/police_car/police_car_wheel_left.obj"
+#define POLICE_CAR_WHEEL_PHYSX_PATH "models/police_car/police_car_wheel_left_physx.obj"
 
 namespace snippetvehicle
 {
