@@ -16,7 +16,7 @@
 #include "GraphicsSystem.h"
 #include "PhysicsSystem.h"
 #include "AudioSystem.h"
-#include "miscFunctions.h"
+#include "specialInputHandler.h"
 
 // Window elements
 #include "DebugPanel.h"
@@ -38,6 +38,9 @@
 #include "Garage.h"
 
 #include "PowerUp.h"
+
+
+
 
 //Used for debugging
 void printMat4(glm::mat4 m) {

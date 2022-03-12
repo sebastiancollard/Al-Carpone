@@ -59,33 +59,12 @@ public:
 				}
 
 				// Headlights
-				for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
+				for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
 
-					if (v == state.activeVehicles[0]) { // This is player -> skip
-						continue;
-					}
-
-					else {
-						PoliceCar* popo;
-
-						try {
-							popo = (PoliceCar*)v; // Just in case
-						}
-						catch (exception e) {
-							std::cerr << "Couldn't cast vehicle to PoliceCar: " << e.what() << std::endl;
-							continue;
-						}
-						
-						if ((pairs[i].triggerActor == popo->headlights->ptr) && (player.isDetectable())) {
-							player.isSeen = !player.isSeen;
-							//std::cout << player.isSeen << std::endl;
-							if(player.isSeen) popo->startChase();
-							player.jailTimer.reset();
-						}
-
-						
-
-			
+					if ((pairs[i].triggerActor == popo->headlights->ptr) && (player.isDetectable())) {
+						player.isSeen = !player.isSeen;
+						if(player.isSeen) popo->startChase();
+						player.jailTimer.reset();
 					}
 				}
 			}

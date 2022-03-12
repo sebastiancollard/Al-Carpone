@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <vector>
+#include "Player.h"
 #include "Vehicle.h"
 #include "Building.h"
 #include "PoliceCar.h"
@@ -16,6 +17,7 @@
 
 
 // For compiler not to complain
+class Player;
 class Building;
 class Vehicle;
 class PoliceCar;
@@ -70,7 +72,8 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
-	std::vector<Vehicle*> activeVehicles = {};
+	// TODO: player + activepoliceVehicles instead of activeVehicles
+	Player* player;
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<Building*> buildings = 
 	{

@@ -217,7 +217,7 @@
     <ClInclude Include="init.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="miscFunctions.h" />
+    <ClInclude Include="specialInputHandler.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PhysicsSystem.h" />

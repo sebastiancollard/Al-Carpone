@@ -8,7 +8,7 @@
 #include <fstream>
 
 
-
+// Read file containing a list of vectors
 static std::vector<glm::vec3> load_positions(std::string path) {
 	std::vector<std::string> lines;
 	std::string line;

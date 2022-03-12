@@ -293,7 +293,7 @@
     <ClInclude Include="init.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="miscFunctions.h">
+    <ClInclude Include="specialInputHandler.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
     <ClInclude Include="State.h">

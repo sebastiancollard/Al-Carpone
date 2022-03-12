@@ -96,34 +96,14 @@ void PhysicsSystem::step(GLFWwindow* window)
 
 		if (timestep < 1.0f / 60.0f) substep = timestep;
 
-		for (int i = 0; i < state.activeVehicles.size(); i++) {
+		// Handle Player Vehicle
+		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
+		simulate_vehicle(&player, substep);
 
-			//Update the control inputs for the vehicle.dwd
-			if (state.activeVehicles[i] == &player) {
-				if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
-			}
-			else {
-				((PoliceCar*)(state.activeVehicles[i]))->handle(window, player, state);
-			}
-			updateDrivingMode(*state.activeVehicles[i]);
-			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, state.activeVehicles[i]->vehicleInAir, *state.activeVehicles[i]->vehiclePtr);
-
-
-			//Raycasts.
-			PxVehicleWheels* vehicles[1] = { state.activeVehicles[i]->vehiclePtr };
-			PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
-			const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
-			PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
-
-
-			//Vehicle update.
-			const PxVec3 grav = gScene->getGravity();
-			PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
-			PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, player.vehiclePtr->mWheelsSimData.getNbWheels()} };
-			PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
-
-			//Work out if the vehicle is in the air.
-			state.activeVehicles[i]->vehicleInAir = state.activeVehicles[i]->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+		// Handle Police Vehicles
+		for (PoliceCar* policecar : state.activePoliceVehicles) {
+			policecar->handle(window, player, state);
+			simulate_vehicle(policecar, substep);
 		}
 
 		//Scene update.
@@ -135,6 +115,31 @@ void PhysicsSystem::step(GLFWwindow* window)
 }
 
 
+void PhysicsSystem::simulate_vehicle(Vehicle* vehicle, float substep) {
+	updateDrivingMode(*vehicle);
+	PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, vehicle->vehicleInAir, *vehicle->vehiclePtr);
+
+
+	//Raycasts.
+	PxVehicleWheels* vehicles[1] = { vehicle->vehiclePtr };
+	PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+	const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
+	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+
+
+	//Vehicle update.
+	const PxVec3 grav = gScene->getGravity();
+	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
+	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, player.vehiclePtr->mWheelsSimData.getNbWheels()} };
+	PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+
+	//Work out if the vehicle is in the air.
+	vehicle->vehicleInAir = vehicle->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+}
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Cleanup PHYSICS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,9 +149,12 @@ void PhysicsSystem::step(GLFWwindow* window)
 void PhysicsSystem::cleanup()
 {
 	// Free Vehicle Pointers
-	for (Vehicle* v : state.activeVehicles) {
-		v->vehiclePtr->getRigidDynamicActor()->release();
-		v->vehiclePtr->free();
+	player.vehiclePtr->getRigidDynamicActor()->release();
+	player.vehiclePtr->free();
+
+	for (PoliceCar* p : state.activePoliceVehicles) {
+		p->vehiclePtr->getRigidDynamicActor()->release();
+		p->vehiclePtr->free();
 	}
 
 	// TODO release trigger actors?

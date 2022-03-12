@@ -41,8 +41,7 @@ int main()
 	//TODO Cleanup
 	//Setup main player vehicle
 	player = Player(0);
-	//Add it to the list of active vehicles
-	state.activeVehicles.push_back(&player);
+	state.player = &player;
 
 	// Build list of buildings
 	Bank bank;
@@ -136,9 +135,9 @@ int main()
 			mainMenu.drawMenu(graphics, state);
 			
 			// Despawn any additional active vehicles (enemies)
-			while (state.activeVehicles.size() > 1) {
-				despawnEnemy(state.activeVehicles.back());
-				state.activeVehicles.pop_back();
+			while (state.activePoliceVehicles.size() > 0) {
+				despawnEnemy(state.activePoliceVehicles.back());
+				state.activePoliceVehicles.pop_back();
 			}
 		
 			
@@ -161,25 +160,21 @@ int main()
 					police_car1 = PoliceCar(1);
 					police_car1.moveStartPoint(PxVec3(559.949, 31.3, -360.091));
 					police_car1.createModel();
-					state.activeVehicles.push_back(&police_car1);
 					state.activePoliceVehicles.push_back(&police_car1);
 
 					police_car2 = PoliceCar(2);
 					police_car2.moveStartPoint(PxVec3(419.948730, 21.455765, -60.534622));
 					police_car2.createModel();
-					state.activeVehicles.push_back(&police_car2);
 					state.activePoliceVehicles.push_back(&police_car2);
 					
 					police_car3 = PoliceCar(3);
 					police_car3.moveStartPoint(PxVec3(100.000031, 0.299998, -220.079498));
 					police_car3.createModel();
-					state.activeVehicles.push_back(&police_car3);
 					state.activePoliceVehicles.push_back(&police_car3);
 					
 					police_car4 = PoliceCar(4);
 					police_car4.moveStartPoint(PxVec3(-99.999969, 0.299998, -220.079498));
 					police_car4.createModel();
-					state.activeVehicles.push_back(&police_car4);
 					state.activePoliceVehicles.push_back(&police_car4);
 
 					gScene->addActor(*garageDoor);
@@ -205,12 +200,13 @@ int main()
 					//spawn police car on tuning level
 					police_car1 = PoliceCar(1);
 					police_car1.createModel();
-					state.activeVehicles.push_back(&police_car1);
+					state.activePoliceVehicles.push_back(&police_car1);
 				}
 				
 				//Reset active vehicles
-				for (Vehicle* v : state.activeVehicles) {
-					v->reset();
+				player.reset();
+				for (PoliceCar* p : state.activePoliceVehicles) {
+					p->reset();
 				}
 
 			}

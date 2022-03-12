@@ -7,7 +7,7 @@
 #include "Player.h"
 #include "AudioSystem.h"
 
-
+// TODO make functions for each input (so gamepad and keyboard are the same)
 //Checks for special inputs that would alter the state, and updates state accordingly
 void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioSystem* audio)
 {
@@ -56,8 +56,9 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 	{
 		if (!state.R_isHeld) {
-			for (Vehicle* v : state.activeVehicles) {
-				v->reset();
+			player.reset();
+			for (PoliceCar* p : state.activePoliceVehicles) {
+				p->reset();
 			}
 		}
 		state.R_isHeld = true;
@@ -113,9 +114,9 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 				//std::cout << "TRIANGLE (xbox y, ns pro x)" << std::endl;
 				if (!state.triangle_isHeld)
 				{
-					for (Vehicle* v : state.activeVehicles)
-					{
-						v->reset();
+					player.reset();
+					for (PoliceCar* p : state.activePoliceVehicles) {
+						p->reset();
 					}
 				}
 				state.R_isHeld = true;
