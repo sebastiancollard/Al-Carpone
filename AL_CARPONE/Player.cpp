@@ -4,14 +4,32 @@
 #define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
 #define CAR_RWHEEL_PATH "models/al_carpone/car_Rwheel.obj"
 
+#define POLICE_CAR_CHASSIS_PATH "models/police_car/police_car_chassis.obj"
+#define POLICE_CAR_LWHEEL_PATH "models/police_car/police_car_wheel_left.obj"
+#define POLICE_CAR_RWHEEL_PATH "models/police_car/police_car_wheel_right.obj"
 
-void Player::createModel() {
 
-	Model car_chassis(CAR_CHASSIS_PATH);
+void Player::createModel(){
+	Model car_chassis(CAR_CHASSIS_PATH);			//creates the player (al carpone) model
 	Model car_lwheel(CAR_LWHEEL_PATH);
 	Model car_rwheel(CAR_RWHEEL_PATH);
+	player_model = new CarModel4W(car_chassis, car_lwheel, car_rwheel);
+	car = player_model;
 
-	car = new CarModel4W(car_chassis, car_lwheel, car_rwheel);
+	Model police_chassis(POLICE_CAR_CHASSIS_PATH);	//creates a police car model to use with camouflage power
+	Model police_lwheel(POLICE_CAR_LWHEEL_PATH);
+	Model police_rwheel(POLICE_CAR_RWHEEL_PATH);
+	police_model = new CarModel4W(police_chassis, police_lwheel, police_rwheel);
+}
+
+void Player::setCurrentModel(VEHICLE_TYPE type) {
+	if (type == AL_CARPONE) {
+		car = player_model;
+	}
+	else {
+		car = police_model;
+	}
+	model_type = type;
 }
 
 void Player::setPos(PxTransform T) {
@@ -50,6 +68,12 @@ void Player::setDetectable(bool b) {
 bool Player::isDetectable() {
 	return detectable;
 }
+
+VEHICLE_TYPE Player::getCurrentModelType() {
+	return model_type;
+}
+
+
 
 PowerUp* Player::getPower() {
 	return &equippedPower;

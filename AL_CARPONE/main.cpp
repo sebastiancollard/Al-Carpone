@@ -541,4 +541,13 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		//player->getPower()->setType(NONE);
 
 	}
+	else if (!player->isDetectable() && player->getCurrentModelType() == AL_CARPONE) {			//PLAYER IS CAMOUFLAGED
+		player->setCurrentModel(POLICE_CAR);
+	}
+	else if (player->isDetectable() && player->getCurrentModelType() == POLICE_CAR) {			//PLAYER HAS JUST COME OUT OF CAMOUFLAGE
+		player->setCurrentModel(AL_CARPONE);
+	}
+
+
+
 }
