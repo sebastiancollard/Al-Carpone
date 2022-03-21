@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Model.h"
 
 typedef unsigned int uint;
 
@@ -31,6 +32,8 @@ public:
 
 	// stores three values per upgrade tier. 1: delta that affects the target parameter 2: whether the delta is multiplicative or additive 3: cost for the given tier
 	std::vector<std::tuple<float, bool, uint>> upgradeInfo;
+	
+	std::vector<Model> menuElements;
 
 	Upgrade(uint upgradeType, uint upgradeSpecifier, uint highestTier);
 

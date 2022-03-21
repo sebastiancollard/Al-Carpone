@@ -5,7 +5,6 @@
 #include "PxCustomEventCallback.h"
 
 
-#define CASH_ROBBED_PER_FRAME 5		// $5 per frame for now?
 
 using namespace physx;
 using namespace snippetvehicle;
@@ -19,5 +18,5 @@ void Bank::createTrigger() {
 }
 
 void Bank::triggerFunction(Player& player, State& state){
-	player.addCash((double) CASH_ROBBED_PER_FRAME * state.timeStep);
+	player.addCash((double) robRate * state.timeStep);
 }

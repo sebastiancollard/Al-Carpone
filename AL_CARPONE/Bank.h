@@ -14,6 +14,7 @@
 
 class Bank : public Building {
 
+
 	physx::PxVec3 b_pos = physx::PxVec3(490, 30, -430);	// Position currently hardcoded
 
 	float depth = 17.f;	 //y axis
@@ -21,6 +22,9 @@ class Bank : public Building {
 	float width = 17.f;	 //x axis
 
 public:
+
+	unsigned int robRate = 5;
+
 
 	Bank() { createTrigger(); }
 

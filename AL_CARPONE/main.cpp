@@ -48,11 +48,25 @@ int main()
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
 
-	Garage engineGarage(0, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19));
+	// engine upgrade variables
+	//player.vehiclePtr->mDriveSimData.getGearsData().mSwitchTime;
+	//player.vehiclePtr->mDriveSimData.getEngineData().mPeakTorque;
+
+	// robbery upgrade variables
+	//bank.robRate;
+	//state.activePoliceVehicles[0]->detectionRadius;
+
+	// handling upgrade variables
+	//player.vehiclePtr->mWheelsSimData.getSuspensionData(0).mSpringStrength;
+	//player.vehiclePtr->mWheelsSimData.getWheelData(0).mMaxSteer;
+	//gFrictionPairs->setTypePairFriction(gFrictionPairs->getTypePairFriction() * 1.1f);
+
+
+	Garage engineGarage(GarageTypes::ENGINE_GARAGE, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19));
 	state.buildings[BUILDINGS::GARAGE1] = &engineGarage;
-	Garage handlingGarage(1, PxVec3(-100, -20, -278), PxVec3(19, 2, 10));
+	Garage handlingGarage(GarageTypes::HANDLING_GARAGE, PxVec3(-100, -20, -278), PxVec3(19, 2, 10));
 	state.buildings[BUILDINGS::GARAGE2] = &handlingGarage;
-	Garage robbingGarage(2, PxVec3(862.1, 20, -280.11), PxVec3(29, 2, 29));
+	Garage robbingGarage(GarageTypes::ROBBING_GARAGE, PxVec3(862.1, 20, -280.11), PxVec3(29, 2, 29));
 	state.buildings[BUILDINGS::GARAGE3] = &robbingGarage;
 	PxFilterData groundPlaneSimFilterData(sv::COLLISION_FLAG_GROUND, sv::COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	garageDoor = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 3);

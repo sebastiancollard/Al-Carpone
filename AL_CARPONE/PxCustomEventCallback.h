@@ -44,7 +44,8 @@ public:
 						state.buildings[j]->isInRange = !state.buildings[j]->isInRange; // Set boolean value
 						if (state.buildings[j]->isInRange) {
 							//std::cout << "BUILDING IN RANGE!!!" << std::endl;
-							if (j == 1 || j == 2 || j == 3) std::cout << "garage!" << std::endl;; //garageDoorOpen = true;
+
+							state.buildings[j]->triggerFunction(player, state);
 						}
 						else {
 							//std::cout << "BUILDING OUT OF RANGE!!!" << std::endl;
