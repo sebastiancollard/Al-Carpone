@@ -48,11 +48,11 @@ int main()
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
 
-	Garage engineGarage(0, PxVec3(250, 0, -100), PxVec3(10, 2, 10));
+	Garage engineGarage(0, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19));
 	state.buildings[BUILDINGS::GARAGE1] = &engineGarage;
-	Garage handlingGarage(1, PxVec3(-100, -20, -270), PxVec3(20, 2, 10));
+	Garage handlingGarage(1, PxVec3(-100, -20, -278), PxVec3(19, 2, 10));
 	state.buildings[BUILDINGS::GARAGE2] = &handlingGarage;
-	Garage robbingGarage(2, PxVec3(846, 20, -280), PxVec3(20, 2, 15));
+	Garage robbingGarage(2, PxVec3(862.1, 20, -280.11), PxVec3(29, 2, 29));
 	state.buildings[BUILDINGS::GARAGE3] = &robbingGarage;
 	PxFilterData groundPlaneSimFilterData(sv::COLLISION_FLAG_GROUND, sv::COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	garageDoor = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 3);
@@ -271,6 +271,8 @@ int main()
 		///////////////////////////////////////////////////////////////
 		else {	
 			// toggles garage door physx objects
+			// must be done before physics.step()
+			garageDoorOpen = !player.beingChased(state);
 			if (garageDoorOpen && !garageDoorPrev) gScene->removeActor(*garageDoor);
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;

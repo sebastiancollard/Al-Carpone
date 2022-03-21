@@ -63,6 +63,8 @@ public:
 
 	void sendToJail(State& state);
 
+	bool beingChased(State& state);
+
 	// Robbing Mehcanism
 	int getCash();
 	void addCash(double amount);

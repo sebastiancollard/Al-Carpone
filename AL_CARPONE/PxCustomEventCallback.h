@@ -44,11 +44,11 @@ public:
 						state.buildings[j]->isInRange = !state.buildings[j]->isInRange; // Set boolean value
 						if (state.buildings[j]->isInRange) {
 							//std::cout << "BUILDING IN RANGE!!!" << std::endl;
-							if (j == 1 || j == 2 || j == 3) garageDoorOpen = true;
+							if (j == 1 || j == 2 || j == 3) std::cout << "garage!" << std::endl;; //garageDoorOpen = true;
 						}
 						else {
 							//std::cout << "BUILDING OUT OF RANGE!!!" << std::endl;
-							if (j == 1 || j == 2 || j == 3) garageDoorOpen = false;
+							if (j == 1 || j == 2 || j == 3); // garageDoorOpen = false;
 						} 
 					}
 					//if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr || pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) //corner store trigger area
