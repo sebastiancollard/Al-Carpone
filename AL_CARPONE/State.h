@@ -6,6 +6,7 @@
 #include "Vehicle.h"
 #include "Building.h"
 #include "PoliceCar.h"
+#include "Player.h"
 
 
 //Locked position and orientation. Used for third person view behind the car.
@@ -70,8 +71,10 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
-	std::vector<Vehicle*> activeVehicles = {};
 	std::vector<PoliceCar*> activePoliceVehicles = {};
+	std::vector<PoliceCar*> inactivePoliceVehicles = {};
+	Player* playerPtr;
+
 	std::vector<Building*> buildings = 
 	{
 		NULL, //BANK
@@ -109,22 +112,9 @@ public:
 	bool triangle_isHeld = false;
 	bool square_isHeld = false;
 	bool option_isHeld = false;
-	//Updates the state's time-sensitive variables.
-	void updateTime() {
-		currTime = glfwGetTime();
-		timeStep = currTime - prevTime;
-		prevTime = currTime;
-		timeSinceLastFpsUpdate += timeStep;
-	}
 
-	//Toggles the camera mode between bound and unbound.
-	void toggleCameraMode() {
-		if (cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
-			cameraMode = CAMERA_MODE_BOUND;
-		}
-		else {
-			cameraMode = CAMERA_MODE_UNBOUND_FREELOOK;
-		}
-	}
+	void updateTime();
+	void toggleCameraMode();
+	void resetVehicles();
 
 };

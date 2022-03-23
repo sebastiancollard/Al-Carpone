@@ -1,12 +1,59 @@
  //Initializes the physx system and all global variables and calls other includes.
 #include"init.h"
+#include"util.h"
 
 namespace sv = snippetvehicle;
 
-extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, PoliceCar*);
+bool debugmode = false;
+
+struct DebugTools {
+	Model red_arrow, blue_arrow, grey_arrow, red_node, blue_node, grey_node;
+	DebugTools() :
+		red_arrow("models/debug/red_arrow.obj"), blue_arrow("models/debug/blue_arrow.obj"), grey_arrow("models/debug/grey_arrow.obj"),
+		red_node("models/debug/red_node.obj"), blue_node("models/debug/blue_node.obj"), grey_node("models/debug/grey_node.obj") {}
+
+};
+
+extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools);
 extern void despawnEnemy(Vehicle*);
 extern void despawnItem();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
+
+void createPolice(DrivingNodes* drivingNodes, CarModel4W* policeCarModel, State& state) {
+
+	for (int i = 0; i < (int)drivingNodes->getPatrolRoutes().size(); i++) {
+		PoliceCar* p = new PoliceCar(i, drivingNodes);
+
+		glm::vec3 glmPOS = drivingNodes->getNextPatrolNodePosition(i, 0);
+		glm::vec3 glmDIR = drivingNodes->getNextPatrolNodePosition(i, 1) - drivingNodes->getNextPatrolNodePosition(i, 0);
+
+		p->setStart(PxVec3(glmPOS.x, glmPOS.y, glmPOS.z), PxVec3(glmDIR.x, 0, glmDIR.z));
+
+		p->reset();
+
+		state.inactivePoliceVehicles.push_back(p);
+		
+	}
+
+}
+
+void spawnPolice(State& state) {
+	while (state.inactivePoliceVehicles.size() > 0) {
+		state.activePoliceVehicles.push_back(state.inactivePoliceVehicles.back());
+		state.inactivePoliceVehicles.pop_back();
+
+		state.activePoliceVehicles.back()->reset();
+	}
+}
+
+void despawnPolice(State& state) {
+	while (state.activePoliceVehicles.size() > 0) {
+		state.inactivePoliceVehicles.push_back(state.activePoliceVehicles.back());
+		state.activePoliceVehicles.pop_back();
+	}
+}
+
+
 
 int main()
 {
@@ -41,8 +88,28 @@ int main()
 	//TODO Cleanup
 	//Setup main player vehicle
 	player = Player(0);
-	//Add it to the list of active vehicles
-	state.activeVehicles.push_back(&player);
+	state.playerPtr = &player;
+	
+	cout << "Initializing AI..." << endl;
+
+
+	//Setup police and driving nodes
+	DrivingNodes* dNodes = new DrivingNodes(
+		load_positions("models/map/PATROL_NODES.obj"), load_edges("models/map/PATROL_NODES.obj"),
+		load_positions("models/map/NAVIGATION_NODES.obj"), load_edges("models/map/NAVIGATION_NODES.obj"));
+
+	Model police_car_chassis("models/police_car/police_car_chassis.obj");
+	Model police_car_lwheel("models/police_car/police_car_wheel_left.obj");
+	Model police_car_rwheel("models/police_car/police_car_wheel_right.obj");
+
+	CarModel4W* policeCarModel = new CarModel4W(police_car_chassis, police_car_lwheel, police_car_rwheel);
+
+	createPolice(dNodes, policeCarModel, state);
+
+	DebugTools dTools;
+	
+	cout << "Initializing Buildings..." << endl;
+
 
 	// Build list of buildings
 	Bank bank;
@@ -68,13 +135,12 @@ int main()
 
 	SelectItem selectItem;
 
+	cout << "Initializing Player..." << endl;
+
+
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
-	PoliceCar police_car1;
-	PoliceCar police_car2;
-	PoliceCar police_car3;
-	PoliceCar police_car4;
-	
+
 
 	graphics.enableDepthBuffer();
 
@@ -83,6 +149,9 @@ int main()
 	BoundCamera boundCamera(player, state);	// Locked in a sphere around the car
 	FreeCamera freeCamera(player);		// Move and look freely anywhere (for debugging)
 	Camera* activeCamera = &boundCamera;
+
+	cout << "DONE!" << endl;
+
 
 	//////////////////////////////////////////////////////////////////////////
 	// MAIN LOOP
@@ -133,13 +202,9 @@ int main()
 		///////////////////////////////////////////////////////////////
 		else if (state.gamestate == GAMESTATE_MAIN_MENU) {
 			//Draw the menu
-			mainMenu.drawMenu(graphics, state);
+			mainMenu.drawMenu(graphics, state, &audio);
 			
-			// Despawn any additional active vehicles (enemies)
-			while (state.activeVehicles.size() > 1) {
-				despawnEnemy(state.activeVehicles.back());
-				state.activeVehicles.pop_back();
-			}
+			despawnPolice(state);
 		
 			
 			// If exiting the main menu
@@ -158,29 +223,8 @@ int main()
 					T.q = PxQuat(0.000010, 0.999808, 0.000475, -0.019572);
 					player.setResetPoint(T);
 
-					police_car1 = PoliceCar(1);
-					police_car1.moveStartPoint(PxVec3(559.949, 31.3, -360.091));
-					police_car1.createModel();
-					state.activeVehicles.push_back(&police_car1);
-					state.activePoliceVehicles.push_back(&police_car1);
+					spawnPolice(state);
 
-					police_car2 = PoliceCar(2);
-					police_car2.moveStartPoint(PxVec3(419.948730, 21.455765, -60.534622));
-					police_car2.createModel();
-					state.activeVehicles.push_back(&police_car2);
-					state.activePoliceVehicles.push_back(&police_car2);
-					
-					police_car3 = PoliceCar(3);
-					police_car3.moveStartPoint(PxVec3(100.000031, 0.299998, -220.079498));
-					police_car3.createModel();
-					state.activeVehicles.push_back(&police_car3);
-					state.activePoliceVehicles.push_back(&police_car3);
-					
-					police_car4 = PoliceCar(4);
-					police_car4.moveStartPoint(PxVec3(-99.999969, 0.299998, -220.079498));
-					police_car4.createModel();
-					state.activeVehicles.push_back(&police_car4);
-					state.activePoliceVehicles.push_back(&police_car4);
 
 					gScene->addActor(*garageDoor);
 				}
@@ -190,9 +234,11 @@ int main()
 				}
 				
 				//Remove the old level pointer and add the new
+				printf("CREATING LEVEL PHYSX!\n");
 				gGroundPlane = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, state.selectedLevel);
-				
-				gScene->removeActor(*activeLevelActorPtr);
+				printf("DONE!\n");
+
+				if(activeLevelActorPtr != NULL) gScene->removeActor(*activeLevelActorPtr);
 				
 				gScene->addActor(*gGroundPlane);
 
@@ -201,18 +247,22 @@ int main()
 				gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
 				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
 
+				state.updateTime();
+				state.updateTime(); //flush timestep to fix step()
+
+
 				if (state.selectedLevel == LEVEL_TUNING) {
 					//spawn police car on tuning level
-					police_car1 = PoliceCar(1);
-					police_car1.createModel();
-					state.activeVehicles.push_back(&police_car1);
+					//police_car1 = PoliceCar(1);
+					//police_car1.createModel();
+					//state.activeVehicles.push_back(&police_car1);
 				}
 				
 				//Reset active vehicles
-				for (Vehicle* v : state.activeVehicles) {
-					v->reset();
-				}
-
+				//for (Vehicle* v : state.activeVehicles) {
+				//	v->reset();
+				//}
+				state.resetVehicles();
 			}
 			
 		}
@@ -223,7 +273,7 @@ int main()
 			pauseMenu.handleInputs(graphics.window, state);
 			pauseMenu.drawPauseMenu(graphics, state);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, &police_car1);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, policeCarModel, dTools);
 		}
 		///////////////////////////////////////////////////////////////
 		//corner store
@@ -275,8 +325,12 @@ int main()
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;
 		
+
+			//printf("2\n");
 			//Simulate physics through the timestep
 			physics.step(graphics.window);
+			//printf("~2\n");
+			
 
 			//PxTransform t = player.vehiclePtr->getRigidDynamicActor()->getGlobalPose();
 			//printf("POS: <%.2f,%.2f,%.2f>\n Q: <%.2f,%.2f,%.2f,%.2f>\n", t.p.x, t.p.y, t.p.z, t.q.x, t.q.y, t.q.z, t.q.w);
@@ -292,10 +346,11 @@ int main()
 				player.getPower()->setType(NONE);
 			}
 
+
 			//update player jail timer
 			player.jailTimer.tick();
 			if (player.isSeen) {
-				if (player.jailTimer.getDeltaTime() > 2.0f) {
+				if (!debugmode && player.jailTimer.getDeltaTime() > 2.0f) {
 					player.sendToJail(state);
 
 					for (PoliceCar* p : state.activePoliceVehicles) {
@@ -304,8 +359,7 @@ int main()
 					}
 				}
 			}
-				
-
+					
 			else player.jailTimer.reset();
 
 			//Check for special inputs (currently only camera mode change)
@@ -322,7 +376,7 @@ int main()
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car1);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools);
 
 			// DEBUG MODE
 			if (state.debugMode) { // Camera is deactivated
@@ -342,7 +396,7 @@ int main()
 
 
 
-void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, PoliceCar* police_car) {
+void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools) {
 
 	glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 	glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
@@ -381,6 +435,30 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	mainMenu->active_level->Draw(*graphics->shader3D);
 	if (!state->selectedLevel && !garageDoorOpen) mainMenu->levels[3].Draw(*graphics->shader3D);
 
+	if (debugmode) {
+		for (PoliceCar* p : state->activePoliceVehicles) {
+			/*
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, p->getPos() + glm::vec3(0,5,0));
+
+			glm::vec3 v1 = glm::normalize(glm::vec3(1.0f,0,1.0f));
+			glm::vec3 v2 = p->getTargetDirection();
+
+			model = glm::rotate(model, glm::dot(v1,v2), glm::vec3(0, 1, 0));
+			//model = glm::rotate(model, p->getTargetDirection());
+			graphics->shader3D->setMat4("model", model);
+			dTools.red_arrow.Draw(*graphics->shader3D);
+
+			*/
+
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, p->getTargetNodeLocation());
+			graphics->shader3D->setMat4("model", model);
+			dTools.red_node.Draw(*graphics->shader3D);
+
+		}
+
+	}
 	
 
 	// Render dynamic physx shapes
@@ -423,7 +501,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					graphics->shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
 					CarModel4W* activeCar;
 					activeCar = player->car;
-					if (i != 0) activeCar = police_car->car;
+					if (i != 0) activeCar = policeCarModel;
 
 					if (j == 0) {
 						activeCar->Draw(FRWHEEL, *graphics->shader3D, model);;

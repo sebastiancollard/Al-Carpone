@@ -11,7 +11,7 @@ AudioSystem::AudioSystem() {
 	VehicleSoundEngine->setSoundVolume(1.0f);
 	MusicSoundEngine->setSoundVolume(musicVolume);
 	
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 11; i++) {
 		policeSirenPointers[i] = MiscSoundEngine->play3D(soundPaths[SIREN_LOOP].c_str(), irrklang::vec3df(0,0,0), true, true);
 		policeSirenPointers[i]->setVolume(3.0f);
 		policeSirenPointers[i]->setMinDistance(10.0f);
@@ -236,6 +236,8 @@ void AudioSystem::updateMiscSounds(Player* player, State* state) {
 	}
 
 	glm::vec3 playerPosGLM = player->getPos();
+
+	assert(activePoliceVehicles.size() <= 11);
 
 	for (int i = 0; i < state->activePoliceVehicles.size(); i++) {
 

@@ -67,16 +67,18 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 	//Create the friction table for each combination of tire and surface type.
 	gFrictionPairs = createFrictionPairs(gMaterial);
 
+	//load level in main
+
 	//Create a plane to drive on.
-	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 0);
-	gScene->addActor(*gGroundPlane);
+	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	//gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 0);
+	//gScene->addActor(*gGroundPlane);
 
 
-	PxU32 size = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) * sizeof(PxActor*);
-	PxActor** actors = (PxActor**)malloc(size);
-	gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
-	activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
+	//PxU32 size = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) * sizeof(PxActor*);
+	//PxActor** actors = (PxActor**)malloc(size);
+	//gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
+	//activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
 }
 
 
@@ -96,21 +98,28 @@ void PhysicsSystem::step(GLFWwindow* window)
 
 		if (timestep < 1.0f / 60.0f) substep = timestep;
 
-		for (int i = 0; i < state.activeVehicles.size(); i++) {
+		std::vector<Vehicle*> activevehicles;
+		
+		for (PoliceCar* p : state.activePoliceVehicles) {
+			activevehicles.push_back(p);
+		}
+		activevehicles.push_back(&player);
+
+		for (int i = 0; i < activevehicles.size(); i++) {
 
 			//Update the control inputs for the vehicle.dwd
-			if (state.activeVehicles[i] == &player) {
+			if (activevehicles[i] == &player) {
 				if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
 			}
 			else {
-				((PoliceCar*)(state.activeVehicles[i]))->handle(window, player, state);
+				((PoliceCar*)(activevehicles[i]))->handle(window, player, state);
 			}
-			updateDrivingMode(*state.activeVehicles[i]);
-			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, state.activeVehicles[i]->vehicleInAir, *state.activeVehicles[i]->vehiclePtr);
+			updateDrivingMode(*activevehicles[i]);
+			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, activevehicles[i]->vehicleInAir, *activevehicles[i]->vehiclePtr);
 
 
 			//Raycasts.
-			PxVehicleWheels* vehicles[1] = { state.activeVehicles[i]->vehiclePtr };
+			PxVehicleWheels* vehicles[1] = { activevehicles[i]->vehiclePtr };
 			PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
 			const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
 			PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
@@ -123,7 +132,7 @@ void PhysicsSystem::step(GLFWwindow* window)
 			PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
 
 			//Work out if the vehicle is in the air.
-			state.activeVehicles[i]->vehicleInAir = state.activeVehicles[i]->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+			activevehicles[i]->vehicleInAir = activevehicles[i]->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
 		}
 
 		//Scene update.
@@ -143,8 +152,15 @@ void PhysicsSystem::step(GLFWwindow* window)
 
 void PhysicsSystem::cleanup()
 {
+	std::vector<Vehicle*> activevehicles;
+
+	for (PoliceCar* p : state.activePoliceVehicles) {
+		activevehicles.push_back(p);
+	}
+	activevehicles.push_back(&player);
+
 	// Free Vehicle Pointers
-	for (Vehicle* v : state.activeVehicles) {
+	for (Vehicle* v : activevehicles) {
 		v->vehiclePtr->getRigidDynamicActor()->release();
 		v->vehiclePtr->free();
 	}

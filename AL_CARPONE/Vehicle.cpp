@@ -80,6 +80,55 @@ Vehicle::Vehicle(VEHICLE_TYPE type, unsigned int ID, physx::PxVec3 startOffset) 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+void Vehicle::setStart(PxVec3 pos, PxVec3 dir) {
+
+	startDirection = glm::normalize(glm::vec3(dir.x,dir.y,dir.z));
+
+	PxTransform T;
+	T.p = pos;
+	dir.normalize();
+
+	glm::vec3 glmDir(dir.x, dir.y, dir.z);
+
+	PxQuat selection;
+	glm::vec3 selectionComparer;
+
+	PxQuat NORTH(0, 1, 0, 0);
+	glm::vec3 glmNORTH(0, 0, -1);
+
+	selection = NORTH;
+	selectionComparer = glmNORTH;
+
+	PxQuat EAST(0, sqrt(0.5), 0, sqrt(0.5));
+	glm::vec3 glmEAST(1, 0, 0);
+
+	if (glm::length(glmEAST - glmDir) < glm::length(selectionComparer - glmDir)) {
+		selection = EAST;
+		selectionComparer = glmEAST;
+	}
+
+	PxQuat SOUTH(0, 0, 0, -1);
+	glm::vec3 glmSOUTH(0, 0, 1);
+
+	if (glm::length(glmSOUTH - glmDir) < glm::length(selectionComparer - glmDir)) {
+		selection = SOUTH;
+		selectionComparer = glmSOUTH;
+	}
+
+	PxQuat WEST(0, -sqrt(0.5), 0, -sqrt(0.5));
+	glm::vec3 glmWEST(-1, 0, 0);
+
+	if (glm::length(glmWEST - glmDir) < glm::length(selectionComparer - glmDir)) {
+		selection = WEST;
+		selectionComparer = glmWEST;
+	}
+
+	T.q = selection;
+
+	startTransform = T;
+}
+
+
 PxTransform Vehicle::getStartTransform() {
 	return startTransform;
 }
@@ -222,7 +271,6 @@ void Vehicle::setResetPoint(PxTransform t) {
 
 
 void Vehicle::reset() {
-	targetIndex = 0;
 	actorPtr->setGlobalPose(startTransform);
 	vehiclePtr->getRigidDynamicActor()->setAngularVelocity(PxVec3(0, 0, 0));
 	vehiclePtr->getRigidDynamicActor()->setLinearVelocity(PxVec3(0, 0, 0));

@@ -158,6 +158,7 @@
     <ClCompile Include="constants.cpp" />
     <ClCompile Include="CornerStore.cpp" />
     <ClCompile Include="DebugPanel.cpp" />
+    <ClCompile Include="DrivingNodes.cpp" />
     <ClCompile Include="Garage.cpp" />
     <ClCompile Include="Exit.cpp" />
     <ClCompile Include="glad.c" />
@@ -188,6 +189,7 @@
     <ClCompile Include="SnippetVehicleSceneQuery.cpp" />
     <ClCompile Include="SnippetVehicleTankCreate.cpp" />
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Upgrade.cpp" />
@@ -201,6 +203,7 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="CornerStore.h" />
     <ClInclude Include="DebugPanel.h" />
+    <ClInclude Include="DrivingNodes.h" />
     <ClInclude Include="Garage.h" />
     <ClInclude Include="Exit.h" />
     <ClInclude Include="GraphicsSystem.h" />

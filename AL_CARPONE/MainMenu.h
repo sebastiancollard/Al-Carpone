@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <vector>
-
+#include "AudioSystem.h"
 #include "GraphicsSystem.h"
 #include "Model.h"
 #include "State.h"
@@ -29,11 +29,11 @@ public:
 
 	MainMenu();
 	void changeLevel(int level);
-	void drawMenu(GraphicsSystem& graphics, State& state);
+	void drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio);
 	void drawLoadingScreen(GraphicsSystem& graphics);
 	void drawWinScreen(GraphicsSystem&);	
 	void drawJailScreen(GraphicsSystem* graphics);
 	void drawLoseScreen(GraphicsSystem&);
-	void handleInputs(GLFWwindow* window, State& state);
+	void handleInputs(GLFWwindow* window, State& state, AudioSystem* audio);
 
 };

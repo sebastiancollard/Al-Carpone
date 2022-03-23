@@ -80,8 +80,15 @@ private:
 		NULL,
 		NULL,
 		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
 		NULL 
-		//4 Police cars
+		//11 Police cars
 	};
 
 	std::vector<std::string> soundPaths{

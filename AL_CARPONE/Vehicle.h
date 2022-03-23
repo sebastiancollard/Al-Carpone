@@ -31,6 +31,8 @@ public:
 	bool vehicleChangingGears;
 	unsigned int ID = -1;
 	unsigned int targetIndex = 0;
+	glm::vec3 targetPosition;
+	glm::vec3 startDirection;
 
 	physx::PxRigidActor* actorPtr;	// Each vehicle instantiation has an actor (physx vehicle). Mostly used to query information about the car in the context of the simulation.
 	physx::PxVehicleDrive4W* vehiclePtr;
@@ -66,6 +68,8 @@ public:
 	bool isMoving();
 	bool isChangingGears();
 
+	void setStart(PxVec3 position, PxVec3 direction);
+
 	// Resets
 	void setResetPoint(PxTransform t);
 	void reset();
@@ -78,6 +82,7 @@ protected:
 	glm::vec3 jerk;
 
 	PxTransform startTransform;
+	
 
 
 	

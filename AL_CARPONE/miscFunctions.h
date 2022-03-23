@@ -56,9 +56,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 	{
 		if (!state.R_isHeld) {
-			for (Vehicle* v : state.activeVehicles) {
-				v->reset();
-			}
+			state.resetVehicles();
 		}
 		state.R_isHeld = true;
 	}
@@ -113,10 +111,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 				//std::cout << "TRIANGLE (xbox y, ns pro x)" << std::endl;
 				if (!state.triangle_isHeld)
 				{
-					for (Vehicle* v : state.activeVehicles)
-					{
-						v->reset();
-					}
+					state.resetVehicles();
 				}
 				state.R_isHeld = true;
 			}

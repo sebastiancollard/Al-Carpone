@@ -1,5 +1,6 @@
 #include "MainMenu.h"
 #include "physx_globals.h"
+
 #include "util.h" //load_positions
 
 
@@ -41,10 +42,10 @@ void MainMenu::changeLevel(int level) {
 // DRAW MAIN MENU
 ////////////////////////////////////////////////////////////////////////
 
-void MainMenu::drawMenu(GraphicsSystem& graphics, State& state) {
+void MainMenu::drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio) {
 	graphics.shader2D->use();
 	selectionScreens[selectedOption].Draw(*graphics.shader2D);
-	handleInputs(graphics.window, state);
+	handleInputs(graphics.window, state, audio);
 }
 
 void MainMenu::drawLoadingScreen(GraphicsSystem& graphics) {
@@ -77,7 +78,7 @@ void MainMenu::drawJailScreen(GraphicsSystem* graphics) {
 
 
 //Checks for special inputs that would alter the state, and updates state accordingly
-void MainMenu::handleInputs(GLFWwindow* window, State& state)
+void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
@@ -120,6 +121,14 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state)
 		return;
 	}
 	else state.S_isHeld = false;
+
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
+		if (!state.M_isHeld) {
+			audio->toggleMusic();
+		}
+		state.M_isHeld = true;
+	}
+	else state.M_isHeld = false;
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
