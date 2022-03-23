@@ -36,7 +36,6 @@
 #include "Exit.h"
 #include "CornerStore.h"
 #include "Garage.h"
-
 #include "PowerUp.h"
 
 //Used for debugging

@@ -190,7 +190,8 @@ void PhysicsSystem::createDynamic(const PxTransform& t, const PxGeometry& geomet
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 }
 
-PxRigidDynamic* PhysicsSystem::createDynamicItem(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
+//CURRENTLY UNUSED. PLEASE KEEP FOR BACK-UP OPTION
+PxRigidDynamic* PhysicsSystem::createDynamicItemOld(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
 {
 	static PxU32 dynamicCounter = 0;
 
@@ -206,6 +207,45 @@ PxRigidDynamic* PhysicsSystem::createDynamicItem(const PxTransform& t, const PxG
 
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 	return dynamic;
+}
+
+physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(std::string path, const PxTransform& t, const PxVec3& velocity) {
+	Model item_model(path);
+
+	std::vector<PxVec3> positions;
+	for (Vertex& v : item_model.meshes[0].vertices)
+		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+	PxVec3* verts = positions.data();
+
+	PxConvexMeshDesc convexDesc;
+	convexDesc.points.count = positions.size();
+	convexDesc.points.stride = sizeof(PxVec3);
+	convexDesc.points.data = verts;
+	convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+	PxConvexMesh* convexMesh = NULL;
+	PxDefaultMemoryOutputStream buf;
+	if (gCooking->cookConvexMesh(convexDesc, buf))
+	{
+		PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
+		convexMesh = gPhysics->createConvexMesh(id);
+	}
+
+	physx::PxRigidDynamic* dynamic = gPhysics->createRigidDynamic(PxTransform(t));
+
+	PxShape* itemConvexShape = PxRigidActorExt::createExclusiveShape(*dynamic,
+		PxConvexMeshGeometry(convexMesh), *gMaterial);
+
+	PxFilterData filter(COLLISION_FLAG_ITEM, COLLISION_FLAG_ITEM_AGAINST, 0, 0);
+	itemConvexShape->setSimulationFilterData(filter);
+
+	dynamic->setAngularDamping(0.5f);
+	dynamic->setLinearVelocity(velocity);
+	gScene->addActor(*dynamic);
+
+	return dynamic;
+
 }
 
 
