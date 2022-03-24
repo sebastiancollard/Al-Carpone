@@ -21,6 +21,7 @@ void Player::setPos(PxTransform T) {
 void Player::sendToJail(State& state) {
 	printf("GO TO JAIL!\n");
 	reset();
+	jailTimer.reset();
 	state.gamestate = GAMESTATE::GAMESTATE_JAILED;
 	return;
 }

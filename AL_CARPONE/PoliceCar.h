@@ -43,15 +43,17 @@ public:
 	// Must be called after graphics system is initalized!
 	void createModel();
 	
-	void handle(glm::vec3 playerPos, bool playerSpotted, double timestep);
+	void handle(glm::vec3 playerPos,double timestep);
 	void stun(double seconds = 5);
 	void reset();
 	void startChase();
 	void hardReset();
 
-	void update(glm::vec3 playerPos, bool playerSpotted, double timeStep);
+	void update(glm::vec3 playerPos,double timeStep);
 
-	
+	bool playerInTrigger; //Player in trigger volume
+	bool playerInSight; //Raycast to player successful
+	bool playerDetected; //playerInTrigger && playerInSight
 	
 	//debug
 	glm::vec3 getTargetDirection() {
@@ -86,7 +88,7 @@ private:
 
 	void idle(double timestep);
 	void patrol();
-	void chase(glm::vec3 playerPos, bool playerSpotted, double timestep);
+	void chase(glm::vec3 playerPos,double timestep);
 	void reverse(double timestep, glm::vec3 playerPos);
 	void brake(double timestep);
 

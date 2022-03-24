@@ -293,14 +293,25 @@ int main()
 
 			//update player jail timer
 			player.jailTimer.tick();
-			if (player.isSeen) {
-				if (!debugmode && player.jailTimer.getDeltaTime() > 2.0f) {
-					player.sendToJail(state);
 
+			bool playerDetected = false;
+
+			for (PoliceCar* p : state.activePoliceVehicles) {
+				if (p->playerDetected) {
+					playerDetected = true;
+					break;
+				}
+			}
+
+			if (playerDetected) {
+				for (PoliceCar* p : state.activePoliceVehicles) {
+					p->startChase();
+				}
+				if (!debugmode && player.jailTimer.getDeltaTime() > 5.0f) {
 					for (PoliceCar* p : state.activePoliceVehicles) {
 						p->hardReset();
-						
 					}
+					player.sendToJail(state);
 				}
 			}
 					

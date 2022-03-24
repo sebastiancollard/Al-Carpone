@@ -7,7 +7,7 @@
 
 // TODO not yet in seconds
 #define MAX_IDLE_TIME 20		
-#define MAX_CHASE_TIME 200
+#define MAX_CHASE_TIME 30
 
 
 // Car Speeds
@@ -22,11 +22,11 @@
 PoliceCar::PoliceCar(int ID, DrivingNodes* drivingNodes) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVec3(10.f, 0, 0)) {
 
 	// Make Headlights
-	float len = 20.f;
-	float width = 5.f;
+	float len = 50.f;
+	float width = 10.f;
 	auto pos = getPos() + glm::vec3(width, 0, len);
 	physx::PxVec3 t_pos = physx::PxVec3(pos.x - width, pos.y, -pos.z + 3*pos.z/4);
-	headlights = new BoxTrigger(false, t_pos, 8.f, 2.f, len);
+	headlights = new BoxTrigger(false, t_pos, 30.f, 2.f, len);
 	headlights->addJoint(actorPtr, startTransform);
 	dNodes = drivingNodes;
 	shouldReset = false;
@@ -34,7 +34,7 @@ PoliceCar::PoliceCar(int ID, DrivingNodes* drivingNodes) : Vehicle(VEHICLE_TYPE:
 	//myThread = std::thread(&updateLoop);
 }
 
-void PoliceCar::update(glm::vec3 playerPos, bool playerSpotted, double timeStep) {
+void PoliceCar::update(glm::vec3 playerPos,double timeStep) {
 
 	myPos = getPos();
 	myDir = getDir();
@@ -43,15 +43,27 @@ void PoliceCar::update(glm::vec3 playerPos, bool playerSpotted, double timeStep)
 	if (shouldReset) reset();
 	shouldReset = false;
 
+
+	glm::vec3 direction = -glm::normalize(playerPos - myPos);
+
+	PxVec3 vOffset(0, 5.0f, 0);
+
+	PxVec3 origin = PxVec3(playerPos.x, playerPos.y, playerPos.z) + vOffset;
+	PxVec3 unitDir = PxVec3(direction.x, direction.y, direction.z);
+	PxRaycastBuffer hit;
+
+	playerInSight = !gScene->raycast(origin, unitDir, glm::distance(playerPos, myPos), hit, PxHitFlag::eMESH_BOTH_SIDES);
+	playerDetected = playerInSight && playerInTrigger;
+
 	//updateRequest = true;
-	handle(playerPos, playerSpotted, timeStep);
+	handle(playerPos,timeStep);
 }
 
 
 // Game logic to handle Per frame
-void PoliceCar::handle(glm::vec3 playerPos, bool playerSpotted, double timeStep) {
+void PoliceCar::handle(glm::vec3 playerPos, double timeStep) {
 
-	if (playerSpotted) startChase();
+	if (playerDetected && ai_state != AISTATE::IDLE) startChase();
 
 	if (vehicleInAir) {
 		airTime += timeStep;
@@ -91,7 +103,7 @@ void PoliceCar::handle(glm::vec3 playerPos, bool playerSpotted, double timeStep)
 			break;
 	
 		case AISTATE::CHASE:
-			chase(playerPos,playerSpotted,timeStep);
+			chase(playerPos,timeStep);
 			break;
 	}
 
@@ -180,43 +192,29 @@ void PoliceCar::patrol() {
 
 // AI only goes forward atm
 // Resets after timer runs out
-void PoliceCar::chase(glm::vec3 playerPos, bool playerSpotted, double timestep) {
+void PoliceCar::chase(glm::vec3 playerPos,double timestep) {
 
 	updateSpeed(CHASE_ACCEL);
 
-	if (playerSpotted) {
-		//printf("CHASING PLAYER\n");
-		startChase();	// Reset timer
+	if (playerInSight) {
 		targetPosition = playerPos;
 		targetingPlayer = true;
-		updateSpeed(CHASE_ACCEL);
 	}
+
 	else {
-		if (x_z_distance_squared(myPos, playerPos) < x_z_distance_squared(myPos, targetPosition)) {
-			targetingPlayer = true;
-			targetPosition = playerPos;
-		}
-		else if(targetingPlayer || x_z_distance_squared(myPos, targetPosition) < 900.0f){
-
+		if(targetingPlayer || x_z_distance_squared(myPos, targetPosition) < 900.0f){
 			targetPosition = dNodes->guideMeFromTo(myPos, playerPos);
-
-			if (x_z_distance_squared(myPos, playerPos) <= x_z_distance_squared(myPos, targetPosition)) {
-				targetPosition = playerPos;
-				targetingPlayer = true;
-			}
-
-			//If we need a hard turn
-			if (glm::dot(myDir, glm::normalize(myPos - targetPosition)) < 0.5 && myForwardSpeed > 20.f) { 
-				brakeTime = 0.5f;
-				return;
-			}
-
 			targetingPlayer = false;
 		} 
-
 		chaseTime -= timestep; // TODO use timer instead
 	}
-	
+
+	//If we need a hard turn
+	if (glm::dot(myDir, glm::normalize(myPos - targetPosition)) < 0.5 && myForwardSpeed > 20.f) {
+		brakeTime = 0.5f;
+		return;
+	}
+
 	driveTo(targetPosition);
 	
 	if (chaseTime <= 0) {
@@ -224,7 +222,6 @@ void PoliceCar::chase(glm::vec3 playerPos, bool playerSpotted, double timestep) 
 		std::cout << "CHASING END" << std::endl;
 		ai_state = AISTATE::PATROL;
 		shouldReset = true;					//Teleport to start node
-		//player.jailTimer.reset(); fix?
 	}
 }
 
@@ -237,6 +234,7 @@ void PoliceCar::chase(glm::vec3 playerPos, bool playerSpotted, double timestep) 
 
 //reset position and state
 void PoliceCar::hardReset() {
+	reset();
 	shouldReset = true;
 	ai_state = AISTATE::PATROL;
 	chaseTime = 0;
@@ -248,14 +246,11 @@ void PoliceCar::startChase() {
 	ai_state = AISTATE::CHASE;
 }
 
-
-
 // Stunned
 void PoliceCar::stun(double seconds) {
 	if (seconds > 0) idleTime = seconds;
 	ai_state = AISTATE::IDLE;
 }
-
 
 void PoliceCar::reset() {
 	Vehicle::reset();

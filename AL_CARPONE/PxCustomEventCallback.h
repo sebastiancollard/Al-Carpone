@@ -61,10 +61,7 @@ public:
 				// Headlights
 				for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars	
 					if ((pairs[i].triggerActor == popo->headlights->ptr) && (player.isDetectable())) {
-						player.isSeen = !player.isSeen;
-						//std::cout << player.isSeen << std::endl;
-						if(player.isSeen) popo->startChase();
-						player.jailTimer.reset();
+						popo->playerInTrigger = !popo->playerInTrigger;
 					}
 				}
 			}
