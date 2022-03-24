@@ -30,6 +30,7 @@ public:
 
 	AISTATE ai_state = AISTATE::PATROL;
 	BoxTrigger* headlights;
+	bool isStunned;
 
 
 	PoliceCar() {}

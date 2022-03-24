@@ -51,7 +51,12 @@ PxFilterFlags VehicleFilterShader
 	if( (0 == (filterData0.word0 & filterData1.word1)) && (0 == (filterData1.word0 & filterData0.word1)) )
 		return PxFilterFlag::eSUPPRESS;
 
+
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	//If one of the objects is an item, trigger the contact callback (PxCustomEventCallback::onContact)
+	if ((filterData0.word0 == COLLISION_FLAG_ITEM) || (filterData1.word0 == COLLISION_FLAG_ITEM)) {
+		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
+	}
 	
 	//If one of the objects is a trigger, call the trigger callback
 	if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1)) {

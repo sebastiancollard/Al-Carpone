@@ -33,7 +33,7 @@ private:
 
 	bool detectable = true;					//Flag that specifies whether the player is detectable to enemies
 	VEHICLE_TYPE model_type = AL_CARPONE;	//Used for model switching when using the camouflage power
-	double cash = 0;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+	double cash = 90;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
 	double cashRateMultiplier = 5;
 

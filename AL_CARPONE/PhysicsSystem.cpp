@@ -242,7 +242,7 @@ physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(std::string path, const 
 
 	dynamic->setAngularDamping(0.5f);
 	dynamic->setLinearVelocity(velocity);
-	gScene->addActor(*dynamic);
+	gScene->addActor(*dynamic);					//Note: items are not added to physx_actors
 
 	return dynamic;
 

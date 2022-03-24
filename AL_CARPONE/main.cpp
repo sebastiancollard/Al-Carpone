@@ -290,6 +290,7 @@ int main()
 			if (player.getPower()->shouldDespawn()) {
 				despawnItem();
 				player.getPower()->setType(NONE);
+				player.getPower()->actorPtr = NULL;
 			}
 
 			//update player jail timer
@@ -426,7 +427,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					if (i != 0) activeCar = police_car->car;
 
 					if (j == 0) {
-						activeCar->Draw(FRWHEEL, *graphics->shader3D, model);;
+						activeCar->Draw(FRWHEEL, *graphics->shader3D, model);
 					}
 					else if (j == 1) {
 						activeCar->Draw(FLWHEEL, *graphics->shader3D, model);
@@ -443,7 +444,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 				}
 			}
 			//Instead of cycling through all physx actors, this cycles through those that have been added to the 
-			//sinple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
+			//simple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
 			//with that actor. Is very similar to the above for loop.
 			//Future TODO: for more complex objects, add ability to have multiple models per object (like the cars)
 			for (auto object : simple_renderables) {
@@ -491,14 +492,14 @@ void despawnItem()
 			printf("Erasing item...\n");
 			i = i - 1;
 
-			//for (int j = 0; j < physx_actors.size(); j++) 
-			//{		
-			//	if (physx_actors[j].actorPtr == ptr) 
-			//	{
-			//		physx_actors.erase(physx_actors.begin() + j);		//erase from physx_actors
-			//		break;
-			//	}
-			//}
+			for (int j = 0; j < physx_actors.size(); j++) 
+			{		
+				if (physx_actors[j].actorPtr == ptr) 
+				{
+					physx_actors.erase(physx_actors.begin() + j);		//erase from physx_actors
+					break;
+				}
+			}
 		}
 	}
 }
@@ -508,43 +509,28 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->stopThrow();
 		PxRigidDynamic* actor;
 
-		if (player->getPower()->getType() == DONUT) {
-			/*actor = physics->createDynamicItemOld(PxTransform(
-				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-				PxBoxGeometry(0.3, 0.2, 0.3),	//donut is box
-				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
-			);*/
+		if (player->getPower()->getType() == DONUT) {		//PLAYER THROWS DONUT
 			actor = physics->createDynamicItem(
 				player->getPower()->getModelPath(),
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 20.0f		//donut velocity
 			);
 		}
 		else {
-			/*actor = physics->createDynamicItemOld(PxTransform(
-				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-				PxSphereGeometry(0.5),			//tomato is sphere
-				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
-			);*/
-			actor = physics->createDynamicItem(
+			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
 				player->getPower()->getModelPath(),
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
 		}
+		
 		Model model = Model(player->getPower()->getModelPath());
 		simple_renderables.push_back({ actor, model, "powerup"});
-		//player->getPower()->setType(NONE);
+		player->getPower()->actorPtr = actor;
 
 	}
-	else if (player->getPower()->drop_item) {		//PLAYER DROPS SPIKE TRAP
+	else if (player->getPower()->drop_item) {				//PLAYER DROPS SPIKE TRAP
 		player->getPower()->stopDrop();
-
-		/*PxRigidDynamic* actor = physics->createDynamicItemOld(PxTransform(
-			PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-			PxBoxGeometry(1.2, 0.3, 0.3),		//spike trap is box
-			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
-		);*/
 
 		PxRigidDynamic* actor = physics->createDynamicItem(
 			player->getPower()->getModelPath(),
@@ -554,12 +540,14 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		
 		Model model = Model(player->getPower()->getModelPath());
 		simple_renderables.push_back({ actor, model , "powerup" });
+		player->getPower()->actorPtr = actor;
 
 	}
-	else if (!player->isDetectable() && player->getCurrentModelType() == AL_CARPONE) {			//PLAYER IS CAMOUFLAGED
+	else if (!player->isDetectable() && player->getCurrentModelType() == AL_CARPONE) {		//Player is now camouflaged
 		player->setCurrentModel(POLICE_CAR);
 	}
-	else if (player->isDetectable() && player->getCurrentModelType() == POLICE_CAR) {			//PLAYER HAS JUST COME OUT OF CAMOUFLAGE
+	
+	if (player->isDetectable() && player->getCurrentModelType() == POLICE_CAR) {			//Player has just come out of camouflage
 		player->setCurrentModel(AL_CARPONE);
 	}
 

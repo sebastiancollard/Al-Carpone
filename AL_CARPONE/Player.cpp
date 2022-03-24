@@ -73,8 +73,6 @@ VEHICLE_TYPE Player::getCurrentModelType() {
 	return model_type;
 }
 
-
-
 PowerUp* Player::getPower() {
 	return &equippedPower;
 }
