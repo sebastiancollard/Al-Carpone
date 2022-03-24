@@ -3,6 +3,7 @@
 // Graphics Libraries
 #include <glm/gtc/type_ptr.hpp>
 #include "constants.h"
+#include <ft2build.h>
 
 // Physics Libraries
 #include "snippetvehiclecommon/SnippetVehicleFilterShader.h"
