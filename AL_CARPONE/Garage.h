@@ -13,7 +13,11 @@ enum GarageTypes {
 
 class Garage : public Building {
 public:
+	GraphicsSystem& graphics;
+
 	unsigned int type;
+
+	Model menuTitle;
 	std::vector<Upgrade> upgradeList;
 	physx::PxVec3 position;	// Position currently hardcoded
 
@@ -21,13 +25,13 @@ public:
 	float height = 4.f; //z axis
 	float width = 21.6;	 //x axis
 
-	Garage(unsigned int upgradeType, PxVec3 pos, PxVec3 dims) { 
+	Garage(unsigned int upgradeType, PxVec3 pos, PxVec3 dims, GraphicsSystem& g) : graphics(g) { 
 		type = upgradeType;
 		position = pos;
 		createTrigger(dims); 
 	}
 
 	void createTrigger(PxVec3 dimensions); // Must only be called once!
-	void drawGarageMenu(GraphicsSystem& graphics, State& state, Player& player);
+	void drawGarageMenu();
 	void triggerFunction(Player& player, State& state); // ENTER GARAGE
 };

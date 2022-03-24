@@ -45,7 +45,7 @@ public:
 						if (state.buildings[j]->isInRange) {
 							//std::cout << "BUILDING IN RANGE!!!" << std::endl;
 
-							state.buildings[j]->triggerFunction(player, state);
+							//state.buildings[j]->triggerFunction(player, state);
 						}
 						else {
 							//std::cout << "BUILDING OUT OF RANGE!!!" << std::endl;

@@ -62,12 +62,13 @@ int main()
 	//gFrictionPairs->setTypePairFriction(gFrictionPairs->getTypePairFriction() * 1.1f);
 
 
-	Garage engineGarage(GarageTypes::ENGINE_GARAGE, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19));
-	state.buildings[BUILDINGS::GARAGE1] = &engineGarage;
-	Garage handlingGarage(GarageTypes::HANDLING_GARAGE, PxVec3(-100, -20, -278), PxVec3(19, 2, 10));
+	Garage robbingGarage(GarageTypes::ROBBING_GARAGE, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19), graphics);
+	robbingGarage.menuTitle = Model("models/garageMenu/robbery_upgrades/robbery_upgrades_title.obj");
+	state.buildings[BUILDINGS::GARAGE1] = &robbingGarage;
+	Garage handlingGarage(GarageTypes::HANDLING_GARAGE, PxVec3(-100, -20, -278), PxVec3(19, 2, 10), graphics);
 	state.buildings[BUILDINGS::GARAGE2] = &handlingGarage;
-	Garage robbingGarage(GarageTypes::ROBBING_GARAGE, PxVec3(862.1, 20, -280.11), PxVec3(29, 2, 29));
-	state.buildings[BUILDINGS::GARAGE3] = &robbingGarage;
+	Garage engineGarage(GarageTypes::ENGINE_GARAGE, PxVec3(862.1, 20, -280.11), PxVec3(29, 2, 29), graphics);
+	state.buildings[BUILDINGS::GARAGE3] = &engineGarage;
 	PxFilterData groundPlaneSimFilterData(sv::COLLISION_FLAG_GROUND, sv::COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	garageDoor = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 3);
 	
