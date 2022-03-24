@@ -262,9 +262,6 @@ glm::vec3 DrivingNodes::guideMeFromTo(glm::vec3 a, glm::vec3 b) {
 
 }
 
-std::vector<std::vector<std::stack<glm::vec3> > > DrivingNodes::getShortestPaths() {
-	//return shortest_paths;
-}
 
 std::vector<std::vector<glm::vec3> > DrivingNodes::getPatrolRoutes() {
 	return patrol_routes;

@@ -8,35 +8,26 @@
 MainMenu::MainMenu() {
 
 	loadingMapScreen = Model("models/mainMenu/LOADINGMAP.obj");
+	loadingGameScreen = Model("models/mainMenu/LOADINGGAME.obj");
 	gameWinScreen = Model("models/mainMenu/WINSCREEN.obj");
 	gameLoseScreen = Model("models/mainMenu/LOSESCREEN.obj");
 	jailScreen = Model("models/mainMenu/BUSTED.obj");
 
+	
 	selectionScreens = { 
 		Model("models/mainMenu/0_PLAYGAME.obj"),
-		Model("models/mainMenu/1_TUNINGTESTLEVEL.obj"),
-		Model("models/mainMenu/2_RACETRACK.obj"),
-		Model("models/mainMenu/3_OPTIONS.obj")
+		Model("models/mainMenu/1_QUIT.obj"),
 	};
-	level_light_positions = {
-		load_positions("models/map/light_positions.obj"),
-		load_positions("models/tuning_testlevel/light_positions.obj"),
-		load_positions("models/racetrack/light_positions.obj")
-	};
-	levels = {
-		Model("models/map/map.obj"),
-		Model("models/tuning_testlevel/tuning_testlevel.obj"),
-		Model("models/racetrack/racetrack.obj"),
-		Model ("models/map/garage_door.obj")
-	};
-	changeLevel(0);
+
+	light_positions = load_positions("models/map/light_positions.obj");
+	
+	
+	level = Model("models/map/map.obj");
+	garageDoor = Model("models/map/garage_door.obj");
 }
 
 
-void MainMenu::changeLevel(int level) {
-	active_level = &levels[level];
-	light_positions = &level_light_positions[level];
-}
+
 
 ////////////////////////////////////////////////////////////////////////
 // DRAW MAIN MENU
@@ -48,11 +39,15 @@ void MainMenu::drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* aud
 	handleInputs(graphics.window, state, audio);
 }
 
-void MainMenu::drawLoadingScreen(GraphicsSystem& graphics) {
+void MainMenu::drawLoadingGameScreen(GraphicsSystem& graphics) {
+	graphics.shader2D->use();
+	loadingGameScreen.Draw(*graphics.shader2D);
+}
+
+void MainMenu::drawLoadingMapScreen(GraphicsSystem& graphics) {
 	graphics.shader2D->use();
 	loadingMapScreen.Draw(*graphics.shader2D);
 }
-
 
 void MainMenu::drawWinScreen(GraphicsSystem& graphics) {
 	graphics.shader2D->use();
@@ -82,7 +77,8 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
-			state.terminateProgram = true;
+			state.gamestate = GAMESTATE_INGAME;
+			return;
 		}
 		state.escape_isHeld = true;
 		return;
@@ -93,17 +89,15 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
 		if (!state.enter_isHeld) {
-			//Options menu not handled yet.
-			if (selectedOption == 3) {
-				state.enter_isHeld = true;
+			if (selectedOption == MenuSelection::PLAYGAME) {
+				state.gamestate = GAMESTATE_INGAME;
 				return;
 			}
-
-			state.gamestate = GAMESTATE_INGAME;
-			state.selectedLevel = selectedOption;
-			selectedOption = 0;
+			else if(selectedOption == MenuSelection::QUIT) {
+				state.terminateProgram = true;
+				return;
+			}			
 		}
-		
 		state.enter_isHeld = true;
 
 		return;
@@ -115,7 +109,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		if (!state.S_isHeld) {
-			selectedOption = (selectedOption + 1) % 4;
+			selectedOption = (selectedOption + 1) % 2;
 		}
 		state.S_isHeld = true;
 		return;
@@ -133,7 +127,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		if (!state.down_isHeld) {
-			selectedOption = (selectedOption + 1) % 4;
+			selectedOption = (selectedOption + 1) % 2;
 		}
 		state.down_isHeld = true;
 		return;
@@ -143,7 +137,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		if (!state.W_isHeld) {
 
-			selectedOption = (selectedOption - 1) % 4;
+			selectedOption = (selectedOption - 1) % 2;
 		}
 		state.W_isHeld = true;
 		return;
@@ -153,7 +147,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		if (!state.up_isHeld) {
 
-			selectedOption = (selectedOption - 1) % 4;
+			selectedOption = (selectedOption - 1) % 2;
 		}
 		state.up_isHeld = true;
 		return;
@@ -177,14 +171,14 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 			{
 				if (!state.cross_isHeld) 
 				{
-					if (selectedOption == 3) 
-					{
-						state.cross_isHeld = true;
+					if (selectedOption == MenuSelection::PLAYGAME) {
+						state.gamestate = GAMESTATE_INGAME;
 						return;
 					}
-					state.gamestate = GAMESTATE_INGAME;
-					state.selectedLevel = selectedOption;
-					selectedOption = 0;
+					else if (selectedOption == MenuSelection::QUIT) {
+						state.terminateProgram = true;
+						return;
+					}
 				}
 				state.cross_isHeld = true;
 				return;
@@ -199,7 +193,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 			{
 				if (!state.dpad_downisHold) {
 
-					selectedOption = (selectedOption + 1) % 4;
+					selectedOption = (selectedOption + 1) % 2;
 				}
 				state.dpad_downisHold = true;
 				return;
@@ -213,7 +207,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 			{
 				if (!state.dpad_upisHold) {
 
-					selectedOption = (selectedOption - 1) % 4;
+					selectedOption = (selectedOption - 1) % 2;
 				}
 				state.dpad_upisHold = true;
 				return;

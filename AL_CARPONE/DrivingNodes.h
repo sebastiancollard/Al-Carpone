@@ -47,7 +47,6 @@ public:
 	void printShortestRoutes();
 
 	std::vector<std::vector<glm::vec3> > getPatrolRoutes();
-	std::vector<std::vector<std::stack<glm::vec3> > > getShortestPaths();
 	glm::vec3 guideMeFromTo(glm::vec3 a, glm::vec3 b);
 
 	void incrementTargetIndex(unsigned int routeId, unsigned int &targetIndex);

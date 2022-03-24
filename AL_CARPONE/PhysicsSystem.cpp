@@ -70,15 +70,15 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 	//load level in main
 
 	//Create a plane to drive on.
-	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	//gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 0);
-	//gScene->addActor(*gGroundPlane);
+	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 0);
+	gScene->addActor(*gGroundPlane);
 
 
-	//PxU32 size = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) * sizeof(PxActor*);
-	//PxActor** actors = (PxActor**)malloc(size);
-	//gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
-	//activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
+	PxU32 size = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) * sizeof(PxActor*);
+	PxActor** actors = (PxActor**)malloc(size);
+	gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
+	activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
 }
 
 
@@ -251,14 +251,13 @@ PxTriangleMesh* PhysicsSystem::createTriangleMesh(const PxVec3* verts, const PxU
 
 PxTriangleMesh* PhysicsSystem::createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection)
 {
-	std::vector<std::string> level_physx_paths{
-		"models/map/map_physx.obj",
-		"models/tuning_testlevel/tuning_testlevel_physx.obj",
-		"models/racetrack/racetrack_physx.obj",
-		"models/map/garage_door.obj"
-	};
+	std::string level_physx_path = "models/map/map_physx.obj";
+	std::string garage_door_path = "models/map/garage_door.obj";
+	
+	std::string path = level_physx_path;
+	if (selection == 1) path = garage_door_path;
 
-	Model level(level_physx_paths[selection]);
+	Model level(path);
 
 	std::vector<PxVec3> model_positions;
 	std::vector<PxU32> model_indices;

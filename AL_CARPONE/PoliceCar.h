@@ -64,6 +64,7 @@ private:
 	double chaseTime = 0;
 	double stuckTime = 0;
 	double reverseTime = 0;
+	double brakeTime = 0;
 
 	bool targetingPlayer = false;
 	
@@ -71,7 +72,8 @@ private:
 	void idle(double timestep);
 	void patrol(GLFWwindow* window);
 	void chase(GLFWwindow* window, Player& player, double timestep);
-	void reverse(double timestep);
+	void reverse(double timestep, glm::vec3 playerPos);
+	void brake(double timestep);
 
 	void driveTo(glm::vec3 targetPos);
 };

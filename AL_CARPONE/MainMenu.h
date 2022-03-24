@@ -7,13 +7,20 @@
 #include "Model.h"
 #include "State.h"
 
+enum MenuSelection
+{
+	PLAYGAME = 0,
+	QUIT
+};
+
 static class MainMenu {
 
-	unsigned int selectedOption = 0;
+	unsigned int selectedOption = MenuSelection::PLAYGAME;
 
 public:
 
 	Model loadingMapScreen;
+	Model loadingGameScreen;
 	Model gameWinScreen;
 	Model gameLoseScreen;
 	Model jailScreen;
@@ -21,16 +28,15 @@ public:
 
 	std::vector<Model> selectionScreens;
 	std::vector<std::vector<glm::vec3>> level_light_positions;
-	std::vector<Model> levels;
-
-	Model* active_level;
-	std::vector<glm::vec3>* light_positions;
+	Model level;
+	Model garageDoor;
+	std::vector<glm::vec3> light_positions;
 
 
 	MainMenu();
-	void changeLevel(int level);
 	void drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio);
-	void drawLoadingScreen(GraphicsSystem& graphics);
+	void drawLoadingGameScreen(GraphicsSystem& graphics);
+	void drawLoadingMapScreen(GraphicsSystem& graphics);
 	void drawWinScreen(GraphicsSystem&);	
 	void drawJailScreen(GraphicsSystem* graphics);
 	void drawLoseScreen(GraphicsSystem&);

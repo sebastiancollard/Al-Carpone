@@ -21,16 +21,8 @@ class Building;
 class Vehicle;
 class PoliceCar;
 
-
-enum LEVELS {
-	LEVEL_MAIN = 0,
-	LEVEL_TUNING,
-	LEVEL_RACETRACK
-};
-
 enum GAMESTATE {
 	GAMESTATE_MAIN_MENU,
-	GAMESTATE_PAUSE_MENU,
 	GAMESTATE_INGAME,
 	GAMESTATE_CORNERSTORE,
 	GAMESTATE_JAILED
@@ -64,7 +56,6 @@ public:
 	// Modes
 	unsigned int cameraMode = CAMERA_MODE_BOUND;
 	bool debugMode = false;
-	unsigned int selectedLevel = 0;
 
 	//If this is flipped to true, the program should exit.
 	bool terminateProgram = false;
@@ -86,8 +77,6 @@ public:
 		NULL  //EXIT
 	};
 				
-
-
 	//Used to check for single input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.
 	bool Q_isHeld = false;

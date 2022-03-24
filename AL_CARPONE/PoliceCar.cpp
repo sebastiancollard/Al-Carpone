@@ -46,18 +46,25 @@ void PoliceCar::handle(GLFWwindow* window, Player& player, State& state) {
 
 	if (player.isSeen) startChase();
 
-	if (getForwardVelocity() < 1.f && ai_state != AISTATE::PATROL) {
+	if (brakeTime > 0) {
+		brake(state.timeStep);
+		return;
+	}
+
+	if (abs(getForwardVelocity()) < 1.f && ai_state == AISTATE::CHASE) {
 		stuckTime += state.timeStep;
-		if (stuckTime > 2.0f) {
+		if (stuckTime > 1.5f) {
 			reverseTime = 1.0f;
 		}
 	}
 	else stuckTime = 0;
 
 	if (reverseTime > 0) {
-		reverse(state.timeStep);
+		reverse(state.timeStep, player.getPos());
 		return;
 	}
+
+	
 
 	switch (ai_state) {
 		case AISTATE::IDLE:
@@ -78,16 +85,42 @@ void PoliceCar::handle(GLFWwindow* window, Player& player, State& state) {
 // HANDLE AI STATES
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void PoliceCar::reverse(double timestep) {
+void PoliceCar::reverse(double timestep, glm::vec3 playerPos) {
 	inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);
 	reverseTime -= timestep;
 
 	if (reverseTime <= 0) {
 		reverseTime = 0;
 		targetPosition = dNodes->getClosestNodePosition(getPos()); //Re-orient self
+
+		if (glm::distance(getPos(), playerPos) < glm::distance(getPos(), targetPosition)) {
+			targetPosition = playerPos;
+			targetingPlayer = true;
+		}
+
 	}
 }
 
+
+void PoliceCar::brake(double timestep) {
+	inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
+	brakeTime -= timestep;
+
+	if (brakeTime <= 0) {
+		brakeTime = 0;
+		return;
+	}
+
+	glm::vec3 dir = targetPosition - this->getPos();
+	float temp = atan2(glm::dot(glm::cross(this->getDir(), dir), glm::vec3(0.f, 1.f, 0.f)), glm::dot(dir, this->getDir()));
+
+	if (temp < 0) {
+		if (temp < -0.05f) inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);
+	}
+	else {
+		if (temp > 0.05f) inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
+	}
+}
 
 // Stop for MAX_IDLE_TIME seconds before continuing to patrol
 void PoliceCar::idle(double timestep) {
@@ -126,6 +159,8 @@ void PoliceCar::chase(GLFWwindow* window, Player& player, double timestep) {
 	glm::vec3 playerPos = player.getPos();
 	glm::vec3 myPos = getPos();
 
+	updateSpeed(CHASE_ACCEL);
+
 	if (player.isSeen) {
 		//printf("CHASING PLAYER\n");
 		startChase();	// Reset timer
@@ -138,19 +173,23 @@ void PoliceCar::chase(GLFWwindow* window, Player& player, double timestep) {
 			targetingPlayer = true;
 			targetPosition = playerPos;
 		}
-		else if(targetingPlayer || x_z_distance(myPos, targetPosition) < 20.0f){
-			
+		else if(targetingPlayer || x_z_distance(myPos, targetPosition) < 30.0f){
+
 			targetPosition = dNodes->guideMeFromTo(myPos, playerPos);
 
 			if (x_z_distance(myPos, playerPos) <= x_z_distance(myPos, targetPosition)) {
 				targetPosition = playerPos;
 				targetingPlayer = true;
 			}
+
+			//If we need a hard turn
+			if (glm::dot(getDir(), glm::normalize(myPos - targetPosition)) < 0.5 && getForwardVelocity() > 20.f) { 
+				brakeTime = 0.5f;
+				return;
+			}
+
+			targetingPlayer = false;
 		} 
-		updateSpeed(PERSUIT_ACCEL);
-		targetingPlayer = false;
-		
-		
 
 		chaseTime -= timestep; // TODO use timer instead
 	}
@@ -199,6 +238,7 @@ void PoliceCar::reset() {
 	Vehicle::reset();
 	reverseTime = 0;
 	stuckTime = 0;
+	targetIndex = 0;
 	targetingPlayer = false;
 	targetPosition = getPos();
 }

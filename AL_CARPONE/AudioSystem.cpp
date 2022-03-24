@@ -228,7 +228,7 @@ void AudioSystem::updateMusic(State* state) {
 
 void AudioSystem::updateMiscSounds(Player* player, State* state) {
 
-	if (state->gamestate == GAMESTATE::GAMESTATE_PAUSE_MENU) {
+	if (state->gamestate == GAMESTATE::GAMESTATE_MAIN_MENU) {
 		for (irrklang::ISound* p : policeSirenPointers) {
 			p->setIsPaused(true);
 		}
@@ -237,7 +237,7 @@ void AudioSystem::updateMiscSounds(Player* player, State* state) {
 
 	glm::vec3 playerPosGLM = player->getPos();
 
-	assert(activePoliceVehicles.size() <= 11);
+	assert(state->activePoliceVehicles.size() <= 11);
 
 	for (int i = 0; i < state->activePoliceVehicles.size(); i++) {
 

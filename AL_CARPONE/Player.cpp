@@ -20,7 +20,7 @@ void Player::setPos(PxTransform T) {
 
 void Player::sendToJail(State& state) {
 	printf("GO TO JAIL!\n");
-
+	reset();
 	state.gamestate = GAMESTATE::GAMESTATE_JAILED;
 	return;
 }
@@ -76,7 +76,7 @@ void Player::updatePower() {
 }
 
 bool Player::canChooseTool(State& state) {
-	return can_choosePowerTool && state.selectedLevel == LEVELS::LEVEL_MAIN;
+	return can_choosePowerTool;
 }
 
 void Player::setChooseTool(bool b) {
@@ -94,7 +94,7 @@ bool Player::footOnBrake() {
 
 bool Player::canExit(State& state) {
 	//Check that in exit triggerbox and that player cash > exit requirement
-	return cash > 10.0f && state.selectedLevel == LEVELS::LEVEL_MAIN;
+	return cash > 10.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////
