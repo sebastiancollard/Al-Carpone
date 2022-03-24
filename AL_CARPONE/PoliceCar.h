@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "State.h"
 #include "DrivingNodes.h"
+#include <thread>
 
 /*
 PoliceCar Entity Class
@@ -42,11 +43,13 @@ public:
 	// Must be called after graphics system is initalized!
 	void createModel();
 	
-	void handle(GLFWwindow* window, Player& player, State& state);
+	void handle(glm::vec3 playerPos, bool playerSpotted, double timestep);
 	void stun(double seconds = 5);
 	void reset();
 	void startChase();
 	void hardReset();
+
+	void update(glm::vec3 playerPos, bool playerSpotted, double timeStep);
 
 	
 	
@@ -58,20 +61,32 @@ public:
 		return targetPosition;
 	}
 
+	
+	glm::vec3 myPos;
+	glm::vec3 myDir;
+	float myForwardSpeed;
+	bool shouldReset;
+
 private:
+
+
+	double prevTime;
 
 	double idleTime = 0;
 	double chaseTime = 0;
 	double stuckTime = 0;
 	double reverseTime = 0;
 	double brakeTime = 0;
+	double airTime = 0;
 
 	bool targetingPlayer = false;
 	
 
+	std::thread myThread;
+
 	void idle(double timestep);
-	void patrol(GLFWwindow* window);
-	void chase(GLFWwindow* window, Player& player, double timestep);
+	void patrol();
+	void chase(glm::vec3 playerPos, bool playerSpotted, double timestep);
 	void reverse(double timestep, glm::vec3 playerPos);
 	void brake(double timestep);
 

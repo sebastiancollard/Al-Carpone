@@ -26,7 +26,7 @@ unsigned int DrivingNodes::getClosestNodeIndex(glm::vec3 position) {
 	for (int i = 0; i < nodePositions.size(); i++) {
 		glm::vec3 node = nodePositions[i];
 		//ignore height in comparison
-		if (x_z_distance(node, position) < x_z_distance(nodePositions[closest_node_index], position)) closest_node_index = i;
+		if (x_z_distance_squared(node, position) < x_z_distance_squared(nodePositions[closest_node_index], position)) closest_node_index = i;
 	}
 
 	return closest_node_index;
@@ -254,7 +254,7 @@ glm::vec3 DrivingNodes::guideMeFromTo(glm::vec3 a, glm::vec3 b) {
 
 	unsigned int nodeA = getClosestNodeIndex(a);
 
-	if (x_z_distance(a, nodePositions[nodeA]) > 10.0f) return nodePositions[nodeA];
+	if (x_z_distance_squared(a, nodePositions[nodeA]) > 100.0f) return nodePositions[nodeA];
 
 	unsigned int nodeB = getClosestNodeIndex(b);
 

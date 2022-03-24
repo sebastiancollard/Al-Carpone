@@ -18,6 +18,8 @@ public:
 	PhysicsSystem(State& s, Player& p);
 
 	void step(GLFWwindow* window);
+	void stepPlayer(GLFWwindow* window);
+	void stepAI();
 	void cleanup();
 
 	// General Functions (//TODO some private??

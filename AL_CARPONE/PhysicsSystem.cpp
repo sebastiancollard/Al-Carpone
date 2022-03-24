@@ -86,34 +86,29 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 // STEP PHYSICS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 void PhysicsSystem::step(GLFWwindow* window)
 {
-	float timestep = state.timeStep * state.simulationSpeed; // 1.0f / 60.0f;
+	float timestep = state.timeStep * state.simulationSpeed; 
+
+	float substepSize = 1 / 10.f;
+
+	std::vector<Vehicle*> activevehicles;
+
+	for (PoliceCar* p : state.activePoliceVehicles) {
+		p->update(player.getPos(), player.isSeen, state.timeStep);
+		activevehicles.push_back(p);
+	}
+	if(state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
+	activevehicles.push_back(&player);
 
 	while (timestep > 0) {
 
-		float substep = 1.0f / 60.0f;
+		float substep = substepSize;
 
-		if (timestep < 1.0f / 60.0f) substep = timestep;
-
-		std::vector<Vehicle*> activevehicles;
-		
-		for (PoliceCar* p : state.activePoliceVehicles) {
-			activevehicles.push_back(p);
-		}
-		activevehicles.push_back(&player);
+		if (timestep < substepSize) substep = timestep;
 
 		for (int i = 0; i < activevehicles.size(); i++) {
 
-			//Update the control inputs for the vehicle.dwd
-			if (activevehicles[i] == &player) {
-				if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
-			}
-			else {
-				((PoliceCar*)(activevehicles[i]))->handle(window, player, state);
-			}
 			updateDrivingMode(*activevehicles[i]);
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, activevehicles[i]->vehicleInAir, *activevehicles[i]->vehiclePtr);
 
@@ -139,7 +134,7 @@ void PhysicsSystem::step(GLFWwindow* window)
 		gScene->simulate(substep);
 		gScene->fetchResults(true);
 
-		timestep -= (1.0f / 60.0f);
+		timestep -= substepSize;
 	}
 }
 

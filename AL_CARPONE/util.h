@@ -12,6 +12,12 @@ static bool is_in(unsigned int key, std::vector<unsigned int>& vector) {
 	return false;
 }
 
+static float x_z_distance_squared(glm::vec3 a, glm::vec3 b) {
+	float x = b.x - a.x;
+	float z = b.z - a.z;
+	return x * x + z * z;
+}
+
 //distance between vec3s ignoring height (y)
 static float x_z_distance(glm::vec3 a, glm::vec3 b) {
 	float x = b.x - a.x;
