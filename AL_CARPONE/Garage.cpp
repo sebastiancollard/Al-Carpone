@@ -16,13 +16,13 @@ void Garage::createTrigger(PxVec3 dimensions) {
 }
 
 void Garage::drawGarageMenu() {
-	//for (Upgrade& u : upgradeList) {
-	//	u.menuElements[u.tier].Draw(*graphics.shader2D);
-	//}
-	// draw indicator of which upgrade you are hovering over
-	// handle inputs
 	graphics.shader2D->use();
 	menuTitle.Draw(*graphics.shader2D);
+	for (Upgrade& u : upgradeList) {
+		u.menuElements[0].Draw(*graphics.shader2D);
+	}
+	// draw indicator of which upgrade you are hovering over
+	// handle inputs
 }
 
 void Garage::triggerFunction(Player& player, State& state) {

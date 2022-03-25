@@ -41,6 +41,8 @@ public:
 		}
 
 		else if (state->buildings[BUILDINGS::GARAGE1]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE1]))->drawGarageMenu();
-		
+		else if (state->buildings[BUILDINGS::GARAGE2]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE2]))->drawGarageMenu();
+		else if (state->buildings[BUILDINGS::GARAGE3]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE3]))->drawGarageMenu();
+
 	}
 };

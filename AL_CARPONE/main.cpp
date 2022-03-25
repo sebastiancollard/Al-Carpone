@@ -61,14 +61,40 @@ int main()
 	//player.vehiclePtr->mWheelsSimData.getWheelData(0).mMaxSteer;
 	//gFrictionPairs->setTypePairFriction(gFrictionPairs->getTypePairFriction() * 1.1f);
 
+	
 
 	Garage robbingGarage(GarageTypes::ROBBING_GARAGE, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19), graphics);
 	robbingGarage.menuTitle = Model("models/garageMenu/robbery_upgrades/robbery_upgrades_title.obj");
+	Upgrade robSpeed(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::ROB_SPEED, 3);
+	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_1.obj"));
+	robbingGarage.upgradeList.push_back(robSpeed);
+	Upgrade detectionRadius(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::DETECTION_RADIUS, 3);
+	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_1.obj"));
+	robbingGarage.upgradeList.push_back(detectionRadius);
 	state.buildings[BUILDINGS::GARAGE1] = &robbingGarage;
+
 	Garage handlingGarage(GarageTypes::HANDLING_GARAGE, PxVec3(-100, -20, -278), PxVec3(19, 2, 10), graphics);
+	handlingGarage.menuTitle = Model("models/garageMenu/handling_upgrades/handling_upgrades_title.obj");
+	Upgrade tireFriction(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TIRE_FRICTION, 3);
+	tireFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_1.obj"));
+	handlingGarage.upgradeList.push_back(tireFriction);
+	Upgrade steerAngle(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TURN_RADIUS, 3);
+	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_1.obj"));
+	handlingGarage.upgradeList.push_back(steerAngle);
+	Upgrade suspension(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::SUSPENSION, 3);
+	suspension.menuElements.push_back(Model("models/garageMenu/handling_upgrades/suspension_1.obj"));
+	handlingGarage.upgradeList.push_back(suspension);
 	state.buildings[BUILDINGS::GARAGE2] = &handlingGarage;
+
+
 	Garage engineGarage(GarageTypes::ENGINE_GARAGE, PxVec3(862.1, 20, -280.11), PxVec3(29, 2, 29), graphics);
+	engineGarage.menuTitle = Model("models/garageMenu/engine_upgrades/engine_upgrades_title.obj");
+	Upgrade topSpeed(UPGRADE_TYPE::ENGINE, UPGRADE_SPECIFIER::TOP_SPEED, 3);
+	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_1.obj"));
+	engineGarage.upgradeList.push_back(topSpeed);
 	state.buildings[BUILDINGS::GARAGE3] = &engineGarage;
+	
+
 	PxFilterData groundPlaneSimFilterData(sv::COLLISION_FLAG_GROUND, sv::COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	garageDoor = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 3);
 	
