@@ -1,6 +1,7 @@
 #pragma once
 #include "Timer.h"
 #include <iostream>
+#include "physx_globals.h"
 
 #define TOMATO_PATH "models/powerups/tomato.obj"
 #define DONUT_PATH "models/powerups/doughnut.obj"		//TO CHANGE
@@ -16,7 +17,7 @@ enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided t
 
 class PowerUp {
 private:
-	POWER_TYPE type = POWER_TYPE::TOMATO;		//which type of power-up
+	POWER_TYPE type = POWER_TYPE::DONUT;	//which type of power-up
 	std::string model_path;			//set to tomato path automatically for testing
 	
 	Timer timer;			
@@ -28,6 +29,8 @@ private:
 public:
 	bool throw_item = false;
 	bool drop_item = false;
+	
+	physx::PxRigidActor* actorPtr;
 
 	PowerUp();
 	PowerUp(POWER_TYPE power_type);

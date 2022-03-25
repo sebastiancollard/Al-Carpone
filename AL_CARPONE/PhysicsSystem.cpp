@@ -30,6 +30,7 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
 	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
+	PxInitExtensions(*gPhysics, gPvd);
 
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
@@ -51,6 +52,7 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+
 	}
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
@@ -66,6 +68,8 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 
 	//Create the friction table for each combination of tire and surface type.
 	gFrictionPairs = createFrictionPairs(gMaterial);
+
+	//load level in main
 
 	//Create a plane to drive on.
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
@@ -84,60 +88,57 @@ PhysicsSystem::PhysicsSystem(State& s, Player& p) : state(s), player(p)
 // STEP PHYSICS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 void PhysicsSystem::step(GLFWwindow* window)
 {
-	float timestep = state.timeStep * state.simulationSpeed; // 1.0f / 60.0f;
+	float timestep = state.timeStep * state.simulationSpeed;
+
+	float substepSize = 1 / 10.f;
+
+	std::vector<Vehicle*> activevehicles;
+
+	for (PoliceCar* p : state.activePoliceVehicles) {
+		p->update(player.getPos(), state.timeStep);
+		activevehicles.push_back(p);
+	}
+	if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
+	activevehicles.push_back(&player);
 
 	while (timestep > 0) {
 
-		float substep = 1.0f / 60.0f;
+		float substep = substepSize;
 
-		if (timestep < 1.0f / 60.0f) substep = timestep;
+		if (timestep < substepSize) substep = timestep;
 
-		// Handle Player Vehicle
-		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
-		simulate_vehicle(&player, substep);
+		for (int i = 0; i < activevehicles.size(); i++) {
 
-		// Handle Police Vehicles
-		for (PoliceCar* policecar : state.activePoliceVehicles) {
-			policecar->handle(window, player, state);
-			simulate_vehicle(policecar, substep);
+			updateDrivingMode(*activevehicles[i]);
+			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, activevehicles[i]->vehicleInAir, *activevehicles[i]->vehiclePtr);
+
+
+			//Raycasts.
+			PxVehicleWheels* vehicles[1] = { activevehicles[i]->vehiclePtr };
+			PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+			const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
+			PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
+
+
+			//Vehicle update.
+			const PxVec3 grav = gScene->getGravity();
+			PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
+			PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, player.vehiclePtr->mWheelsSimData.getNbWheels()} };
+			PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+
+			//Work out if the vehicle is in the air.
+			activevehicles[i]->vehicleInAir = activevehicles[i]->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
 		}
 
 		//Scene update.
 		gScene->simulate(substep);
 		gScene->fetchResults(true);
 
-		timestep -= (1.0f / 60.0f);
+		timestep -= substepSize;
 	}
 }
-
-
-void PhysicsSystem::simulate_vehicle(Vehicle* vehicle, float substep) {
-	updateDrivingMode(*vehicle);
-	PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, substep, vehicle->vehicleInAir, *vehicle->vehiclePtr);
-
-
-	//Raycasts.
-	PxVehicleWheels* vehicles[1] = { vehicle->vehiclePtr };
-	PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
-	const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
-	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
-
-
-	//Vehicle update.
-	const PxVec3 grav = gScene->getGravity();
-	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
-	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, player.vehiclePtr->mWheelsSimData.getNbWheels()} };
-	PxVehicleUpdates(substep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
-
-	//Work out if the vehicle is in the air.
-	vehicle->vehicleInAir = vehicle->vehiclePtr->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
-}
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,13 +149,17 @@ void PhysicsSystem::simulate_vehicle(Vehicle* vehicle, float substep) {
 
 void PhysicsSystem::cleanup()
 {
-	// Free Vehicle Pointers
-	player.vehiclePtr->getRigidDynamicActor()->release();
-	player.vehiclePtr->free();
+	std::vector<Vehicle*> activevehicles;
 
 	for (PoliceCar* p : state.activePoliceVehicles) {
-		p->vehiclePtr->getRigidDynamicActor()->release();
-		p->vehiclePtr->free();
+		activevehicles.push_back(p);
+	}
+	activevehicles.push_back(&player);
+
+	// Free Vehicle Pointers
+	for (Vehicle* v : activevehicles) {
+		v->vehiclePtr->getRigidDynamicActor()->release();
+		v->vehiclePtr->free();
 	}
 
 	// TODO release trigger actors?
@@ -198,7 +203,8 @@ void PhysicsSystem::createDynamic(const PxTransform& t, const PxGeometry& geomet
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 }
 
-PxRigidDynamic* PhysicsSystem::createDynamicItem(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
+//CURRENTLY UNUSED. PLEASE KEEP FOR BACK-UP OPTION
+PxRigidDynamic* PhysicsSystem::createDynamicItemOld(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
 {
 	static PxU32 dynamicCounter = 0;
 
@@ -214,6 +220,45 @@ PxRigidDynamic* PhysicsSystem::createDynamicItem(const PxTransform& t, const PxG
 
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 	return dynamic;
+}
+
+physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(std::string path, const PxTransform& t, const PxVec3& velocity) {
+	Model item_model(path);
+
+	std::vector<PxVec3> positions;
+	for (Vertex& v : item_model.meshes[0].vertices)
+		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+	PxVec3* verts = positions.data();
+
+	PxConvexMeshDesc convexDesc;
+	convexDesc.points.count = positions.size();
+	convexDesc.points.stride = sizeof(PxVec3);
+	convexDesc.points.data = verts;
+	convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+	PxConvexMesh* convexMesh = NULL;
+	PxDefaultMemoryOutputStream buf;
+	if (gCooking->cookConvexMesh(convexDesc, buf))
+	{
+		PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
+		convexMesh = gPhysics->createConvexMesh(id);
+	}
+
+	physx::PxRigidDynamic* dynamic = gPhysics->createRigidDynamic(PxTransform(t));
+
+	PxShape* itemConvexShape = PxRigidActorExt::createExclusiveShape(*dynamic,
+		PxConvexMeshGeometry(convexMesh), *gMaterial);
+
+	PxFilterData filter(COLLISION_FLAG_ITEM, COLLISION_FLAG_ITEM_AGAINST, 0, 0);
+	itemConvexShape->setSimulationFilterData(filter);
+
+	dynamic->setAngularDamping(0.5f);
+	dynamic->setLinearVelocity(velocity);
+	gScene->addActor(*dynamic);					//Note: items are not added to physx_actors
+
+	return dynamic;
+
 }
 
 
@@ -243,14 +288,13 @@ PxTriangleMesh* PhysicsSystem::createTriangleMesh(const PxVec3* verts, const PxU
 
 PxTriangleMesh* PhysicsSystem::createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection)
 {
-	std::vector<std::string> level_physx_paths{
-		"models/map/map_physx.obj",
-		"models/tuning_testlevel/tuning_testlevel_physx.obj",
-		"models/racetrack/racetrack_physx.obj",
-		"models/map/garage_door.obj"
-	};
+	std::string level_physx_path = "models/map/map_physx.obj";
+	std::string garage_door_path = "models/map/garage_door.obj";
+	
+	std::string path = level_physx_path;
+	if (selection == 1) path = garage_door_path;
 
-	Model level(level_physx_paths[selection]);
+	Model level(path);
 
 	std::vector<PxVec3> model_positions;
 	std::vector<PxU32> model_indices;

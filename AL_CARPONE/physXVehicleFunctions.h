@@ -71,6 +71,8 @@ VehicleDesc initVehicleDesc(VEHICLE_TYPE type)
 	vehicleDesc.chassisCMOffset = chassisCMOffset;
 	vehicleDesc.chassisMaterial = chassisMat;
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_CHASSIS, COLLISION_FLAG_CHASSIS_AGAINST, 0, 0);
+	if (type == POLICE_CAR)
+		vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_CHASSIS_POLICE, COLLISION_FLAG_CHASSIS_POLICE_AGAINST, 0, 0);
 
 	vehicleDesc.wheelMass = wheelMass;
 	vehicleDesc.wheelRadius = wheelRadius;
@@ -79,6 +81,8 @@ VehicleDesc initVehicleDesc(VEHICLE_TYPE type)
 	vehicleDesc.numWheels = nbWheels;
 	vehicleDesc.wheelMaterial = gMaterial;
 	vehicleDesc.wheelSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
+	if (type == POLICE_CAR)
+		vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL_POLICE, COLLISION_FLAG_WHEEL_POLICE_AGAINST, 0, 0);
 
 	return vehicleDesc;
 }

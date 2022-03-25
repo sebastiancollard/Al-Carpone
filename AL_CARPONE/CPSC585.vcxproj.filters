@@ -67,12 +67,6 @@
     <Filter Include="Source Files\Misc">
       <UniqueIdentifier>{73aaab45-45a5-47e7-8fd0-7b0c745e374d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Entity\Abilities">
-      <UniqueIdentifier>{07448453-d072-410d-947a-82ec99474620}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Entity\Abilities">
-      <UniqueIdentifier>{dafce16f-caa2-4a83-bc25-c79b7218aab0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -168,9 +162,6 @@
     <ClCompile Include="PauseMenu.cpp">
       <Filter>Source Files\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="PowerUp.cpp">
-      <Filter>Source Files\Entity\Abilities</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
@@ -203,6 +194,14 @@
     </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>Source Files\Windows</Filter>
+    <ClCompile Include="DrivingNodes.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+     <ClCompile Include="PowerUp.cpp">
+      <Filter>Source Files\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -308,9 +307,6 @@
     <ClInclude Include="PauseMenu.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="PowerUp.h">
-      <Filter>Header Files\Entity\Abilities</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
@@ -336,6 +332,15 @@
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Garage.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="DrivingNodes.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUp.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>

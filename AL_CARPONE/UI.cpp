@@ -2,6 +2,7 @@
 
 #include "SelectItem.h"
 #include "BoxTrigger.h"
+#include "Garage.h"
 
 
 
@@ -78,6 +79,11 @@ void UI::drawPopups(State* state, GraphicsSystem* graphics) {
 		|| state->buildings[BUILDINGS::CORNERSTORE2]->isInRange) {
 		press_f_to_enter_corner_store->Draw(*graphics->shader2D);
 	}
+
+	// Garages
+	else if (state->buildings[BUILDINGS::GARAGE1]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE1]))->drawGarageMenu();
+	else if (state->buildings[BUILDINGS::GARAGE2]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE2]))->drawGarageMenu();
+	else if (state->buildings[BUILDINGS::GARAGE3]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE3]))->drawGarageMenu();
 }
 
 
@@ -116,10 +122,10 @@ glm::vec3 UI::calculateOnMapPos(glm::vec3 pos) {
 
 	float scalex = 0.5 / 1080;
 	float scalez = -0.5 / 720;
-	//float offsetx = (0.65) * -1.5;
-	//float offsetz = (0.32) * 1.5;
-	float offsetx = 150 * scalex;
-	float offsetz = -725 * scalez;
+	float offsetx = -0.930;
+	float offsetz = 0.505;
+	//float offsetx = 150 * scalex;
+	//float offsetz = -725 * scalez;
 
 	return vec3(scalex * pos.x + offsetx, scalez * pos.z + offsetz, 0.f);
 }

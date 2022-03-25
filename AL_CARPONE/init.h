@@ -1,8 +1,10 @@
 #pragma once
+bool debugmode = false;
 
 // Graphics Libraries
 #include <glm/gtc/type_ptr.hpp>
 #include "constants.h"
+#include <ft2build.h>
 
 // Physics Libraries
 #include "snippetvehiclecommon/SnippetVehicleFilterShader.h"
@@ -36,12 +38,18 @@
 #include "Exit.h"
 #include "CornerStore.h"
 #include "Garage.h"
-
 #include "PowerUp.h"
 #include "SelectItem.h"
+#include "AI.h"
 
 
+struct DebugTools {
+	Model red_arrow, blue_arrow, grey_arrow, red_node, blue_node, grey_node;
+	DebugTools() :
+		red_arrow("models/debug/red_arrow.obj"), blue_arrow("models/debug/blue_arrow.obj"), grey_arrow("models/debug/grey_arrow.obj"),
+		red_node("models/debug/red_node.obj"), blue_node("models/debug/blue_node.obj"), grey_node("models/debug/grey_node.obj") {}
 
+};
 
 //Used for debugging
 void printMat4(glm::mat4 m) {

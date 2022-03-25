@@ -10,7 +10,6 @@
 #include "GraphicsSystem.h"
 
 
-
 // Make sure to create this after graphics is initialized!!!
 class UI {
 

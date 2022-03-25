@@ -5,7 +5,7 @@ PowerUp::PowerUp() {}
 
 PowerUp::PowerUp(POWER_TYPE power_type) {
 	type = power_type;
-	duration_sec = 0.f;
+	duration_sec = 15.f;					//default is 15 seconds (choose 0 duration for there to be no timer)
 }
 
 
