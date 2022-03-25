@@ -7,7 +7,7 @@
 
 // TODO not yet in seconds
 #define MAX_IDLE_TIME 20		
-#define MAX_CHASE_TIME 30
+#define MAX_CHASE_TIME 10
 
 
 // Car Speeds
@@ -193,6 +193,8 @@ void PoliceCar::patrol() {
 // AI only goes forward atm
 // Resets after timer runs out
 void PoliceCar::chase(glm::vec3 playerPos,double timestep) {
+
+	printf("CHASETIME: %.2f\n", chaseTime);
 
 	updateSpeed(CHASE_ACCEL);
 
