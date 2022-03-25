@@ -70,12 +70,53 @@ int main()
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
 
-	Garage engineGarage(0, PxVec3(250, 0, -100), PxVec3(10, 2, 10));
-	state.buildings[BUILDINGS::GARAGE1] = &engineGarage;
-	Garage handlingGarage(1, PxVec3(-100, -20, -270), PxVec3(20, 2, 10));
+	// engine upgrade variables
+	//player.vehiclePtr->mDriveSimData.getGearsData().mSwitchTime;
+	//player.vehiclePtr->mDriveSimData.getEngineData().mPeakTorque;
+
+	// robbery upgrade variables
+	//bank.robRate;
+	//state.activePoliceVehicles[0]->detectionRadius;
+
+	// handling upgrade variables
+	//player.vehiclePtr->mWheelsSimData.getSuspensionData(0).mSpringStrength;
+	//player.vehiclePtr->mWheelsSimData.getWheelData(0).mMaxSteer;
+	//gFrictionPairs->setTypePairFriction(gFrictionPairs->getTypePairFriction() * 1.1f);
+
+	
+
+	Garage robbingGarage(GarageTypes::ROBBING_GARAGE, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19), graphics);
+	robbingGarage.menuTitle = Model("models/garageMenu/robbery_upgrades/robbery_upgrades_title.obj");
+	Upgrade robSpeed(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::ROB_SPEED, 3);
+	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_1.obj"));
+	robbingGarage.upgradeList.push_back(robSpeed);
+	Upgrade detectionRadius(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::DETECTION_RADIUS, 3);
+	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_1.obj"));
+	robbingGarage.upgradeList.push_back(detectionRadius);
+	state.buildings[BUILDINGS::GARAGE1] = &robbingGarage;
+
+	Garage handlingGarage(GarageTypes::HANDLING_GARAGE, PxVec3(-100, -20, -278), PxVec3(19, 2, 10), graphics);
+	handlingGarage.menuTitle = Model("models/garageMenu/handling_upgrades/handling_upgrades_title.obj");
+	Upgrade tireFriction(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TIRE_FRICTION, 3);
+	tireFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_1.obj"));
+	handlingGarage.upgradeList.push_back(tireFriction);
+	Upgrade steerAngle(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TURN_RADIUS, 3);
+	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_1.obj"));
+	handlingGarage.upgradeList.push_back(steerAngle);
+	Upgrade suspension(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::SUSPENSION, 3);
+	suspension.menuElements.push_back(Model("models/garageMenu/handling_upgrades/suspension_1.obj"));
+	handlingGarage.upgradeList.push_back(suspension);
 	state.buildings[BUILDINGS::GARAGE2] = &handlingGarage;
-	Garage robbingGarage(2, PxVec3(846, 20, -280), PxVec3(20, 2, 15));
-	state.buildings[BUILDINGS::GARAGE3] = &robbingGarage;
+
+
+	Garage engineGarage(GarageTypes::ENGINE_GARAGE, PxVec3(862.1, 20, -280.11), PxVec3(29, 2, 29), graphics);
+	engineGarage.menuTitle = Model("models/garageMenu/engine_upgrades/engine_upgrades_title.obj");
+	Upgrade topSpeed(UPGRADE_TYPE::ENGINE, UPGRADE_SPECIFIER::TOP_SPEED, 3);
+	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_1.obj"));
+	engineGarage.upgradeList.push_back(topSpeed);
+	state.buildings[BUILDINGS::GARAGE3] = &engineGarage;
+	
+
 	PxFilterData groundPlaneSimFilterData(sv::COLLISION_FLAG_GROUND, sv::COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	garageDoor = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 1);
 	
@@ -224,6 +265,8 @@ int main()
 		///////////////////////////////////////////////////////////////
 		else {	
 			// toggles garage door physx objects
+			// must be done before physics.step()
+			garageDoorOpen = !player.beingChased(state);
 			if (garageDoorOpen && !garageDoorPrev) gScene->removeActor(*garageDoor);
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;
@@ -242,6 +285,7 @@ int main()
 			if (player.getPower()->shouldDespawn()) {
 				despawnItem();
 				player.getPower()->setType(NONE);
+				player.getPower()->actorPtr = NULL;
 			}
 
 
@@ -397,7 +441,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					if (i != 0) activeCar = policeCarModel;
 
 					if (j == 0) {
-						activeCar->Draw(FRWHEEL, *graphics->shader3D, model);;
+						activeCar->Draw(FRWHEEL, *graphics->shader3D, model);
 					}
 					else if (j == 1) {
 						activeCar->Draw(FLWHEEL, *graphics->shader3D, model);
@@ -414,7 +458,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 				}
 			}
 			//Instead of cycling through all physx actors, this cycles through those that have been added to the 
-			//sinple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
+			//simple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
 			//with that actor. Is very similar to the above for loop.
 			//Future TODO: for more complex objects, add ability to have multiple models per object (like the cars)
 			for (auto object : simple_renderables) {
@@ -465,37 +509,48 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->stopThrow();
 		PxRigidDynamic* actor;
 
-		if (player->getPower()->getType() == DONUT) {
-			actor = physics->createDynamicItem(PxTransform(
-				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-				PxBoxGeometry(0.3, 0.2, 0.3),	//donut is box
-				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
+		if (player->getPower()->getType() == DONUT) {		//PLAYER THROWS DONUT
+			actor = physics->createDynamicItem(
+				player->getPower()->getModelPath(),
+				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 20.0f		//donut velocity
 			);
 		}
 		else {
-			actor = physics->createDynamicItem(PxTransform(
-				PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-				PxSphereGeometry(0.5),			//tomato is sphere
+			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
+				player->getPower()->getModelPath(),
+				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
 		}
+		
 		Model model = Model(player->getPower()->getModelPath());
 		simple_renderables.push_back({ actor, model, "powerup"});
-		//player->getPower()->setType(NONE);
+		player->getPower()->actorPtr = actor;
 
 	}
-	else if (player->getPower()->drop_item) {		//PLAYER DROPS SPIKE TRAP
+	else if (player->getPower()->drop_item) {				//PLAYER DROPS SPIKE TRAP
 		player->getPower()->stopDrop();
 
-		PxRigidDynamic* actor = physics->createDynamicItem(PxTransform(
-			PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-			PxBoxGeometry(1.2, 0.3, 0.3),		//spike trap is box
+		PxRigidDynamic* actor = physics->createDynamicItem(
+			player->getPower()->getModelPath(),
+			PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);
 		
 		Model model = Model(player->getPower()->getModelPath());
 		simple_renderables.push_back({ actor, model , "powerup" });
-		//player->getPower()->setType(NONE);
+		player->getPower()->actorPtr = actor;
 
 	}
+	else if (!player->isDetectable() && player->getCurrentModelType() == AL_CARPONE) {		//Player is now camouflaged
+		player->setCurrentModel(POLICE_CAR);
+	}
+	
+	if (player->isDetectable() && player->getCurrentModelType() == POLICE_CAR) {			//Player has just come out of camouflage
+		player->setCurrentModel(AL_CARPONE);
+	}
+
+
+
 }

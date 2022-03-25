@@ -77,7 +77,6 @@ public:
 	\param[in] materials a pointer to an array of material pointers
 	\param[in] materialCount the count of materials
 	\param[in] shapeFlags optional PxShapeFlags
-
 	\return The newly created shape.
 
 	@see PxShape PxShape::release(), PxPhysics::createShape(), PxRigidActor::attachShape()

@@ -1,22 +1,25 @@
 #pragma once
 #include <vector>
+#include "Model.h"
 
 typedef unsigned int uint;
 
 // total list of upgrades go here
 enum UPGRADE_SPECIFIER {
-	FRICTION = 0,
-	BRAKES,
+	ROB_SPEED = 0,
+	DETECTION_RADIUS,
 
 	TOP_SPEED,
 	NOISE,
 
-	TURN_RADIUS
+	TIRE_FRICTION,
+	TURN_RADIUS,
+	SUSPENSION
 };
 
 // we'll wanna have more types, these are just ones we'll want for sure. used mostly to determine which garage each upgrade will belong to.
 enum UPGRADE_TYPE {
-	WHEELS = 0,
+	ROBBERY = 0,
 	ENGINE,
 	HANDLING
 };
@@ -31,6 +34,8 @@ public:
 
 	// stores three values per upgrade tier. 1: delta that affects the target parameter 2: whether the delta is multiplicative or additive 3: cost for the given tier
 	std::vector<std::tuple<float, bool, uint>> upgradeInfo;
+	
+	std::vector<Model> menuElements;
 
 	Upgrade(uint upgradeType, uint upgradeSpecifier, uint highestTier);
 

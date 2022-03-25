@@ -27,10 +27,13 @@ private:
 	bool footIsOnGas = false;
 	bool footIsOnBrake = false;
 
+	CarModel4W* player_model;
+	CarModel4W* police_model;
 	
 
-	bool detectable = true;		//does not do anything yet. flag that specifies whether the player is detectable to enemies
-	double cash = 0;				//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+	bool detectable = true;					//Flag that specifies whether the player is detectable to enemies
+	VEHICLE_TYPE model_type = AL_CARPONE;	//Used for model switching when using the camouflage power
+	double cash = 90;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
 	double cashRateMultiplier = 5;
 
@@ -59,6 +62,7 @@ public:
 
 	// Must be called after graphics system is initalized!
 	void createModel();
+	void setCurrentModel(VEHICLE_TYPE type);
 
 
 	// Handle all key inputs relevant to driving
@@ -72,6 +76,8 @@ public:
 	void sendToJail(State& state);
 	void rob(State& state);
 
+	bool beingChased(State& state);
+
 	// Robbing Mehcanism
 	int getCash();
 	void addCash(double amount);
@@ -81,6 +87,7 @@ public:
 	//Power-up related mechanisms
 	bool isDetectable();
 	void setDetectable(bool can_detect);
+	VEHICLE_TYPE getCurrentModelType();
 	PowerUp* getPower();
 	void usePower();
 	void updatePower();

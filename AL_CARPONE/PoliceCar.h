@@ -32,8 +32,9 @@ public:
 
 	AISTATE ai_state = AISTATE::PATROL;
 	BoxTrigger* headlights;
+	unsigned int detectionRadius = 10.f;
 	DrivingNodes* dNodes;
-
+	bool isStunned;
 
 	PoliceCar() {}
 

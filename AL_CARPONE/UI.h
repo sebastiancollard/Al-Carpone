@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "SelectItem.h"
 #include "BoxTrigger.h"
+#include "Garage.h"
 
 // Make sure to create this after graphics is initialized!!!
 class UI {
@@ -38,6 +39,10 @@ public:
 			graphics->shader2D->use();
 			press_f_to_enter_corner_store->Draw(*graphics->shader2D);
 		}
-		
+
+		else if (state->buildings[BUILDINGS::GARAGE1]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE1]))->drawGarageMenu();
+		else if (state->buildings[BUILDINGS::GARAGE2]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE2]))->drawGarageMenu();
+		else if (state->buildings[BUILDINGS::GARAGE3]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE3]))->drawGarageMenu();
+
 	}
 };

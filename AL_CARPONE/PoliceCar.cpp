@@ -166,6 +166,7 @@ void PoliceCar::idle(double timestep) {
 	idleTime -= timestep; // TODO use Timer instead
 
 	if (idleTime <= 0) ai_state = AISTATE::PATROL;
+	//isStunned = false;
 }
 
 
@@ -246,6 +247,7 @@ void PoliceCar::startChase() {
 void PoliceCar::stun(double seconds) {
 	if (seconds > 0) idleTime = seconds;
 	ai_state = AISTATE::IDLE;
+	isStunned = true;
 }
 
 void PoliceCar::reset() {

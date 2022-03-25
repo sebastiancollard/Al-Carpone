@@ -4,6 +4,7 @@ bool debugmode = false;
 // Graphics Libraries
 #include <glm/gtc/type_ptr.hpp>
 #include "constants.h"
+#include <ft2build.h>
 
 // Physics Libraries
 #include "snippetvehiclecommon/SnippetVehicleFilterShader.h"
@@ -37,7 +38,6 @@ bool debugmode = false;
 #include "Exit.h"
 #include "CornerStore.h"
 #include "Garage.h"
-
 #include "PowerUp.h"
 #include "AI.h"
 
