@@ -68,7 +68,7 @@ public:
 			}
 
 			// Headlights
-			for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
+			/*for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
 
 				if (v == state.activeVehicles[0]) { // This is player -> skip
 					continue;
@@ -106,7 +106,7 @@ public:
 						}
 					}
 				}
-			}
+			}*/
 		}
 	}
 
@@ -124,7 +124,7 @@ public:
 					PxActor* otherActor = (itemActr == pairHeader.actors[0]) ? pairHeader.actors[1] : pairHeader.actors[0];
 					PoliceCar* popo;
 
-					for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
+					/*for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
 
 						if (v == state.activeVehicles[0]) { // This is player -> skip
 							continue;
@@ -161,7 +161,7 @@ public:
 								}
 							}
 						}
-					}
+					}*/
 				}
 			}
 		}
