@@ -44,7 +44,14 @@ public:
 						state.buildings[j]->isInRange = !state.buildings[j]->isInRange; // Set boolean value
 						if (state.buildings[j]->isInRange) {
 							//std::cout << "BUILDING IN RANGE!!!" << std::endl;
-							if (j == 1 || j == 2 || j == 3) garageDoorOpen = true;
+							if (j == 1 || j == 2 || j == 3) {
+								garageDoorOpen = true;
+								for (PoliceCar* p : state.activePoliceVehicles) {
+									if (p->chaseTime > 0) garageDoorOpen = false;
+									break;
+								}
+							}
+						
 						}
 						else {
 							//std::cout << "BUILDING OUT OF RANGE!!!" << std::endl;
@@ -59,17 +66,12 @@ public:
 				}
 
 				// Headlights
-				for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
-
+				for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars	
 					if ((pairs[i].triggerActor == popo->headlights->ptr) && (player.isDetectable())) {
-						player.isSeen = !player.isSeen;
-						if(player.isSeen) popo->startChase();
-						player.jailTimer.reset();
+						popo->playerInTrigger = !popo->playerInTrigger;
 					}
 				}
 			}
-
-			
 		}
 	}
 	

@@ -1,12 +1,13 @@
  //Initializes the physx system and all global variables and calls other includes.
 #include"init.h"
+#include"util.h"
 
 namespace sv = snippetvehicle;
 
-extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, PoliceCar*);
-extern void despawnEnemy(Vehicle*);
+extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools);
 extern void despawnItem();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
+
 
 int main()
 {
@@ -27,7 +28,11 @@ int main()
 	PauseMenu pauseMenu;
 	cout << "	UI..." << endl;
 	UI ui;
-	 
+	
+	graphics.clearBuffer();
+	mainMenu.drawLoadingGameScreen(graphics);
+	graphics.swapBuffers();
+
 	cout << "Initalizing Physics..." << endl;
 
 	//Set up physx with vehicle snippet:
@@ -41,8 +46,26 @@ int main()
 	//TODO Cleanup
 	//Setup main player vehicle
 	player = Player(0);
-	state.player = &player;
+	state.playerPtr = &player;
+	
+	cout << "Initializing AI..." << endl;
 
+
+	//Setup police and driving nodes
+	DrivingNodes* dNodes = new DrivingNodes(
+		load_positions("models/map/PATROL_NODES.obj"), load_edges("models/map/PATROL_NODES.obj"),
+		load_positions("models/map/NAVIGATION_NODES.obj"), load_edges("models/map/NAVIGATION_NODES.obj"));
+
+	Model police_car_chassis("models/police_car/police_car_chassis.obj");
+	Model police_car_lwheel("models/police_car/police_car_wheel_left.obj");
+	Model police_car_rwheel("models/police_car/police_car_wheel_right.obj");
+
+	CarModel4W* policeCarModel = new CarModel4W(police_car_chassis, police_car_lwheel, police_car_rwheel);
+
+	createPolice(dNodes, policeCarModel, state);
+
+	DebugTools dTools;
+	
 	// Build list of buildings
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
@@ -54,7 +77,7 @@ int main()
 	Garage robbingGarage(2, PxVec3(846, 20, -280), PxVec3(20, 2, 15));
 	state.buildings[BUILDINGS::GARAGE3] = &robbingGarage;
 	PxFilterData groundPlaneSimFilterData(sv::COLLISION_FLAG_GROUND, sv::COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	garageDoor = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 3);
+	garageDoor = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, 1);
 	
 	CornerStore cornerStore1(PxVec3(-24.470, 0.964, -11.839));
 	state.buildings[BUILDINGS::CORNERSTORE1] = &cornerStore1;
@@ -67,13 +90,11 @@ int main()
 
 	SelectItem selectItem;
 
+
+
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
-	PoliceCar police_car1;
-	PoliceCar police_car2;
-	PoliceCar police_car3;
-	PoliceCar police_car4;
-	
+
 
 	graphics.enableDepthBuffer();
 
@@ -82,6 +103,22 @@ int main()
 	BoundCamera boundCamera(player, state);	// Locked in a sphere around the car
 	FreeCamera freeCamera(player);		// Move and look freely anywhere (for debugging)
 	Camera* activeCamera = &boundCamera;
+
+	PxTransform T(PxVec3(250.f, 2.0f, -90.f));
+	T.q = PxQuat(0.000010, 0.999808, 0.000475, -0.019572);
+	player.setResetPoint(T);
+
+	gScene->addActor(*garageDoor);
+
+	state.updateTime();
+	state.updateTime(); //flush timestep to fix step()
+
+	spawnPolice(state);
+
+
+
+	state.resetVehicles();
+
 
 	//////////////////////////////////////////////////////////////////////////
 	// MAIN LOOP
@@ -132,95 +169,15 @@ int main()
 		///////////////////////////////////////////////////////////////
 		else if (state.gamestate == GAMESTATE_MAIN_MENU) {
 			//Draw the menu
-			mainMenu.drawMenu(graphics, state);
-			
-			// Despawn any additional active vehicles (enemies)
-			while (state.activePoliceVehicles.size() > 0) {
-				despawnEnemy(state.activePoliceVehicles.back());
-				state.activePoliceVehicles.pop_back();
+			mainMenu.drawMenu(graphics, state, &audio);
+	
+			if (state.gamestate == GAMESTATE::GAMESTATE_INGAME) {
+				state.updateTime();
+				state.updateTime();
 			}
-		
-			
-			// If exiting the main menu
-			if (state.gamestate == GAMESTATE_INGAME) {
 
-				graphics.clearBuffer();
-				mainMenu.drawLoadingScreen(graphics);
-				graphics.swapBuffers();
-
-				// Setup level
-				mainMenu.changeLevel(state.selectedLevel);
-				
-				if (state.selectedLevel == LEVELS::LEVEL_MAIN) {
-					
-					PxTransform T(PxVec3(250.f, 2.0f, -90.f));
-					T.q = PxQuat(0.000010, 0.999808, 0.000475, -0.019572);
-					player.setResetPoint(T);
-
-					police_car1 = PoliceCar(1);
-					police_car1.moveStartPoint(PxVec3(559.949, 31.3, -360.091));
-					police_car1.createModel();
-					state.activePoliceVehicles.push_back(&police_car1);
-
-					police_car2 = PoliceCar(2);
-					police_car2.moveStartPoint(PxVec3(419.948730, 21.455765, -60.534622));
-					police_car2.createModel();
-					state.activePoliceVehicles.push_back(&police_car2);
-					
-					police_car3 = PoliceCar(3);
-					police_car3.moveStartPoint(PxVec3(100.000031, 0.299998, -220.079498));
-					police_car3.createModel();
-					state.activePoliceVehicles.push_back(&police_car3);
-					
-					police_car4 = PoliceCar(4);
-					police_car4.moveStartPoint(PxVec3(-99.999969, 0.299998, -220.079498));
-					police_car4.createModel();
-					state.activePoliceVehicles.push_back(&police_car4);
-
-					gScene->addActor(*garageDoor);
-				}
-				else {
-					player.setResetPoint(PxTransform(PxVec3(0,0,0)));
-					gScene->removeActor(*garageDoor);
-				}
-				
-				//Remove the old level pointer and add the new
-				gGroundPlane = physics.createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics, gCooking, state.selectedLevel);
-				
-				gScene->removeActor(*activeLevelActorPtr);
-				
-				gScene->addActor(*gGroundPlane);
-
-				PxU32 size = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) * sizeof(PxActor*);
-				PxActor** actors = (PxActor**)malloc(size);
-				gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, actors, size, 0);
-				activeLevelActorPtr = actors[gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC) - 1];
-
-				if (state.selectedLevel == LEVEL_TUNING) {
-					//spawn police car on tuning level
-					police_car1 = PoliceCar(1);
-					police_car1.createModel();
-					state.activePoliceVehicles.push_back(&police_car1);
-				}
-				
-				//Reset active vehicles
-				player.reset();
-				for (PoliceCar* p : state.activePoliceVehicles) {
-					p->reset();
-				}
-
-			}
-			
 		}
-		///////////////////////////////////////////////////////////////
-		//PAUSE MENU
-		///////////////////////////////////////////////////////////////
-		else if (state.gamestate == GAMESTATE_PAUSE_MENU) {
-			pauseMenu.handleInputs(graphics.window, state);
-			pauseMenu.drawPauseMenu(graphics, state);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, &police_car1);
-		}
 		///////////////////////////////////////////////////////////////
 		//corner store
 		///////////////////////////////////////////////////////////////
@@ -271,11 +228,10 @@ int main()
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;
 		
+
 			//Simulate physics through the timestep
 			physics.step(graphics.window);
-
-			//PxTransform t = player.vehiclePtr->getRigidDynamicActor()->getGlobalPose();
-			//printf("POS: <%.2f,%.2f,%.2f>\n Q: <%.2f,%.2f,%.2f,%.2f>\n", t.p.x, t.p.y, t.p.z, t.q.x, t.q.y, t.q.z, t.q.w);
+	
 
 			//Update the players physics variables (velocity, acceleration, jerk)
 			//Dont need to check other vehicles (yet?)
@@ -288,20 +244,31 @@ int main()
 				player.getPower()->setType(NONE);
 			}
 
+
 			//update player jail timer
 			player.jailTimer.tick();
-			if (player.isSeen) {
-				if (player.jailTimer.getDeltaTime() > 2.0f) {
-					player.sendToJail(state);
 
-					for (PoliceCar* p : state.activePoliceVehicles) {
-						p->hardReset();
-						
-					}
+			bool playerDetected = false;
+
+			for (PoliceCar* p : state.activePoliceVehicles) {
+				if (p->playerDetected) {
+					playerDetected = true;
+					break;
 				}
 			}
-				
 
+			if (playerDetected) {
+				for (PoliceCar* p : state.activePoliceVehicles) {
+					p->startChase();
+				}
+				if (!debugmode && player.jailTimer.getDeltaTime() > 5.0f) {
+					for (PoliceCar* p : state.activePoliceVehicles) {
+						p->hardReset();
+					}
+					player.sendToJail(state);
+				}
+			}
+					
 			else player.jailTimer.reset();
 
 			//Check for special inputs (currently only camera mode change)
@@ -318,7 +285,8 @@ int main()
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car1);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools);
+
 
 			// DEBUG MODE
 			if (state.debugMode) { // Camera is deactivated
@@ -327,7 +295,7 @@ int main()
 		}
 		graphics.swapBuffers();
 	}
-
+	deletePolice(state);
 	debugPanel.cleanUp();
 	graphics.cleanup();
 	physics.cleanup();
@@ -338,7 +306,7 @@ int main()
 
 
 
-void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, PoliceCar* police_car) {
+void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools) {
 
 	glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 	glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
@@ -353,19 +321,11 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	graphics->shader3D->setMat4("projection", projection);
 	graphics->shader3D->setMat4("view", view);
 
-	graphics->shader3D->setInt("numLights", mainMenu->light_positions->size());
+	graphics->shader3D->setInt("numLights", mainMenu->light_positions.size());
 
-	////////////////////////////
-	//test for loading 3d item//
-	////////////////////////////
-	//if (player->canChooseTool(*state))
-	//{
-	//	Model("models/powerups/TomatoBeef.obj").Draw(*graphics->shader3D);
-	//}
-
-	for (int i = 0; i < mainMenu->light_positions->size(); i++) {
+	for (int i = 0; i < mainMenu->light_positions.size(); i++) {
 		std::string path = "light_positions[" + std::to_string(i) + "]";
-		graphics->shader3D->setVec3(path.c_str(), (*mainMenu->light_positions)[i]);
+		graphics->shader3D->setVec3(path.c_str(), mainMenu->light_positions[i]);
 	}
 
 	// render the loaded model
@@ -374,10 +334,18 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	graphics->shader3D->setMat4("model", model);
 	graphics->shader3D->setVec3("camPos", glm::vec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z));
 	graphics->shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
-	mainMenu->active_level->Draw(*graphics->shader3D);
-	if (!state->selectedLevel && !garageDoorOpen) mainMenu->levels[3].Draw(*graphics->shader3D);
+	mainMenu->level.Draw(*graphics->shader3D);
 
-	
+	if (!garageDoorOpen) mainMenu->garageDoor.Draw(*graphics->shader3D);
+
+	if (debugmode) {
+		for (PoliceCar* p : state->activePoliceVehicles) {
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, p->getTargetNodeLocation());
+			graphics->shader3D->setMat4("model", model);
+			dTools.red_node.Draw(*graphics->shader3D);
+		}
+	}
 
 	// Render dynamic physx shapes
 	{
@@ -419,7 +387,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					graphics->shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
 					CarModel4W* activeCar;
 					activeCar = player->car;
-					if (i != 0) activeCar = police_car->car;
+					if (i != 0) activeCar = policeCarModel;
 
 					if (j == 0) {
 						activeCar->Draw(FRWHEEL, *graphics->shader3D, model);;
@@ -459,20 +427,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			}
 		}
 	}
-}
-
-
-void despawnEnemy(Vehicle* enemy) {
-
-	gScene->removeActor(*enemy->actorPtr);
-	for (int i = 0; i < physx_actors.size(); i++) {
-		if (physx_actors[i].actorPtr == enemy->actorPtr) {
-			printf("ERASING\n");
-			physx_actors.erase(physx_actors.begin() + i);
-			return;
-		}
-	}
-	delete(enemy);
 }
 
 void despawnItem() 

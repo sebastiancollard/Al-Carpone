@@ -13,7 +13,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
-			state.gamestate = GAMESTATE_PAUSE_MENU;
+			state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 		}
 		state.escape_isHeld = true;
 		return;
@@ -56,10 +56,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 	{
 		if (!state.R_isHeld) {
-			player.reset();
-			for (PoliceCar* p : state.activePoliceVehicles) {
-				p->reset();
-			}
+			state.resetVehicles();
 		}
 		state.R_isHeld = true;
 	}
@@ -89,7 +86,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 				//std::cout << "start (PS4 options, XBOX menu, nspro +) " << std::endl;	//ps4 - options
 				if (!state.option_isHeld) 
 				{
-					state.gamestate = GAMESTATE_PAUSE_MENU;
+					state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 				}
 				state.option_isHeld = true;
 				return;
@@ -114,10 +111,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 				//std::cout << "TRIANGLE (xbox y, ns pro x)" << std::endl;
 				if (!state.triangle_isHeld)
 				{
-					player.reset();
-					for (PoliceCar* p : state.activePoliceVehicles) {
-						p->reset();
-					}
+					state.resetVehicles();
 				}
 				state.R_isHeld = true;
 			}

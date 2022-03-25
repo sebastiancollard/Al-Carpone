@@ -1,14 +1,15 @@
-#include "State.h"
-
-#include<glad/glad.h>
-#include<GLFW/glfw3.h>
+#include"State.h"
 
 
-State::State() {
-	player = new Player();
+//Updates the state's time-sensitive variables.
+void State::updateTime() {
+	currTime = glfwGetTime();
+	timeStep = currTime - prevTime;
+	prevTime = currTime;
+	timeSinceLastFpsUpdate += timeStep;
 }
 
-
+//Toggles the camera mode between bound and unbound.
 void State::toggleCameraMode() {
 	if (cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) {
 		cameraMode = CAMERA_MODE_BOUND;
@@ -18,9 +19,9 @@ void State::toggleCameraMode() {
 	}
 }
 
-void State::updateTime() {
-	currTime = glfwGetTime();
-	timeStep = currTime - prevTime;
-	prevTime = currTime;
-	timeSinceLastFpsUpdate += timeStep;
+void State::resetVehicles() {
+	for (PoliceCar* p : activePoliceVehicles) {
+		p->reset();
+	}
+	playerPtr->reset();
 }

@@ -24,8 +24,8 @@ private:
 	
 	static Player player;		//static instance of itself
 
-	bool footIsOnGas;
-	bool footIsOnBrake;
+	bool footIsOnGas = false;
+	bool footIsOnBrake = false;
 
 	
 
