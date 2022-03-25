@@ -68,31 +68,45 @@ public:
 			}
 
 			// Headlights
-			for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
+			/*for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
 
-				if (pairs[i].triggerActor == popo->headlights->ptr) {
-					//PLAYER VS HEADLIGHTS
-					if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable())) {
-						player.isSeen = !player.isSeen;
-						//std::cout << player.isSeen << std::endl;
-						if (player.isSeen) popo->startChase();
-						player.jailTimer.reset();
+				if (v == state.activeVehicles[0]) { // This is player -> skip
+					continue;
+				}
+
+				else {
+					PoliceCar* popo;
+
+					try {
+						popo = (PoliceCar*)v; // Just in case
 					}
-
-					//DONUT VS HEADLIGHTS 
-					else if ((player.getPower()->getType() == DONUT) && (pairs[i].otherActor == player.getPower()->actorPtr)) {
-						if (popo->isStunned) {
-							popo->isStunned = false;
+					catch (exception e) {
+						std::cerr << "Couldn't cast vehicle to PoliceCar: " << e.what() << std::endl;
+						continue;
+					}
+						
+					if (pairs[i].triggerActor == popo->headlights->ptr) {
+						//PLAYER VS HEADLIGHTS
+						if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable())) {
+							player.isSeen = !player.isSeen;
+							//std::cout << player.isSeen << std::endl;
+							if (player.isSeen) popo->startChase();
+								player.jailTimer.reset();
 						}
-						else {
-							popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
-							std::cout << "Police spotted a donut!" << std::endl;
+						
+						//DONUT VS HEADLIGHTS 
+						else if ((player.getPower()->getType() == DONUT) && (pairs[i].otherActor == player.getPower()->actorPtr)) {
+							if (popo->isStunned) {
+								popo->isStunned = false;
+							}
+							else {
+								popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
+								std::cout << "Police spotted a donut!" << std::endl;
+							}
 						}
 					}
 				}
-			}
-				
-			
+			}*/
 		}
 	}
 
@@ -108,29 +122,46 @@ public:
 				if ((pairHeader.actors[0] == itemActr) || (pairHeader.actors[1] == itemActr))
 				{
 					PxActor* otherActor = (itemActr == pairHeader.actors[0]) ? pairHeader.actors[1] : pairHeader.actors[0];
+					PoliceCar* popo;
 
-					for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
-						//TOMATO collision with police chassis or wheel
-						if ((player.getPower()->getType() == TOMATO) && (otherActor == popo->actorPtr)) {
-							if (popo->isStunned) {
-								popo->isStunned = false;
+					/*for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
+
+						if (v == state.activeVehicles[0]) { // This is player -> skip
+							continue;
+						}
+
+						else {
+							PoliceCar* popo;
+
+							try {
+								popo = (PoliceCar*)v; // Just in case
 							}
-							else {
-								popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
-								std::cout << "Police was hit by a tomato!" << std::endl;
+							catch (exception e) {
+								std::cerr << "Couldn't cast vehicle to PoliceCar: " << e.what() << std::endl;
+								continue;
+							}
+							//TOMATO collision with police chassis or wheel
+							if ((player.getPower()->getType() == TOMATO) && (otherActor == popo->actorPtr)) {
+								if (popo->isStunned) {
+									popo->isStunned = false;
+								}
+								else {
+									popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
+									std::cout << "Police was hit by a tomato!" << std::endl;
+								}
+							}
+							//SPIKE TRAP collision with police chassis or wheel
+							else if ((player.getPower()->getType() == SPIKE_TRAP) && (otherActor == popo->actorPtr)) {
+								if (popo->isStunned) {
+									popo->isStunned = false;
+								}
+								else {
+									popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
+									std::cout << "Police ran over a spike trap!" << std::endl;
+								}
 							}
 						}
-						//SPIKE TRAP collision with police chassis or wheel
-						else if ((player.getPower()->getType() == SPIKE_TRAP) && (otherActor == popo->actorPtr)) {
-							if (popo->isStunned) {
-								popo->isStunned = false;
-							}
-							else {
-								popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
-								std::cout << "Police ran over a spike trap!" << std::endl;
-							}
-						}
-					}
+					}*/
 				}
 			}
 		}
@@ -140,7 +171,6 @@ public:
 	void onWake(PxActor** actors, PxU32 count) { PX_UNUSED(actors); PX_UNUSED(count); }
 	void onSleep(PxActor** actors, PxU32 count) { PX_UNUSED(actors); PX_UNUSED(count); }
 	void onAdvance(const PxRigidBody* const*, const PxTransform*, const PxU32) {}
-
 };
 
 

@@ -18,5 +18,5 @@ void Bank::createTrigger() {
 }
 
 void Bank::triggerFunction(Player& player, State& state){
-	player.addCash((double) robRate * state.timeStep);
+	player.rob(state);
 }

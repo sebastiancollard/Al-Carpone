@@ -289,9 +289,6 @@ int main()
 			}
 
 
-			//update player jail timer
-			player.jailTimer.tick();
-
 			bool playerDetected = false;
 
 			for (PoliceCar* p : state.activePoliceVehicles) {
@@ -302,18 +299,28 @@ int main()
 			}
 
 			if (playerDetected) {
+
+				player.jailTimer += state.timeStep;
+
 				for (PoliceCar* p : state.activePoliceVehicles) {
 					p->startChase();
 				}
-				if (!debugmode && player.jailTimer.getDeltaTime() > 5.0f) {
+				if (!debugmode && player.jailTimer >= 5.0f) {
+
+					player.sendToJail(state);
+
 					for (PoliceCar* p : state.activePoliceVehicles) {
 						p->hardReset();
 					}
-					player.sendToJail(state);
 				}
 			}
 					
-			else player.jailTimer.reset();
+			else {
+				player.jailTimer -= state.timeStep * 0.1f;
+				if (player.jailTimer < 0) player.jailTimer = 0;
+			}
+
+			//printf("JAILTIMER: %.2f\n", player.jailTimer);
 
 			//Check for special inputs (currently only camera mode change)
 			checkSpecialInputs(graphics.window, state, player, &audio);

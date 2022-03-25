@@ -39,7 +39,7 @@ void Player::setPos(PxTransform T) {
 void Player::sendToJail(State& state) {
 	printf("GO TO JAIL!\n");
 	reset();
-	jailTimer.reset();
+	jailTimer = 0;
 	state.gamestate = GAMESTATE::GAMESTATE_JAILED;
 	return;
 }
@@ -126,6 +126,27 @@ bool Player::canExit(State& state) {
 	return cash > 10.0f;
 }
 
+float chanceScale = 100000.f;
+
+void Player::rob(State& state) {
+	if (state.policeAlerted() || abs(getForwardVelocity()) > 0.1) return;
+
+	timeSpentRobbing += state.timeStep;
+
+	alertChancePerFrame += state.timeStep / chanceScale;
+
+	//printf("TIME[%.2f] CHANCE[%f]\n", timeSpentRobbing,alertChancePerFrame);
+
+	if (((float)(rand() % 1000) / 1000.0f) < alertChancePerFrame) state.alertPolice();
+
+	if (timeSpentRobbing > 1.0f) {
+		addCash(cashRobbedPerFrame * cashRateMultiplier * state.timeStep);
+	}
+
+
+// CASH_ROBBED_PER_FRAME* state.timeStep
+}
+
 ///////////////////////////////////////////////////////////////////////
 // INPUT HANDLING
 ///////////////////////////////////////////////////////////////////////
@@ -134,6 +155,31 @@ bool Player::canExit(State& state) {
 // Handle all key inputs relevant to driving
 void Player::handleInput(GLFWwindow* window, State& state)
 {
+
+	
+
+	// Handle interactions
+	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
+
+		for (Building* b : state.buildings) {
+			if (b == nullptr) continue;
+			if (b->isInRange) {
+				b->triggerFunction(*this, state);
+				return;
+			}
+		}
+		state.f_isHeld = true;
+	}
+	else {
+		state.f_isHeld = false;
+		timeSpentRobbing = 0;
+	}
+
+	if (alertChancePerFrame > 0) {
+		alertChancePerFrame -= state.timeStep / (3.0f * chanceScale);
+		if (alertChancePerFrame < 0) alertChancePerFrame = 0;
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		updateSpeed(1.0f);
 		inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
@@ -183,19 +229,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 	footIsOnBrake = state.space_isHeld;
 
-	// Handle interactions
-	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
-
-		for (Building* b : state.buildings) {
-			if (b == nullptr) continue;
-			if (b->isInRange) {
-				b->triggerFunction(*this, state);
-			}
-		}
-
-		state.f_isHeld = true;
-	}
-	else state.f_isHeld = false;
+	
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld) {
 		glm::vec3 front = getDir();
