@@ -107,5 +107,7 @@ public:
 	void updateTime();
 	void toggleCameraMode();
 	void resetVehicles();
+	void alertPolice();
+	bool policeAlerted();
 
 };

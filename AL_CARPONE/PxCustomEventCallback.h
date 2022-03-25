@@ -81,5 +81,3 @@ public:
 	void onAdvance(const PxRigidBody* const*, const PxTransform*, const PxU32) {}
 	void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) { PX_UNUSED((pairHeader)); PX_UNUSED((pairs)); PX_UNUSED((nbPairs)); }
 };
-
-

@@ -37,9 +37,17 @@ private:
 	PowerUp equippedPower =  PowerUp();
 	bool can_choosePowerTool = false;
 
+
+	//robbing
+	float timeSpentRobbing = 0;
+	float cashRobbedPerFrame = 5;
+	double alertChancePerFrame = 0;
+
+
+
 public:
 
-	Timer jailTimer;
+	float jailTimer;
 
 	bool isSeen = false;
 
@@ -62,6 +70,7 @@ public:
 	bool canExit(State& state);
 
 	void sendToJail(State& state);
+	void rob(State& state);
 
 	// Robbing Mehcanism
 	int getCash();

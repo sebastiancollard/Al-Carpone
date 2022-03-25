@@ -25,3 +25,16 @@ void State::resetVehicles() {
 	}
 	playerPtr->reset();
 }
+
+void State::alertPolice() {
+	for (PoliceCar* p : activePoliceVehicles) {
+		p->startChase();
+	}
+}
+
+bool State::policeAlerted() {
+	for (PoliceCar* p : activePoliceVehicles) {
+		if (p->chaseTime > 0) return true;
+	}
+	return false;
+}

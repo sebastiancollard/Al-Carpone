@@ -215,7 +215,7 @@ void PoliceCar::chase(glm::vec3 playerPos,double timestep) {
 	
 	if (chaseTime <= 0) {
 		//TODO stop siren
-		std::cout << "CHASING END" << std::endl;
+		//std::cout << "CHASING END" << std::endl;
 		ai_state = AISTATE::PATROL;
 		shouldReset = true;					//Teleport to start node
 	}
