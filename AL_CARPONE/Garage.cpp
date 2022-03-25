@@ -15,6 +15,17 @@ void Garage::createTrigger(PxVec3 dimensions) {
 	trigger = new BoxTrigger(true, t_pos, dimensions.x, dimensions.y, dimensions.z);
 }
 
+void Garage::drawGarageMenu() {
+	graphics.shader2D->use();
+	menuTitle.Draw(*graphics.shader2D);
+	for (Upgrade& u : upgradeList) {
+		u.menuElements[0].Draw(*graphics.shader2D);
+	}
+	// draw indicator of which upgrade you are hovering over
+	// handle inputs
+}
+
 void Garage::triggerFunction(Player& player, State& state) {
-	std::cout << "trigger" << std::endl;
+	std::cout << "GARAGE " << this->type << std::endl;
+	drawGarageMenu();
 }

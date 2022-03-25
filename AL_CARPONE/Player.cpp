@@ -26,6 +26,12 @@ void Player::sendToJail(State& state) {
 	return;
 }
 
+bool Player::beingChased(State& state) {
+	for (PoliceCar* p : state.activePoliceVehicles)
+		if (p->ai_state == AISTATE::CHASE) return true;
+	return false;
+}
+
 ///////////////////////////////////////////////////////////////////////
 // ROBING FUNCTIONS
 ///////////////////////////////////////////////////////////////////////

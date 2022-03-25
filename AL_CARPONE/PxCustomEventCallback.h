@@ -55,7 +55,7 @@ public:
 						}
 						else {
 							//std::cout << "BUILDING OUT OF RANGE!!!" << std::endl;
-							if (j == 1 || j == 2 || j == 3) garageDoorOpen = false;
+							if (j == 1 || j == 2 || j == 3); // garageDoorOpen = false;
 						} 
 					}
 					//if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr || pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) //corner store trigger area
