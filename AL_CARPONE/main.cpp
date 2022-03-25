@@ -264,12 +264,6 @@ int main()
 		//INGAME
 		///////////////////////////////////////////////////////////////
 		else {	
-			// toggles garage door physx objects
-			// must be done before physics.step()
-			garageDoorOpen = !player.beingChased(state);
-			if (garageDoorOpen && !garageDoorPrev) gScene->removeActor(*garageDoor);
-			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
-			garageDoorPrev = garageDoorOpen;
 		
 
 			//Simulate physics through the timestep
