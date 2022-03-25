@@ -67,33 +67,74 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	return convexMesh;
 }
 
+bool chassisMeshesInitialized = false;
+PxConvexMesh* carponeChassisMesh;
+PxConvexMesh* policeChassisMesh;
+
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int type)
 {
-	Model chassis(CHASSIS_PHYSX_OBJ_PATH);
-	if (type == 1) chassis = Model(POLICE_CAR_CHASSIS_PHYSX_PATH);
-	
+	if (!chassisMeshesInitialized) {
+		Model chassis(CHASSIS_PHYSX_OBJ_PATH);
 
-	std::vector<PxVec3> positions;
-	for (Vertex& v : chassis.meshes[0].vertices)
-		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+		std::vector<PxVec3> positions;
+		for (Vertex& v : chassis.meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
 
-	PxVec3* verts = positions.data();
+		PxVec3* verts = positions.data();
 
-	return createConvexMesh(verts,positions.size(),physics,cooking);
+		carponeChassisMesh = createConvexMesh(verts, positions.size(), physics, cooking);
+
+		chassis = Model(POLICE_CAR_CHASSIS_PHYSX_PATH);
+
+		positions = std::vector<PxVec3>();
+
+		for (Vertex& v : chassis.meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+		verts = positions.data();
+
+		policeChassisMesh = createConvexMesh(verts, positions.size(), physics, cooking);
+
+		chassisMeshesInitialized = true;
+	}
+	if (type == 0) return carponeChassisMesh;
+	return policeChassisMesh;
 }
 
-PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking,unsigned int type)
-{
-	Model wheel(WHEEL_PHYSX_OBJ_PATH);
-	if (type == 1) wheel = Model(POLICE_CAR_WHEEL_PHYSX_PATH);
+bool wheelMeshesInitialized = false;
+PxConvexMesh* carponeWheelMesh;
+PxConvexMesh* policeWheelMesh;
 
-	std::vector<PxVec3> positions;
-	for (Vertex& v : wheel.meshes[0].vertices)
-		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
 
-	PxVec3* verts = positions.data();
+PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking,unsigned int type){
 
-	return createConvexMesh(verts,positions.size(),physics,cooking);
+	if (!wheelMeshesInitialized) {
+		Model wheel(WHEEL_PHYSX_OBJ_PATH);
+
+		std::vector<PxVec3> positions;
+		for (Vertex& v : wheel.meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+		PxVec3* verts = positions.data();
+
+		carponeWheelMesh = createConvexMesh(verts, positions.size(), physics, cooking);
+
+		wheel = Model(POLICE_CAR_WHEEL_PHYSX_PATH);
+
+		positions = std::vector<PxVec3>();
+
+		for (Vertex& v : wheel.meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+		verts = positions.data();
+
+		wheelMeshesInitialized = true;
+
+		policeWheelMesh = createConvexMesh(verts, positions.size(), physics, cooking);
+	}
+
+	if (type == 0) return carponeWheelMesh;
+	return policeWheelMesh;
 }
 
 PxRigidDynamic* createVehicleActor
