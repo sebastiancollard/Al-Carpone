@@ -275,13 +275,13 @@ int main()
 		///////////////////////////////////////////////////////////////
 		else if (state.gamestate == GAMESTATE_MAIN_MENU) {
 			//Draw the menu
-			mainMenu.drawMenu(graphics, state);
-			
-			// Despawn any additional active vehicles (enemies)
-			while (state.activeVehicles.size() > 1) {
-				despawnEnemy(state.activeVehicles.back());
-				state.activeVehicles.pop_back();
-			}
+			//mainMenu.drawMenu(graphics, state);
+			//
+			//// Despawn any additional active vehicles (enemies)
+			//while (state.activeVehicles.size() > 1) {
+			//	despawnEnemy(state.activeVehicles.back());
+			//	state.activeVehicles.pop_back();
+			//}
 		
 			RenderText(&graphics, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
 			// If exiting the main menu
@@ -493,7 +493,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
 	graphics->skybox->Draw(projection, view);
 	view = activeCamera->GetViewMatrix();
-
 
 	ui->update(state, player, graphics);
 
