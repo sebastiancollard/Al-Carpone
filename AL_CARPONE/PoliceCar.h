@@ -8,6 +8,8 @@
 #include "BoxTrigger.h"
 #include "Player.h"
 #include "State.h"
+#include "DrivingNodes.h"
+#include <thread>
 
 /*
 PoliceCar Entity Class
@@ -30,30 +32,67 @@ public:
 
 	AISTATE ai_state = AISTATE::PATROL;
 	BoxTrigger* headlights;
+	unsigned int detectionRadius = 10.f;
+	DrivingNodes* dNodes;
 	bool isStunned;
-
 
 	PoliceCar() {}
 
 	// Call parent constructor
-	PoliceCar(int ID);
+	PoliceCar(int ID, DrivingNodes* drivingNodes);
 
 	// Must be called after graphics system is initalized!
 	void createModel();
-
-	void handle(GLFWwindow* window, Player& player, State& state);
+	
+	void handle(glm::vec3 playerPos,double timestep);
 	void stun(double seconds = 5);
+	void reset();
 	void startChase();
 	void hardReset();
 
-private:
+	void update(glm::vec3 playerPos,double timeStep);
 
-	double idleTime = 0;
+	bool playerInTrigger; //Player in trigger volume
+	bool playerInSight; //Raycast to player successful
+	bool playerDetected; //playerInTrigger && playerInSight
+	
+	//debug
+	glm::vec3 getTargetDirection() {
+		return glm::normalize(targetPosition - getPos());
+	}
+	glm::vec3 getTargetNodeLocation() {
+		return targetPosition;
+	}
+
+	
+	glm::vec3 myPos;
+	glm::vec3 myDir;
+	float myForwardSpeed;
+	bool shouldReset;
+
 	double chaseTime = 0;
 
+private:
+
+
+	double prevTime;
+
+	double idleTime = 0;
+	double stuckTime = 0;
+	double reverseTime = 0;
+	double brakeTime = 0;
+	double airTime = 0;
+
+	bool targetingPlayer = false;
+	
+
+	std::thread myThread;
+
 	void idle(double timestep);
-	void patrol(GLFWwindow* window);
-	void chase(GLFWwindow* window, Player& player, double timestep);
+	void patrol();
+	void chase(glm::vec3 playerPos,double timestep);
+	void reverse(double timestep, glm::vec3 playerPos);
+	void brake(double timestep);
 
 	void driveTo(glm::vec3 targetPos);
 };

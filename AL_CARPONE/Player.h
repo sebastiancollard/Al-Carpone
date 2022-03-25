@@ -24,8 +24,8 @@ private:
 	
 	static Player player;		//static instance of itself
 
-	bool footIsOnGas;
-	bool footIsOnBrake;
+	bool footIsOnGas = false;
+	bool footIsOnBrake = false;
 
 	CarModel4W* player_model;
 	CarModel4W* police_model;
@@ -66,6 +66,8 @@ public:
 	bool canExit(State& state);
 
 	void sendToJail(State& state);
+
+	bool beingChased(State& state);
 
 	// Robbing Mehcanism
 	int getCash();

@@ -11,7 +11,7 @@ AudioSystem::AudioSystem() {
 	VehicleSoundEngine->setSoundVolume(1.0f);
 	MusicSoundEngine->setSoundVolume(musicVolume);
 	
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 11; i++) {
 		policeSirenPointers[i] = MiscSoundEngine->play3D(soundPaths[SIREN_LOOP].c_str(), irrklang::vec3df(0,0,0), true, true);
 		policeSirenPointers[i]->setVolume(3.0f);
 		policeSirenPointers[i]->setMinDistance(10.0f);
@@ -89,8 +89,6 @@ void AudioSystem::updateEngineAudio(Player* player, float pitch, float volume) {
 
 	if (footOnGas) {
 		if (!player->footOnGas()) {
-
-			
 
 			stopSound(SOUND_SELECTION::REV_LOOP);
 			playENGINESound(SOUND_SELECTION::REV_DOWN, false);
@@ -171,12 +169,12 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 		
 
 
-	playSound(IDLE_LOOP, true);
+
 	updateEngineAudio(player, pitch, volume);
 
 	if (player->vehicleInAir) {
 		stopSound(SOUND_SELECTION::GROUND_SOUNDS);
-		stopSound(SOUND_SELECTION::BRAKE_LOOP);
+		stopSound(SOUND_SELECTION::BRAKE_LOOP);;
 		return;
 	}
 	
@@ -184,6 +182,8 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 	setPitchAndVolume(SOUND_SELECTION::GROUND_SOUNDS,
 		MIN_GROUND_PITCH + (MAX_GROUND_PITCH - MIN_GROUND_PITCH) * (speed / 10.0f),
 		MIN_GROUND_VOLUME + (MAX_GROUND_VOLUME - MIN_GROUND_VOLUME) * (speed / 10.0f));
+
+	playSound(IDLE_LOOP, true);
 
 	if (soundPointers[IDLE_LOOP]) {
 		soundPointers[IDLE_LOOP]->setVolume(MIN_IDLE_VOLUME + (MAX_IDLE_VOLUME - MIN_IDLE_VOLUME) * revScale); // maybe make just speed based
@@ -228,7 +228,7 @@ void AudioSystem::updateMusic(State* state) {
 
 void AudioSystem::updateMiscSounds(Player* player, State* state) {
 
-	if (state->gamestate == GAMESTATE::GAMESTATE_PAUSE_MENU) {
+	if (state->gamestate == GAMESTATE::GAMESTATE_MAIN_MENU) {
 		for (irrklang::ISound* p : policeSirenPointers) {
 			p->setIsPaused(true);
 		}
@@ -236,6 +236,8 @@ void AudioSystem::updateMiscSounds(Player* player, State* state) {
 	}
 
 	glm::vec3 playerPosGLM = player->getPos();
+
+	assert(state->activePoliceVehicles.size() <= 11);
 
 	for (int i = 0; i < state->activePoliceVehicles.size(); i++) {
 

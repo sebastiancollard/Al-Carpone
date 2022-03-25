@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include "PxPhysicsAPI.h"
 #include "State.h"
+#include "Vehicle.h"
 #include "Player.h"
 
 using namespace physx;
@@ -18,6 +19,7 @@ public:
 	PhysicsSystem(State& s, Player& p);
 
 	void step(GLFWwindow* window);
+	void simulate_vehicle(Vehicle* vehicle, float substep);
 	void cleanup();
 
 	// General Functions (//TODO some private??
