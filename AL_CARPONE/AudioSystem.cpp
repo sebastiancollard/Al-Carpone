@@ -11,7 +11,7 @@ AudioSystem::AudioSystem() {
 	VehicleSoundEngine->setSoundVolume(1.0f);
 	MusicSoundEngine->setSoundVolume(musicVolume);
 	
-	for (int i = 0; i < 11; i++) {
+	for (int i = 0; i < 12; i++) {
 		policeSirenPointers[i] = MiscSoundEngine->play3D(soundPaths[SIREN_LOOP].c_str(), irrklang::vec3df(0,0,0), true, true);
 		policeSirenPointers[i]->setVolume(3.0f);
 		policeSirenPointers[i]->setMinDistance(10.0f);
@@ -67,6 +67,8 @@ const float MIN_BRAKE_PITCH = 0.7f;
 const float MAX_BRAKE_PITCH = 1.3f;
 const float MIN_BRAKE_VOLUME = 0.0f;
 const float MAX_BRAKE_VOLUME = 0.75f;
+
+
 
 float revScale = 0.0f;
 float revScaleGoal = 0.0f;
@@ -210,7 +212,7 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 	else stopSound(SOUND_SELECTION::BRAKE_LOOP);
 }
 
-
+void AudioSystem::updateMenuSounds(State* state) {}
 
 void AudioSystem::updateMusic(State* state) {
 

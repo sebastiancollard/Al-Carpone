@@ -19,8 +19,19 @@ enum SOUND_SELECTION {
 	GEAR_SWITCH1,
 	GROUND_SOUNDS,
 	WIND_LOOP,
-	SIREN_LOOP
+	SIREN_LOOP,
+	POP_UP_MENU
 	//TOTAL = 12
+};
+
+enum CORNER_STORE_SOUND 
+{
+	IDLE,
+	ENTER,
+	CHANGE_SELECTION,
+	PURCHASE_SUCCESS,
+	PURCHASE_ERROR
+	//TOTAL = 4
 };
 
 class AudioSystem {
@@ -43,6 +54,8 @@ public:
 	void updateMusic(State*);
 
 	void updateMiscSounds(Player*, State*);
+
+	void updateMenuSounds(State*);
 
 	void setMusicVolume(float);
 
@@ -73,7 +86,16 @@ private:
 		NULL,	//GEARSWITCH1
 		NULL,	//GROUND_SOUNDS
 		NULL,	//WIND_LOOP
+		NULL,	//POP UP MENU
 		//TOTAL = 12
+	};
+
+	std::vector<irrklang::ISound*> Corner_soundPointers{
+		NULL,	//IDLE,
+		NULL,	//CHANGE_SELECTION,
+		NULL,	//PURCHASE_SUCCESS,
+		NULL,	//PURCHASE_ERROR
+		//TOTAL = 4
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {
@@ -105,9 +127,19 @@ private:
 		"audio/gearswitch1.mp3",
 		"audio/wheelsOnGroundLOOP.wav",
 		"audio/windLOOP.wav",
-		"audio/sirenloop.wav"
+		"audio/sirenloop.wav",
+		"audio/pop_menu.wav"
 		//TOTAL = 12
 	};
+
+	//std::vector<std::string> corner_soundPaths{
+	//	"place holder",
+	//	"",
+	//	"audio/change_selection.wav",
+	//	"",
+	//	""
+	//};
+
 };
 
 
