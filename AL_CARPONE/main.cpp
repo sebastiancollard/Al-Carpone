@@ -345,9 +345,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	graphics->skybox->Draw(projection, view);
 	view = activeCamera->GetViewMatrix();
 
-
-	ui->update(state, player, graphics);
-
 	graphics->shader3D->use();
 	// send them to shader
 	graphics->shader3D->setMat4("projection", projection);
@@ -369,15 +366,12 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	}
 
 	// render the loaded model
-
 	glm::mat4 model = glm::mat4(1.0f);
 	graphics->shader3D->setMat4("model", model);
 	graphics->shader3D->setVec3("camPos", glm::vec3(activeCamera->pos.x, activeCamera->pos.y, activeCamera->pos.z));
 	graphics->shader3D->setInt("shaderMode", SHADER_MODE_DIFFUSE);
 	mainMenu->active_level->Draw(*graphics->shader3D);
 	if (!state->selectedLevel && !garageDoorOpen) mainMenu->levels[3].Draw(*graphics->shader3D);
-
-	
 
 	// Render dynamic physx shapes
 	{
@@ -459,6 +453,9 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			}
 		}
 	}
+
+	// UI needs to be drawn after all 3D elements
+	ui->update(state, player, graphics);
 }
 
 

@@ -1,43 +1,39 @@
 #pragma once
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+
 #include "Model.h"
-#include "SelectItem.h"
-#include "BoxTrigger.h"
+#include "State.h"
+#include "Player.h"
+#include "GraphicsSystem.h"
+
+
 
 // Make sure to create this after graphics is initialized!!!
 class UI {
 
 public:
+	// POPUPS
 	Model* press_f_to_rob;
 	Model* press_f_to_exit;
 	Model* press_f_to_enter_corner_store;
 	Model* Item;
 
+	// UI ELEMENTS
+	Model* minimap;
+	Model* player_marker;
 
-	UI() {
-		press_f_to_rob = new Model("models/popups/press_f_to_rob.obj");
-		press_f_to_exit = new Model("models/popups/press_f_to_exit.obj");
-		press_f_to_enter_corner_store = new Model("models/popups/press_f_to_enter_corner_store.obj");
-	}
+	UI();
 	
+	void update(State* state, Player* player, GraphicsSystem* graphics);
 
-	void update(State* state, Player* player, GraphicsSystem* graphics) {
-		//Tell player if they can rob
-		if (state->buildings[BUILDINGS::BANK]->isInRange) {
-			graphics->shader2D->use();
-			press_f_to_rob->Draw(*graphics->shader2D);
-		}
+private:
 
-		else if (state->buildings[BUILDINGS::EXIT]->isInRange) {
-			graphics->shader2D->use();
-			press_f_to_exit->Draw(*graphics->shader2D);
-		}
+	glm::mat4 player_movement = glm::mat4(1.f);
 
-		else if (state->buildings[BUILDINGS::CORNERSTORE1]->isInRange
-			|| state->buildings[BUILDINGS::CORNERSTORE2]->isInRange) {
-			graphics->shader2D->use();
-			press_f_to_enter_corner_store->Draw(*graphics->shader2D);
-		}
-		
-	}
+	void drawPopups(State* state, GraphicsSystem* graphics);
+	glm::mat4 updateMarkerPos(glm::vec3 original_pos);
+	glm::vec3 calculateOnMapPos(glm::vec3 pos);
 };
