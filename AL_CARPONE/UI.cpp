@@ -118,8 +118,8 @@ glm::vec3 UI::calculateOnMapPos(glm::vec3 pos) {
 	float scalez = -0.5 / 720;
 	//float offsetx = (0.65) * -1.5;
 	//float offsetz = (0.32) * 1.5;
-	float offsetx = 702 * (0.5 / 1864);	// px * scale
-	float offsetz = 1200 * (0.5 / 1391);
+	float offsetx = 150 * scalex;
+	float offsetz = -725 * scalez;
 
 	return vec3(scalex * pos.x + offsetx, scalez * pos.z + offsetz, 0.f);
 }
