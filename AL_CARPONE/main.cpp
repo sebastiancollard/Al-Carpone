@@ -80,76 +80,73 @@ int main()
 	//////////////////
 	//test free type//
 	//////////////////
-	FT_Library FT_library;
-	if (FT_Init_FreeType(&FT_library))
+	// FreeType
+	// --------
+	FT_Library ft;
+	// All functions return a value different than 0 whenever an error occurred
+	if (FT_Init_FreeType(&ft))
 	{
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 		return -1;
 	}
 
-	FT_Face FT_face;
-	//if (FT_New_Face(FT_library, "fonts/arial.ttf", 0, &FT_face))
-	//{
-	//	std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-	//	return -1;
-	//}
-	auto error = FT_New_Face(FT_library,
-		"freeType/Blah!.ttf",
-		0,
-		&FT_face);
-	if (error == FT_Err_Unknown_File_Format)
-	{
-		cout<<"the font file could be openedand read, but it appears that its font format is unsupported"<<endl;
+	// load font as face
+	FT_Face face;
+	if (FT_New_Face(ft, "./freeType/Blah!.ttf", 0, &face)) {
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+		return -1;
 	}
-	else if (error)
-	{
-		cout<<"another error code means that the font file could not be opened or read, or that it is broken"<<endl;
-	};
-	
-	//FT_Set_Pixel_Sizes(FT_face, 0, 48);
+	else {
+		// set size to load glyphs as
+		FT_Set_Pixel_Sizes(face, 0, 48);
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+		// disable byte-alignment restriction
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	for (unsigned char c = 0; c < 128; c++)
-	{
-		// load character glyph 
-		if (FT_Load_Char(FT_face, c, FT_LOAD_RENDER))
+		// load first 128 characters of ASCII set
+		for (unsigned char c = 0; c < 128; c++)
 		{
-			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-			continue;
+			// Load character glyph 
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+			{
+				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+				continue;
+			}
+			// generate texture
+			unsigned int texture;
+			glGenTextures(1, &texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_RED,
+				face->glyph->bitmap.width,
+				face->glyph->bitmap.rows,
+				0,
+				GL_RED,
+				GL_UNSIGNED_BYTE,
+				face->glyph->bitmap.buffer
+			);
+			// set texture options
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			// now store character for later use
+			Character character = {
+				texture,
+				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+				static_cast<unsigned int>(face->glyph->advance.x)
+			};
+			Characters.insert(std::pair<char, Character>(c, character));
 		}
-		// generate texture
-		unsigned int texture;
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			GL_RED,
-			FT_face->glyph->bitmap.width,
-			FT_face->glyph->bitmap.rows,
-			0,
-			GL_RED,
-			GL_UNSIGNED_BYTE,
-			FT_face->glyph->bitmap.buffer
-		);
-		// set texture options
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// now store character for later use
-		Character character = {
-			texture,
-			glm::ivec2(FT_face->glyph->bitmap.width, FT_face->glyph->bitmap.rows),
-			glm::ivec2(FT_face->glyph->bitmap_left, FT_face->glyph->bitmap_top),
-			FT_face->glyph->advance.x
-		};
-		Characters.insert(std::pair<char, Character>(c, character));
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	// destroy FreeType once we're finished
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
 
-	FT_Done_Face(FT_face);
-	FT_Done_FreeType(FT_library);
 	//////////////////
 	//test free type//
 	//////////////////
