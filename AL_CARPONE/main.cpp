@@ -6,7 +6,7 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools);
 extern void despawnItem();
-extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*);
 
 
 int main()
@@ -337,7 +337,7 @@ int main()
 
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
-			checkForItemActions(&player, &boundCamera, &physics);
+			checkForItemActions(&player, &boundCamera, &physics, &state);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools);
 
@@ -507,8 +507,9 @@ void despawnItem()
 	}
 }
 
-void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics) {
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state) {
 	if (player->getPower()->throw_item) {			//PLAYER THROWS ITEM
+		state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::THROW_OUT);
 		player->getPower()->stopThrow();
 		PxRigidDynamic* actor;
 

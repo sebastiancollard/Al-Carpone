@@ -198,7 +198,7 @@
     <ClCompile Include="State.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
-     <ClCompile Include="PowerUp.cpp">
+    <ClCompile Include="PowerUp.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
   </ItemGroup>
@@ -340,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="PowerUp.h">
       <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangePlaylist.h">
+      <Filter>Header Files\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

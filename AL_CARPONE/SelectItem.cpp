@@ -70,6 +70,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 				else 
 				{
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+					return;
 				}
 					
 				break;
@@ -84,6 +85,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 				else
 				{
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+					return;
 				}
 				break;
 			case 2:
@@ -97,6 +99,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 				else 
 				{
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+					return;
 				}
 				break;
 			case 3:
@@ -110,6 +113,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 				else 
 				{
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+					return;
 				}
 				break;
 			}
