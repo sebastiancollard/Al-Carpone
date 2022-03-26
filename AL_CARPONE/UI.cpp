@@ -57,6 +57,22 @@ void UI::update(State* state, Player* player, GraphicsSystem* graphics) {
 	// Draw Popups if applicable
 	graphics->shader2D->setMat4("model", mat4(1.f));
 	drawPopups(state, graphics);
+
+	if (state->buildings[BUILDINGS::GARAGE1]->isInRange) {
+		Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE1]));
+		g->handleInput(graphics->window, state, player);
+		g->drawGarageMenu();
+	}
+	else if (state->buildings[BUILDINGS::GARAGE2]->isInRange) {
+		Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE2]));
+		g->handleInput(graphics->window, state, player);
+		g->drawGarageMenu();
+	}
+	else if (state->buildings[BUILDINGS::GARAGE3]->isInRange) {
+		Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE3]));
+		g->handleInput(graphics->window, state, player);
+		g->drawGarageMenu();
+	}
 }
 
 
@@ -79,11 +95,6 @@ void UI::drawPopups(State* state, GraphicsSystem* graphics) {
 		|| state->buildings[BUILDINGS::CORNERSTORE2]->isInRange) {
 		press_f_to_enter_corner_store->Draw(*graphics->shader2D);
 	}
-
-	// Garages
-	else if (state->buildings[BUILDINGS::GARAGE1]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE1]))->drawGarageMenu();
-	else if (state->buildings[BUILDINGS::GARAGE2]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE2]))->drawGarageMenu();
-	else if (state->buildings[BUILDINGS::GARAGE3]->isInRange) ((Garage*)(state->buildings[BUILDINGS::GARAGE3]))->drawGarageMenu();
 }
 
 
