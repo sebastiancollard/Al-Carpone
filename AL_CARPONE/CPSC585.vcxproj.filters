@@ -194,6 +194,7 @@
     </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>Source Files\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="DrivingNodes.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
