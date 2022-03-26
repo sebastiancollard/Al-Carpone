@@ -18,6 +18,7 @@ public:
 
 	Shader* shader3D;
 	Shader* shader2D;
+	Shader* shaderText;
 
 	//Skybox skybox;
 

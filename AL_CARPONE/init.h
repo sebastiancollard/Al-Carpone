@@ -40,8 +40,7 @@
 #include "PowerUp.h"
 
 //freetype
-#include "ft2build.h"
-#include FT_FREETYPE_H  
+#include "textRenderer.h"
 
 
 //Used for debugging

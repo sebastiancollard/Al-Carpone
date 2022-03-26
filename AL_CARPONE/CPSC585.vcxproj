@@ -79,13 +79,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(ProjectDir)glew\libs;$(ProjectDir)glfw\libs;$(ProjectDir)glut\libs;$(ProjectDir)physx\libs_debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)snippets\include;$(ProjectDir)glut\include;$(ProjectDir)glm\include;$(ProjectDir)glfw\include;$(ProjectDir)glew\include;$(ProjectDir)physx\include;$(ProjectDir)stb\include;$(ProjectDir)KHR\include;$(ProjectDir)fmod\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)freeType\libs;$(ProjectDir)glew\libs;$(ProjectDir)glfw\libs;$(ProjectDir)glut\libs;$(ProjectDir)physx\libs_debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)freeType\include;$(ProjectDir)snippets\include;$(ProjectDir)glut\include;$(ProjectDir)glm\include;$(ProjectDir)glfw\include;$(ProjectDir)glew\include;$(ProjectDir)physx\include;$(ProjectDir)stb\include;$(ProjectDir)KHR\include;$(ProjectDir)fmod\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(ProjectDir)glut\libs;$(ProjectDir)glew\libs;$(ProjectDir)glfw\libs;$(ProjectDir)physx\libs_release;$(ProjectDir)freeType\libs;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)snippets\include;$(ProjectDir)glut\include;$(ProjectDir)glm\include;$(ProjectDir)glfw\include;$(ProjectDir)glew\include;$(ProjectDir)physx\include;$(ProjectDir)stb\include;$(ProjectDir)KHR\include;$(ProjectDir)fmod\include;$(ProjectDir)freeType\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)freeType\include;$(ProjectDir)snippets\include;$(ProjectDir)glut\include;$(ProjectDir)glm\include;$(ProjectDir)glfw\include;$(ProjectDir)glew\include;$(ProjectDir)physx\include;$(ProjectDir)stb\include;$(ProjectDir)KHR\include;$(ProjectDir)fmod\include;$(ProjectDir)freeType\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -189,6 +189,7 @@
     <ClCompile Include="SnippetVehicleTankCreate.cpp" />
     <ClCompile Include="SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="stb.cpp" />
+    <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Upgrade.cpp" />
     <ClCompile Include="Vehicle.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Upgrade.h" />
@@ -244,6 +246,8 @@
     <None Include="shader2D.vs" />
     <None Include="shader3D.fs" />
     <None Include="shader3D.vs" />
+    <None Include="shaderText.fs" />
+    <None Include="shaderText.vs" />
     <None Include="skybox.fs" />
     <None Include="skybox.vs" />
   </ItemGroup>

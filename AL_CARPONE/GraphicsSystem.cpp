@@ -40,6 +40,11 @@ GraphicsSystem::GraphicsSystem() {
 	// Generates Shader object using shaders default.vert and default.frag
 	shader3D = new Shader("shader3D.vs", "shader3D.fs");
 	shader2D = new Shader("shader2D.vs", "shader2D.fs");
+	shaderText = new Shader("shaderText.vs", "shaderText.fs");
+
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCREEN_WIDTH), 0.0f, static_cast<float>(SCREEN_HEIGHT));
+	shaderText->use();
+	shaderText->setMat4("projection", projection);
 
 	skybox = new Skybox();
 }

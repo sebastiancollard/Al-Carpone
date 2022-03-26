@@ -3,65 +3,10 @@
 
 namespace sv = snippetvehicle;
 
-extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, PoliceCar*);
+extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, PoliceCar*, TextRenderer*);
 extern void despawnEnemy(Vehicle*);
 extern void despawnItem();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
-
-struct Character {
-	unsigned int TextureID;  // ID handle of the glyph texture
-	glm::ivec2   Size;       // Size of glyph
-	glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
-	unsigned int Advance;    // Offset to advance to next glyph
-};
-
-std::map<char, Character> Characters;
-
-unsigned int VAO, VBO;
-
-void RenderText(GraphicsSystem* s, std::string text, float x, float y, float scale, glm::vec3 color)
-{
-	// activate corresponding render state	
-	s->shader2D->use();
-	glUniform3f(glGetUniformLocation(s->shader2D->ID, "textColor"), color.x, color.y, color.z);
-	glActiveTexture(GL_TEXTURE0);
-	glBindVertexArray(VAO);
-
-	// iterate through all characters
-	std::string::const_iterator c;
-	for (c = text.begin(); c != text.end(); c++)
-	{
-		Character ch = Characters[*c];
-
-		float xpos = x + ch.Bearing.x * scale;
-		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-
-		float w = ch.Size.x * scale;
-		float h = ch.Size.y * scale;
-		// update VBO for each character
-		float vertices[6][4] = {
-			{ xpos,     ypos + h,   0.0f, 0.0f },
-			{ xpos,     ypos,       0.0f, 1.0f },
-			{ xpos + w, ypos,       1.0f, 1.0f },
-
-			{ xpos,     ypos + h,   0.0f, 0.0f },
-			{ xpos + w, ypos,       1.0f, 1.0f },
-			{ xpos + w, ypos + h,   1.0f, 0.0f }
-		};
-		// render glyph texture over quad
-		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-		// update content of VBO memory
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		// render quad
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
-	}
-	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
 
 int main()
 {
@@ -82,6 +27,9 @@ int main()
 	PauseMenu pauseMenu;
 	cout << "	UI..." << endl;
 	UI ui;
+	cout << "	FreeType..." << endl;
+	TextRenderer text_renderer;
+	text_renderer.initFont();
 	 
 	cout << "Initalizing Physics..." << endl;
 
@@ -122,93 +70,6 @@ int main()
 	state.buildings[BUILDINGS::EXIT] = &exit;
 
 	SelectItem selectItem;
-
-	//////////////////
-	//test free type//
-	//////////////////
-	
-	// FreeType
-	// --------
-	FT_Library ft;
-	// All functions return a value different than 0 whenever an error occurred
-	if (FT_Init_FreeType(&ft))
-	{
-		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-		return -1;
-	}
-
-	// load font as face
-	FT_Face face;
-	if (FT_New_Face(ft, "./freeType/Blah!.ttf", 0, &face)) {
-		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-		return -1;
-	}
-	else {
-		// set size to load glyphs as
-		FT_Set_Pixel_Sizes(face, 0, 48);
-
-		// disable byte-alignment restriction
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-		// load first 128 characters of ASCII set
-		for (unsigned char c = 0; c < 128; c++)
-		{
-			// Load character glyph 
-			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-			{
-				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-				continue;
-			}
-			// generate texture
-			unsigned int texture;
-			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				GL_RED,
-				face->glyph->bitmap.width,
-				face->glyph->bitmap.rows,
-				0,
-				GL_RED,
-				GL_UNSIGNED_BYTE,
-				face->glyph->bitmap.buffer
-			);
-			// set texture options
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			// now store character for later use
-			Character character = {
-				texture,
-				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-				static_cast<unsigned int>(face->glyph->advance.x)
-			};
-			Characters.insert(std::pair<char, Character>(c, character));
-		}
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	// destroy FreeType once we're finished
-	FT_Done_Face(face);
-	FT_Done_FreeType(ft);
-
-	//////////////////
-	//test free type//
-	//////////////////
-
-	// configure VAO/VBO for texture quads
-	// -----------------------------------
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
 
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
@@ -275,15 +136,14 @@ int main()
 		///////////////////////////////////////////////////////////////
 		else if (state.gamestate == GAMESTATE_MAIN_MENU) {
 			//Draw the menu
-			//mainMenu.drawMenu(graphics, state);
-			//
-			//// Despawn any additional active vehicles (enemies)
-			//while (state.activeVehicles.size() > 1) {
-			//	despawnEnemy(state.activeVehicles.back());
-			//	state.activeVehicles.pop_back();
-			//}
-		
-			RenderText(&graphics, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+			mainMenu.drawMenu(graphics, state);
+			
+			// Despawn any additional active vehicles (enemies)
+			while (state.activeVehicles.size() > 1) {
+				despawnEnemy(state.activeVehicles.back());
+				state.activeVehicles.pop_back();
+			}
+	
 			// If exiting the main menu
 			if (state.gamestate == GAMESTATE_INGAME) {
 
@@ -365,7 +225,7 @@ int main()
 			pauseMenu.handleInputs(graphics.window, state);
 			pauseMenu.drawPauseMenu(graphics, state);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, &police_car1);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui, &state, &police_car1, &text_renderer);
 		}
 		///////////////////////////////////////////////////////////////
 		//corner store
@@ -464,7 +324,7 @@ int main()
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car1);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, &police_car1, &text_renderer);
 
 			
 
@@ -484,10 +344,7 @@ int main()
 	return EXIT_SUCCESS;
 }
 
-
-
-
-void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, PoliceCar* police_car) {
+void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, PoliceCar* police_car, TextRenderer* text_renderer) {
 
 	glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 	glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
@@ -502,14 +359,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	graphics->shader3D->setMat4("view", view);
 
 	graphics->shader3D->setInt("numLights", mainMenu->light_positions->size());
-
-	////////////////////////////
-	//test for loading 3d item//
-	////////////////////////////
-	//if (player->canChooseTool(*state))
-	//{
-	//	Model("models/powerups/TomatoBeef.obj").Draw(*graphics->shader3D);
-	//}
 
 	for (int i = 0; i < mainMenu->light_positions->size(); i++) {
 		std::string path = "light_positions[" + std::to_string(i) + "]";
@@ -607,8 +456,14 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			}
 		}
 	}
-}
 
+	//Render (freeType) text
+	Shader& shader = *graphics->shaderText;
+	//TODO: create textbox struct (text, xy, scale, colour) in textRenderer and keep track of certain textboxes such as cash for easy manipulation
+	std::string message = "Cash: $" + std::to_string(player->getCash());
+	text_renderer->RenderText(*graphics->shaderText, message, 650.0f, 25.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));	
+	//params: shader, text, x_pos (screen coord), y_pos(screen_coord), scale, colour
+}
 
 void despawnEnemy(Vehicle* enemy) {
 
