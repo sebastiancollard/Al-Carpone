@@ -93,7 +93,7 @@ void UI::drawPopups(State* state, GraphicsSystem* graphics) {
 // Return corresponding translation matrix to pass on to the shader later
 mat4 UI::updateMarkerPos(vec3 original_pos) {
 	vec3 player_pos = calculateOnMapPos(original_pos);
-	cout << player_pos.x << ',' << player_pos.y << ',' << player_pos.z << endl;
+	//cout << player_pos.x << ',' << player_pos.y << ',' << player_pos.z << endl;
 	return mat4(vec4(1, 0, 0, 0), vec4(0, 1, 0, 0), vec4(0, 0, 0, 1), vec4(player_pos, 1));
 }
 
