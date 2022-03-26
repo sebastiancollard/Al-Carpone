@@ -11,19 +11,34 @@ enum GarageTypes {
 	ROBBING_GARAGE
 };
 
+enum GarageSelection {
+	FIRST = 0,
+	SECOND,
+	THIRD
+};
+
 class Garage : public Building {
 public:
 	GraphicsSystem& graphics;
 
 	unsigned int type;
+	unsigned int currentSelection = 0;
 
 	Model menuTitle;
+	Model selectTop;
+	Model selectMid;
+	Model selectBot;
+
 	std::vector<Upgrade> upgradeList;
 	physx::PxVec3 position;	// Position currently hardcoded
 
 	float depth = 21.6f;	 //y axis
 	float height = 4.f; //z axis
 	float width = 21.6;	 //x axis
+
+	bool downPressed = false;
+	bool upPressed = false;
+	bool enterPressed = false;
 
 	Garage(unsigned int upgradeType, PxVec3 pos, PxVec3 dims, GraphicsSystem& g) : graphics(g) { 
 		type = upgradeType;
@@ -32,6 +47,7 @@ public:
 	}
 
 	void createTrigger(PxVec3 dimensions); // Must only be called once!
+	void handleInput(GLFWwindow* window, State* state, Player* player);
 	void drawGarageMenu();
 	void triggerFunction(Player& player, State& state); // ENTER GARAGE
 };

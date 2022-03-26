@@ -73,50 +73,133 @@ int main()
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
 
-	// engine upgrade variables
-	//player.vehiclePtr->mDriveSimData.getGearsData().mSwitchTime;
-	//player.vehiclePtr->mDriveSimData.getEngineData().mPeakTorque;
 
-	// robbery upgrade variables
-	//bank.robRate;
-	//state.activePoliceVehicles[0]->detectionRadius;
 
-	// handling upgrade variables
-	//player.vehiclePtr->mWheelsSimData.getSuspensionData(0).mSpringStrength;
-	//player.vehiclePtr->mWheelsSimData.getWheelData(0).mMaxSteer;
-	//gFrictionPairs->setTypePairFriction(gFrictionPairs->getTypePairFriction() * 1.1f);
-
+	// update player stats to starter stats
 	
+	// robbery speed done by default
+	// detection radius done by default
+
+	// top speed
+	PxVehicleEngineData engineData = player.vehiclePtr->mDriveSimData.getEngineData();
+	engineData.mPeakTorque = PLAYER_BASE_ENGINE_PEAK_TORQUE;
+	player.vehiclePtr->mDriveSimData.setEngineData(engineData);
+	// gear speed
+	PxVehicleGearsData gearData = player.vehiclePtr->mDriveSimData.getGearsData();
+	gearData.mSwitchTime = PLAYER_BASE_GEAR_CHANGE_SPEED;
+	player.vehiclePtr->mDriveSimData.setGearsData(gearData);
+
+	// road friction done by default
+	// steer angle
+	PxVehicleWheelData wheelData = player.vehiclePtr->mWheelsSimData.getWheelData(0);
+	wheelData.mMaxSteer = PLAYER_BASE_STEER_ANGLE;
+	player.vehiclePtr->mWheelsSimData.setWheelData(0, wheelData);
+	wheelData = player.vehiclePtr->mWheelsSimData.getWheelData(1);
+	wheelData.mMaxSteer = PLAYER_BASE_STEER_ANGLE;
+	player.vehiclePtr->mWheelsSimData.setWheelData(1, wheelData);
+	// car flip TODO
+	
+	Model select1("models/garageMenu/select_1.obj");
+	Model select2("models/garageMenu/select_2.obj");
+	Model select3("models/garageMenu/select_3.obj");
 
 	Garage robbingGarage(GarageTypes::ROBBING_GARAGE, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19), graphics);
 	robbingGarage.menuTitle = Model("models/garageMenu/robbery_upgrades/robbery_upgrades_title.obj");
-	Upgrade robSpeed(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::ROB_SPEED, 3);
+	robbingGarage.selectTop = select1;
+	robbingGarage.selectMid = select2;
+	robbingGarage.selectBot = select3;
+	Upgrade robSpeed(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::ROB_SPEED, 5);
 	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_1.obj"));
+	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_2.obj"));
+	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_3.obj"));
+	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_4.obj"));
+	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_5.obj"));
+	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_maxed.obj"));
+	robSpeed.upgradeInfo.clear();
+	robSpeed.upgradeInfo.push_back(std::make_tuple(1.25f, true, 5000));
+	robSpeed.upgradeInfo.push_back(std::make_tuple(2.5f, true, 11250));
+	robSpeed.upgradeInfo.push_back(std::make_tuple(5.f, true, 17500));
+	robSpeed.upgradeInfo.push_back(std::make_tuple(10.f, true, 30000));
+	robSpeed.upgradeInfo.push_back(std::make_tuple(20.f, true, 55000));
 	robbingGarage.upgradeList.push_back(robSpeed);
-	Upgrade detectionRadius(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::DETECTION_RADIUS, 3);
+	Upgrade detectionRadius(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::DETECTION_RADIUS, 5);
 	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_1.obj"));
+	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_2.obj"));
+	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_3.obj"));
+	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_4.obj"));
+	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_5.obj"));
+	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_maxed.obj"));
+	detectionRadius.upgradeInfo.clear();
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.1f, true, 15000));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.2f, true, 30000));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.3f, true, 60000));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.4f, true, 90000));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.5f, true, 110000));
 	robbingGarage.upgradeList.push_back(detectionRadius);
 	state.buildings[BUILDINGS::GARAGE1] = &robbingGarage;
 
 	Garage handlingGarage(GarageTypes::HANDLING_GARAGE, PxVec3(-100, -20, -278), PxVec3(19, 2, 10), graphics);
 	handlingGarage.menuTitle = Model("models/garageMenu/handling_upgrades/handling_upgrades_title.obj");
-	Upgrade tireFriction(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TIRE_FRICTION, 3);
-	tireFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_1.obj"));
-	handlingGarage.upgradeList.push_back(tireFriction);
-	Upgrade steerAngle(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TURN_RADIUS, 3);
+	handlingGarage.selectTop = select1;
+	handlingGarage.selectMid = select2;
+	handlingGarage.selectBot = select3;
+	Upgrade roadFriction(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TIRE_FRICTION, 3);
+	roadFriction.upgradeInfo.clear();
+	roadFriction.upgradeInfo.push_back(std::make_tuple(0.1f, true, 10000));
+	roadFriction.upgradeInfo.push_back(std::make_tuple(0.2f, true, 65000));
+	roadFriction.upgradeInfo.push_back(std::make_tuple(0.3f, true, 105000));
+	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_1.obj"));
+	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_2.obj"));
+	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_3.obj"));
+	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_maxed.obj"));
+	handlingGarage.upgradeList.push_back(roadFriction);
+	Upgrade steerAngle(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TURN_RADIUS, 2);
+	steerAngle.upgradeInfo.clear();
+	steerAngle.upgradeInfo.push_back(std::make_tuple(1.f / 3.f, true, 12500));
+	steerAngle.upgradeInfo.push_back(std::make_tuple(0.9999f, true, 50000));
 	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_1.obj"));
+	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_2.obj"));
+	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_maxed.obj"));
 	handlingGarage.upgradeList.push_back(steerAngle);
-	Upgrade suspension(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::SUSPENSION, 3);
-	suspension.menuElements.push_back(Model("models/garageMenu/handling_upgrades/suspension_1.obj"));
-	handlingGarage.upgradeList.push_back(suspension);
+	Upgrade flipOver(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::CAR_FLIP, 1);
+	flipOver.upgradeInfo.clear();
+	flipOver.upgradeInfo.push_back(std::make_tuple(0.f, true, 100000));
+	flipOver.menuElements.push_back(Model("models/garageMenu/handling_upgrades/car_flipper.obj"));
+	flipOver.menuElements.push_back(Model("models/garageMenu/handling_upgrades/car_flipper_maxed.obj"));
+	handlingGarage.upgradeList.push_back(flipOver);
 	state.buildings[BUILDINGS::GARAGE2] = &handlingGarage;
-
 
 	Garage engineGarage(GarageTypes::ENGINE_GARAGE, PxVec3(862.1, 20, -280.11), PxVec3(29, 2, 29), graphics);
 	engineGarage.menuTitle = Model("models/garageMenu/engine_upgrades/engine_upgrades_title.obj");
-	Upgrade topSpeed(UPGRADE_TYPE::ENGINE, UPGRADE_SPECIFIER::TOP_SPEED, 3);
+	engineGarage.selectTop = select1;
+	engineGarage.selectMid = select2;
+	engineGarage.selectBot = select3;
+	Upgrade topSpeed(UPGRADE_TYPE::ENGINE, UPGRADE_SPECIFIER::TOP_SPEED, 6);
+	topSpeed.upgradeInfo.clear();
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.02f, true, 11250));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.04f, true, 17500));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.08f, true, 30000));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.16f, true, 55000));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.32f, true, 82500));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.50f, true, 105000));
 	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_1.obj"));
+	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_2.obj"));
+	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_3.obj"));
+	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_4.obj"));
+	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_5.obj"));
+	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_6.obj"));
+	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_maxed.obj"));
 	engineGarage.upgradeList.push_back(topSpeed);
+	Upgrade gearSpeed(UPGRADE_TYPE::ENGINE, UPGRADE_SPECIFIER::GEAR_SPEED, 3);
+	gearSpeed.upgradeInfo.clear();
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(1.f / 9.f, true, 20000));
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(2.f / 9.f, true, 30000));
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(3.f / 9.f, true, 50000));
+	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_1.obj"));
+	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_2.obj"));
+	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_3.obj"));
+	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_maxed.obj"));
+	engineGarage.upgradeList.push_back(gearSpeed);
 	state.buildings[BUILDINGS::GARAGE3] = &engineGarage;
 	
 

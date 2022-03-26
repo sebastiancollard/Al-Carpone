@@ -130,18 +130,20 @@ float chanceScale = 100000.f;
 
 void Player::rob(State& state) {
 	if (state.policeAlerted() || abs(getForwardVelocity()) > 0.1) return;
-
+	
 	timeSpentRobbing += state.timeStep;
-
+	
 	alertChancePerFrame += state.timeStep / chanceScale;
-
+	
 	//printf("TIME[%.2f] CHANCE[%f]\n", timeSpentRobbing,alertChancePerFrame);
-
+	
 	if (((float)(rand() % 1000) / 1000.0f) < alertChancePerFrame) state.alertPolice();
-
+	
 	if (timeSpentRobbing > 1.0f) {
 		addCash(cashRobbedPerFrame * cashRateMultiplier * state.timeStep);
 	}
+
+	//addCash(cashRobbedPerFrame * state.timeStep);
 
 
 // CASH_ROBBED_PER_FRAME* state.timeStep
