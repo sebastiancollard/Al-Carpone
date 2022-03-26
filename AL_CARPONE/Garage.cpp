@@ -35,7 +35,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 		std::cout << "enter" << std::endl;
 		if (upgradeList[currentSelection].tier < u.maxTier) {
 			player->setCash(player->getCash() - u.cost(u.tier));
-			player->cashRobbedPerFrame = 500 + 500 * u.delta(u.tier);
+			//player->cashRobbedPerFrame = player->basecashRobbedPerFrame + player->basecashRobbedPerFrame * u.delta(u.tier);
 			++upgradeList[currentSelection].tier;
 		} 
 		std::cout << upgradeList[currentSelection].tier << std::endl;;
@@ -59,7 +59,7 @@ void Garage::drawGarageMenu() {
 			break;
 	}
 	for (Upgrade& u : upgradeList) {
-		u.menuElements[0].Draw(*graphics.shader2D);
+		u.menuElements[u.tier].Draw(*graphics.shader2D);
 	}
 	// draw indicator of which upgrade you are hovering over
 	// handle inputs
