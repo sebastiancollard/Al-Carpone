@@ -76,7 +76,8 @@ public:
 						player.isSeen = !player.isSeen;
 						//std::cout << player.isSeen << std::endl;
 						if (player.isSeen) popo->startChase();
-							player.jailTimer.reset();
+						//player.jailTimer.reset();
+						player.jailTimer = 0; //TODO: not sure if this is correct?
 					}
 						
 					//DONUT VS HEADLIGHTS 
@@ -108,7 +109,7 @@ public:
 					PxActor* otherActor = (itemActr == pairHeader.actors[0]) ? pairHeader.actors[1] : pairHeader.actors[0];
 					PoliceCar* popo;
 
-					/for (PoliceCar* popo : state.activeVehicles) { // Iterate through policeCars
+					for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
 						//TOMATO collision with police chassis or wheel
 						if ((player.getPower()->getType() == TOMATO) && (otherActor == popo->actorPtr)) {
 							if (popo->isStunned) {
