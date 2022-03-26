@@ -56,38 +56,48 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 			//should select some item
 			//std::cout << "select item number:"<< selection << std::endl;
 			int cur_cash = player.getCash();
-			if (cur_cash < 5) { return; }
-			else {
-				switch (selection)
+			
+			switch (selection)
+			{
+			case 0:
+				if (cur_cash > TOMATO_PRICE ) 
 				{
-				case 0:
 					player.getPower()->setType(TOMATO);
 					player.getPower()->setDuration(15.0f);
-					player.setCash(cur_cash - 5);
-					cout << "Tomato 0" << endl;
-					break;
-				case 1:
-					player.getPower()->setType(DONUT);
-					player.getPower()->setDuration(15.0f);
-					player.setCash(cur_cash - 5);
-					cout << "Donut 1" << endl;
-					break;
-				case 2:
-					player.getPower()->setType(SPIKE_TRAP);
-					player.getPower()->setDuration(15.0f);
-					player.setCash(cur_cash - 5);
-					cout << "spike_trap 2" << endl;
-					break;
-				case 3:
-					player.getPower()->setType(CAMOUFLAGE);
-					player.getPower()->setDuration(15.0f);
-					player.setCash(cur_cash - 5);
-					cout << "camouflag 3" << endl;
-					break;
+					player.setCash(cur_cash - TOMATO_PRICE);
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PUCHASE_SUCCESS);
 				}
-				//cout << player.getPower() << endl;
-				state.gamestate = GAMESTATE_INGAME;
+				else 
+				{
+					
+				}
+					
+				break;
+			case 1:
+				player.getPower()->setType(DONUT);
+				player.getPower()->setDuration(15.0f);
+				player.setCash(cur_cash - 200);
+				state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PUCHASE_SUCCESS);
+				cout << "Donut 1" << endl;
+				break;
+			case 2:
+				player.getPower()->setType(SPIKE_TRAP);
+				player.getPower()->setDuration(15.0f);
+				player.setCash(cur_cash -700);
+				state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PUCHASE_SUCCESS);
+				cout << "spike_trap 2" << endl;
+				break;
+			case 3:
+				player.getPower()->setType(CAMOUFLAGE);
+				player.getPower()->setDuration(15.0f);
+				player.setCash(cur_cash - 1000);	//1000
+				state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PUCHASE_SUCCESS);
+				cout << "camouflag 3" << endl;
+				break;
 			}
+			//cout << player.getPower() << endl;
+			state.gamestate = GAMESTATE_INGAME;
+			
 		}
 
 		state.enter_isHeld = true;
@@ -100,9 +110,11 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 		if (!state.S_isHeld) {
 			selection = (selection + 1) % 4;
 			cout << selection << endl;
+			
 		}
 		state.S_isHeld = true;
 		return;
@@ -113,6 +125,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		if (!state.down_isHeld) {
 			selection = (selection + 1) % 4;
+			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 		}
 		state.down_isHeld = true;
 		return;
@@ -120,8 +133,9 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	else state.down_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 		if (!state.W_isHeld) {
-
+			//state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 			selection = (selection - 1) % 4;
 		}
 		state.W_isHeld = true;
@@ -131,7 +145,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		if (!state.up_isHeld) {
-
+			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 			selection = (selection - 1) % 4;
 		}
 		state.up_isHeld = true;
@@ -209,7 +223,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 			if ((controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_PRESS))
 			{
 				if (!state.dpad_downisHold) {
-
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 					selection = (selection + 1) % 4;
 				}
 				state.dpad_downisHold = true;
@@ -223,7 +237,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 			if ((controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] == GLFW_PRESS))
 			{
 				if (!state.dpad_upisHold) {
-
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 					selection = (selection - 1) % 4;
 				}
 				state.dpad_upisHold = true;

@@ -48,7 +48,7 @@ enum BUILDINGS {
 class State {
 public:
 	
-	GAMESTATE gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
+	GAMESTATE gamestate = GAMESTATE::GAMESTATE_INGAME;
 
 	// Time
 	double currTime = 0.;				
@@ -65,6 +65,9 @@ public:
 	bool terminateProgram = false;
 	bool gameWon = false;
 	bool gameLost = false;
+
+	//for sound effect
+	
 
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<PoliceCar*> inactivePoliceVehicles = {};

@@ -175,6 +175,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		for (Building* b : state.buildings) {
 			if (b == nullptr) continue;
 			if (b->isInRange) {
+				
 				b->triggerFunction(*this, state);
 				return;
 			}

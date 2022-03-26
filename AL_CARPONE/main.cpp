@@ -225,6 +225,7 @@ int main()
 		else if (state.gamestate == GAMESTATE_CORNERSTORE)
 		{
 			selectItem.drawMenu(graphics, state, player);
+			
 		}
 		///////////////////////////////////////////////////////////////
 		//jail
@@ -272,6 +273,7 @@ int main()
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;
 		
+			
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);

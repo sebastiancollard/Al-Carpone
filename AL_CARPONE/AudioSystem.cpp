@@ -191,6 +191,8 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 
 	updateEngineAudio(player, pitch, volume);
 
+	
+
 	if (player->vehicleInAir) {
 		stopSound(SOUND_SELECTION::GROUND_SOUNDS);
 		stopSound(SOUND_SELECTION::BRAKE_LOOP);;
