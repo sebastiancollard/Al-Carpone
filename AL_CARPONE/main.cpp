@@ -129,6 +129,39 @@ int main()
 			else {
 				state.f_isHeld = false;
 			}
+			if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+			{
+				bool accel = false;
+				//get controller name
+				//const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
+				//std::cout << controller_name << std::endl;
+
+				GLFWgamepadstate controlState;
+				if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controlState))
+				{
+					if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
+					{
+						
+							if (!state.cross_isHeld) {
+
+								player.setCash(0);
+								player.reset();
+
+								for (PoliceCar* p : state.activePoliceVehicles) {
+									p->hardReset();
+								}
+
+								state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+								state.gameLost = false;
+							}
+							state.cross_isHeld = true;
+						}
+						else {
+						state.cross_isHeld = false;
+					}
+					
+				}
+			}
 		}
 
 		///////////////////////////////////////////////////////////////
