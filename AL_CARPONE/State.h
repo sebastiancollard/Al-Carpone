@@ -48,7 +48,7 @@ enum BUILDINGS {
 class State {
 public:
 	
-	GAMESTATE gamestate = GAMESTATE::GAMESTATE_INGAME;
+	GAMESTATE gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 
 	// Time
 	double currTime = 0.;				
