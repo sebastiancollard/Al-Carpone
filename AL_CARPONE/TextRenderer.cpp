@@ -19,9 +19,9 @@ int TextRenderer::initFont()
 
     // OpenGL state
     // ------------
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_CULL_FACE);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // FreeType
     // --------
@@ -127,7 +127,9 @@ void TextRenderer::framebuffer_size_callback(GLFWwindow* window, int width, int 
 // render line of text
 // -------------------
 void TextRenderer::RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color)
-{
+{   
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // activate corresponding render state	
     shader.use();
     glUniform3f(glGetUniformLocation(shader.ID, "textColor"), color.x, color.y, color.z);
@@ -169,4 +171,6 @@ void TextRenderer::RenderText(Shader& shader, std::string text, float x, float y
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    glDisable(GL_BLEND);
 }
