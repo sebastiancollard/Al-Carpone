@@ -42,7 +42,7 @@ int main()
 	cout << "Initalizing Audio..." << endl;
 
 	AudioSystem audio;
-
+	state.audioSystemPtr = &audio;
 	//TODO Cleanup
 	//Setup main player vehicle
 	player = Player(0);
@@ -62,7 +62,7 @@ int main()
 
 	CarModel4W* policeCarModel = new CarModel4W(police_car_chassis, police_car_lwheel, police_car_rwheel);
 
-	createPolice(dNodes, policeCarModel, state);
+	if(debugmode != DEBUGMODE::NOCOPS) createPolice(dNodes, policeCarModel, state);
 
 	DebugTools dTools;
 	
@@ -154,7 +154,7 @@ int main()
 	state.updateTime();
 	state.updateTime(); //flush timestep to fix step()
 
-	spawnPolice(state);
+	if(debugmode != DEBUGMODE::NOCOPS) spawnPolice(state);
 
 
 
@@ -266,7 +266,8 @@ int main()
 		else {	
 			// toggles garage door physx objects
 			// must be done before physics.step()
-			garageDoorOpen = !player.beingChased(state);
+			bool policeAlerted = player.beingChased(state);
+			garageDoorOpen = !policeAlerted;
 			if (garageDoorOpen && !garageDoorPrev) gScene->removeActor(*garageDoor);
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;
@@ -346,7 +347,7 @@ int main()
 		}
 		graphics.swapBuffers();
 	}
-	deletePolice(state);
+	if(debugmode != DEBUGMODE::NOCOPS) deletePolice(state);
 	debugPanel.cleanUp();
 	graphics.cleanup();
 	physics.cleanup();

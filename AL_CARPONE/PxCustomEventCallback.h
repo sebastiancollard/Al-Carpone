@@ -8,6 +8,15 @@
 
 using namespace physx;
 
+static enum DEBUGMODE {
+	FALSE,
+	NOJAIL,
+	NOALERT,
+	NOCOPS
+};
+
+extern DEBUGMODE debugmode;
+
 //TODO CLEAN UP LATER
 class PxCustomEventCallback : public PxSimulationEventCallback {
 
@@ -68,45 +77,27 @@ public:
 			}
 
 			// Headlights
-			/*for (Vehicle* v : state.activeVehicles) { // Iterate through policeCars
-
-				if (v == state.activeVehicles[0]) { // This is player -> skip
-					continue;
-				}
-
-				else {
-					PoliceCar* popo;
-
-					try {
-						popo = (PoliceCar*)v; // Just in case
-					}
-					catch (exception e) {
-						std::cerr << "Couldn't cast vehicle to PoliceCar: " << e.what() << std::endl;
-						continue;
+			for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
+				if (pairs[i].triggerActor == popo->headlights->ptr) {
+					//PLAYER VS HEADLIGHTS
+					if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable())) {
+						player.isSeen = !player.isSeen;
+						//std::cout << player.isSeen << std::endl;
+						if (player.isSeen && (debugmode == DEBUGMODE::FALSE || debugmode == DEBUGMODE::NOJAIL)) state.alertPolice();
 					}
 						
-					if (pairs[i].triggerActor == popo->headlights->ptr) {
-						//PLAYER VS HEADLIGHTS
-						if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable())) {
-							player.isSeen = !player.isSeen;
-							//std::cout << player.isSeen << std::endl;
-							if (player.isSeen) popo->startChase();
-								player.jailTimer.reset();
+					//DONUT VS HEADLIGHTS 
+					else if ((player.getPower()->getType() == DONUT) && (pairs[i].otherActor == player.getPower()->actorPtr)) {
+						if (popo->isStunned) {
+							popo->isStunned = false;
 						}
-						
-						//DONUT VS HEADLIGHTS 
-						else if ((player.getPower()->getType() == DONUT) && (pairs[i].otherActor == player.getPower()->actorPtr)) {
-							if (popo->isStunned) {
-								popo->isStunned = false;
-							}
-							else {
-								popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
-								std::cout << "Police spotted a donut!" << std::endl;
-							}
+						else {
+							popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
+							std::cout << "Police spotted a donut!" << std::endl;
 						}
 					}
 				}
-			}*/
+			}
 		}
 	}
 

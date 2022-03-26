@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "AudioSystem.h"
 
 #define CAR_CHASSIS_PATH "models/al_carpone/chassis_carpone.obj"
 #define CAR_LWHEEL_PATH "models/al_carpone/car_Lwheel.obj"
@@ -137,12 +138,22 @@ void Player::rob(State& state) {
 
 	//printf("TIME[%.2f] CHANCE[%f]\n", timeSpentRobbing,alertChancePerFrame);
 
-	if (((float)(rand() % 1000) / 1000.0f) < alertChancePerFrame) state.alertPolice();
-
 	if (timeSpentRobbing > 1.0f) {
 		addCash(cashRobbedPerFrame * cashRateMultiplier * state.timeStep);
+		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::ROB_LOOP);
+	}
+	else {
+		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::OPEN_DUFFLE);
 	}
 
+
+	if (((float)(rand() % 1000) / 1000.0f) < alertChancePerFrame) {
+		state.alertPolice();
+		glm::vec3 pos = state.playerPtr->getPos();
+		state.audioSystemPtr->triggerBankAlarm(pos.x,pos.y,pos.z);
+		state.audioSystemPtr->stopSound(SOUND_SELECTION::ROB_LOOP);
+		state.audioSystemPtr->stopSound(SOUND_SELECTION::OPEN_DUFFLE);
+	}
 
 // CASH_ROBBED_PER_FRAME* state.timeStep
 }
@@ -172,7 +183,11 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	}
 	else {
 		state.f_isHeld = false;
-		timeSpentRobbing = 0;
+		if (timeSpentRobbing > 0) {
+			state.audioSystemPtr->stopSound(SOUND_SELECTION::ROB_LOOP);
+			state.audioSystemPtr->stopSound(SOUND_SELECTION::OPEN_DUFFLE);
+			timeSpentRobbing = 0;
+		}
 	}
 
 	if (alertChancePerFrame > 0) {

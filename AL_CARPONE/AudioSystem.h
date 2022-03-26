@@ -5,7 +5,7 @@
 #include <thread>
 #include <string>
 
-enum SOUND_SELECTION {
+static enum SOUND_SELECTION {
 	SONG_INTRO = 0,
 	SONG_LOOP,
 	ENGINE_LOOP,
@@ -19,8 +19,35 @@ enum SOUND_SELECTION {
 	GEAR_SWITCH1,
 	GROUND_SOUNDS,
 	WIND_LOOP,
-	SIREN_LOOP
-	//TOTAL = 12
+	SIREN_LOOP,
+	MENU_CLICK_LOW,
+	MENU_CLICK_HIGH,
+	MENU_SELECT,
+	BANK_ALARM,
+	OPEN_DUFFLE,
+	ROB_LOOP
+};
+static std::vector<std::string> soundPaths{
+		"audio/songINTRO.wav",
+		"audio/songLOOP.wav",
+		"audio/engineloop.wav",
+		"audio/idleloop.wav",
+		"audio/turnover.mp3",
+		"audio/brakeLOOP.wav",
+		"audio/revUP.wav",
+		"audio/revLOOP.wav",
+		"audio/revDOWN.wav",
+		"audio/gearswitch0.mp3",
+		"audio/gearswitch1.mp3",
+		"audio/wheelsOnGroundLOOP.wav",
+		"audio/windLOOP.wav",
+		"audio/sirenloop.wav",
+		"audio/click.ogg",
+		"audio/click2.ogg",
+		"audio/bend.ogg",
+		"audio/bank_alarm.wav",
+		"audio/open_duffle.wav",
+		"audio/robbing_loop.wav"
 };
 
 class AudioSystem {
@@ -28,8 +55,8 @@ public:
 	irrklang::ISoundEngine* VehicleSoundEngine;
 	irrklang::ISoundEngine* VehicleEngineSpecificSoundEngine;
 	irrklang::ISoundEngine* MusicSoundEngine;
-	irrklang::ISoundEngine* MiscSoundEngine;
-
+	irrklang::ISoundEngine* PoliceSoundEngine;
+	irrklang::ISoundEngine* EffectsSoundEngine;
 	AudioSystem();
 
 	void wait();
@@ -42,13 +69,18 @@ public:
 
 	void updateMusic(State*);
 
-	void updateMiscSounds(Player*, State*);
+	void updatePoliceSounds(Player*, State*);
 
 	void setMusicVolume(float);
 
 	void toggleMusic();
 
 	void setPitchAndVolume(SOUND_SELECTION, float, float);
+
+	void playSoundEffect(SOUND_SELECTION);
+
+
+	void triggerBankAlarm(float,float,float);
 
 	irrklang::ISound* playSound(unsigned int, bool);
 	irrklang::ISound* playENGINESound(unsigned int, bool);
@@ -73,7 +105,13 @@ private:
 		NULL,	//GEARSWITCH1
 		NULL,	//GROUND_SOUNDS
 		NULL,	//WIND_LOOP
-		//TOTAL = 12
+		NULL,   //POLICE_SIREN (IGNORE)
+		NULL,	//MENU_CLICK_LOW,
+		NULL,	//MENU_CLIGH_HIGH,
+		NULL,	//MENU_SELECT
+		NULL,	//BANK_ALARM
+		NULL,	//OPEN_DUFFLE
+		NULL	//ROB_LOOP
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {
@@ -87,29 +125,12 @@ private:
 		NULL,
 		NULL,
 		NULL,
-		NULL 
+		NULL
 		//11 Police cars
 	};
 
-	std::vector<std::string> soundPaths{
-		"audio/songINTRO.wav",
-		"audio/songLOOP.wav",
-		"audio/engineloop.wav",
-		"audio/idleloop.wav",
-		"audio/turnover.mp3",
-		"audio/brakeLOOP.wav",
-		"audio/revUP.wav",
-		"audio/revLOOP.wav",
-		"audio/revDOWN.wav",
-		"audio/gearswitch0.mp3",
-		"audio/gearswitch1.mp3",
-		"audio/wheelsOnGroundLOOP.wav",
-		"audio/windLOOP.wav",
-		"audio/sirenloop.wav"
-		//TOTAL = 12
-	};
-};
 
+};
 
 
 /*
