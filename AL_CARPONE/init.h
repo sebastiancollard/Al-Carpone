@@ -51,6 +51,10 @@ struct DebugTools {
 
 };
 
+//freetype
+#include "textRenderer.h"
+
+
 //Used for debugging
 void printMat4(glm::mat4 m) {
 	for (int i = 0; i < 4; i++) {

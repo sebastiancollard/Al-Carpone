@@ -4,7 +4,7 @@
 
 namespace sv = snippetvehicle;
 
-extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools);
+extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*);
 extern void despawnItem();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
 
@@ -28,7 +28,10 @@ int main()
 	PauseMenu pauseMenu;
 	cout << "	UI..." << endl;
 	UI ui;
-	
+	cout << "	FreeType..." << endl;
+	TextRenderer text_renderer;
+	text_renderer.initFont();
+
 	graphics.clearBuffer();
 	mainMenu.drawLoadingGameScreen(graphics);
 	graphics.swapBuffers();
@@ -203,6 +206,39 @@ int main()
 			else {
 				state.f_isHeld = false;
 			}
+			if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+			{
+				bool accel = false;
+				//get controller name
+				//const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
+				//std::cout << controller_name << std::endl;
+
+				GLFWgamepadstate controlState;
+				if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controlState))
+				{
+					if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
+					{
+						
+							if (!state.cross_isHeld) {
+
+								player.setCash(0);
+								player.reset();
+
+								for (PoliceCar* p : state.activePoliceVehicles) {
+									p->hardReset();
+								}
+
+								state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+								state.gameLost = false;
+							}
+							state.cross_isHeld = true;
+						}
+						else {
+						state.cross_isHeld = false;
+					}
+					
+				}
+			}
 		}
 
 		///////////////////////////////////////////////////////////////
@@ -336,7 +372,7 @@ int main()
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer);
 
 
 			// DEBUG MODE
@@ -344,6 +380,7 @@ int main()
 				debugPanel.draw(player);
 			}
 		}
+		
 		graphics.swapBuffers();
 	}
 	deletePolice(state);
@@ -357,7 +394,7 @@ int main()
 
 
 
-void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools) {
+void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools, TextRenderer* text_renderer) {
 
 	glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 	glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
@@ -474,6 +511,13 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			}
 		}
 	}
+
+	//Render (freeType) text
+	Shader& shader = *graphics->shaderText;
+	//TODO: create textbox struct (text, xy, scale, colour) in textRenderer and keep track of certain textboxes such as cash for easy manipulation
+	std::string message = "Cash: $" + std::to_string(player->getCash());
+	text_renderer->RenderText(*graphics->shaderText, message, 650.0f, 25.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));	
+	//params: shader, text, x_pos (screen coord), y_pos(screen_coord), scale, colour
 
 	// UI needs to be drawn after all 3D elements
 	ui->update(state, player, graphics);
