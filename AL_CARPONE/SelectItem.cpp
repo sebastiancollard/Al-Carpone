@@ -65,34 +65,52 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 					player.getPower()->setType(TOMATO);
 					player.getPower()->setDuration(15.0f);
 					player.setCash(cur_cash - TOMATO_PRICE);
-					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PUCHASE_SUCCESS);
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 				}
 				else 
 				{
-					
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
 				}
 					
 				break;
 			case 1:
-				player.getPower()->setType(DONUT);
-				player.getPower()->setDuration(15.0f);
-				player.setCash(cur_cash - 200);
-				state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PUCHASE_SUCCESS);
-				cout << "Donut 1" << endl;
+				if (cur_cash > DONUT_PRICE)
+				{
+					player.getPower()->setType(DONUT);
+					player.getPower()->setDuration(15.0f);
+					player.setCash(cur_cash - DONUT_PRICE);
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
+				}
+				else
+				{
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+				}
 				break;
 			case 2:
-				player.getPower()->setType(SPIKE_TRAP);
-				player.getPower()->setDuration(15.0f);
-				player.setCash(cur_cash -700);
-				state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PUCHASE_SUCCESS);
-				cout << "spike_trap 2" << endl;
+				if (cur_cash > SPIKE_TRAP_PRICE)
+				{
+					player.getPower()->setType(SPIKE_TRAP);
+					player.getPower()->setDuration(15.0f);
+					player.setCash(cur_cash - SPIKE_TRAP_PRICE);
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
+				}
+				else 
+				{
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+				}
 				break;
 			case 3:
-				player.getPower()->setType(CAMOUFLAGE);
-				player.getPower()->setDuration(15.0f);
-				player.setCash(cur_cash - 1000);	//1000
-				state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PUCHASE_SUCCESS);
-				cout << "camouflag 3" << endl;
+				if (cur_cash > CAMOUFLAG_PRICE)
+				{
+					player.getPower()->setType(CAMOUFLAGE);
+					player.getPower()->setDuration(15.0f);
+					player.setCash(cur_cash - CAMOUFLAG_PRICE);	//1000
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
+				}
+				else 
+				{
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+				}
 				break;
 			}
 			//cout << player.getPower() << endl;
