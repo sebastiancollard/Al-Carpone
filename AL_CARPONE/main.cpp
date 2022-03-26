@@ -70,19 +70,31 @@ int main()
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
 
-	// engine upgrade variables
-	//player.vehiclePtr->mDriveSimData.getGearsData().mSwitchTime;
-	//player.vehiclePtr->mDriveSimData.getEngineData().mPeakTorque;
 
-	// robbery upgrade variables
-	//bank.robRate;
-	//state.activePoliceVehicles[0]->detectionRadius;
 
-	// handling upgrade variables
-	//player.vehiclePtr->mWheelsSimData.getSuspensionData(0).mSpringStrength;
-	//player.vehiclePtr->mWheelsSimData.getWheelData(0).mMaxSteer;
-	//gFrictionPairs->setTypePairFriction(gFrictionPairs->getTypePairFriction() * 1.1f);
+	// update player stats to starter stats
+	
+	// robbery speed done by default
+	// detection radius done by default
 
+	// top speed
+	PxVehicleEngineData engineData = player.vehiclePtr->mDriveSimData.getEngineData();
+	engineData.mPeakTorque = PLAYER_BASE_ENGINE_PEAK_TORQUE;
+	player.vehiclePtr->mDriveSimData.setEngineData(engineData);
+	// gear speed
+	PxVehicleGearsData gearData = player.vehiclePtr->mDriveSimData.getGearsData();
+	gearData.mSwitchTime = PLAYER_BASE_GEAR_CHANGE_SPEED;
+	player.vehiclePtr->mDriveSimData.setGearsData(gearData);
+
+	// road friction done by default
+	// steer angle
+	PxVehicleWheelData wheelData = player.vehiclePtr->mWheelsSimData.getWheelData(0);
+	wheelData.mMaxSteer = PLAYER_BASE_STEER_ANGLE;
+	player.vehiclePtr->mWheelsSimData.setWheelData(0, wheelData);
+	wheelData = player.vehiclePtr->mWheelsSimData.getWheelData(1);
+	wheelData.mMaxSteer = PLAYER_BASE_STEER_ANGLE;
+	player.vehiclePtr->mWheelsSimData.setWheelData(1, wheelData);
+	// car flip TODO
 	
 	Model select1("models/garageMenu/select_1.obj");
 	Model select2("models/garageMenu/select_2.obj");
@@ -138,10 +150,10 @@ int main()
 	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_3.obj"));
 	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_maxed.obj"));
 	handlingGarage.upgradeList.push_back(roadFriction);
-	Upgrade steerAngle(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TURN_RADIUS, 3);
+	Upgrade steerAngle(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TURN_RADIUS, 2);
 	steerAngle.upgradeInfo.clear();
-	steerAngle.upgradeInfo.push_back(std::make_tuple(0.3333f, true, 12500));
-	steerAngle.upgradeInfo.push_back(std::make_tuple(1.f, true, 50000));
+	steerAngle.upgradeInfo.push_back(std::make_tuple(1.f / 3.f, true, 12500));
+	steerAngle.upgradeInfo.push_back(std::make_tuple(0.9999f, true, 50000));
 	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_1.obj"));
 	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_2.obj"));
 	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_maxed.obj"));
@@ -177,9 +189,9 @@ int main()
 	engineGarage.upgradeList.push_back(topSpeed);
 	Upgrade gearSpeed(UPGRADE_TYPE::ENGINE, UPGRADE_SPECIFIER::GEAR_SPEED, 3);
 	gearSpeed.upgradeInfo.clear();
-	gearSpeed.upgradeInfo.push_back(std::make_tuple(0.2f, true, 20000));
-	gearSpeed.upgradeInfo.push_back(std::make_tuple(0.5f, true, 30000));
-	gearSpeed.upgradeInfo.push_back(std::make_tuple(1.f, true, 50000));
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(1.f / 9.f, true, 20000));
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(2.f / 9.f, true, 30000));
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(3.f / 9.f, true, 50000));
 	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_1.obj"));
 	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_2.obj"));
 	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_3.obj"));
