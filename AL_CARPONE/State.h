@@ -103,6 +103,8 @@ public:
 	bool up_isHeld = false;
 	bool escape_isHeld = false;
 	bool tab_isHeld = false;
+	bool right_isHeld = false;
+	bool left_isHeld = false;
 	//CONTROLLER input
 	bool dpad_downisHold = false;
 	bool dpad_upisHold = false;

@@ -10,11 +10,11 @@ enum UPGRADE_SPECIFIER {
 	DETECTION_RADIUS,
 
 	TOP_SPEED,
-	NOISE,
+	GEAR_SPEED,
 
 	TIRE_FRICTION,
 	TURN_RADIUS,
-	SUSPENSION
+	CAR_FLIP
 };
 
 // we'll wanna have more types, these are just ones we'll want for sure. used mostly to determine which garage each upgrade will belong to.

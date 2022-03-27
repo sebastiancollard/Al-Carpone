@@ -23,7 +23,7 @@ class Bank : public Building {
 
 public:
 
-	unsigned int robRate = 5;
+	unsigned int robRate = 500;
 
 
 	Bank() { createTrigger(); }

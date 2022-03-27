@@ -81,8 +81,6 @@ VehicleDesc initVehicleDesc(VEHICLE_TYPE type)
 	vehicleDesc.numWheels = nbWheels;
 	vehicleDesc.wheelMaterial = gMaterial;
 	vehicleDesc.wheelSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
-	if (type == POLICE_CAR)
-		vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL_POLICE, COLLISION_FLAG_WHEEL_POLICE_AGAINST, 0, 0);
 
 	return vehicleDesc;
 }

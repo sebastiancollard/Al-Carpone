@@ -132,8 +132,8 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 		if (!state.S_isHeld) {
+			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 			selection = (selection + 1) % 4;
 			cout << selection << endl;
 			
@@ -155,8 +155,8 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	else state.down_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 		if (!state.W_isHeld) {
+			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 			//state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 			selection = (selection - 1) % 4;
 		}

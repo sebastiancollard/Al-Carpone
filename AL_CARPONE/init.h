@@ -48,8 +48,13 @@ DEBUGMODE debugmode = DEBUGMODE::FALSE;
 #include "CornerStore.h"
 #include "Garage.h"
 #include "PowerUp.h"
+#include "SelectItem.h"
 #include "AI.h"
 
+#include "SelectItem.h"
+#include "BoxTrigger.h"
+#include "Garage.h"
+#include "ChangePlaylist.h"
 
 struct DebugTools {
 	Model red_arrow, blue_arrow, grey_arrow, red_node, blue_node, grey_node;
@@ -58,6 +63,10 @@ struct DebugTools {
 		red_node("models/debug/red_node.obj"), blue_node("models/debug/blue_node.obj"), grey_node("models/debug/grey_node.obj") {}
 
 };
+
+//freetype
+#include "textRenderer.h"
+
 
 //Used for debugging
 void printMat4(glm::mat4 m) {
