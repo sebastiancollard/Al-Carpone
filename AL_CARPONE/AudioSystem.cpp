@@ -253,15 +253,24 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 void AudioSystem::updateMusic(State* state) {
 
 	if (!musicShouldPlay) return;
-
+	/*
+	if (!introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[PURCHASE_FAIL].c_str())) {
+		soundPointers[PURCHASE_FAIL] = MusicSoundEngine->play2D(soundPaths[PURCHASE_FAIL].c_str(), false);
+		introPlayed = true;
+	}*/
 	if (!introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_INTRO].c_str())) {
 		soundPointers[SONG_INTRO] = MusicSoundEngine->play2D(soundPaths[SONG_INTRO].c_str(), false);
 		introPlayed = true;
-	}
+	}/*
 	if (soundPointers[SONG_INTRO] && soundPointers[SONG_INTRO]->isFinished()
 		&& !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_LOOP].c_str())) {
 
 		soundPointers[SONG_LOOP] = MusicSoundEngine->play2D(soundPaths[SONG_LOOP].c_str(), true);
+	}*/
+	if(soundPointers[SONG_INTRO] && soundPointers[SONG_INTRO]->isFinished() && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[(state->playlist_count)+ RADIO_START_INDEX].c_str())) {
+		stopSound(cur_play);
+		soundPointers[(state->playlist_count) + RADIO_START_INDEX] = MusicSoundEngine->play2D(soundPaths[(state->playlist_count) + RADIO_START_INDEX].c_str(), true);
+		cur_play = (state->playlist_count) + RADIO_START_INDEX;
 	}
 
 }

@@ -6,17 +6,11 @@
 #include "GraphicsSystem.h"
 #include "Model.h"
 #include "State.h"
-enum PLAYLIST {
-	LIST1,
-	LIST2,
-	LIST3
-};
-
 
 class ChangePlaylist 
 {
 
-	unsigned int currentPlaylist = PLAYLIST::LIST1;
+	
 
 public:
 	

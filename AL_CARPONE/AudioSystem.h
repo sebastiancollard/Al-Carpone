@@ -4,6 +4,7 @@
 #include "Player.h"
 #include <thread>
 #include <string>
+#define RADIO_START_INDEX 30
 
 static enum SOUND_SELECTION {
 	SONG_INTRO = 0,
@@ -35,8 +36,12 @@ static enum SOUND_SELECTION {
 	UPGRADE,
 	WINGAME,
 	LOSEGAME,
-	GARAGE_DOOR
+	GARAGE_DOOR,
+	RADIO_LOOP1,
+	RADIO_LOOP2,
+	RADIO_LOOP3
 };
+
 static std::vector<std::string> soundPaths{
 		"audio/songINTRO.wav",		//0
 		"audio/songLOOP.wav",		//1
@@ -68,10 +73,14 @@ static std::vector<std::string> soundPaths{
 		"audio/victory.wav",		//27
 		"audio/lose.wav",			//28
 		"audio/garage_door.wav",	//29
-
+		"audio/loop1.wav",			//30
+		"audio/loop2.wav",			//31
+		"audio/loop3.wav"			//32
 };
 
 class AudioSystem {
+
+
 public:
 	irrklang::ISoundEngine* VehicleSoundEngine;
 	irrklang::ISoundEngine* VehicleEngineSpecificSoundEngine;
@@ -115,7 +124,7 @@ private:
 	bool introPlayed = false;
 	float musicVolume = 0.25f;
 	bool musicShouldPlay = true;
-	unsigned int cur_play = 0;
+	unsigned int cur_play = RADIO_START_INDEX;
 
 	std::vector<irrklang::ISound*> soundPointers{
 		NULL,	//SONG_INTRO	
@@ -147,7 +156,10 @@ private:
 		NULL,	//UPGRADE
 		NULL,	//WIN
 		NULL,	//LOSE
-		NULL	//GARAGE DOOR
+		NULL,	//GARAGE DOOR
+		NULL,	//RADIO_LOOP1
+		NULL,	//RADIO_LOOP2
+		NULL	//RADIO_LOOP3
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {

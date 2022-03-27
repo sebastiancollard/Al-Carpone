@@ -66,6 +66,9 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
+	//garage
+	bool g_draw = false;
+
 	//for sound effect
 	int playlist_count = 0;
 
@@ -103,6 +106,8 @@ public:
 	bool up_isHeld = false;
 	bool escape_isHeld = false;
 	bool tab_isHeld = false;
+	bool right_isHeld = false;
+	bool left_isHeld = false;
 	//CONTROLLER input
 	bool dpad_downisHold = false;
 	bool dpad_upisHold = false;
