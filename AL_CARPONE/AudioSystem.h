@@ -34,32 +34,32 @@ static enum SOUND_SELECTION {
 	JAIL_DOOR
 };
 static std::vector<std::string> soundPaths{
-		"audio/songINTRO.wav",
-		"audio/songLOOP.wav",
-		"audio/engineloop.wav",
-		"audio/idleloop.wav",
-		"audio/turnover.mp3",
-		"audio/brakeLOOP.wav",
-		"audio/revUP.wav",
-		"audio/revLOOP.wav",
-		"audio/revDOWN.wav",
-		"audio/gearswitch0.mp3",
-		"audio/gearswitch1.mp3",
-		"audio/wheelsOnGroundLOOP.wav",
-		"audio/windLOOP.wav",
-		"audio/sirenloop.wav",
-		"audio/click.ogg",
-		"audio/click2.ogg",
-		"audio/bend.ogg",
-		"audio/bank_alarm.wav",
-		"audio/open_duffle.wav",
-		"audio/robbing_loop.wav",
-		"audio/pop_menu2.wav",
-		"audio/pay_cash2.mp3",
-		"audio/error.wav",
-		"audio/door_bell.wav",
-		"audio/throw_out.mp3",
-		"audio/jail_door.wav"
+		"audio/songINTRO.wav",		//0
+		"audio/songLOOP.wav",		//1
+		"audio/engineloop.wav",		//2
+		"audio/idleloop.wav",		//3
+		"audio/turnover.mp3",		//4
+		"audio/brakeLOOP.wav",		//5
+		"audio/revUP.wav",			//6
+		"audio/revLOOP.wav",		//7
+		"audio/revDOWN.wav",		//8
+		"audio/gearswitch0.mp3",	//9
+		"audio/gearswitch1.mp3",	//10
+		"audio/wheelsOnGroundLOOP.wav",//11
+		"audio/windLOOP.wav",		//12
+		"audio/sirenloop.wav",		//13
+		"audio/click.ogg",			//14
+		"audio/click2.ogg",			//15
+		"audio/bend.ogg",			//16
+		"audio/bank_alarm.wav",		//17
+		"audio/open_duffle.wav",	//18
+		"audio/robbing_loop.wav",	//19
+		"audio/pop_menu2.wav",		//20
+		"audio/pay_cash2.mp3",		//21
+		"audio/error.wav",	//22
+		"audio/door_bell.wav",		//23
+		"audio/throw_out.mp3"		//24
+		"audio/jail_door.wav"		//25
 };
 
 class AudioSystem {
