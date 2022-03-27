@@ -14,9 +14,10 @@ MainMenu::MainMenu() {
 	jailScreen = Model("models/mainMenu/BUSTED.obj");
 
 	
-	selectionScreens = { 
+	selectionScreens = {
 		Model("models/mainMenu/0_PLAYGAME.obj"),
 		Model("models/mainMenu/1_QUIT.obj"),
+		
 	};
 
 	light_positions = load_positions("models/map/light_positions.obj");
