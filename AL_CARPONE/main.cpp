@@ -6,7 +6,7 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*);
 extern void despawnItem();
-extern void checkForItemActions(Player* , Camera* , PhysicsSystem*);
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*);
 
 
 int main()
@@ -45,7 +45,7 @@ int main()
 	cout << "Initalizing Audio..." << endl;
 
 	AudioSystem audio;
-
+	state.audioSystemPtr = &audio;
 	//TODO Cleanup
 	//Setup main player vehicle
 	player = Player(0);
@@ -65,7 +65,7 @@ int main()
 
 	CarModel4W* policeCarModel = new CarModel4W(police_car_chassis, police_car_lwheel, police_car_rwheel);
 
-	createPolice(dNodes, policeCarModel, state);
+	if(debugmode != DEBUGMODE::NOCOPS) createPolice(dNodes, policeCarModel, state);
 
 	DebugTools dTools;
 	
@@ -240,7 +240,7 @@ int main()
 	state.updateTime();
 	state.updateTime(); //flush timestep to fix step()
 
-	spawnPolice(state);
+	if(debugmode != DEBUGMODE::NOCOPS) spawnPolice(state);
 
 
 
@@ -344,6 +344,7 @@ int main()
 		else if (state.gamestate == GAMESTATE_CORNERSTORE)
 		{
 			selectItem.drawMenu(graphics, state, player);
+			
 		}
 		///////////////////////////////////////////////////////////////
 		//jail
@@ -357,6 +358,7 @@ int main()
 				if (!state.f_isHeld) {
 					if (player.getCash() >= 10.0f) {
 						player.setCash(player.getCash() - 10.0f);
+						audio.playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 						//player.setPos();
 
 						PxVec3 p(190.21, 0.96, -194.67);
@@ -370,7 +372,10 @@ int main()
 						
 						state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 					}
-					else state.gameLost = true;
+					else {
+						state.gameLost = true;
+						audio.playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+					}
 				}
 				state.f_isHeld = true;
 			}
@@ -385,11 +390,13 @@ int main()
 		else {	
 			// toggles garage door physx objects
 			// must be done before physics.step()
-			garageDoorOpen = !player.beingChased(state);
+			bool policeAlerted = player.beingChased(state);
+			garageDoorOpen = !policeAlerted;
 			if (garageDoorOpen && !garageDoorPrev) gScene->removeActor(*garageDoor);
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;
 		
+			
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);
@@ -417,16 +424,15 @@ int main()
 				}
 			}
 
+
 			if (playerDetected) {
 
 				player.jailTimer += state.timeStep;
 
-				for (PoliceCar* p : state.activePoliceVehicles) {
-					p->startChase();
-				}
-				if (!debugmode && player.jailTimer >= 5.0f) {
+				if (debugmode != DEBUGMODE::NOJAIL && player.jailTimer >= 5.0f) {
 
 					player.sendToJail(state);
+					audio.playSoundEffect(SOUND_SELECTION::JAIL_DOOR);
 
 					for (PoliceCar* p : state.activePoliceVehicles) {
 						p->hardReset();
@@ -453,7 +459,7 @@ int main()
 
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
-			checkForItemActions(&player, &boundCamera, &physics);
+			checkForItemActions(&player, &boundCamera, &physics, &state);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer);
 
@@ -466,7 +472,7 @@ int main()
 		
 		graphics.swapBuffers();
 	}
-	deletePolice(state);
+	if(debugmode != DEBUGMODE::NOCOPS) deletePolice(state);
 	debugPanel.cleanUp();
 	graphics.cleanup();
 	physics.cleanup();
@@ -630,8 +636,9 @@ void despawnItem()
 	}
 }
 
-void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics) {
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state) {
 	if (player->getPower()->throw_item) {			//PLAYER THROWS ITEM
+		state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::THROW_OUT);
 		player->getPower()->stopThrow();
 		PxRigidDynamic* actor;
 

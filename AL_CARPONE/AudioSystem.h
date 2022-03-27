@@ -5,7 +5,7 @@
 #include <thread>
 #include <string>
 
-enum SOUND_SELECTION {
+static enum SOUND_SELECTION {
 	SONG_INTRO = 0,
 	SONG_LOOP,
 	ENGINE_LOOP,
@@ -19,8 +19,47 @@ enum SOUND_SELECTION {
 	GEAR_SWITCH1,
 	GROUND_SOUNDS,
 	WIND_LOOP,
-	SIREN_LOOP
-	//TOTAL = 12
+	SIREN_LOOP,
+	MENU_CLICK_LOW,
+	MENU_CLICK_HIGH,
+	MENU_SELECT,
+	BANK_ALARM,
+	OPEN_DUFFLE,
+	ROB_LOOP,
+	POP_TRIGGER_MENU,
+	PURCHASE_SUCCESS,
+	PURCHASE_FAIL,
+	ENTER_STORE,
+	THROW_OUT,
+	JAIL_DOOR
+};
+static std::vector<std::string> soundPaths{
+		"audio/songINTRO.wav",		//0
+		"audio/songLOOP.wav",		//1
+		"audio/engineloop.wav",		//2
+		"audio/idleloop.wav",		//3
+		"audio/turnover.mp3",		//4
+		"audio/brakeLOOP.wav",		//5
+		"audio/revUP.wav",			//6
+		"audio/revLOOP.wav",		//7
+		"audio/revDOWN.wav",		//8
+		"audio/gearswitch0.mp3",	//9
+		"audio/gearswitch1.mp3",	//10
+		"audio/wheelsOnGroundLOOP.wav",//11
+		"audio/windLOOP.wav",		//12
+		"audio/sirenloop.wav",		//13
+		"audio/click.ogg",			//14
+		"audio/click2.ogg",			//15
+		"audio/bend.ogg",			//16
+		"audio/bank_alarm.wav",		//17
+		"audio/open_duffle.wav",	//18
+		"audio/robbing_loop.wav",	//19
+		"audio/pop_menu2.wav",		//20
+		"audio/pay_cash2.mp3",		//21
+		"audio/error.wav",	//22
+		"audio/door_bell.wav",		//23
+		"audio/throw_out.mp3",		//24
+		"audio/jail_door.wav"		//25
 };
 
 class AudioSystem {
@@ -28,8 +67,8 @@ public:
 	irrklang::ISoundEngine* VehicleSoundEngine;
 	irrklang::ISoundEngine* VehicleEngineSpecificSoundEngine;
 	irrklang::ISoundEngine* MusicSoundEngine;
-	irrklang::ISoundEngine* MiscSoundEngine;
-
+	irrklang::ISoundEngine* PoliceSoundEngine;
+	irrklang::ISoundEngine* EffectsSoundEngine;
 	AudioSystem();
 
 	void wait();
@@ -42,13 +81,18 @@ public:
 
 	void updateMusic(State*);
 
-	void updateMiscSounds(Player*, State*);
+	void updatePoliceSounds(Player*, State*);
 
 	void setMusicVolume(float);
 
 	void toggleMusic();
 
 	void setPitchAndVolume(SOUND_SELECTION, float, float);
+
+	void playSoundEffect(SOUND_SELECTION);
+
+
+	void triggerBankAlarm(float,float,float);
 
 	irrklang::ISound* playSound(unsigned int, bool);
 	irrklang::ISound* playENGINESound(unsigned int, bool);
@@ -73,7 +117,19 @@ private:
 		NULL,	//GEARSWITCH1
 		NULL,	//GROUND_SOUNDS
 		NULL,	//WIND_LOOP
-		//TOTAL = 12
+		NULL,   //POLICE_SIREN (IGNORE)
+		NULL,	//MENU_CLICK_LOW,
+		NULL,	//MENU_CLIGH_HIGH,
+		NULL,	//MENU_SELECT
+		NULL,	//BANK_ALARM
+		NULL,	//OPEN_DUFFLE
+		NULL,	//ROB_LOOP
+		NULL,	//POP_TRIGGER_MENU
+		NULL,	//PUCHASE_SUCCESS
+		NULL,	//PURCHASE_FAIL
+		NULL,	//ENTER_STORE
+		NULL,	//THROW OUT
+		NULL	//JAIL_DOOR
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {
@@ -87,29 +143,12 @@ private:
 		NULL,
 		NULL,
 		NULL,
-		NULL 
+		NULL
 		//11 Police cars
 	};
 
-	std::vector<std::string> soundPaths{
-		"audio/songINTRO.wav",
-		"audio/songLOOP.wav",
-		"audio/engineloop.wav",
-		"audio/idleloop.wav",
-		"audio/turnover.mp3",
-		"audio/brakeLOOP.wav",
-		"audio/revUP.wav",
-		"audio/revLOOP.wav",
-		"audio/revDOWN.wav",
-		"audio/gearswitch0.mp3",
-		"audio/gearswitch1.mp3",
-		"audio/wheelsOnGroundLOOP.wav",
-		"audio/windLOOP.wav",
-		"audio/sirenloop.wav"
-		//TOTAL = 12
-	};
-};
 
+};
 
 
 /*

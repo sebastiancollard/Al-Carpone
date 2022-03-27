@@ -203,6 +203,7 @@
     <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ChangePlaylist.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="CornerStore.h" />
     <ClInclude Include="DebugPanel.h" />

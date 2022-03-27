@@ -23,15 +23,15 @@ PoliceCar::PoliceCar(int ID, DrivingNodes* drivingNodes) : Vehicle(VEHICLE_TYPE:
 	float width = 10.f;
 	auto pos = getPos() + glm::vec3(width, 0, len);
 	physx::PxVec3 t_pos = physx::PxVec3(pos.x - width, pos.y, -pos.z + 3*pos.z/4);
-	headlights = new BoxTrigger(false, t_pos, 30.f, 2.f, len);
-	headlights->addJoint(actorPtr, startTransform);
+	//headlights = new BoxTrigger(false, t_pos, 30.f, 2.f, len);
+	//headlights->addJoint(actorPtr, startTransform);
 	dNodes = drivingNodes;
 	shouldReset = false;
 	//myThread = std::thread(&updateLoop,this);
 	//myThread = std::thread(&updateLoop);
 }
 
-void PoliceCar::update(glm::vec3 playerPos,double timeStep) {
+void PoliceCar::update(glm::vec3 playerPos,State& state) {
 
 	myPos = getPos();
 	myDir = getDir();
@@ -49,11 +49,15 @@ void PoliceCar::update(glm::vec3 playerPos,double timeStep) {
 	PxVec3 unitDir = PxVec3(direction.x, direction.y, direction.z);
 	PxRaycastBuffer hit;
 
-	playerInSight = !gScene->raycast(origin, unitDir, glm::distance(playerPos, myPos), hit, PxHitFlag::eMESH_BOTH_SIDES);
+	distanceToPlayer = glm::distance(playerPos, myPos);
+	playerInTrigger = distanceToPlayer < detectionRadius;
+	playerInSight = !gScene->raycast(origin, unitDir, distanceToPlayer, hit, PxHitFlag::eMESH_BOTH_SIDES);
 	playerDetected = playerInSight && playerInTrigger;
 
+	if (playerDetected) state.alertPolice();
+
 	//updateRequest = true;
-	handle(playerPos,timeStep);
+	handle(playerPos,state.timeStep);
 }
 
 
@@ -128,7 +132,7 @@ void PoliceCar::reverse(double timestep, glm::vec3 playerPos) {
 		reverseTime = 0;
 		targetPosition = dNodes->getClosestNodePosition(myPos); //Re-orient self
 
-		if (x_z_distance_squared(myPos, playerPos) < x_z_distance_squared(myPos, targetPosition)) {
+		if (playerInSight) {
 			targetPosition = playerPos;
 			targetingPlayer = true;
 		}

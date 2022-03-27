@@ -10,6 +10,7 @@
 #include "Player.h"
 
 
+
 //Locked position and orientation. Used for third person view behind the car.
 #define CAMERA_MODE_BOUND 0
 //Player has full control of position and orientation of the camera, loses control of the car.
@@ -22,6 +23,7 @@ class Player;
 class Building;
 class Vehicle;
 class PoliceCar;
+class AudioSystem;
 
 enum GAMESTATE {
 	GAMESTATE_MAIN_MENU,
@@ -64,9 +66,14 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
+	//for sound effect
+	
+
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<PoliceCar*> inactivePoliceVehicles = {};
 	Player* playerPtr;
+
+	AudioSystem* audioSystemPtr;
 
 	std::vector<Building*> buildings = 
 	{

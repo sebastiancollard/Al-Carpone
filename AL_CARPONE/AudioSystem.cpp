@@ -6,13 +6,14 @@ AudioSystem::AudioSystem() {
 	VehicleSoundEngine = irrklang::createIrrKlangDevice();
 	VehicleEngineSpecificSoundEngine = irrklang::createIrrKlangDevice();
 	MusicSoundEngine = irrklang::createIrrKlangDevice();
-	MiscSoundEngine = irrklang::createIrrKlangDevice();
+	PoliceSoundEngine = irrklang::createIrrKlangDevice();
+	EffectsSoundEngine = irrklang::createIrrKlangDevice();
 
 	VehicleSoundEngine->setSoundVolume(1.0f);
 	MusicSoundEngine->setSoundVolume(musicVolume);
 	
 	for (int i = 0; i < 11; i++) {
-		policeSirenPointers[i] = MiscSoundEngine->play3D(soundPaths[SIREN_LOOP].c_str(), irrklang::vec3df(0,0,0), true, true);
+		policeSirenPointers[i] = PoliceSoundEngine->play3D(soundPaths[SIREN_LOOP].c_str(), irrklang::vec3df(0,0,0), true, true);
 		policeSirenPointers[i]->setVolume(3.0f);
 		policeSirenPointers[i]->setMinDistance(10.0f);
 	}
@@ -37,6 +38,24 @@ void AudioSystem::setPitchAndVolume(SOUND_SELECTION selection, float pitch, floa
 	if (soundPointers[selection]) {
 		soundPointers[selection]->setPlaybackSpeed(pitch);
 		soundPointers[selection]->setVolume(volume);
+	}
+}
+
+void AudioSystem::playSoundEffect(SOUND_SELECTION selection) {
+	if (!EffectsSoundEngine->isCurrentlyPlaying(soundPaths[selection].c_str())) {
+		if (soundPointers[selection] && !soundPointers[selection]->isFinished()) return;
+		irrklang::ISound* sound = EffectsSoundEngine->play2D(soundPaths[selection].c_str(), false);
+		soundPointers[selection] = sound;
+	}
+}
+
+
+
+void AudioSystem::triggerBankAlarm(float playerx, float playery, float playerz) {
+	if (!EffectsSoundEngine->isCurrentlyPlaying(soundPaths[SOUND_SELECTION::BANK_ALARM].c_str())) {
+		//irrklang::vec3df bankpos(490 - playerx, 30 - playery, -430 - playerz);
+		irrklang::ISound* sound = EffectsSoundEngine->play2D(soundPaths[SOUND_SELECTION::BANK_ALARM].c_str());
+		soundPointers[SOUND_SELECTION::BANK_ALARM] = sound;
 	}
 }
 
@@ -172,6 +191,8 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 
 	updateEngineAudio(player, pitch, volume);
 
+	
+
 	if (player->vehicleInAir) {
 		stopSound(SOUND_SELECTION::GROUND_SOUNDS);
 		stopSound(SOUND_SELECTION::BRAKE_LOOP);;
@@ -226,7 +247,7 @@ void AudioSystem::updateMusic(State* state) {
 
 }
 
-void AudioSystem::updateMiscSounds(Player* player, State* state) {
+void AudioSystem::updatePoliceSounds(Player* player, State* state) {
 
 	if (state->gamestate == GAMESTATE::GAMESTATE_MAIN_MENU) {
 		for (irrklang::ISound* p : policeSirenPointers) {
@@ -269,12 +290,12 @@ void AudioSystem::updateAudio(Player* player, State* state) {
 
 	updateMusic(state);
 	updateVehicleSounds(player, state);
-	updateMiscSounds(player, state);
+	updatePoliceSounds(player, state);
 
 	VehicleEngineSpecificSoundEngine->update();
 	VehicleSoundEngine->update();
 	MusicSoundEngine->update();
-	MiscSoundEngine->update();
+	PoliceSoundEngine->update();
 
 
 }
@@ -284,13 +305,11 @@ void AudioSystem::stopSound(unsigned int selection) {
 }
 
 irrklang::ISound* AudioSystem::playSound(unsigned int selection, bool loop) {
-
 	if (!VehicleSoundEngine->isCurrentlyPlaying(soundPaths[selection].c_str())) {
 		irrklang::ISound* sound = VehicleSoundEngine->play2D(soundPaths[selection].c_str(), loop);
 		soundPointers[selection] = sound;
 		return sound;
 	}
-
 }
 
 irrklang::ISound* AudioSystem::playENGINESound(unsigned int selection, bool loop) {

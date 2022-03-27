@@ -1,5 +1,13 @@
 #pragma once
-bool debugmode = false;
+
+static enum DEBUGMODE {
+	FALSE,
+	NOJAIL,
+	NOALERT,
+	NOCOPS
+};
+
+DEBUGMODE debugmode = DEBUGMODE::FALSE;
 
 // Graphics Libraries
 #include <glm/gtc/type_ptr.hpp>

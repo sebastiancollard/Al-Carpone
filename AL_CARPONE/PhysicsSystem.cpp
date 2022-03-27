@@ -97,7 +97,7 @@ void PhysicsSystem::step(GLFWwindow* window)
 	std::vector<Vehicle*> activevehicles;
 
 	for (PoliceCar* p : state.activePoliceVehicles) {
-		p->update(player.getPos(), state.timeStep);
+		p->update(player.getPos(), state);
 		activevehicles.push_back(p);
 	}
 	if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);

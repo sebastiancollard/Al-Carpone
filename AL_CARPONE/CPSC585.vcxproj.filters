@@ -201,7 +201,7 @@
     <ClCompile Include="State.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
-     <ClCompile Include="PowerUp.cpp">
+    <ClCompile Include="PowerUp.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
     <ClCompile Include="TextRenderer.cpp">
@@ -349,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="TextRenderer.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangePlaylist.h">
+      <Filter>Header Files\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

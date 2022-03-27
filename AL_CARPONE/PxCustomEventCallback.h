@@ -5,8 +5,18 @@
 #include "PoliceCar.h"
 #include "Building.h"
 #include "PowerUp.h"
+#include "AudioSystem.h"
 
 using namespace physx;
+
+static enum DEBUGMODE {
+	FALSE,
+	NOJAIL,
+	NOALERT,
+	NOCOPS
+};
+
+extern DEBUGMODE debugmode;
 
 //TODO CLEAN UP LATER
 class PxCustomEventCallback : public PxSimulationEventCallback {
@@ -43,6 +53,9 @@ public:
 					if (state.buildings[j] == nullptr) continue;
 					if (pairs[i].triggerActor == state.buildings[j]->trigger->ptr) {
 						state.buildings[j]->isInRange = !state.buildings[j]->isInRange; // Set boolean value
+						/*cout << "px in trigger area " << endl;
+						state.inTrigger = true;*/
+						state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::POP_TRIGGER_MENU);
 						if (state.buildings[j]->isInRange) {
 							//std::cout << "BUILDING IN RANGE!!!" << std::endl;
 							if (j == 1 || j == 2 || j == 3) {
@@ -59,26 +72,30 @@ public:
 							if (j == 1 || j == 2 || j == 3); // garageDoorOpen = false;
 						} 
 					}
+					else 
+					{
+						
+						
+					};
 					//if (pairs[i].triggerActor == b->CornetStoreTrigger1->ptr || pairs[i].triggerActor == b->CornetStoreTrigger2->ptr) //corner store trigger area
 					//{		
 					//	b->cornerRange = !b->cornerRange;
 					//	
 					//}
 				}
+				
 			}
-
+			
 			// Headlights
+			/*
 			for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
-						
 				if (pairs[i].triggerActor == popo->headlights->ptr) {
 					//PLAYER VS HEADLIGHTS
-					if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable())) {
-						player.isSeen = !player.isSeen;
-						//std::cout << player.isSeen << std::endl;
-						if (player.isSeen) popo->startChase();
-						//player.jailTimer.reset();
-						player.jailTimer = 0; //TODO: not sure if this is correct?
+					if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable()) && (debugmode == DEBUGMODE::FALSE || debugmode == DEBUGMODE::NOJAIL)) {
+						popo->playerDetected = !popo->playerDetected;
+						state.alertPolice();
 					}
+					
 						
 					//DONUT VS HEADLIGHTS 
 					else if ((player.getPower()->getType() == DONUT) && (pairs[i].otherActor == player.getPower()->actorPtr)) {
@@ -92,7 +109,10 @@ public:
 					}
 				}
 			}
+			*/
 		}
+		/*cout << "px not in trigger area " << endl;
+		state.inTrigger = false;*/
 	}
 
 	void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) 

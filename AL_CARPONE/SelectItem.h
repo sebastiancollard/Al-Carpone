@@ -6,6 +6,12 @@
 #include "PowerUp.h"
 #include "GraphicsSystem.h"
 #include "State.h"
+#include "AudioSystem.h"
+
+#define TOMATO_PRICE 100
+#define DONUT_PRICE 200
+#define SPIKE_TRAP_PRICE 700
+#define CAMOUFLAG_PRICE 1000
 
 static class SelectItem
 {
