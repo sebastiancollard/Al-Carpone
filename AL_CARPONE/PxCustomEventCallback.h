@@ -87,14 +87,15 @@ public:
 			}
 			
 			// Headlights
+			/*
 			for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
 				if (pairs[i].triggerActor == popo->headlights->ptr) {
 					//PLAYER VS HEADLIGHTS
-					if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable())) {
-						player.isSeen = !player.isSeen;
-						//std::cout << player.isSeen << std::endl;
-						if (player.isSeen && (debugmode == DEBUGMODE::FALSE || debugmode == DEBUGMODE::NOJAIL)) state.alertPolice();
+					if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable()) && (debugmode == DEBUGMODE::FALSE || debugmode == DEBUGMODE::NOJAIL)) {
+						popo->playerDetected = !popo->playerDetected;
+						state.alertPolice();
 					}
+					
 						
 					//DONUT VS HEADLIGHTS 
 					else if ((player.getPower()->getType() == DONUT) && (pairs[i].otherActor == player.getPower()->actorPtr)) {
@@ -108,6 +109,7 @@ public:
 					}
 				}
 			}
+			*/
 		}
 		/*cout << "px not in trigger area " << endl;
 		state.inTrigger = false;*/

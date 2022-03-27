@@ -43,7 +43,7 @@ void AudioSystem::setPitchAndVolume(SOUND_SELECTION selection, float pitch, floa
 
 void AudioSystem::playSoundEffect(SOUND_SELECTION selection) {
 	if (!EffectsSoundEngine->isCurrentlyPlaying(soundPaths[selection].c_str())) {
-		//if (soundPointers[selection] && !soundPointers[selection]->isFinished()) return;
+		if (soundPointers[selection] && !soundPointers[selection]->isFinished()) return;
 		irrklang::ISound* sound = EffectsSoundEngine->play2D(soundPaths[selection].c_str(), false);
 		soundPointers[selection] = sound;
 	}

@@ -7,7 +7,7 @@ static enum DEBUGMODE {
 	NOCOPS
 };
 
-DEBUGMODE debugmode = DEBUGMODE::NOALERT;
+DEBUGMODE debugmode = DEBUGMODE::FALSE;
 
 // Graphics Libraries
 #include <glm/gtc/type_ptr.hpp>

@@ -31,8 +31,8 @@ class PoliceCar : public Vehicle {
 public:
 
 	AISTATE ai_state = AISTATE::PATROL;
-	BoxTrigger* headlights;
-	unsigned int detectionRadius = 10.f;
+	//BoxTrigger* headlights;
+	unsigned int detectionRadius = 30.f;
 	DrivingNodes* dNodes;
 	bool isStunned;
 
@@ -50,7 +50,9 @@ public:
 	void startChase();
 	void hardReset();
 
-	void update(glm::vec3 playerPos,double timeStep);
+	void update(glm::vec3 playerPos,State& state);
+
+	float distanceToPlayer = 999;
 
 	bool playerInTrigger; //Player in trigger volume
 	bool playerInSight; //Raycast to player successful

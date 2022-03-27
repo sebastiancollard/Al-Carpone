@@ -239,6 +239,7 @@ int main()
 				if (!state.f_isHeld) {
 					if (player.getCash() >= 10.0f) {
 						player.setCash(player.getCash() - 10.0f);
+						audio.playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 						//player.setPos();
 
 						PxVec3 p(190.21, 0.96, -194.67);
@@ -252,7 +253,10 @@ int main()
 						
 						state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 					}
-					else state.gameLost = true;
+					else {
+						state.gameLost = true;
+						audio.playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+					}
 				}
 				state.f_isHeld = true;
 			}
@@ -301,16 +305,16 @@ int main()
 				}
 			}
 
+			if (!player.isDetectable()) printf("WHY\n");
+
 			if (playerDetected) {
 
 				player.jailTimer += state.timeStep;
 
-				for (PoliceCar* p : state.activePoliceVehicles) {
-					p->startChase();
-				}
-				if (!debugmode && player.jailTimer >= 5.0f) {
+				if (debugmode != DEBUGMODE::NOJAIL && player.jailTimer >= 5.0f) {
 
 					player.sendToJail(state);
+					audio.playSoundEffect(SOUND_SELECTION::JAIL_DOOR);
 
 					for (PoliceCar* p : state.activePoliceVehicles) {
 						p->hardReset();
@@ -322,6 +326,7 @@ int main()
 				player.jailTimer -= state.timeStep * 0.1f;
 				if (player.jailTimer < 0) player.jailTimer = 0;
 			}
+			printf("%f\n", player.jailTimer);
 
 			//printf("JAILTIMER: %.2f\n", player.jailTimer);
 

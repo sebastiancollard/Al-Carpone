@@ -30,7 +30,8 @@ static enum SOUND_SELECTION {
 	PURCHASE_SUCCESS,
 	PURCHASE_FAIL,
 	ENTER_STORE,
-	THROW_OUT
+	THROW_OUT,
+	JAIL_DOOR
 };
 static std::vector<std::string> soundPaths{
 		"audio/songINTRO.wav",
@@ -57,7 +58,8 @@ static std::vector<std::string> soundPaths{
 		"audio/pay_cash2.mp3",
 		"audio/error.wav",
 		"audio/door_bell.wav",
-		"audio/throw_out.mp3"
+		"audio/throw_out.mp3",
+		"audio/jail_door.wav"
 };
 
 class AudioSystem {
@@ -126,7 +128,8 @@ private:
 		NULL,	//PUCHASE_SUCCESS
 		NULL,	//PURCHASE_FAIL
 		NULL,	//ENTER_STORE
-		NULL	//THROW OUT
+		NULL,	//THROW OUT
+		NULL,	//JAIL_DOOR
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {
