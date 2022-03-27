@@ -34,7 +34,8 @@ static enum SOUND_SELECTION {
 	JAIL_DOOR,
 	UPGRADE,
 	WINGAME,
-	LOSEGAME
+	LOSEGAME,
+	GARAGE_DOOR
 };
 static std::vector<std::string> soundPaths{
 		"audio/songINTRO.wav",		//0
@@ -65,7 +66,8 @@ static std::vector<std::string> soundPaths{
 		"audio/jail_door.wav",		//25
 		"audio/upgrade.wav",		//26
 		"audio/victory.wav",		//27
-		"audio/lose.wav"			//28
+		"audio/lose.wav",			//28
+		"audio/garage_door.wav",	//29
 
 };
 
@@ -113,9 +115,10 @@ private:
 	bool introPlayed = false;
 	float musicVolume = 0.25f;
 	bool musicShouldPlay = true;
+	unsigned int cur_play = 0;
 
 	std::vector<irrklang::ISound*> soundPointers{
-		NULL,	//SONG_INTRO
+		NULL,	//SONG_INTRO	
 		NULL,	//SONG_LOOP
 		NULL,	//ENGINE_LOOP
 		NULL,	//IDLE_LOOP
@@ -140,10 +143,11 @@ private:
 		NULL,	//PURCHASE_FAIL
 		NULL,	//ENTER_STORE
 		NULL,	//THROW OUT
-		NULL,	//JAIL_DOOR
+		NULL,	//JAIL_DOOR							
 		NULL,	//UPGRADE
-		NULL,
-		NULL
+		NULL,	//WIN
+		NULL,	//LOSE
+		NULL	//GARAGE DOOR
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {

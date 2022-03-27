@@ -16,8 +16,14 @@ enum PLAYLIST {
 class ChangePlaylist 
 {
 
+	unsigned int currentPlaylist = PLAYLIST::LIST1;
 
+public:
 	
-	void handleInputs(GLFWwindow* window, State& state, AudioSystem* audio);
+	std::vector<Model> radio_list;
 
+	ChangePlaylist();
+	void drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio);
+	void handleInputs(GLFWwindow* window, State& state, AudioSystem* audio);
+	
 };

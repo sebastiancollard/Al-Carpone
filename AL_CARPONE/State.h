@@ -67,7 +67,7 @@ public:
 	bool gameLost = false;
 
 	//for sound effect
-	
+	int playlist_count = 0;
 
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<PoliceCar*> inactivePoliceVehicles = {};
@@ -102,6 +102,7 @@ public:
 	bool down_isHeld = false;
 	bool up_isHeld = false;
 	bool escape_isHeld = false;
+	bool tab_isHeld = false;
 	//CONTROLLER input
 	bool dpad_downisHold = false;
 	bool dpad_upisHold = false;
