@@ -305,7 +305,6 @@ int main()
 				}
 			}
 
-			if (!player.isDetectable()) printf("WHY\n");
 
 			if (playerDetected) {
 
@@ -326,7 +325,6 @@ int main()
 				player.jailTimer -= state.timeStep * 0.1f;
 				if (player.jailTimer < 0) player.jailTimer = 0;
 			}
-			printf("%f\n", player.jailTimer);
 
 			//printf("JAILTIMER: %.2f\n", player.jailTimer);
 

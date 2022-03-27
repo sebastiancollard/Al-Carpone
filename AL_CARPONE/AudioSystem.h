@@ -58,7 +58,7 @@ static std::vector<std::string> soundPaths{
 		"audio/pay_cash2.mp3",		//21
 		"audio/error.wav",	//22
 		"audio/door_bell.wav",		//23
-		"audio/throw_out.mp3"		//24
+		"audio/throw_out.mp3",		//24
 		"audio/jail_door.wav"		//25
 };
 
@@ -129,7 +129,7 @@ private:
 		NULL,	//PURCHASE_FAIL
 		NULL,	//ENTER_STORE
 		NULL,	//THROW OUT
-		NULL,	//JAIL_DOOR
+		NULL	//JAIL_DOOR
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {
