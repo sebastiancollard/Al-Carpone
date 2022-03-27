@@ -88,31 +88,6 @@ public:
 				}
 				
 			}
-			
-			// Headlights
-			/*
-			for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
-				if (pairs[i].triggerActor == popo->headlights->ptr) {
-					//PLAYER VS HEADLIGHTS
-					if ((pairs[i].otherActor == player.actorPtr) && (player.isDetectable()) && (debugmode == DEBUGMODE::FALSE || debugmode == DEBUGMODE::NOJAIL)) {
-						popo->playerDetected = !popo->playerDetected;
-						state.alertPolice();
-					}
-					
-						
-					//DONUT VS HEADLIGHTS 
-					else if ((player.getPower()->getType() == DONUT) && (pairs[i].otherActor == player.getPower()->actorPtr)) {
-						if (popo->isStunned) {
-							popo->isStunned = false;
-						}
-						else {
-							popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
-							std::cout << "Police spotted a donut!" << std::endl;
-						}
-					}
-				}
-			}
-			*/
 		}
 		/*cout << "px not in trigger area " << endl;
 		state.inTrigger = false;*/
@@ -136,20 +111,14 @@ public:
 						//TOMATO collision with police chassis or wheel
 						if ((player.getPower()->getType() == TOMATO) && (otherActor == popo->actorPtr)) {
 							if (popo->isStunned) {
-								popo->isStunned = false;
-							}
-							else {
-								popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
+								popo->stun(7);				//Default stun for 7 seconds. Adjust? could stun police until item despawns.
 								std::cout << "Police was hit by a tomato!" << std::endl;
 							}
 						}
 						//SPIKE TRAP collision with police chassis or wheel
 						else if ((player.getPower()->getType() == SPIKE_TRAP) && (otherActor == popo->actorPtr)) {
-							if (popo->isStunned) {
-								popo->isStunned = false;
-							}
-							else {
-								popo->stun(5);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
+							if (!popo->isStunned) {
+								popo->stun(7);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
 								std::cout << "Police ran over a spike trap!" << std::endl;
 							}
 						}

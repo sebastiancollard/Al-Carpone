@@ -29,6 +29,7 @@ private:
 public:
 	bool throw_item = false;
 	bool drop_item = false;
+	bool itemInWorld = false;
 	
 	physx::PxRigidActor* actorPtr;
 
@@ -49,4 +50,5 @@ public:
 	std::string getModelPath();
 	bool shouldDespawn();
 
+	glm::vec3 getPos();
 };

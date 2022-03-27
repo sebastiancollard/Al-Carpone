@@ -106,3 +106,15 @@ std::string PowerUp::getModelPath() {
 bool PowerUp::shouldDespawn() {
 	return (!timer_active && power_used && (duration_sec > 0.f));
 }
+
+
+glm::vec3 PowerUp::getPos() {
+	const int MAX_NUM_ACTOR_SHAPES = 128;
+	PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
+
+	const PxU32 nbShapes = actorPtr->getNbShapes();
+	actorPtr->getShapes(shapes, nbShapes);
+
+	PxTransform shapePose(PxShapeExt::getGlobalPose(*shapes[0], *actorPtr));
+	return glm::vec3(shapePose.p.x, shapePose.p.y, shapePose.p.z);
+}

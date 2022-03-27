@@ -416,6 +416,7 @@ int main()
 				despawnItem();
 				player.getPower()->setType(NONE);
 				player.getPower()->actorPtr = NULL;
+				player.getPower()->itemInWorld = false;
 			}
 
 
@@ -661,14 +662,14 @@ void despawnItem()
 			printf("Erasing item...\n");
 			i = i - 1;
 
-			for (int j = 0; j < physx_actors.size(); j++) 
-			{		
-				if (physx_actors[j].actorPtr == ptr) 
-				{
-					physx_actors.erase(physx_actors.begin() + j);		//erase from physx_actors
-					break;
-				}
-			}
+			//for (int j = 0; j < physx_actors.size(); j++) 
+			//{		
+			//	if (physx_actors[j].actorPtr == ptr) 
+			//	{
+			//		physx_actors.erase(physx_actors.begin() + j);		//erase from physx_actors
+			//		break;
+			//	}
+			//}
 		}
 	}
 }
@@ -683,7 +684,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 			actor = physics->createDynamicItem(
 				player->getPower()->getModelPath(),
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 20.0f		//donut velocity
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
 			);
 		}
 		else {
@@ -697,6 +698,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		Model model = Model(player->getPower()->getModelPath());
 		simple_renderables.push_back({ actor, model, "powerup"});
 		player->getPower()->actorPtr = actor;
+		player->getPower()->itemInWorld = true;
 
 	}
 	else if (player->getPower()->drop_item) {				//PLAYER DROPS SPIKE TRAP
@@ -711,6 +713,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		Model model = Model(player->getPower()->getModelPath());
 		simple_renderables.push_back({ actor, model , "powerup" });
 		player->getPower()->actorPtr = actor;
+		player->getPower()->itemInWorld = true;
 
 	}
 	else if (!player->isDetectable() && player->getCurrentModelType() == AL_CARPONE) {		//Player is now camouflaged
