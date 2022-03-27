@@ -170,7 +170,7 @@ void Player::rob(State& state) {
 void Player::handleInput(GLFWwindow* window, State& state)
 {
 
-	
+
 
 	// Handle interactions
 	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
@@ -178,7 +178,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		for (Building* b : state.buildings) {
 			if (b == nullptr) continue;
 			if (b->isInRange) {
-				
+
 				b->triggerFunction(*this, state);
 				return;
 			}
@@ -209,7 +209,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 		state.W_isHeld = true;
 	}
-	else{
+	else {
 		state.W_isHeld = false;
 	}
 
@@ -248,7 +248,11 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 	footIsOnBrake = state.space_isHeld;
 
-	
+	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
+	{
+		state.tab_isHeld = true;
+	}
+	else state.tab_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld) {
 		glm::vec3 front = getDir();

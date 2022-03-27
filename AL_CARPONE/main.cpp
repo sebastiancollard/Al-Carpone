@@ -218,7 +218,7 @@ int main()
 	state.buildings[BUILDINGS::EXIT] = &exit;
 
 	SelectItem selectItem;
-
+	ChangePlaylist playlist;
 
 
 	// Initialize Models
@@ -406,7 +406,7 @@ int main()
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;
 		
-			
+			if (state.tab_isHeld) { playlist.drawMenu(graphics, state, &audio); }
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);
@@ -457,9 +457,6 @@ int main()
 
 			//printf("JAILTIMER: %.2f\n", player.jailTimer);
 
-			//Check for special inputs (currently only camera mode change)
-			checkSpecialInputs(graphics.window, state, player, &audio);
-
 			if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
 			else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
 
@@ -467,6 +464,9 @@ int main()
 			if (!state.debugMode) activeCamera->handleInput(graphics.window, state);
 			if (activeCamera == &boundCamera) boundCamera.checkClipping(graphics.window);
 
+			//Check for special inputs (currently only camera mode change)
+			// NOTE: needs to be put AFTER camera mode and input checking to prevent camera glitches on certain inputs
+			checkSpecialInputs(graphics.window, state, player, &audio);
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics, &state);

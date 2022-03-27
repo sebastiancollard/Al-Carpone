@@ -6,18 +6,18 @@
 #include "GraphicsSystem.h"
 #include "Model.h"
 #include "State.h"
-enum PLAYLIST {
-	LIST1,
-	LIST2,
-	LIST3
-};
-
 
 class ChangePlaylist 
 {
 
-
 	
-	void handleInputs(GLFWwindow* window, State& state, AudioSystem* audio);
 
+public:
+	
+	std::vector<Model> radio_list;
+
+	ChangePlaylist();
+	void drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio);
+	void handleInputs(GLFWwindow* window, State& state, AudioSystem* audio);
+	
 };

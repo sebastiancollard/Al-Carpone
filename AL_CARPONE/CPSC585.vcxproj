@@ -155,6 +155,7 @@
     <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ChangePlaylist.cpp" />
     <ClCompile Include="constants.cpp" />
     <ClCompile Include="CornerStore.cpp" />
     <ClCompile Include="DebugPanel.cpp" />

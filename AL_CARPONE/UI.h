@@ -8,6 +8,13 @@
 #include "State.h"
 #include "Player.h"
 #include "GraphicsSystem.h"
+#include "State.h"
+#include "Player.h"
+#include "GraphicsSystem.h"
+#include "SelectItem.h"
+#include "BoxTrigger.h"
+#include "Garage.h"
+#include "ChangePlaylist.h"
 
 
 // Make sure to create this after graphics is initialized!!!
@@ -18,6 +25,7 @@ public:
 	Model* press_f_to_rob;
 	Model* press_f_to_exit;
 	Model* press_f_to_enter_corner_store;
+	Model* press_f_to_enter_garage;
 	Model* Item;
 
 	// UI ELEMENTS
