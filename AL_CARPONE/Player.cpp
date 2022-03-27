@@ -55,8 +55,6 @@ bool Player::beingChased(State& state) {
 // ROBING FUNCTIONS
 ///////////////////////////////////////////////////////////////////////
 
-
-
 int Player::getCash() {
 	return cash;
 }
@@ -137,11 +135,12 @@ void Player::rob(State& state) {
 	
 	timeSpentRobbing += state.timeStep;
 	
-	alertChancePerFrame += state.timeStep / chanceScale;
-	
 	//printf("TIME[%.2f] CHANCE[%f]\n", timeSpentRobbing,alertChancePerFrame);
 
+	printf("ALARMTIMER: %.2f\n", alarmCheckTimer);
+
 	if (timeSpentRobbing > 1.0f) {
+		alarmCheckTimer += state.timeStep;
 		addCash(cashRobbedPerFrame * cashRateMultiplier * state.timeStep);
 		state.audioSystemPtr->playRobLoop();
 	}
@@ -149,14 +148,22 @@ void Player::rob(State& state) {
 		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::OPEN_DUFFLE);
 	}
 
-
-	if (((float)(rand() % 1000) / 1000.0f) < alertChancePerFrame) {
-		state.alertPolice();
-		glm::vec3 pos = state.playerPtr->getPos();
-		state.audioSystemPtr->triggerBankAlarm(pos.x,pos.y,pos.z);
-		state.audioSystemPtr->stopSound(SOUND_SELECTION::ROB_LOOP);
-		state.audioSystemPtr->stopSound(SOUND_SELECTION::OPEN_DUFFLE);
+	if (alarmCheckTimer > alarmCheckInterval) {
+		printf("ALARMTIMER: %.2f > %.2f\n", alarmCheckTimer, alarmCheckInterval);
+		float random = (float)(rand() % 101) / 100.f;
+		if (random < alarmChancePerCheck) {
+			state.alertPolice();
+			glm::vec3 pos = state.playerPtr->getPos();
+			state.audioSystemPtr->triggerBankAlarm(pos.x, pos.y, pos.z);
+			state.audioSystemPtr->stopSound(SOUND_SELECTION::ROB_LOOP);
+			state.audioSystemPtr->stopSound(SOUND_SELECTION::OPEN_DUFFLE);
+		}
+		alarmCheckTimer = 0.f;
+		alarmChancePerCheck *= 1.5f;
 	}
+
+
+
 
 // CASH_ROBBED_PER_FRAME* state.timeStep
 }
@@ -169,7 +176,6 @@ void Player::rob(State& state) {
 // Handle all key inputs relevant to driving
 void Player::handleInput(GLFWwindow* window, State& state)
 {
-
 
 
 	// Handle interactions
@@ -194,9 +200,9 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		}
 	}
 
-	if (alertChancePerFrame > 0) {
-		alertChancePerFrame -= state.timeStep / (3.0f * chanceScale);
-		if (alertChancePerFrame < 0) alertChancePerFrame = 0;
+	if (alarmChancePerCheck > baseAlarmChancePerCheck) {
+		alarmChancePerCheck -= state.timeStep / (100.f * (float)baseAlarmChancePerCheck);
+		if (alarmChancePerCheck < baseAlarmChancePerCheck) alarmChancePerCheck = baseAlarmChancePerCheck;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {

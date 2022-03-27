@@ -51,8 +51,16 @@ public:
 	float basecashRobbedPerFrame = 5000;
 	float cashRobbedPerFrame = basecashRobbedPerFrame;
 
-	double alertChancePerFrame = 0;
-	float chanceScale = 100000.f;
+	float initAlarmChancePerCheck = 0.1f;
+	float baseAlarmChancePerCheck = initAlarmChancePerCheck;
+	float alarmChancePerCheck = baseAlarmChancePerCheck;
+
+	float alarmCheckTimer = 0.f;
+
+	float initAlarmCheckInterval = 2.f;
+	float baseAlarmCheckInterval = initAlarmCheckInterval;
+	float alarmCheckInterval = baseAlarmCheckInterval;
+
 
 	float jailTimer = 0;
 

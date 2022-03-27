@@ -32,8 +32,13 @@ public:
 
 	AISTATE ai_state = AISTATE::PATROL;
 	//BoxTrigger* headlights;
-	unsigned int baseDetectionRadius = 30.f;
-	unsigned int detectionRadius = baseDetectionRadius;
+	float baseDetectionRadius = 30.f;
+	float detectionRadius = baseDetectionRadius;
+
+	float baseJailRadius = 10.f;
+	float jailRadius = baseJailRadius;
+
+
 	DrivingNodes* dNodes;
 	bool isStunned;
 
@@ -60,6 +65,8 @@ public:
 	bool playerInTrigger; //Player in trigger volume
 	bool playerInSight; //Raycast to player successful
 	bool playerDetected; //playerInTrigger && playerInSight
+	bool playerInJailRadius; 
+	bool playerArrestable; //playerInJailRadius && playerInSight
 	
 	//debug
 	glm::vec3 getTargetDirection() {
