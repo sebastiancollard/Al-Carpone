@@ -33,7 +33,7 @@ private:
 
 	bool detectable = true;					//Flag that specifies whether the player is detectable to enemies
 	VEHICLE_TYPE model_type = AL_CARPONE;	//Used for model switching when using the camouflage power
-	unsigned int cash = 11118751;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+	unsigned int cash = 0;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
 	double cashRateMultiplier = 1;
 
@@ -43,7 +43,7 @@ private:
 
 	//robbing
 	float timeSpentRobbing = 0;
-	double alertChancePerFrame = 0;
+	
 
 
 
@@ -51,7 +51,10 @@ public:
 	float basecashRobbedPerFrame = 500;
 	float cashRobbedPerFrame = basecashRobbedPerFrame;
 
-	float jailTimer;
+	double alertChancePerFrame = 0;
+	float chanceScale = 100000.f;
+
+	float jailTimer = 0;
 
 	bool isSeen = false;
 

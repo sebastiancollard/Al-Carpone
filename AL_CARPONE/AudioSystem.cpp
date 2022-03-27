@@ -11,7 +11,8 @@ AudioSystem::AudioSystem() {
 
 	VehicleSoundEngine->setSoundVolume(1.0f);
 	MusicSoundEngine->setSoundVolume(musicVolume);
-	
+	EffectsSoundEngine->setSoundVolume(0.3f);
+
 	for (int i = 0; i < 11; i++) {
 		policeSirenPointers[i] = PoliceSoundEngine->play3D(soundPaths[SIREN_LOOP].c_str(), irrklang::vec3df(0,0,0), true, true);
 		policeSirenPointers[i]->setVolume(3.0f);
@@ -41,15 +42,31 @@ void AudioSystem::setPitchAndVolume(SOUND_SELECTION selection, float pitch, floa
 	}
 }
 
-void AudioSystem::playSoundEffect(SOUND_SELECTION selection) {
-	if (!EffectsSoundEngine->isCurrentlyPlaying(soundPaths[selection].c_str())) {
-		if (soundPointers[selection] && !soundPointers[selection]->isFinished()) return;
-		irrklang::ISound* sound = EffectsSoundEngine->play2D(soundPaths[selection].c_str(), false);
-		soundPointers[selection] = sound;
+void AudioSystem::playRobLoop() {
+	if (!soundPointers[SOUND_SELECTION::ROB_LOOP]){
+		irrklang::ISound* sound = EffectsSoundEngine->play2D(soundPaths[SOUND_SELECTION::ROB_LOOP].c_str(), false);
+		soundPointers[SOUND_SELECTION::ROB_LOOP] = sound;
+	}
+	else if (soundPointers[SOUND_SELECTION::ROB_LOOP]->isFinished()) {
+		irrklang::ISound* sound = EffectsSoundEngine->play2D(soundPaths[SOUND_SELECTION::ROB_LOOP].c_str(), false);
+		soundPointers[SOUND_SELECTION::ROB_LOOP] = sound;
 	}
 }
 
+void AudioSystem::playSoundEffect(SOUND_SELECTION selection) {
+	if (EffectsSoundEngine->isCurrentlyPlaying(soundPaths[selection].c_str())) {
+		soundPointers[selection]->stop();
+	}
+	irrklang::ISound* sound = EffectsSoundEngine->play2D(soundPaths[selection].c_str(), false);
+	soundPointers[selection] = sound;
+}
 
+void AudioSystem::stopMusic() {
+	musicShouldPlay = false;
+	introPlayed = false;
+	
+	MusicSoundEngine->stopAllSounds();
+}
 
 void AudioSystem::triggerBankAlarm(float playerx, float playery, float playerz) {
 	if (!EffectsSoundEngine->isCurrentlyPlaying(soundPaths[SOUND_SELECTION::BANK_ALARM].c_str())) {
@@ -234,6 +251,8 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 
 
 void AudioSystem::updateMusic(State* state) {
+
+	if (!musicShouldPlay) return;
 
 	if (!introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_INTRO].c_str())) {
 		soundPointers[SONG_INTRO] = MusicSoundEngine->play2D(soundPaths[SONG_INTRO].c_str(), false);

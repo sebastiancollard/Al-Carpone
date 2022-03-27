@@ -1,4 +1,5 @@
 #include "Exit.h"
+#include "AudioSystem.h"
 
 void Exit::createTrigger() {
 	//ROBBING TRIGGER
@@ -6,9 +7,12 @@ void Exit::createTrigger() {
 }
 
 void Exit::triggerFunction(Player& player, State& state) {
-	if (player.getCash() > 100.f) {
+	if (player.getCash() > 100000.f && !state.policeAlerted()) {
 		state.gameWon = true;
+		state.audioSystemPtr->stopMusic();
+		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::WINGAME);
 		return;
 	}
+	else state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
 }
 

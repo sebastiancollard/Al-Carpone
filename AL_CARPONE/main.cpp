@@ -53,6 +53,8 @@ int main()
 	
 	cout << "Initializing AI..." << endl;
 
+	unsigned int bail_cost_init = 1000;
+	unsigned int bail_cost = bail_cost_init;
 
 	//Setup police and driving nodes
 	DrivingNodes* dNodes = new DrivingNodes(
@@ -268,6 +270,7 @@ int main()
 
 		if (state.gameWon) {
 			mainMenu.drawWinScreen(graphics);
+			
 		}
 		else if (state.gameLost) {
 			mainMenu.drawLoseScreen(graphics);
@@ -354,13 +357,18 @@ int main()
 		{
 			mainMenu.drawJailScreen(&graphics);
 
+			graphics.shaderText->use();
+			std::string message = "Cost : $" + std::to_string(bail_cost);
+			text_renderer.RenderText(*graphics.shaderText, message, 25.0f, 450.0f, 0.7f, glm::vec3(0.0, 0.0f, 0.0f)); //not displaying
+		
+
 			if (glfwGetKey(graphics.window, GLFW_KEY_F) == GLFW_PRESS) {
 				if (!state.f_isHeld) {
-					if (player.getCash() >= 10.0f) {
-						player.setCash(player.getCash() - 10.0f);
+					if (player.getCash() >= bail_cost) {
+						player.setCash(player.getCash() - bail_cost);
 						audio.playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 						//player.setPos();
-
+						bail_cost = bail_cost * 2;
 						PxVec3 p(190.21, 0.96, -194.67);
 						PxQuat q(-0.00, -0.71, 0.00, -0.70);
 
@@ -375,6 +383,8 @@ int main()
 					else {
 						state.gameLost = true;
 						audio.playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+						audio.playSoundEffect(SOUND_SELECTION::LOSEGAME);
+						bail_cost = bail_cost_init;
 					}
 				}
 				state.f_isHeld = true;
@@ -608,6 +618,40 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	text_renderer->RenderText(*graphics->shaderText, message, 650.0f, 25.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));	
 	//params: shader, text, x_pos (screen coord), y_pos(screen_coord), scale, colour
 
+	float chaseSum = 0;
+	float chaseMax = 0;
+
+	for (PoliceCar* p : state->activePoliceVehicles) {
+		chaseSum += p->chaseTime;
+		chaseMax += p->maxChaseTime;
+	}
+
+	float ratio = chaseSum / chaseMax;
+	
+	message = "Alert Level : ";
+	
+	if (ratio > 0) {
+		if (ratio > 0)   message += "* ";
+		if (ratio > 0.2) message += "* ";
+		if (ratio > 0.4) message += "* ";
+		if (ratio > 0.6) message += "* ";
+		if (ratio > 0.8) message += "* ";
+		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 550.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+
+		message = "Jail Countdown : " + std::to_string(5 - (int)player->jailTimer);
+		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 500.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+	}
+
+	if (player->alertChancePerFrame > 0) {
+		message = "Alarm Risk : + ";
+		int num = (int)(player->alertChancePerFrame * player->chanceScale / 5);
+		while (num > 0) {
+			message += "+ ";
+			num--;
+		}
+		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 450.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+	}
+	
 	// UI needs to be drawn after all 3D elements
 	ui->update(state, player, graphics);
 }

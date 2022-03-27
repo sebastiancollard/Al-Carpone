@@ -31,7 +31,10 @@ static enum SOUND_SELECTION {
 	PURCHASE_FAIL,
 	ENTER_STORE,
 	THROW_OUT,
-	JAIL_DOOR
+	JAIL_DOOR,
+	UPGRADE,
+	WINGAME,
+	LOSEGAME
 };
 static std::vector<std::string> soundPaths{
 		"audio/songINTRO.wav",		//0
@@ -48,18 +51,22 @@ static std::vector<std::string> soundPaths{
 		"audio/wheelsOnGroundLOOP.wav",//11
 		"audio/windLOOP.wav",		//12
 		"audio/sirenloop.wav",		//13
-		"audio/click.ogg",			//14
-		"audio/click2.ogg",			//15
+		"audio/click.wav",			//14
+		"audio/click2.wav",			//15
 		"audio/bend.ogg",			//16
 		"audio/bank_alarm.wav",		//17
 		"audio/open_duffle.wav",	//18
 		"audio/robbing_loop.wav",	//19
 		"audio/pop_menu2.wav",		//20
 		"audio/pay_cash2.mp3",		//21
-		"audio/error.wav",	//22
+		"audio/error.wav",			//22
 		"audio/door_bell.wav",		//23
 		"audio/throw_out.mp3",		//24
-		"audio/jail_door.wav"		//25
+		"audio/jail_door.wav",		//25
+		"audio/upgrade.wav",		//26
+		"audio/victory.wav",		//27
+		"audio/lose.wav"			//28
+
 };
 
 class AudioSystem {
@@ -91,8 +98,11 @@ public:
 
 	void playSoundEffect(SOUND_SELECTION);
 
+	void playRobLoop();
 
 	void triggerBankAlarm(float,float,float);
+
+	void stopMusic();
 
 	irrklang::ISound* playSound(unsigned int, bool);
 	irrklang::ISound* playENGINESound(unsigned int, bool);
@@ -102,6 +112,7 @@ private:
 
 	bool introPlayed = false;
 	float musicVolume = 0.25f;
+	bool musicShouldPlay = true;
 
 	std::vector<irrklang::ISound*> soundPointers{
 		NULL,	//SONG_INTRO
@@ -129,7 +140,10 @@ private:
 		NULL,	//PURCHASE_FAIL
 		NULL,	//ENTER_STORE
 		NULL,	//THROW OUT
-		NULL	//JAIL_DOOR
+		NULL,	//JAIL_DOOR
+		NULL,	//UPGRADE
+		NULL,
+		NULL
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {

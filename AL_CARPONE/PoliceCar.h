@@ -37,6 +37,8 @@ public:
 	DrivingNodes* dNodes;
 	bool isStunned;
 
+	float maxChaseTime = 10.f;
+
 	PoliceCar() {}
 
 	// Call parent constructor
