@@ -61,7 +61,8 @@ static std::vector<std::string> soundPaths{
 		"audio/door_bell.wav",		//23
 		"audio/throw_out.mp3",		//24
 		"audio/jail_door.wav",		//25
-		"audio/garage_door.wav"		//26	
+		"audio/garage_door.wav",	//26	
+		"audio/Radio_Jazz.mp3"
 
 };
 

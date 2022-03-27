@@ -130,7 +130,7 @@ int main()
 	state.buildings[BUILDINGS::EXIT] = &exit;
 
 	SelectItem selectItem;
-
+	ChangePlaylist playlist;
 
 
 	// Initialize Models
@@ -277,7 +277,7 @@ int main()
 			else if (!garageDoorOpen && garageDoorPrev) gScene->addActor(*garageDoor);
 			garageDoorPrev = garageDoorOpen;
 		
-			
+			if (state.tab_isHeld) { playlist.drawMenu(graphics, state, &audio); }
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);

@@ -34,6 +34,7 @@ DEBUGMODE debugmode = DEBUGMODE::FALSE;
 #include "PauseMenu.h"
 #include "UI.h"
 
+
 // Game Elements
 #include "Skybox.h"
 #include "Camera.h"
@@ -48,7 +49,6 @@ DEBUGMODE debugmode = DEBUGMODE::FALSE;
 #include "Garage.h"
 #include "PowerUp.h"
 #include "AI.h"
-
 
 
 struct DebugTools {

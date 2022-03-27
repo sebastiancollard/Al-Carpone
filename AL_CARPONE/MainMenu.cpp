@@ -17,8 +17,7 @@ MainMenu::MainMenu() {
 	selectionScreens = {
 		Model("models/mainMenu/0_PLAYGAME.obj"),
 		Model("models/mainMenu/1_QUIT.obj"),
-		/*Model("models/RadioSelect/radio1.obj"),
-		Model("models/RadioSelect/radio2.obj")*/
+		
 	};
 
 	light_positions = load_positions("models/map/light_positions.obj");
