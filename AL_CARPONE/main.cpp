@@ -341,11 +341,11 @@ int main()
 		///////////////////////////////////////////////////////////////
 		//corner store
 		///////////////////////////////////////////////////////////////
-		else if (state.gamestate == GAMESTATE_CORNERSTORE)
-		{
-			selectItem.drawMenu(graphics, state, player);
-			
-		}
+		//else if (state.gamestate == GAMESTATE_CORNERSTORE)
+		//{
+		//	selectItem.drawMenu(graphics, state, player);
+		//	
+		//}
 		///////////////////////////////////////////////////////////////
 		//jail
 		///////////////////////////////////////////////////////////////
@@ -401,6 +401,7 @@ int main()
 			garageDoorPrev = garageDoorOpen;
 		
 			if (state.tab_isHeld) { playlist.drawMenu(graphics, state, &audio); }
+			if (player.canChooseTool(state)) { selectItem.drawMenu(graphics, state, player); }
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);

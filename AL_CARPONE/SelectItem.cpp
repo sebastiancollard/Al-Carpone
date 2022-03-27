@@ -13,23 +13,27 @@ SelectItem::SelectItem()
 
 	rotate_item =
 	{
-		Model("models/powerups/tomato.obj"),
-		Model("models/powerups/doughnut.obj"),
-		Model("models/powerups/spike.obj"),
-		Model("models/powerups/spike.obj")
+		Model("models/ChooseItem/select_4.obj"),
+		Model("models/ChooseItem/select_1.obj"),
+		Model("models/ChooseItem/select_2.obj"),
+		Model("models/ChooseItem/select_3.obj")
 	};
-	changeItem(0);
+	//changeItem(0);
 }
 
 void SelectItem::changeItem(int item) {
-	active_selection = new Model("models/ChooseItem/base.obj");
+	active_selection = new Model("models/ChooseItem/select_4.obj");
 	//active_rotate = new Model("models/powerups/TomatoBeef.obj");
 }
 
 void SelectItem::drawMenu(GraphicsSystem& graphics, State& state, Player& player) {
 	graphics.shader2D->use();
-	Select_Item_Pics[selection].Draw(*graphics.shader2D);
-
+	Select_Item_Pics[0].Draw(*graphics.shader2D);
+	Select_Item_Pics[1].Draw(*graphics.shader2D);
+	Select_Item_Pics[2].Draw(*graphics.shader2D);
+	Select_Item_Pics[3].Draw(*graphics.shader2D);
+	//0.86 0.95
+	rotate_item[selection].Draw(*graphics.shader2D);
 	//graphics.shader3D->use();
 	//rotate_item[selection].Draw(*graphics.shader3D);
 	//active_rotate->Draw(*graphics.shader3D);
@@ -42,7 +46,8 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
-			state.gamestate = GAMESTATE_INGAME;
+			//state.gamestate = GAMESTATE_INGAME;
+			player.setChooseTool(false);
 		}
 		state.escape_isHeld = true;
 		return;
@@ -118,8 +123,8 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 				break;
 			}
 			//cout << player.getPower() << endl;
-			state.gamestate = GAMESTATE_INGAME;
-			
+			//state.gamestate = GAMESTATE_INGAME;
+			player.setChooseTool(false);
 		}
 
 		state.enter_isHeld = true;
@@ -131,7 +136,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	}
 
 	// Handles key inputs
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+	/*if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		if (!state.S_isHeld) {
 			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 			selection = (selection + 1) % 4;
@@ -141,7 +146,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 		state.S_isHeld = true;
 		return;
 	}
-	else state.S_isHeld = false;
+	else state.S_isHeld = false;*/
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
@@ -154,16 +159,16 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	}
 	else state.down_isHeld = false;
 
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		if (!state.W_isHeld) {
-			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
-			//state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
-			selection = (selection - 1) % 4;
-		}
-		state.W_isHeld = true;
-		return;
-	}
-	else state.W_isHeld = false;
+	//if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+	//	if (!state.W_isHeld) {
+	//		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
+	//		//state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
+	//		selection = (selection - 1) % 4;
+	//	}
+	//	state.W_isHeld = true;
+	//	return;
+	//}
+	//else state.W_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		if (!state.up_isHeld) {
@@ -231,7 +236,8 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 							break;
 						}
 						//cout << player.getPower() << endl;
-						state.gamestate = GAMESTATE_INGAME;
+						//state.gamestate = GAMESTATE_INGAME;
+						player.setChooseTool(false);
 					}
 				}
 				//std::cout << "CROSS (xbox a, ns pro b)" << std::endl;
