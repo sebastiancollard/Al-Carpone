@@ -32,7 +32,8 @@ public:
 
 	AISTATE ai_state = AISTATE::PATROL;
 	//BoxTrigger* headlights;
-	unsigned int detectionRadius = 30.f;
+	unsigned int baseDetectionRadius = 30.f;
+	unsigned int detectionRadius = baseDetectionRadius;
 	DrivingNodes* dNodes;
 	bool isStunned;
 
