@@ -124,7 +124,7 @@ void UI::drawPopups(State* state, GraphicsSystem* graphics) {
 		|| state->buildings[BUILDINGS::GARAGE3]->isInRange)
 	{
 		press_f_to_enter_garage->Draw(*graphics->shader2D);
-	}
+}
 
 
 }
