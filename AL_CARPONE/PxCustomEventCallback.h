@@ -60,6 +60,9 @@ public:
 							//std::cout << "BUILDING IN RANGE!!!" << std::endl;
 							if (j == 1 || j == 2 || j == 3) {
 								garageDoorOpen = true;
+
+								state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::GARAGE_DOOR);
+
 								for (PoliceCar* p : state.activePoliceVehicles) {
 									if (p->chaseTime > 0) garageDoorOpen = false;
 									break;

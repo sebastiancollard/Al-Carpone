@@ -145,7 +145,6 @@ void Garage::drawGarageMenu() {
 
 void Garage::triggerFunction(Player& player, State& state) {
 	std::cout << "GARAGE " << this->type << std::endl;
-	state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::GARAGE_DOOR);
-	drawGarageMenu();
+	//drawGarageMenu();
 	
 }

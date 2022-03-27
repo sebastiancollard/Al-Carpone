@@ -48,7 +48,7 @@ private:
 
 
 public:
-	float basecashRobbedPerFrame = 500;
+	float basecashRobbedPerFrame = 5000;
 	float cashRobbedPerFrame = basecashRobbedPerFrame;
 
 	double alertChancePerFrame = 0;
