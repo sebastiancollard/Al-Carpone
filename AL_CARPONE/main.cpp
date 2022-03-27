@@ -401,7 +401,9 @@ int main()
 			garageDoorPrev = garageDoorOpen;
 		
 			if (state.tab_isHeld) { playlist.drawMenu(graphics, state, &audio); }
-			if (player.canChooseTool(state)) { selectItem.drawMenu(graphics, state, player); }
+			if (player.canChooseTool(state) && (state.buildings[BUILDINGS::CORNERSTORE1]->isInRange 
+				|| state.buildings[BUILDINGS::CORNERSTORE2]->isInRange))
+			{ selectItem.drawMenu(graphics, state, player); }
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);
