@@ -239,7 +239,7 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
         //yaw = 0;
         updateLocked(state);
     }
-
+    
     if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
     {
         //get controller name
@@ -249,7 +249,8 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
         GLFWgamepadstate state;
         if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
         {
-            float rotX, rotY;
+            float rotX = 0;
+            float rotY = 0;
             if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) > 0.15)
             {
                 rotY = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
@@ -276,7 +277,7 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
             oldVehDir = player.getDir();
         }
     }
-
+    
 
     glm::vec3 velocity = getGLMvec3(player.vehiclePtr->getRigidDynamicActor()->getLinearVelocity());
     //printVec3("velocity", velocity);

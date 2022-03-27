@@ -35,7 +35,7 @@ public:
 	float baseDetectionRadius = 30.f;
 	float detectionRadius = baseDetectionRadius;
 
-	float baseJailRadius = 10.f;
+	float baseJailRadius = 20.f;
 	float jailRadius = baseJailRadius;
 
 
