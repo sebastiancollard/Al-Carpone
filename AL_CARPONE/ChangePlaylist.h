@@ -16,8 +16,16 @@ enum PLAYLIST {
 class ChangePlaylist 
 {
 
+	unsigned int currentPlaylist = PLAYLIST::LIST1;
 
-	
+public:
+	Model playlist1;
+	Model playlist2;
+	Model playlist3;
+
+
+	ChangePlaylist();
+
 	void handleInputs(GLFWwindow* window, State& state, AudioSystem* audio);
 
 };
