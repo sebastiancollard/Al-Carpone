@@ -186,69 +186,35 @@ void Vehicle::updateSpeed(double newSpeed) {
 // Fetch Directions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+PxMat44 Vehicle::getTransform() const {
+	PxMat44 mat = this->vehiclePtr->getRigidDynamicActor()->getGlobalPose();
+	return mat.getTranspose();
+}
 
 // fetch the front-facing direction of the player vehicle
 glm::vec3 Vehicle::getDir() {
-	const int MAX_NUM_ACTOR_SHAPES = 128;
-	PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
-	const PxU32 nbShapes = actorPtr->getNbShapes();
-	PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
-	actorPtr->getShapes(shapes, nbShapes);
-
-	PxTransform shape;
-
-	// fetch position of two wheels, both along the same side of the car and compute a direction from that
-	shape = PxTransform(PxShapeExt::getGlobalPose(*shapes[0], *actorPtr));
-	glm::vec3 a(shape.p.x, shape.p.y, shape.p.z);
-
-	shape = PxTransform(PxShapeExt::getGlobalPose(*shapes[2], *actorPtr));
-	glm::vec3 b(shape.p.x, shape.p.y, shape.p.z);
-
-	return glm::normalize(a - b);
+	PxMat44 transformMat = PxTransform(this->getTransform());
+	return glm::normalize(glm::vec3(transformMat[0][2], transformMat[1][2], transformMat[2][2]));
 }
 
 
 // fetch the vector pointing to the right of the vehicle
 glm::vec3 Vehicle::getRight() {
-	const int MAX_NUM_ACTOR_SHAPES = 128;
-	PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
-	const PxU32 nbShapes = actorPtr->getNbShapes();
-	PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
-	actorPtr->getShapes(shapes, nbShapes);
-
-	PxTransform shape;
-
-	// fetch position of the front two wheels of the car and find right by that
-	shape = PxTransform(PxShapeExt::getGlobalPose(*shapes[0], *actorPtr));
-	glm::vec3 a(shape.p.x, shape.p.y, shape.p.z);
-
-	shape = PxTransform(PxShapeExt::getGlobalPose(*shapes[1], *actorPtr));
-	glm::vec3 b(shape.p.x, shape.p.y, shape.p.z);
-
-	return glm::normalize(a - b);
+	PxMat44 transformMat = PxTransform(this->getTransform());
+	return glm::normalize(glm::vec3(transformMat[0][0], transformMat[1][0], transformMat[2][0]));
 }
 
 
 glm::vec3 Vehicle::getUp() {
-	glm::vec3 a = getRight();
-	glm::vec3 b = getDir();
-
-	return  glm::normalize(glm::cross(a, b));
+	PxMat44 transformMat = PxTransform(this->getTransform());
+	return glm::normalize(glm::vec3(transformMat[0][1], transformMat[1][1], transformMat[2][1]));
 }
 
 
 // fetch position of the vehicle chassis
 glm::vec3 Vehicle::getPos() {
-	const int MAX_NUM_ACTOR_SHAPES = 128;
-	PxShape* shapes[MAX_NUM_ACTOR_SHAPES];
-	const PxU32 nbShapes = actorPtr->getNbShapes();
-	PX_ASSERT(nbShapes <= MAX_NUM_ACTOR_SHAPES);
-	actorPtr->getShapes(shapes, nbShapes);
-
-	PxTransform shape(PxShapeExt::getGlobalPose(*shapes[4], *actorPtr)); // index 4 here is the box, 0 through 3 are the wheels, we'll have to find a better way to do this.
-
-	return glm::vec3(shape.p.x, shape.p.y, shape.p.z);
+	PxVec3 pxPos = actorPtr->getGlobalPose().p;
+	return glm::vec3(pxPos.x, pxPos.y, pxPos.z);
 }
 
 

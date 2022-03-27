@@ -50,6 +50,7 @@ public:
 	void moveStartPoint(PxVec3 v);
 
 	// Fetch directions
+	PxMat44 getTransform() const;
 	glm::vec3 getDir();		// fetch the front-facing direction of the player vehicle
 	glm::vec3 getRight();	// fetch the vector pointing to the right of the vehicle
 	glm::vec3 getUp();

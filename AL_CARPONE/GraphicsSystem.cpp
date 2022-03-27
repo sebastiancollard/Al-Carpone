@@ -20,7 +20,7 @@ GraphicsSystem::GraphicsSystem() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create a GLFWwindow object of 800 by 800 pixels
-	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", NULL, NULL);
+	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", glfwGetPrimaryMonitor(), NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{

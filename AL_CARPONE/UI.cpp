@@ -54,6 +54,9 @@ void UI::update(State* state, Player* player, GraphicsSystem* graphics) {
 
 	// Calculate player marker position
 	player_movement = updateMarkerPos(player->getPos());	// Gets translation matrix
+	glm::vec3 out(0, 0, -1);
+	float theta = atan2(glm::dot(glm::cross(player->getDir(), out), glm::vec3(0.f, 1.f, 0.f)), glm::dot(player->getDir(), out));
+	player_movement = glm::rotate(player_movement, theta, out);
 	graphics->shader2D->setMat4("model", player_movement);
 	player_marker->Draw(*graphics->shader2D);
 
