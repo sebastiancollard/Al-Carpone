@@ -120,7 +120,6 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 		enterPressed = true;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) enterPressed = false;
-	
 }
 
 void Garage::drawGarageMenu() {

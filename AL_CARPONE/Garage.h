@@ -29,8 +29,6 @@ public:
 	Model selectMid;
 	Model selectBot;
 
-	Model pop_up = Model();
-
 	std::vector<Upgrade> upgradeList;
 	physx::PxVec3 position;	// Position currently hardcoded
 

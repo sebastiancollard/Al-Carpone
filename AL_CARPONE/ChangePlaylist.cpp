@@ -13,7 +13,7 @@ ChangePlaylist::ChangePlaylist() {
 
 void ChangePlaylist::drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio) {
 	graphics.shader2D->use();
-	radio_list[currentPlaylist].Draw(*graphics.shader2D);
+	radio_list[state.playlist_count].Draw(*graphics.shader2D);
 	handleInputs(graphics.window, state, audio);
 }
 
@@ -25,7 +25,7 @@ void ChangePlaylist::handleInputs(GLFWwindow* window, State& state, AudioSystem*
 			if (!state.right_isHeld) 
 			{
 				state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
-				currentPlaylist = (currentPlaylist + 1) % 3;
+				state.playlist_count = (state.playlist_count + 1) % 3;
 			}
 			state.right_isHeld = true;
 			return;
@@ -40,7 +40,7 @@ void ChangePlaylist::handleInputs(GLFWwindow* window, State& state, AudioSystem*
 		if (!state.left_isHeld)
 		{
 			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
-			currentPlaylist = (currentPlaylist - 1) % 3;
+			state.playlist_count = (state.playlist_count - 1) % 3;
 		}
 		state.left_isHeld = true;
 		return;
