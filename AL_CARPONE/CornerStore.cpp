@@ -7,7 +7,7 @@ void CornerStore::createTrigger() {
 
 void CornerStore::triggerFunction(Player& player, State& state) {
 	player.setChooseTool(true);
-	cout << player.canChooseTool(state) << endl;
+	//cout << player.canChooseTool(state) << endl;
 	state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::ENTER_STORE);
 	//state.gamestate = GAMESTATE_CORNERSTORE;
 }

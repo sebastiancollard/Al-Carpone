@@ -32,7 +32,7 @@ void SelectItem::drawMenu(GraphicsSystem& graphics, State& state, Player& player
 	Select_Item_Pics[1].Draw(*graphics.shader2D);
 	Select_Item_Pics[2].Draw(*graphics.shader2D);
 	Select_Item_Pics[3].Draw(*graphics.shader2D);
-	
+	//0.86 0.95
 	rotate_item[selection].Draw(*graphics.shader2D);
 	//graphics.shader3D->use();
 	//rotate_item[selection].Draw(*graphics.shader3D);
@@ -136,7 +136,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	}
 
 	// Handles key inputs
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+	/*if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		if (!state.S_isHeld) {
 			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 			selection = (selection + 1) % 4;
@@ -146,7 +146,7 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 		state.S_isHeld = true;
 		return;
 	}
-	else state.S_isHeld = false;
+	else state.S_isHeld = false;*/
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
@@ -159,16 +159,16 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	}
 	else state.down_isHeld = false;
 
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		if (!state.W_isHeld) {
-			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
-			//state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
-			selection = (selection - 1) % 4;
-		}
-		state.W_isHeld = true;
-		return;
-	}
-	else state.W_isHeld = false;
+	//if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+	//	if (!state.W_isHeld) {
+	//		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
+	//		//state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
+	//		selection = (selection - 1) % 4;
+	//	}
+	//	state.W_isHeld = true;
+	//	return;
+	//}
+	//else state.W_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		if (!state.up_isHeld) {

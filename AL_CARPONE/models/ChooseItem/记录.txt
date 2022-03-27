@@ -1,5 +1,0 @@
-MainMenu是drawMenu里读取的Main menu constructor生成的level_models<Model>里的model.
-
-我要做的：
-	在state里加入一个state，这样在main menu通过按键就可以直接调试
-	搞明白怎么读取地图，在testlevel上加入一个模型，车开过去可以进入买东西的阶段
