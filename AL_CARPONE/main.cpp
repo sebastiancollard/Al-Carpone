@@ -53,9 +53,6 @@ int main()
 	
 	cout << "Initializing AI..." << endl;
 
-	unsigned int bail_cost_init = 1000;
-	unsigned int bail_cost = bail_cost_init;
-
 	//Setup police and driving nodes
 	DrivingNodes* dNodes = new DrivingNodes(
 		load_positions("models/map/PATROL_NODES.obj"), load_edges("models/map/PATROL_NODES.obj"),
@@ -357,18 +354,16 @@ int main()
 		{
 			mainMenu.drawJailScreen(&graphics);
 
-			graphics.shaderText->use();
-			std::string message = "Cost : $" + std::to_string(bail_cost);
-			text_renderer.RenderText(*graphics.shaderText, message, 25.0f, 450.0f, 0.7f, glm::vec3(0.0, 0.0f, 0.0f)); //not displaying
-		
-
 			if (glfwGetKey(graphics.window, GLFW_KEY_F) == GLFW_PRESS) {
+
+				float bail_cost = 2000.f;
+				if (player.getCash() * 0.75 > bail_cost) bail_cost = player.getCash() * 0.75;
+
 				if (!state.f_isHeld) {
 					if (player.getCash() >= bail_cost) {
 						player.setCash(player.getCash() - bail_cost);
 						audio.playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 						//player.setPos();
-						bail_cost = bail_cost * 2;
 						PxVec3 p(190.21, 0.96, -194.67);
 						PxQuat q(-0.00, -0.71, 0.00, -0.70);
 
@@ -384,7 +379,6 @@ int main()
 						state.gameLost = true;
 						audio.playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
 						audio.playSoundEffect(SOUND_SELECTION::LOSEGAME);
-						bail_cost = bail_cost_init;
 					}
 				}
 				state.f_isHeld = true;
@@ -425,17 +419,17 @@ int main()
 			}
 
 
-			bool playerDetected = false;
+			bool shouldArrest = false;
 
 			for (PoliceCar* p : state.activePoliceVehicles) {
-				if (p->playerDetected) {
-					playerDetected = true;
+				if (p->playerArrestable) {
+					shouldArrest = true;
 					break;
 				}
 			}
 
 
-			if (playerDetected) {
+			if (shouldArrest) {
 
 				player.jailTimer += state.timeStep;
 
@@ -641,10 +635,9 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 		message = "Jail Countdown : " + std::to_string(5 - (int)player->jailTimer);
 		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 500.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
 	}
-
-	if (player->alertChancePerFrame > 0) {
-		message = "Alarm Risk : + ";
-		int num = (int)(player->alertChancePerFrame * player->chanceScale / 5);
+	int num = (int)( (float)(player->alarmChancePerCheck - player->baseAlarmChancePerCheck) / (float)(player->baseAlarmChancePerCheck) );
+	if (num > 0) {
+		message = "Alarm Risk : ";
 		while (num > 0) {
 			message += "+ ";
 			num--;
