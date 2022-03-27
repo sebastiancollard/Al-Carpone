@@ -50,6 +50,7 @@ DEBUGMODE debugmode = DEBUGMODE::FALSE;
 #include "AI.h"
 
 
+
 struct DebugTools {
 	Model red_arrow, blue_arrow, grey_arrow, red_node, blue_node, grey_node;
 	DebugTools() :

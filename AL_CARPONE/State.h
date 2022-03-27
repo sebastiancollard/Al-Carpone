@@ -67,7 +67,7 @@ public:
 	bool gameLost = false;
 
 	//for sound effect
-	
+	int playlist_count = 0;
 
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<PoliceCar*> inactivePoliceVehicles = {};
