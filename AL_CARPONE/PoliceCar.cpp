@@ -7,7 +7,6 @@
 
 // TODO not yet in seconds
 #define MAX_IDLE_TIME 20		
-#define MAX_CHASE_TIME 20
 
 
 // Car Speeds
@@ -243,7 +242,7 @@ void PoliceCar::hardReset() {
 
 // Initiate chase
 void PoliceCar::startChase() {
-	chaseTime = MAX_CHASE_TIME;
+	chaseTime = maxChaseTime;
 	ai_state = AISTATE::CHASE;
 }
 

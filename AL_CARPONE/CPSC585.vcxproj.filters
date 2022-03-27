@@ -192,6 +192,9 @@
     <ClCompile Include="Garage.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="DrivingNodes.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
@@ -200,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="PowerUp.cpp">
       <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="ChangePlaylist.cpp">
       <Filter>Source Files\Windows</Filter>
@@ -344,6 +350,9 @@
     <ClInclude Include="PowerUp.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="ChangePlaylist.h">
       <Filter>Header Files\Windows</Filter>
     </ClInclude>
@@ -365,6 +374,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="skybox.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shaderText.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shaderText.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

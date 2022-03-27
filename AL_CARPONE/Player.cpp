@@ -127,20 +127,23 @@ bool Player::canExit(State& state) {
 	return cash > 10.0f;
 }
 
-float chanceScale = 100000.f;
+
 
 void Player::rob(State& state) {
+	
+	inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
+
 	if (state.policeAlerted() || abs(getForwardVelocity()) > 0.1) return;
-
+	
 	timeSpentRobbing += state.timeStep;
-
+	
 	alertChancePerFrame += state.timeStep / chanceScale;
-
+	
 	//printf("TIME[%.2f] CHANCE[%f]\n", timeSpentRobbing,alertChancePerFrame);
 
 	if (timeSpentRobbing > 1.0f) {
 		addCash(cashRobbedPerFrame * cashRateMultiplier * state.timeStep);
-		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::ROB_LOOP);
+		state.audioSystemPtr->playRobLoop();
 	}
 	else {
 		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::OPEN_DUFFLE);
