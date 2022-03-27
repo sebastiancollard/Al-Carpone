@@ -8,6 +8,14 @@
 #include "State.h"
 #include "Player.h"
 #include "GraphicsSystem.h"
+#include "State.h"
+#include "Player.h"
+#include "GraphicsSystem.h"
+#include "SelectItem.h"
+#include "BoxTrigger.h"
+#include "Garage.h"
+#include "ChangePlaylist.h"
+
 
 // Make sure to create this after graphics is initialized!!!
 class UI {

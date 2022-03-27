@@ -50,8 +50,10 @@ void PoliceCar::update(glm::vec3 playerPos,State& state) {
 
 	distanceToPlayer = glm::distance(playerPos, myPos);
 	playerInTrigger = distanceToPlayer < detectionRadius;
+	playerInJailRadius = distanceToPlayer < jailRadius;
 	playerInSight = !gScene->raycast(origin, unitDir, distanceToPlayer, hit, PxHitFlag::eMESH_BOTH_SIDES);
 	playerDetected = playerInSight && playerInTrigger;
+	playerArrestable = playerInSight && playerInJailRadius;
 
 	if (playerDetected) state.alertPolice();
 
