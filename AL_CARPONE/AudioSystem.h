@@ -33,31 +33,31 @@ static enum SOUND_SELECTION {
 	THROW_OUT
 };
 static std::vector<std::string> soundPaths{
-		"audio/songINTRO.wav",
-		"audio/songLOOP.wav",
-		"audio/engineloop.wav",
-		"audio/idleloop.wav",
-		"audio/turnover.mp3",
-		"audio/brakeLOOP.wav",
-		"audio/revUP.wav",
-		"audio/revLOOP.wav",
-		"audio/revDOWN.wav",
-		"audio/gearswitch0.mp3",
-		"audio/gearswitch1.mp3",
-		"audio/wheelsOnGroundLOOP.wav",
-		"audio/windLOOP.wav",
-		"audio/sirenloop.wav",
-		"audio/click.ogg",
-		"audio/click2.ogg",
-		"audio/bend.ogg",
-		"audio/bank_alarm.wav",
-		"audio/open_duffle.wav",
-		"audio/robbing_loop.wav",
-		"audio/pop_menu2.wav",
-		"audio/pay_cash2.mp3",
-		"audio/error.wav",
-		"audio/door_bell.wav",
-		"audio/throw_out.mp3"
+		"audio/songINTRO.wav",		//0
+		"audio/songLOOP.wav",		//1
+		"audio/engineloop.wav",		//2
+		"audio/idleloop.wav",		//3
+		"audio/turnover.mp3",		//4
+		"audio/brakeLOOP.wav",		//5
+		"audio/revUP.wav",			//6
+		"audio/revLOOP.wav",		//7
+		"audio/revDOWN.wav",		//8
+		"audio/gearswitch0.mp3",	//9
+		"audio/gearswitch1.mp3",	//10
+		"audio/wheelsOnGroundLOOP.wav",//11
+		"audio/windLOOP.wav",		//12
+		"audio/sirenloop.wav",		//13
+		"audio/click.ogg",			//14
+		"audio/click2.ogg",			//15
+		"audio/bend.ogg",			//16
+		"audio/bank_alarm.wav",		//17
+		"audio/open_duffle.wav",	//18
+		"audio/robbing_loop.wav",	//19
+		"audio/pop_menu2.wav",		//20
+		"audio/pay_cash2.mp3",		//21
+		"audio/error.wav",	//22
+		"audio/door_bell.wav",		//23
+		"audio/throw_out.mp3"		//24
 };
 
 class AudioSystem {
@@ -102,30 +102,30 @@ private:
 	float musicVolume = 0.25f;
 
 	std::vector<irrklang::ISound*> soundPointers{
-		NULL,	//SONG_INTRO
-		NULL,	//SONG_LOOP
-		NULL,	//ENGINE_LOOP
-		NULL,	//IDLE_LOOP
-		NULL,	//TURNOVER
-		NULL,	//BRAKE_LOOP
-		NULL,	//REV_UP
-		NULL,	//REV_LOOP
-		NULL,	//REV_DOWN
-		NULL,	//GEARSWITCH0
-		NULL,	//GEARSWITCH1
-		NULL,	//GROUND_SOUNDS
-		NULL,	//WIND_LOOP
-		NULL,   //POLICE_SIREN (IGNORE)
-		NULL,	//MENU_CLICK_LOW,
-		NULL,	//MENU_CLIGH_HIGH,
-		NULL,	//MENU_SELECT
-		NULL,	//BANK_ALARM
-		NULL,	//OPEN_DUFFLE
-		NULL,	//ROB_LOOP
-		NULL,	//POP_TRIGGER_MENU
-		NULL,	//PUCHASE_SUCCESS
-		NULL,	//PURCHASE_FAIL
-		NULL,	//ENTER_STORE
+		NULL,	//SONG_INTRO	
+		NULL,	//SONG_LOOP		
+		NULL,	//ENGINE_LOOP	
+		NULL,	//IDLE_LOOP		
+		NULL,	//TURNOVER		
+		NULL,	//BRAKE_LOOP		
+		NULL,	//REV_UP		
+		NULL,	//REV_LOOP		
+		NULL,	//REV_DOWN		
+		NULL,	//GEARSWITCH0	
+		NULL,	//GEARSWITCH1	
+		NULL,	//GROUND_SOUNDS	
+		NULL,	//WIND_LOOP		
+		NULL,   //POLICE_SIREN (IGNORE)	
+		NULL,	//MENU_CLICK_LOW,	
+		NULL,	//MENU_CLIGH_HIGH,		
+		NULL,	//MENU_SELECT		
+		NULL,	//BANK_ALARM		
+		NULL,	//OPEN_DUFFLE		
+		NULL,	//ROB_LOOP			
+		NULL,	//POP_TRIGGER_MENU	
+		NULL,	//PUCHASE_SUCCESS	
+		NULL,	//PURCHASE_FAIL		
+		NULL,	//ENTER_STORE		
 		NULL	//THROW OUT
 	};
 
