@@ -28,7 +28,9 @@ void State::resetVehicles() {
 
 void State::alertPolice() {
 	for (PoliceCar* p : activePoliceVehicles) {
-		p->startChase();
+		if (!p->isStunned) {
+			p->startChase();
+		}
 	}
 }
 

@@ -34,6 +34,7 @@ public:
 	//BoxTrigger* headlights;
 	float baseDetectionRadius = 30.f;
 	float detectionRadius = baseDetectionRadius;
+	float donutRadius = baseDetectionRadius * 1.5f;
 
 	float baseJailRadius = 20.f;
 	float jailRadius = baseJailRadius;
@@ -58,7 +59,7 @@ public:
 	void startChase();
 	void hardReset();
 
-	void update(glm::vec3 playerPos,State& state);
+	void update(Player& player, State& state);
 
 	float distanceToPlayer = 999;
 
@@ -107,4 +108,5 @@ private:
 	void brake(double timestep);
 
 	void driveTo(glm::vec3 targetPos);
+	void eatDonut(glm::vec3 donutPos);
 };

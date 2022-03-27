@@ -87,7 +87,7 @@ void Player::usePower() {
 	//std:cout << equippedPower.getType() << std::endl;
 	if (equippedPower.getType() == CAMOUFLAGE) {
 		equippedPower.activateTimed();
-		detectable = false;	
+		detectable = false;
 	}
 	else {
 		equippedPower.dropOrThrow();

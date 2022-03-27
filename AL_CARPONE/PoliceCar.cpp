@@ -30,7 +30,9 @@ PoliceCar::PoliceCar(int ID, DrivingNodes* drivingNodes) : Vehicle(VEHICLE_TYPE:
 	//myThread = std::thread(&updateLoop);
 }
 
-void PoliceCar::update(glm::vec3 playerPos,State& state) {
+void PoliceCar::update(Player& player, State& state) {
+
+	glm::vec3 playerPos = player.getPos();
 
 	myPos = getPos();
 	myDir = getDir();
@@ -52,8 +54,16 @@ void PoliceCar::update(glm::vec3 playerPos,State& state) {
 	playerInTrigger = distanceToPlayer < detectionRadius;
 	playerInJailRadius = distanceToPlayer < jailRadius;
 	playerInSight = !gScene->raycast(origin, unitDir, distanceToPlayer, hit, PxHitFlag::eMESH_BOTH_SIDES);
-	playerDetected = playerInSight && playerInTrigger && state.playerPtr->isDetectable();
+	playerDetected = playerInSight && playerInTrigger && player.isDetectable();
 	playerArrestable = playerInSight && playerInJailRadius;
+
+	if ((player.getPower()->getType() == DONUT) && (player.getPower()->itemInWorld)) {
+		float distance = glm::distance(player.getPower()->getPos(), myPos);
+		if (distance < detectionRadius) {
+			eatDonut(player.getPower()->getPos());
+			return;
+		}
+	}
 
 	if (playerDetected) state.alertPolice();
 
@@ -170,8 +180,10 @@ void PoliceCar::idle(double timestep) {
 
 	idleTime -= timestep; // TODO use Timer instead
 
-	if (idleTime <= 0) ai_state = AISTATE::PATROL;
-	//isStunned = false;
+	if (idleTime <= 0) {
+		ai_state = AISTATE::PATROL;
+		isStunned = false;
+	}
 }
 
 
@@ -227,9 +239,6 @@ void PoliceCar::chase(glm::vec3 playerPos,double timestep) {
 	}
 }
 
-
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // GENERAL FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -277,5 +286,17 @@ void PoliceCar::driveTo(glm::vec3 targetPos) {
 	}
 	else {
 		if (temp > 0.05f) inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);
+	}
+}
+
+
+void PoliceCar::eatDonut(glm::vec3 donutPos) {
+
+	if (glm::distance(donutPos, myPos) < baseJailRadius)	//using jailRadius as radius where police "stops" to eat donut
+	{
+		stun(1);	//just stun for 1 second. This will keep being called until the item despawns, so that the stun actually lasts as long as the items remaining timer
+	}
+	else {
+		driveTo(donutPos);
 	}
 }
