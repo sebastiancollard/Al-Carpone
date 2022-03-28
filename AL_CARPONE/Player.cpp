@@ -296,13 +296,9 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			float forwardOrbackward, leftOrRightturn;
 			//forwardOrbackward = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
 			leftOrRightturn = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
-			if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1 && state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
-			{
-				inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
-				footIsOnBrake = true;
-			}
 			
-			else if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
+			
+			if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
 			{
 				footIsOnGas = true;
 				double newSpeed = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
@@ -346,6 +342,11 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			{
 				//std::cout << "left bumber (L1)" << std::endl;	//ps4 L1
 				usePower();
+			}
+			if (state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])
+			{
+				inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
+				footIsOnBrake = true;
 			}
 		}
 	}
