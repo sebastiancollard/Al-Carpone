@@ -29,7 +29,6 @@ public:
 	double leftTurn = 0.5f;
 	double rightTurn = -0.5f;
 
-
 	bool vehicleInAir = true;
 	bool vehicleChangingGears;
 	unsigned int ID = -1;
@@ -69,8 +68,6 @@ public:
 	void updateSpeed(double);
 	void updateLeftSpeed(double);
 	void updateRightSpeed(double);
-
-
 	void updatePhysicsVariables(double);
 
 	bool isMoving();
