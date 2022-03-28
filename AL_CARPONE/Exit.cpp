@@ -7,7 +7,7 @@ void Exit::createTrigger() {
 }
 
 void Exit::triggerFunction(Player& player, State& state) {
-	if (player.getCash() >= 1000000.f && !state.policeAlerted()) {
+	if (player.getCash() >= 250000.f && !state.policeAlerted()) {
 		state.gameWon = true;
 		state.audioSystemPtr->stopMusic();
 		state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::WINGAME);
