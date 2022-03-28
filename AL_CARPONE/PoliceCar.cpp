@@ -13,6 +13,14 @@
 #define PATROL_ACCEL 0.625f
 #define PERSUIT_ACCEL 0.7f
 #define CHASE_ACCEL 0.8f
+static enum DEBUGMODE {
+	FALSE,
+	TRUE,
+	NOJAIL,
+	NOALERT,
+	NOCOPS,
+};
+
 
 
 PoliceCar::PoliceCar(int ID, DrivingNodes* drivingNodes) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVec3(10.f, 0, 0)) {
@@ -31,6 +39,8 @@ PoliceCar::PoliceCar(int ID, DrivingNodes* drivingNodes) : Vehicle(VEHICLE_TYPE:
 }
 
 void PoliceCar::update(Player& player, State& state) {
+
+	extern DEBUGMODE debugmode;
 
 	glm::vec3 playerPos = player.getPos();
 
@@ -74,6 +84,8 @@ void PoliceCar::update(Player& player, State& state) {
 			return;
 		}
 	}
+
+	if (debugmode == DEBUGMODE::NOALERT) return;
 
 	if (playerDetected) state.alertPolice();
 

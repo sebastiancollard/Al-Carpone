@@ -9,15 +9,7 @@
 
 using namespace physx;
 
-static enum DEBUGMODE {
-	FALSE,
-	TRUE,
-	NOJAIL,
-	NOALERT,
-	NOCOPS
-};
 
-extern DEBUGMODE debugmode;
 
 //TODO CLEAN UP LATER
 class PxCustomEventCallback : public PxSimulationEventCallback {

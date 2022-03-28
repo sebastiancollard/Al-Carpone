@@ -5,7 +5,7 @@ static enum DEBUGMODE {
 	TRUE,
 	NOJAIL,
 	NOALERT,
-	NOCOPS
+	NOCOPS,
 };
 
 DEBUGMODE debugmode = DEBUGMODE::FALSE;

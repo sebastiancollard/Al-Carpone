@@ -71,6 +71,10 @@ void DebugPanel::draw(Player& player) {
         if (Button("TOGGLE DEBUG MODE")) {
             enableDebug = !enableDebug;
         }
+        
+        if (Button("ADD CASH")) {
+            player.addCash(10000);
+        }
 
         Spacing();
         if (CollapsingHeader("Steer Vs Forward Speed")) {

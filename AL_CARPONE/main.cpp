@@ -528,8 +528,8 @@ int main()
 			// DEBUG MODE
 			if (state.debugMode) { // Camera is deactivated
 				debugPanel.draw(player);
-				if (debugPanel.enableDebug && debugmode == DEBUGMODE::FALSE) debugmode = DEBUGMODE::TRUE;
-				else if (!debugPanel.enableDebug && debugmode == DEBUGMODE::TRUE) debugmode = DEBUGMODE::FALSE;
+				if (debugPanel.enableDebug) debugmode = DEBUGMODE::NOALERT;
+				else if (!debugPanel.enableDebug) debugmode = DEBUGMODE::FALSE;
 			}
 		}
 		
@@ -690,10 +690,14 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 		if (ratio > 0.6) message += "* ";
 		if (ratio > 0.8) message += "* ";
 		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 550.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+	}
+	int jailCountdown = 5 - (int)player->jailTimer;
 
-		message = "Jail Countdown : " + std::to_string(5 - (int)player->jailTimer);
+	if (jailCountdown < 5 || ratio > 0) {
+		message = "Jail Countdown : " + std::to_string(jailCountdown);
 		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 500.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
 	}
+	
 	int num = (int)( (float)(player->alarmChancePerCheck - player->baseAlarmChancePerCheck) / (float)(player->baseAlarmChancePerCheck) );
 	if (num > 0) {
 		message = "Alarm Risk : ";
