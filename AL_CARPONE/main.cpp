@@ -7,7 +7,7 @@ namespace sv = snippetvehicle;
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*);
 extern void despawnItem();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*);
-
+extern void preloadPowerupModels();
 
 int main()
 {
@@ -72,7 +72,8 @@ int main()
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
 
-
+	preloadPowerupModels();
+	physics.preloadMeshes(tomatoModel, donutModel, spikeModel);
 
 	// update player stats to starter stats
 	
@@ -683,20 +684,20 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 
 		if (player->getPower()->getType() == DONUT) {		//PLAYER THROWS DONUT
 			actor = physics->createDynamicItem(
-				player->getPower()->getModelPath(),
+				player->getPower()->getModel(), player->getPower()->getType(),
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
 			);
 		}
 		else {
 			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
-				player->getPower()->getModelPath(),
+				player->getPower()->getModel(), player->getPower()->getType(),
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
 		}
 		
-		Model model = Model(player->getPower()->getModelPath());
+		Model model = *player->getPower()->getModel();
 		simple_renderables.push_back({ actor, model, "powerup"});
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
@@ -706,12 +707,12 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->stopDrop();
 
 		PxRigidDynamic* actor = physics->createDynamicItem(
-			player->getPower()->getModelPath(),
+			player->getPower()->getModel(), player->getPower()->getType(),
 			PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);
 		
-		Model model = Model(player->getPower()->getModelPath());
+		Model model = *player->getPower()->getModel();
 		simple_renderables.push_back({ actor, model , "powerup" });
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;

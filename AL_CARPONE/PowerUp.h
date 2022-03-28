@@ -3,9 +3,6 @@
 #include <iostream>
 #include "physx_globals.h"
 
-#define TOMATO_PATH "models/powerups/tomato.obj"
-#define DONUT_PATH "models/powerups/doughnut.obj"		//TO CHANGE
-#define SPIKE_PATH "models/powerups/spike.obj"
 
 enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided this was more of a nice-to-have
 	NONE,
@@ -15,11 +12,31 @@ enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided t
 	SPIKE_TRAP
 };
 
+static Model* tomatoModel;// = new Model("models/powerups/tomato.obj");
+static Model* donutModel;// = new Model("models/powerups/doughnut.obj");
+static Model* spikeModel;// = new Model("models/powerups/spike.obj");
+
+static void preloadPowerupModels() {
+	if (tomatoModel == nullptr) tomatoModel = new Model("models/powerups/tomato.obj");
+	if (donutModel == nullptr) donutModel = new Model("models/powerups/doughnut.obj");
+	if (spikeModel == nullptr) spikeModel = new Model("models/powerups/spike.obj");
+}
+
+/*
+Model* tomatoModel;
+bool tomatoModelLoaded = false;
+Model* donutModel;
+bool donutModelLoaded = false;
+Model* spikeModel;
+bool spikeModelLoaded = false;
+*/
+
 class PowerUp {
 private:
 	POWER_TYPE type = POWER_TYPE::DONUT;	//which type of power-up
-	std::string model_path;			//set to tomato path automatically for testing
 	
+	Model* model;
+
 	Timer timer;			
 	float duration_sec = 15.f;		//total duration of the ability (permanent for upgrades?)	duration of 0 does not use the timer (permanent)
 									//If something has a total duration of 0, then it will last infitnitely
@@ -47,8 +64,8 @@ public:
 	void setDuration(float d);		//sets the timer duration if it needs to be changed
 	void stopThrow();
 	void stopDrop();
-	std::string getModelPath();
 	bool shouldDespawn();
+	Model* getModel();
 
 	glm::vec3 getPos();
 };

@@ -23,6 +23,11 @@
 
 using namespace std;
 
+class Model;
+
+static map<string, Model*> loadedModels;
+
+
 class Model
 {
 public:
@@ -37,9 +42,18 @@ public:
     // constructor, expects a filepath to a 3D model.
     Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
+        /*
+        if (loadedModels.find(path) != loadedModels.end()) {
+            Model* loadedModel = loadedModels[path];
+            this->textures_loaded = loadedModel->textures_loaded;
+            this->meshes = loadedModel->meshes;
+            this->directory = loadedModel->directory;
+            this->gammaCorrection = loadedModel->gammaCorrection;
+            return;
+        }
+        */
         loadModel(path);
-
-
+        //loadedModels[path] = this;
     }
 
     // draws the model, and thus all its meshes

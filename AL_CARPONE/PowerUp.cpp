@@ -1,5 +1,7 @@
 #include "PowerUp.h"
 
+
+
 //Constructors
 PowerUp::PowerUp() {}
 
@@ -46,20 +48,17 @@ void PowerUp::dropOrThrow() {
 	if (!power_used) {
 		switch (type) {
 		case TOMATO:
-			model_path = TOMATO_PATH;
 			throw_item = true;
 			activateTimed();
 			std::cout << "Using tomato power!" << std::endl;
 			break;
 		case DONUT:
 			//player to throws donut
-			model_path = DONUT_PATH;
 			throw_item = true;
 			activateTimed();
 			std::cout << "Using doughnut power!" << std::endl;
 			break;
 		case SPIKE_TRAP:
-			model_path = SPIKE_PATH;
 			drop_item = true;
 			activateTimed();
 			std::cout << "Using spike power!" << std::endl;
@@ -98,9 +97,32 @@ void PowerUp::setDuration(float d) {
 	duration_sec = d;
 }
 
-std::string PowerUp::getModelPath() {
-	return model_path;
+
+
+Model* PowerUp::getModel() {
+	switch (type) {
+	case TOMATO:
+		//if (!tomatoModelLoaded) tomatoModel = new Model(TOMATO_PATH);
+		//tomatoModelLoaded = true;
+		if (tomatoModel == nullptr) tomatoModel = new Model("models/powerups/tomato.obj");
+		return tomatoModel;
+	case DONUT:
+		//if (!donutModelLoaded) donutModel = new Model(DONUT_PATH);
+		//donutModelLoaded = true;
+		if (donutModel == nullptr) donutModel = new Model("models/powerups/doughnut.obj");
+		return donutModel;
+	case SPIKE_TRAP:
+		//if (!spikeModelLoaded) spikeModel = new Model(SPIKE_PATH);
+		//spikeModelLoaded = true;
+		if (spikeModel == nullptr) spikeModel = new Model("models/powerups/spike.obj");
+		return spikeModel;
+	default:
+		//Do nothing
+		break;
+		return model;
+	}
 }
+
 
 //should the item be "despawned" from the world (after it has been thrown, and the countdown timer has run out)
 bool PowerUp::shouldDespawn() {

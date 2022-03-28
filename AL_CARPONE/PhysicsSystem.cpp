@@ -222,11 +222,84 @@ PxRigidDynamic* PhysicsSystem::createDynamicItemOld(const PxTransform& t, const 
 	return dynamic;
 }
 
-physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(std::string path, const PxTransform& t, const PxVec3& velocity) {
-	Model item_model(path);
+PxConvexMesh* tomatoMesh;
+PxConvexMesh* donutMesh;
+PxConvexMesh* spikeMesh;
+
+void PhysicsSystem::preloadMeshes(Model* tomatoModel, Model* donutModel, Model* spikeModel) {
+
+	if (tomatoMesh == NULL) {
+		std::vector<PxVec3> positions;
+		for (Vertex& v : tomatoModel->meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+		PxVec3* verts = positions.data();
+
+		PxConvexMeshDesc convexDesc;
+		convexDesc.points.count = positions.size();
+		convexDesc.points.stride = sizeof(PxVec3);
+		convexDesc.points.data = verts;
+		convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+		PxConvexMesh* convexMesh = NULL;
+		PxDefaultMemoryOutputStream buf;
+		if (gCooking->cookConvexMesh(convexDesc, buf))
+		{
+			PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
+			convexMesh = gPhysics->createConvexMesh(id);
+		}
+		tomatoMesh = convexMesh;
+	}
+	if (donutMesh == NULL) {
+		std::vector<PxVec3> positions;
+		for (Vertex& v : donutModel->meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+		PxVec3* verts = positions.data();
+
+		PxConvexMeshDesc convexDesc;
+		convexDesc.points.count = positions.size();
+		convexDesc.points.stride = sizeof(PxVec3);
+		convexDesc.points.data = verts;
+		convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+		PxConvexMesh* convexMesh = NULL;
+		PxDefaultMemoryOutputStream buf;
+		if (gCooking->cookConvexMesh(convexDesc, buf))
+		{
+			PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
+			convexMesh = gPhysics->createConvexMesh(id);
+		}
+		donutMesh = convexMesh;
+	}
+	if (spikeMesh == NULL) {
+		std::vector<PxVec3> positions;
+		for (Vertex& v : spikeModel->meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+		PxVec3* verts = positions.data();
+
+		PxConvexMeshDesc convexDesc;
+		convexDesc.points.count = positions.size();
+		convexDesc.points.stride = sizeof(PxVec3);
+		convexDesc.points.data = verts;
+		convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+		PxConvexMesh* convexMesh = NULL;
+		PxDefaultMemoryOutputStream buf;
+		if (gCooking->cookConvexMesh(convexDesc, buf))
+		{
+			PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
+			convexMesh = gPhysics->createConvexMesh(id);
+		}
+		spikeMesh = convexMesh;
+	}
+}
+
+physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(Model* item_model, POWER_TYPE type, const PxTransform& t, const PxVec3& velocity) {
 
 	std::vector<PxVec3> positions;
-	for (Vertex& v : item_model.meshes[0].vertices)
+	for (Vertex& v : item_model->meshes[0].vertices)
 		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
 
 	PxVec3* verts = positions.data();
@@ -237,7 +310,19 @@ physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(std::string path, const 
 	convexDesc.points.data = verts;
 	convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
 
-	PxConvexMesh* convexMesh = NULL;
+	if (tomatoMesh == NULL || donutMesh == NULL || spikeMesh == NULL) {
+		printf("POWERUP MESHES NOT LOADED\n");
+		return NULL;
+	}
+
+	PxConvexMesh* convexMesh = tomatoMesh;
+	switch (type) {
+	case(DONUT):
+		convexMesh = donutMesh;
+		break;
+	case(SPIKE_TRAP):
+		convexMesh = spikeMesh;
+	}
 	PxDefaultMemoryOutputStream buf;
 	if (gCooking->cookConvexMesh(convexDesc, buf))
 	{
