@@ -39,7 +39,8 @@ static enum SOUND_SELECTION {
 	GARAGE_DOOR,
 	RADIO_LOOP1,
 	RADIO_LOOP2,
-	RADIO_LOOP3
+	RADIO_LOOP3,
+	SONG_DRUMS
 };
 
 static std::vector<std::string> soundPaths{
@@ -75,7 +76,8 @@ static std::vector<std::string> soundPaths{
 		"audio/garage_door.wav",	//29
 		"audio/loop1.wav",			//30
 		"audio/loop2.wav",			//31
-		"audio/loop3.wav"			//32
+		"audio/loop3.wav",			//32
+		"audio/song_drums.wav"		//33
 };
 
 class AudioSystem {
@@ -159,7 +161,8 @@ private:
 		NULL,	//GARAGE DOOR
 		NULL,	//RADIO_LOOP1
 		NULL,	//RADIO_LOOP2
-		NULL	//RADIO_LOOP3
+		NULL,	//RADIO_LOOP3
+		NULL	//SONG_DRUMS
 	};
 
 	std::vector<irrklang::ISound*> policeSirenPointers = {

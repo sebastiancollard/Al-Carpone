@@ -11,6 +11,7 @@ using namespace physx;
 
 static enum DEBUGMODE {
 	FALSE,
+	TRUE,
 	NOJAIL,
 	NOALERT,
 	NOCOPS

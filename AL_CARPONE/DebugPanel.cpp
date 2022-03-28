@@ -6,7 +6,6 @@
 
 using namespace physx;
 
-
 /*
 * Vehicles: Tuning PhysX 4.1 SDK Guide:
 * https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/Vehicles.html#tuning-guide
@@ -15,7 +14,6 @@ using namespace physx;
 
 
 DebugPanel::DebugPanel(GLFWwindow* window) {
-
     // Initialize ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -70,6 +68,9 @@ void DebugPanel::draw(Player& player) {
             }
         }
 
+        if (Button("TOGGLE DEBUG MODE")) {
+            enableDebug = !enableDebug;
+        }
 
         Spacing();
         if (CollapsingHeader("Steer Vs Forward Speed")) {

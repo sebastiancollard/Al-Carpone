@@ -528,6 +528,8 @@ int main()
 			// DEBUG MODE
 			if (state.debugMode) { // Camera is deactivated
 				debugPanel.draw(player);
+				if (debugPanel.enableDebug && debugmode == DEBUGMODE::FALSE) debugmode = DEBUGMODE::TRUE;
+				else if (!debugPanel.enableDebug && debugmode == DEBUGMODE::TRUE) debugmode = DEBUGMODE::FALSE;
 			}
 		}
 		
@@ -572,7 +574,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 	if (!garageDoorOpen) mainMenu->garageDoor.Draw(*graphics->shader3D);
 
-	if (debugmode) {
+	if (debugmode == DEBUGMODE::NOJAIL) {
 		for (PoliceCar* p : state->activePoliceVehicles) {
 			model = glm::mat4(1.0f);
 			model = glm::translate(model, p->getTargetNodeLocation());

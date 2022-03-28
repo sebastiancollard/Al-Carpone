@@ -32,7 +32,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 	else state.f5_isHeld = false;
 
 	// Freemode Camera
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && debugmode != DEBUGMODE::FALSE)
 	{
 		if (!state.Q_isHeld) {
 			state.toggleCameraMode();
@@ -41,7 +41,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 	}
 	else state.Q_isHeld = false;
 
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS && debugmode != DEBUGMODE::FALSE)
 	{
 		if (!state.R_isHeld) {
 			state.resetVehicles();
@@ -84,7 +84,7 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 				state.option_isHeld = false;
 			}
 
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE])
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] && debugmode != DEBUGMODE::FALSE)
 			{
 				//std::cout << "TRIANGLE (xbox y, ns pro x)" << std::endl;
 				if (!state.triangle_isHeld)

@@ -66,6 +66,8 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
+	
+
 	//garage
 	bool g_draw = false;
 
@@ -125,5 +127,6 @@ public:
 	void resetVehicles();
 	void alertPolice();
 	bool policeAlerted();
+	float getAlertLevel();
 
 };

@@ -7,6 +7,7 @@ using namespace std;
 
 static enum DEBUGMODE {
 	FALSE,
+	TRUE,
 	NOJAIL,
 	NOALERT,
 	NOCOPS

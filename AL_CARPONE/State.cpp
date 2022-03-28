@@ -40,3 +40,15 @@ bool State::policeAlerted() {
 	}
 	return false;
 }
+
+float State::getAlertLevel() {
+	float chaseSum = 0;
+	float chaseMax = 0;
+	for (PoliceCar* p : activePoliceVehicles) {
+		chaseSum += p->chaseTime;
+		chaseMax += p->maxChaseTime;
+	}
+	if (chaseMax <= 0) return 0;
+
+	float ratio = chaseSum / chaseMax;
+}

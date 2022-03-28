@@ -8,11 +8,16 @@
 #include "Player.h"
 
 class DebugPanel {
+public:
+
+	 bool enableDebug = false;
 
 private:
 	
 	bool showPanel = false;
 	bool updateValues = false;
+
+
 
 	// Color (currently unused)
 	ImVec4 color;

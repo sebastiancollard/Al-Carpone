@@ -254,22 +254,33 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 void AudioSystem::updateMusic(State* state) {
 
 	if (!musicShouldPlay) return;
+
+	if (!MusicSoundEngine->isCurrentlyPlaying(soundPaths[SOUND_SELECTION::SONG_INTRO].c_str())) {
+		soundPointers[SOUND_SELECTION::SONG_INTRO] = MusicSoundEngine->play2D(soundPaths[SOUND_SELECTION::SONG_INTRO].c_str(), true);
+	}
+	if (!MusicSoundEngine->isCurrentlyPlaying(soundPaths[SOUND_SELECTION::SONG_DRUMS].c_str())) {
+		soundPointers[SOUND_SELECTION::SONG_DRUMS] = MusicSoundEngine->play2D(soundPaths[SOUND_SELECTION::SONG_DRUMS].c_str(), true);
+	}
+
+	if(soundPointers[SOUND_SELECTION::SONG_DRUMS]) soundPointers[SOUND_SELECTION::SONG_DRUMS]->setVolume(state->getAlertLevel());
+	//printf("%.2f\n", state->getAlertLevel());
+
 	/*
 	if (!introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[PURCHASE_FAIL].c_str())) {
 		soundPointers[PURCHASE_FAIL] = MusicSoundEngine->play2D(soundPaths[PURCHASE_FAIL].c_str(), false);
 		introPlayed = true;
 	}*/
 
-	if (!introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_INTRO].c_str())) {
-		soundPointers[SONG_INTRO] = MusicSoundEngine->play2D(soundPaths[SONG_INTRO].c_str(), false);
-		introPlayed = true;
-	}
-	/*
-	if (soundPointers[SONG_INTRO] && soundPointers[SONG_INTRO]->isFinished()
-		&& !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_LOOP].c_str())) {
-
-		soundPointers[SONG_LOOP] = MusicSoundEngine->play2D(soundPaths[SONG_LOOP].c_str(), true);
-	}*/
+	//if (!introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_INTRO].c_str())) {
+	//	soundPointers[SONG_INTRO] = MusicSoundEngine->play2D(soundPaths[SONG_INTRO].c_str(), false);
+	//	introPlayed = true;
+	//}
+	
+	//if (soundPointers[SONG_INTRO] && soundPointers[SONG_INTRO]->isFinished()
+	//	&& !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_LOOP].c_str())) {
+	//
+	//	soundPointers[SONG_LOOP] = MusicSoundEngine->play2D(soundPaths[SONG_LOOP].c_str(), true);
+	/*}
 	if(MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_INTRO].c_str()) && state->playlist_count != 0)
 	{
 		stopSound(SONG_INTRO);
@@ -287,7 +298,7 @@ void AudioSystem::updateMusic(State* state) {
 		soundPointers[(state->playlist_count) + RADIO_START_INDEX] = MusicSoundEngine->play2D(soundPaths[(state->playlist_count) + RADIO_START_INDEX].c_str(), true);
 		cur_play = (state->playlist_count) + RADIO_START_INDEX;
 	}
-	
+	*/
 
 }
 
