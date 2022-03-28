@@ -290,34 +290,34 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		//const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
 		//std::cout << controller_name << std::endl;
 
-		GLFWgamepadstate state;
-		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+		GLFWgamepadstate ControlState;
+		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &ControlState))
 		{
 			float forwardOrbackward, leftOrRightturn;
-			//forwardOrbackward = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
-			leftOrRightturn = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
+			//forwardOrbackward = ControlState.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
+			leftOrRightturn = ControlState.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
 			
 			
-			if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
+			if (ControlState.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
 			{
 				footIsOnGas = true;
-				double newSpeed = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
+				double newSpeed = ControlState.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
 				updateSpeed(newSpeed/2);
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
 				if (vehicleInAir) {
 					glm::vec3 left = -getRight();
 					vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 				}
-				//std::cout << "right trigger: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
+				//std::cout << "right trigger: " << ControlState.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
 			}
-			else if (state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
+			else if (ControlState.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
 			{
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 				if (vehicleInAir) {
 					glm::vec3 right = getRight();
 					vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(right.x, right.y, right.z));
 				}
-				//std::cout << "left trigger: " << state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
+				//std::cout << "left trigger: " << ControlState.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
 			}
 			
 			if (leftOrRightturn < -0.05)
@@ -338,16 +338,23 @@ void Player::handleInput(GLFWwindow* window, State& state)
 					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
 				}
 			}
-			if (state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
+			if (ControlState.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
 			{
 				//std::cout << "left bumber (L1)" << std::endl;	//ps4 L1
 				usePower();
 			}
-			if (state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])
+			if (ControlState.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])
 			{
 				inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
 				footIsOnBrake = true;
 			}
+			if (ControlState.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB])
+			{
+				//std::cout << "right thumb(joystick)" << std::endl;
+				state.right_thumb = true;
+			}
+			else state.right_thumb = false;
+
 		}
 	}
 	

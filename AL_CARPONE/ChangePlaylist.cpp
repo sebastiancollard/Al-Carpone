@@ -49,4 +49,44 @@ void ChangePlaylist::handleInputs(GLFWwindow* window, State& state, AudioSystem*
 	{
 		state.left_isHeld = false;
 	}
+
+	if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+	{
+		GLFWgamepadstate controlState;
+		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controlState))
+		{
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT])
+			{
+				//std::cout << "DPAD_RIGHT" << std::endl;
+				if (!state.dpad_rightIsHold)
+				{
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
+					state.playlist_count = (state.playlist_count + 1) % 3;
+				}
+				state.dpad_rightIsHold = true;
+				return;
+
+			}
+			else 
+			{
+				state.dpad_rightIsHold = false;
+			
+			}
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT])
+			{
+				//std::cout << "DPAD_LEFT" << std::endl;
+				if (!state.dpad_leftIsHold)
+				{
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
+					state.playlist_count = (state.playlist_count - 1) % 3;
+				}
+				state.dpad_leftIsHold = true;
+				return;
+			}
+			else 
+			{
+				state.dpad_leftIsHold = false;
+			}
+		}
+	}
 }
