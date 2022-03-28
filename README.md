@@ -43,65 +43,59 @@ TO RUN STANDALONE:
 CONTROLS:
 
 	MAIN MENU:
-		W/UpArrow/S/DownArrow: Change level selection
-		Enter: Select highlighted level
+		↑ & ↓: Change selection
+		Enter: Select
 	        Escape: Close game
 
 	IN GAME:
-		Q: Toggle third-person / free camera mode.
-		Left Click (hold): Allows user to move mouse to look freely
-		F5: Toggle Debug Mode (Camera disabled while in Debug Mode)
-		ESC: Return to menu (Level select)
-		R: Restart 
-		C: Look behind
-		E: Use item
-		F: Rob bank (When in range)
-		Shift: Boost (Might be a powerup eventually, but for now it's just for fun while testing)
-
-	THIRD PERSON VIEW:
-		W: Accelerate forward
-		A: Turn wheels left
+		W: Accelerate
+		A: Turn left
 		S: Brake/Reverse
-		D: Turn wheels left
+		D: Turn left
+		WASD: Mid-air control
 		Space: Handbrake
-
-	FREE CAMERA VIEW:
-		W: Move forward
-		A: Move right
-		S: Mode backward
-		D: Move right
-		Shift (hold): Increase movement speed
+		Left Click (Hold): Move camera
+		ESC: Pause
+		C: Look behind
+		E: Use powerup
+		F: Interact
+		
+	PAUSE MENU:
+		↑ & ↓: Change selection
+		Enter: Select
+		ESC: Go back to game
+	
+	CORNER STORE & GARAGE MENUS:
+		↑ & ↓: Change selection
+		Enter: Select
+		Esc: Exit menu (only works on garage menu for the moment)
 
 CONTROLLER:
 
 	MAIN MENU:
 		↑ & ↓: Change level selection
-		X (ps4) / A (xbox): Select highlighted level
-		O (ps4) / B (xbox): Close game
+		X (Playstation) / A (Xbox): Select highlighted level
+		O (Playstation) / B (Xbox): Close game
 	
 	IN GAME:
-		Left trigger: move reverse
-		Right trigger: move forward
-		Left stick: controls player left or right turn
-		Options(ps4)/menu(xbox)/+(ns pro): pause menu
-		□ (ps4) / x (xbox) / y (nspro): building trigger function
-		▲ (ps4) / y (xbox) / x (nspro): reset
-		L1 (ps4): use item
-		Handbrake not yet added
-		Look behind not yet added
+		Left trigger: Reverse
+		Right trigger: Move forward
+		Left stick: Turn / Mid-air control
+		Options (Playstation) / Menu (Xbox)/ + (NS pro): Pause menu
+		□ (Playstation) / X (Xbox) / Y (NS pro): Interact
+		▲ (Playstation) / Y (Xbox) / X (NS pro): reset
+		L1 (Playstation) / LB (Xbox): Use powerup
+		R1 (Playstation) / RB (Xbox): Handbrake
+		R3 (Playstation) / RS (Xbox): Look behind
 		
 	PAUSE MENU:
-		↑ & ↓ ==> change selection
-		X(ps4)/A(xbox) ==> select
-		options(ps4)/menu(xbox)/+(ns pro) ==> go back to in game state
-		corner store:
-		↑ & ↓ ==> change selection
-		X(ps4) / A (xbox) ==> select
-		O (ps4) / B (xbox) ==> back to in game state
+		↑ & ↓: Change selection
+		X (Playstation) / A (Xbox): Select
+		Options (Playstation) / Menu (Xbox) / + (NS pro): Go back to game
 	
-	CORNER STORE:
-		↑ & ↓: change selection
-		X (ps4) / A (xbox): select
-		O (ps4) / B (xbox): back to in game state
+	CORNER STORE & GARAGE MENUS:
+		↑ & ↓: Change selection
+		X (Playstation) / A (Xbox): Select
+		O (Playstation) / B (Xbox): Exit menu
 		
 	
