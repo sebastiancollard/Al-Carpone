@@ -26,6 +26,9 @@ Sidenotes:
 	buy a car flip upgrade that allows you to flip your car while upside down. This functionality is not yet implemented, so if you get stuck, enter debugmode 
 	and hit 'R')
 
+- 	We are planning on adding an additional upgrade to the starting garage which would allow the player to see police locations on the minimap. The upgrade path 
+	would consist of increasing the radius around the player and reveal all police locations within that radius.
+
 
 TO RUN STANDALONE:
 
