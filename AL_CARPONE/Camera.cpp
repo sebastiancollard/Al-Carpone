@@ -249,6 +249,16 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
         GLFWgamepadstate state;
         if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
         {
+            
+            if (abs(state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB]) == 1) {
+                dir = -player.getDir();
+                stoppedLookingBehind = true;
+            }
+            else if (stoppedLookingBehind) {
+                dir = player.getDir();
+                stoppedLookingBehind = false;
+            }
+
             float rotX = 0;
             float rotY = 0;
             if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) > 0.15)
