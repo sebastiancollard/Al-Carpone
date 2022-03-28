@@ -20,6 +20,7 @@ AudioSystem::AudioSystem() {
 	}
 
 	introPlayed = false;
+	//soundPointers[SONG_INTRO] = MusicSoundEngine->play2D(soundPaths[SONG_INTRO].c_str(), false);
 }
 
 void AudioSystem::wait() {
@@ -258,20 +259,35 @@ void AudioSystem::updateMusic(State* state) {
 		soundPointers[PURCHASE_FAIL] = MusicSoundEngine->play2D(soundPaths[PURCHASE_FAIL].c_str(), false);
 		introPlayed = true;
 	}*/
+
 	if (!introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_INTRO].c_str())) {
 		soundPointers[SONG_INTRO] = MusicSoundEngine->play2D(soundPaths[SONG_INTRO].c_str(), false);
 		introPlayed = true;
-	}/*
+	}
+	/*
 	if (soundPointers[SONG_INTRO] && soundPointers[SONG_INTRO]->isFinished()
 		&& !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_LOOP].c_str())) {
 
 		soundPointers[SONG_LOOP] = MusicSoundEngine->play2D(soundPaths[SONG_LOOP].c_str(), true);
 	}*/
-	if(soundPointers[SONG_INTRO] && soundPointers[SONG_INTRO]->isFinished() && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[(state->playlist_count)+ RADIO_START_INDEX].c_str())) {
+	if(MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_INTRO].c_str()) && state->playlist_count != 0)
+	{
+		stopSound(SONG_INTRO);
+		soundPointers[(state->playlist_count) + RADIO_START_INDEX] = MusicSoundEngine->play2D(soundPaths[(state->playlist_count) + RADIO_START_INDEX].c_str(), true);
+		cur_play = (state->playlist_count) + RADIO_START_INDEX;
+		cout << "1 && cur: " << cur_play << "count: " << state->playlist_count << endl;
+		introPlayed = true;
+	}
+	if(introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[(state->playlist_count)+ RADIO_START_INDEX].c_str())
+		&& !MusicSoundEngine->isCurrentlyPlaying(soundPaths[SONG_INTRO].c_str())) 
+		
+	{
 		stopSound(cur_play);
+		cout << "2 && cur: " << cur_play << "count: " << state->playlist_count << endl;
 		soundPointers[(state->playlist_count) + RADIO_START_INDEX] = MusicSoundEngine->play2D(soundPaths[(state->playlist_count) + RADIO_START_INDEX].c_str(), true);
 		cur_play = (state->playlist_count) + RADIO_START_INDEX;
 	}
+	
 
 }
 

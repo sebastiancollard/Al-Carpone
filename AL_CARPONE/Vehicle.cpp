@@ -181,6 +181,12 @@ void Vehicle::updateSpeed(double newSpeed) {
 	speed = newSpeed;
 }
 
+void Vehicle::updateLeftSpeed(double newSpeed) {
+	leftTurn = newSpeed;
+}
+void Vehicle::updateRightSpeed(double newSpeed) {
+	rightTurn = newSpeed;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // Fetch Directions

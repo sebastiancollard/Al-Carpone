@@ -101,14 +101,14 @@ void startBrakeMode()
 	gVehicleInputData.setAnalogBrake(1.0f);
 }
 
-void startTurnHardLeftMode()
+void startTurnHardLeftMode(double leftTurn)
 {
-	gVehicleInputData.setAnalogSteer(0.5f);
+	gVehicleInputData.setAnalogSteer(leftTurn);
 }
 
-void startTurnHardRightMode()
+void startTurnHardRightMode(double rightTurn)
 {
-	gVehicleInputData.setAnalogSteer(-0.5f);
+	gVehicleInputData.setAnalogSteer(rightTurn);
 }
 
 void startHandbrakeMode()
@@ -179,10 +179,10 @@ void updateDrivingMode(Vehicle& vehicle)
 			startAccelerateReverseMode();
 			break;
 		case eDRIVE_MODE_HARD_TURN_LEFT:
-			startTurnHardLeftMode();
+			startTurnHardLeftMode(vehicle.leftTurn);
 			break;
 		case eDRIVE_MODE_HARD_TURN_RIGHT:
-			startTurnHardRightMode();
+			startTurnHardRightMode(vehicle.rightTurn);
 			break;
 		case eDRIVE_MODE_HANDBRAKE:
 			startHandbrakeMode();
