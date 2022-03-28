@@ -263,7 +263,6 @@ void AudioSystem::updateMusic(State* state) {
 	}
 
 	if(soundPointers[SOUND_SELECTION::SONG_DRUMS]) soundPointers[SOUND_SELECTION::SONG_DRUMS]->setVolume(state->getAlertLevel());
-	//printf("%.2f\n", state->getAlertLevel());
 
 	/*
 	if (!introPlayed && !MusicSoundEngine->isCurrentlyPlaying(soundPaths[PURCHASE_FAIL].c_str())) {
