@@ -22,18 +22,6 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 		state.escape_isHeld = false;
 	}
 
-	
-	// Handle any building triggerfunction (rob, get powerup, etc)
-	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
-		for (Building* b : state.buildings) {
-			if (b == nullptr) continue;
-			if (b->isInRange) {
-				b->triggerFunction(player, state);
-			}
-		}
-	}
-
-
 	// Debug Mode
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) {
 		if (!state.f5_isHeld) {
@@ -94,16 +82,6 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 			else 
 			{
 				state.option_isHeld = false;
-			}
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE])
-			{
-				//std::cout << "SQUARE (xbox x, ns pro y)" << std::endl;
-				for (Building* b : state.buildings) {
-					if (b == nullptr) continue;
-					if (b->isInRange) {
-						b->triggerFunction(player, state);
-					}
-				}
 			}
 
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE])

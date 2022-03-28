@@ -30,7 +30,7 @@ GraphicsSystem::GraphicsSystem() {
 
 	// Create a GLFWwindow object of 800 by 800 pixels
 	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", glfwGetPrimaryMonitor(), NULL);
-	if(debugmode != DEBUGMODE::FALSE) window = glfwCreateWindow(SCREEN_WIDTH*0.75, SCREEN_HEIGHT*0.75, "Al Carpone", NULL, NULL);
+	if(debugmode != DEBUGMODE::FALSE) window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
