@@ -17,7 +17,7 @@ void Garage::createTrigger(PxVec3 dimensions) {
 }
 
 void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !downPressed) {
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !downPressed && showShop) {
 		//std::cout << "down" << std::endl;
 		state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 		if (currentSelection < upgradeList.size() - 1) ++currentSelection;
@@ -25,7 +25,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 	}
 	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) downPressed = false;
 
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !upPressed) {
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !upPressed && showShop) {
 		//std::cout << "up" << std::endl;
 		state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 		if (currentSelection > 0) --currentSelection;
@@ -42,7 +42,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) fPressed = false;
 
 	Upgrade u = upgradeList[currentSelection];
-	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !enterPressed) {
+	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !enterPressed && showShop) {
 		std::cout << "enter" << std::endl;
 		if (upgradeList[currentSelection].tier < u.maxTier && player->getCash() >= u.cost(u.tier)) {
 			player->setCash(player->getCash() - u.cost(u.tier));
@@ -141,7 +141,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 		GLFWgamepadstate controller_state;
 		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controller_state))
 		{
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN])
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] && showShop)
 			{
 				if (!gpDownPressed) {
 					state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
@@ -152,7 +152,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 			}
 			else gpDownPressed = false;
 
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP])
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] && showShop)
 			{
 				if (!gpUpPressed) {
 					state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
@@ -168,13 +168,13 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 				if (!gpSquarePressed) {
 					//std::cout << "up" << std::endl;
 					state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
-					showShop = true;
+					showShop = !showShop;
 				}
 				gpSquarePressed = true;
 			}
 			else gpSquarePressed = false;
 
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE])
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE] && showShop)
 			{
 				if (!gpCirclePressed) {
 					//std::cout << "up" << std::endl;
@@ -185,7 +185,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 			}
 			else gpCirclePressed = false;
 
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_CROSS] && showShop)
 			{
 				if (!gpXPressed) {
 					if (upgradeList[currentSelection].tier < u.maxTier && player->getCash() >= u.cost(u.tier)) {
