@@ -315,9 +315,18 @@ void AudioSystem::updatePoliceSounds(Player* player, State* state) {
 
 	assert(state->activePoliceVehicles.size() <= 11);
 
+	unsigned int count = 0;
+	float accum = 0.f;
+
 	for (int i = 0; i < state->activePoliceVehicles.size(); i++) {
 
 		PoliceCar* policecar = state->activePoliceVehicles[i];
+
+		const float dist = glm::distance(player->getPos(), policecar->getPos());
+		if (dist < 60.f) { 
+			++count;
+			accum += dist;
+		}
 
 		if (policecar->ai_state == AISTATE::CHASE) {
 
@@ -338,6 +347,14 @@ void AudioSystem::updatePoliceSounds(Player* player, State* state) {
 		}
 
 	}
+
+
+	// clamp overlapping police sirens
+	
+	//if (count > 0) std::cout << "average distance: " << accum / count << std::endl;
+	if (count > 1) PoliceSoundEngine->setSoundVolume(0.2f / (60.f / (accum / count)));
+	else PoliceSoundEngine->setSoundVolume(0.2f);
+
 }
 
 

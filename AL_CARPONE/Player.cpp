@@ -323,7 +323,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 			if (leftOrRightturn < -0.05)
 			{
-				updateLeftSpeed(-leftOrRightturn);
+				updateLeftSpeed(-leftOrRightturn * 0.5f);
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		
 				if (vehicleInAir) {
 					glm::vec3 back = -getDir();
@@ -332,7 +332,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			}
 			else if (leftOrRightturn > 0.05)
 			{
-				updateRightSpeed(-leftOrRightturn);
+				updateRightSpeed(-leftOrRightturn * 0.5f);
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	
 				if (vehicleInAir) {
 					glm::vec3 front = getDir();
