@@ -51,4 +51,6 @@ float State::getAlertLevel() {
 	if (chaseMax <= 0) return 0;
 
 	float ratio = chaseSum / chaseMax;
+
+	return ratio;
 }
