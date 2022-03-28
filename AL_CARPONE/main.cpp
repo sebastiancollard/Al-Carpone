@@ -667,8 +667,8 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	//Render (freeType) text
 	Shader& shader = *graphics->shaderText;
 	//TODO: create textbox struct (text, xy, scale, colour) in textRenderer and keep track of certain textboxes such as cash for easy manipulation
-	std::string message = "Cash: $" + std::to_string(player->getCash());
-	text_renderer->RenderText(*graphics->shaderText, message, 650.0f, 25.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));	
+	std::string message = "$" + std::to_string(player->getCash());
+	text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 325, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));	
 	//params: shader, text, x_pos (screen coord), y_pos(screen_coord), scale, colour
 
 	float chaseSum = 0;
