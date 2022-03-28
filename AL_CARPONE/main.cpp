@@ -102,6 +102,8 @@ int main()
 	Model select2("models/garageMenu/select_2.obj");
 	Model select3("models/garageMenu/select_3.obj");
 
+	Model garageEntrance("models/garageMenu/entrance.obj");
+
 	Garage robbingGarage(GarageTypes::ROBBING_GARAGE, PxVec3(250, 0, -89.655), PxVec3(19, 2, 19), graphics);
 	robbingGarage.menuTitle = Model("models/garageMenu/robbery_upgrades/robbery_upgrades_title.obj");
 	robbingGarage.selectTop = select1;

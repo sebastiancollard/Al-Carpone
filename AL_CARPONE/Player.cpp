@@ -135,9 +135,7 @@ void Player::rob(State& state) {
 	
 	timeSpentRobbing += state.timeStep;
 	
-	//printf("TIME[%.2f] CHANCE[%f]\n", timeSpentRobbing,alertChancePerFrame);
-
-	printf("ALARMTIMER: %.2f\n", alarmCheckTimer);
+	//printf("ALARMTIMER: %.2f\n", alarmCheckTimer);
 
 	if (timeSpentRobbing > 1.0f) {
 		alarmCheckTimer += state.timeStep;
@@ -149,7 +147,7 @@ void Player::rob(State& state) {
 	}
 
 	if (alarmCheckTimer > alarmCheckInterval) {
-		printf("ALARMTIMER: %.2f > %.2f\n", alarmCheckTimer, alarmCheckInterval);
+		//printf("ALARMTIMER: %.2f > %.2f\n", alarmCheckTimer, alarmCheckInterval);
 		float random = (float)(rand() % 101) / 100.f;
 		if (random < alarmChancePerCheck) {
 			state.alertPolice();
@@ -193,16 +191,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	}
 	else {
 		state.f_isHeld = false;
-		if (timeSpentRobbing > 0) {
-			state.audioSystemPtr->stopSound(SOUND_SELECTION::ROB_LOOP);
-			state.audioSystemPtr->stopSound(SOUND_SELECTION::OPEN_DUFFLE);
-			timeSpentRobbing = 0;
-		}
-	}
-
-	if (alarmChancePerCheck > baseAlarmChancePerCheck) {
-		alarmChancePerCheck -= state.timeStep / (100.f * (float)baseAlarmChancePerCheck);
-		if (alarmChancePerCheck < baseAlarmChancePerCheck) alarmChancePerCheck = baseAlarmChancePerCheck;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -283,6 +271,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		"Nintendo Switch Pro Controller" for bluetooth connection
 	Since NS pro trigger button is not linear it deos not have axes, the value it will be either -1 or 1
 	*/
+
 	if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
 	{
 		bool accel = false;
@@ -290,18 +279,18 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		//const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
 		//std::cout << controller_name << std::endl;
 
-		GLFWgamepadstate state;
-		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+		GLFWgamepadstate controller_state;
+		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controller_state))
 		{
 			float forwardOrbackward, leftOrRightturn;
 			//forwardOrbackward = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
-			leftOrRightturn = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
+			leftOrRightturn = controller_state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
 			
 			
-			if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
+			if (controller_state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
 			{
 				footIsOnGas = true;
-				double newSpeed = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
+				double newSpeed = controller_state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
 				updateSpeed(newSpeed/2);
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
 				if (vehicleInAir) {
@@ -310,7 +299,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 				}
 				//std::cout << "right trigger: " << state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
 			}
-			else if (state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
+			else if (controller_state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
 			{
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 				if (vehicleInAir) {
@@ -320,6 +309,18 @@ void Player::handleInput(GLFWwindow* window, State& state)
 				//std::cout << "left trigger: " << state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
 			}
 			
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE])
+			{
+				//std::cout << "SQUARE (xbox x, ns pro y)" << std::endl;
+				for (Building* b : state.buildings) {
+					if (b == nullptr) continue;
+					if (b->isInRange) {
+						b->triggerFunction(*this, state);
+						return;
+					}
+				}
+			}
+
 			if (leftOrRightturn < -0.05)
 			{
 				updateLeftSpeed(-leftOrRightturn);
@@ -338,12 +339,12 @@ void Player::handleInput(GLFWwindow* window, State& state)
 					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
 				}
 			}
-			if (state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
 			{
 				//std::cout << "left bumber (L1)" << std::endl;	//ps4 L1
 				usePower();
 			}
-			if (state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])
 			{
 				inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
 				footIsOnBrake = true;
@@ -351,5 +352,15 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		}
 	}
 	
+	if (timeSpentRobbing > 0) {
+		state.audioSystemPtr->stopSound(SOUND_SELECTION::ROB_LOOP);
+		state.audioSystemPtr->stopSound(SOUND_SELECTION::OPEN_DUFFLE);
+		timeSpentRobbing = 0;
+	}
+	if (alarmChancePerCheck > baseAlarmChancePerCheck) {
+		alarmChancePerCheck -= state.timeStep / (100.f * (float)baseAlarmChancePerCheck);
+		if (alarmChancePerCheck < baseAlarmChancePerCheck) alarmChancePerCheck = baseAlarmChancePerCheck;
+	}
+
 
 }

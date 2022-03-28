@@ -28,6 +28,7 @@ public:
 	Model selectTop;
 	Model selectMid;
 	Model selectBot;
+	Model entrance;
 
 	std::vector<Upgrade> upgradeList;
 	physx::PxVec3 position;	// Position currently hardcoded
@@ -39,6 +40,15 @@ public:
 	bool downPressed = false;
 	bool upPressed = false;
 	bool enterPressed = false;
+	bool fPressed = false;
+
+	bool gpDownPressed = false;
+	bool gpUpPressed = false;
+	bool gpSquarePressed = false;
+	bool gpXPressed = false;
+	bool gpCirclePressed = false;
+
+	bool showShop = false;
 
 	Garage(unsigned int upgradeType, PxVec3 pos, PxVec3 dims, GraphicsSystem& g) : graphics(g) { 
 		type = upgradeType;

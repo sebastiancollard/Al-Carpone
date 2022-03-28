@@ -44,7 +44,7 @@ void PoliceCar::update(Player& player, State& state) {
 
 	glm::vec3 direction = -glm::normalize(playerPos - myPos);
 
-	PxVec3 vOffset(0, 5.0f, 0);
+	PxVec3 vOffset(0, 2.0f, 0);
 
 	PxVec3 origin = PxVec3(playerPos.x, playerPos.y, playerPos.z) + vOffset;
 	PxVec3 unitDir = PxVec3(direction.x, direction.y, direction.z);
@@ -55,11 +55,21 @@ void PoliceCar::update(Player& player, State& state) {
 	playerInJailRadius = distanceToPlayer < jailRadius;
 	playerInSight = !gScene->raycast(origin, unitDir, distanceToPlayer, hit, PxHitFlag::eMESH_BOTH_SIDES);
 	playerDetected = playerInSight && playerInTrigger && player.isDetectable();
-	playerArrestable = playerInSight && playerInJailRadius;
+	playerArrestable = playerInSight && playerInJailRadius && player.isDetectable();
+
+
 
 	if ((player.getPower()->getType() == DONUT) && (player.getPower()->itemInWorld)) {
-		float distance = glm::distance(player.getPower()->getPos(), myPos);
-		if (distance < detectionRadius) {
+		glm::vec3 donutPos = player.getPower()->getPos();
+		float distance = glm::distance(donutPos , myPos);
+
+		direction = -glm::normalize(donutPos - myPos);
+
+		origin = PxVec3(donutPos.x, donutPos.y, donutPos.z) + vOffset;
+		PxVec3 unitDir = PxVec3(direction.x, direction.y, direction.z);
+		bool seesDonut = !gScene->raycast(origin, unitDir, distance, hit, PxHitFlag::eMESH_BOTH_SIDES);
+
+		if (distance < detectionRadius * 3 && seesDonut) {
 			eatDonut(player.getPower()->getPos());
 			return;
 		}
@@ -292,7 +302,7 @@ void PoliceCar::driveTo(glm::vec3 targetPos) {
 
 void PoliceCar::eatDonut(glm::vec3 donutPos) {
 
-	if (glm::distance(donutPos, myPos) < baseJailRadius)	//using jailRadius as radius where police "stops" to eat donut
+	if (glm::distance(donutPos, myPos) < 3.0f)	//using jailRadius as radius where police "stops" to eat donut
 	{
 		stun(1);	//just stun for 1 second. This will keep being called until the item despawns, so that the stun actually lasts as long as the items remaining timer
 	}

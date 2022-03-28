@@ -22,10 +22,12 @@ class UI {
 
 public:
 	// POPUPS
-	Model* press_f_to_rob;
-	Model* press_f_to_exit;
-	Model* press_f_to_enter_corner_store;
-	Model* press_f_to_enter_garage;
+	//Model* press_f_to_rob;
+	//Model* press_f_to_exit;
+	//Model* press_f_to_enter_corner_store;
+	//Model* press_f_to_enter_garage;
+	Model* interactPrompt;
+	Model* exitPrompt;
 	Model* Item;
 
 	// UI ELEMENTS
