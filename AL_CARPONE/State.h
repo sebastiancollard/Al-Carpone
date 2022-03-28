@@ -111,11 +111,14 @@ public:
 	//CONTROLLER input
 	bool dpad_downisHold = false;
 	bool dpad_upisHold = false;
+	bool dpad_leftIsHold = false;
+	bool dpad_rightIsHold = false;
 	bool cross_isHeld = false;
 	bool circle_isHeld = false;
 	bool triangle_isHeld = false;
 	bool square_isHeld = false;
 	bool option_isHeld = false;
+	bool right_thumb = false;
 
 	void updateTime();
 	void toggleCameraMode();
