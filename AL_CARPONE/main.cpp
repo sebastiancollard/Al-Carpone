@@ -302,10 +302,9 @@ int main()
 				GLFWgamepadstate controlState;
 				if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controlState))
 				{
-					if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
+					if (controlState.buttons[GLFW_GAMEPAD_BUTTON_SQUARE])
 					{
-						
-							if (!state.cross_isHeld) {
+							if (!state.square_isHeld) {
 
 								player.setCash(0);
 								player.reset();
@@ -317,10 +316,10 @@ int main()
 								state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 								state.gameLost = false;
 							}
-							state.cross_isHeld = true;
+							state.square_isHeld = true;
 						}
 						else {
-						state.cross_isHeld = false;
+						state.square_isHeld = false;
 					}
 					
 				}
@@ -399,25 +398,38 @@ int main()
 				GLFWgamepadstate controlState;
 				if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controlState))
 				{
-					if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
+					if (controlState.buttons[GLFW_GAMEPAD_BUTTON_SQUARE])
 					{
+						float bail_cost = 2000.f;
+						if (player.getCash() * 0.75 > bail_cost) bail_cost = player.getCash() * 0.75;
 
-						if (!state.cross_isHeld) {
+						if (!state.square_isHeld) {
 
-							player.setCash(0);
-							player.reset();
+							if (player.getCash() >= bail_cost) {
+								player.setCash(player.getCash() - bail_cost);
+								audio.playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
+								//player.setPos();
+								PxVec3 p(190.21, 0.96, -194.67);
+								PxQuat q(-0.00, -0.71, 0.00, -0.70);
 
-							for (PoliceCar* p : state.activePoliceVehicles) {
-								p->hardReset();
+								PxTransform t;
+								t.p = p;
+								t.q = q;
+
+								player.actorPtr->setGlobalPose(t);
+
+								state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 							}
-
-							state.gamestate = GAMESTATE::GAMESTATE_INGAME;
-							state.gameLost = false;
+							else {
+								state.gameLost = true;
+								audio.playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+								audio.playSoundEffect(SOUND_SELECTION::LOSEGAME);
+							}
 						}
-						state.cross_isHeld = true;
+						state.square_isHeld = true;
 					}
 					else {
-						state.cross_isHeld = false;
+						state.square_isHeld = false;
 					}
 
 				}
