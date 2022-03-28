@@ -230,6 +230,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	}
 	// Set as an else if for now seeing as you normally can't accelerate frontwards/backwards at the same time...
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		updateLeftSpeed(0.5f);
 		inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		// Add left turn to the input queue if 'A' is pressed
 		if (vehicleInAir) {
 			glm::vec3 back = -getDir();
@@ -238,6 +239,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		updateRightSpeed(-0.5f);
 		inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	// Add right turn to the input queue if 'D' is pressed
 		if (vehicleInAir) {
 			glm::vec3 front = getDir();
@@ -322,16 +324,18 @@ void Player::handleInput(GLFWwindow* window, State& state)
 				//std::cout << "left trigger: " << state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
 			}
 			
-			if (leftOrRightturn < -0.15)
+			if (leftOrRightturn < -0.05)
 			{
+				updateLeftSpeed(-leftOrRightturn);
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		
 				if (vehicleInAir) {
 					glm::vec3 back = -getDir();
 					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(back.x, back.y, back.z));
 				}
 			}
-			else if (leftOrRightturn > 0.15)
+			else if (leftOrRightturn > 0.05)
 			{
+				updateRightSpeed(-leftOrRightturn);
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	
 				if (vehicleInAir) {
 					glm::vec3 front = getDir();
