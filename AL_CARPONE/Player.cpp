@@ -9,6 +9,16 @@
 #define POLICE_CAR_LWHEEL_PATH "models/police_car/police_car_wheel_left.obj"
 #define POLICE_CAR_RWHEEL_PATH "models/police_car/police_car_wheel_right.obj"
 
+static enum DEBUGMODE {
+	FALSE,
+	TRUE,
+	NOJAIL,
+	NOALERT,
+	NOCOPS,
+};
+
+extern DEBUGMODE debugmode;
+
 
 void Player::createModel(){
 	Model car_chassis(CAR_CHASSIS_PATH);			//creates the player (al carpone) model
@@ -250,7 +260,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	}
 	else state.tab_isHeld = false;
 
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld && debugmode != DEBUGMODE::FALSE) {
 		glm::vec3 front = getDir();
 		vehiclePtr->getRigidDynamicActor()->addForce(10000.0f * PxVec3(front.x, front.y, front.z), physx::PxForceMode::Enum::eIMPULSE);
 		state.shift_isHeld = true;
