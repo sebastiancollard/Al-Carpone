@@ -11,6 +11,7 @@ Libraries:
 - Assimp (https://github.com/assimp/assimp)
 - stb (https://github.com/nothings/stb)
 - Irrklang (https://www.ambiera.com/irrklang/downloads.html)
+- Freetype (https://freetype.org/)
 
 Hello, here is our Milestone 4!
 
