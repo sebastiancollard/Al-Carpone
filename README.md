@@ -12,27 +12,20 @@ Libraries:
 - stb (https://github.com/nothings/stb)
 - Irrklang (https://www.ambiera.com/irrklang/downloads.html)
 
-Hello, here is our third milestone!
+Hello, here is our Milestone 4!
 
-The goal of the game is to acquire enough money to escape town (currently $100).
-This goal is very easy right now but we will make the game harder as we go forward.
+The goal of the game is to escape town. This requires unlocking the gate which costs $250,000. To get this money, you must rob the bank! Rob speed starts out slow so you have to upgrade your rob speed at one of the garages. To help escape the police (who take your money if they catch you) you can buy upgrades for your car at the other garages. You can also buy temporary powerups at cornerstores to trick and distract police. Explore the symbols on the minimap to find all these locations. 
 
-To get money, you must rob the bank by holding F while close to it. (see map.png for bank and other building locations).
 
-With this money, you can visit corner stores to purchase powerups and consumables to help out. 
-- You can purchase a $5 donut to throw which will divert a police car to path to the donut and idle there for some time (Currently throwable but does nothing).
-- You can purchase a $5 spike trap which will stun any police that pass over it (Currently throwable but does nothing).
-- You can purchase camouflauge which will make you undetectable by the police for 15 seconds after activated (Currently usable but no visual indication).
-Each consumable is activated by pressing E or L1 on controller.
-
-Eventually the garages will have a selection of purchasable permanent upgrades to the car (Speed, rob rate, etc).
-
-If you are detected by the police they will begin to chase you. If you can evade them for long enough they will return to their regular patrol state. If they 
-catch up to you and are close to you for 2 seconds you will be sent to jail to pay a $10 fine. If you cannot pay this fine you lose, and will have to restart.
+If you are detected by the police (get too close) they will begin to chase you. If you can evade them for long enough they will return to their regular patrol state. If they get too close they will start arresting you. If your jail countdown reaches 0 you are sent to jail and must pay at least $2000, or 75% of your money.
 
 Sidenotes: 
-- The boost functionality still exists on keyboard by pressing SHIFT, but that is only meant to be used for debugging and the player should not be able to use it.
-- There are a few areas that need to be fixed where the walls have no collision and cause you to fall under the map. 
+-	Press f5 for dev tools. You can enter debug mode (stops police and allows debug controlls <see Controls>), you can also add money in this menu.
+
+-	Car flip upgrade not yet implemented (flipping your car over & getting stuck is possible, and can cause you to lose the game. to prevent this you can
+	buy a car flip upgrade that allows you to flip your car while upside down. This functionality is not yet implemented, so if you get stuck, enter debugmode 
+	and hit 'R')
+
 
 TO RUN STANDALONE:
 
@@ -59,6 +52,10 @@ CONTROLS:
 		C: Look behind
 		E: Use powerup
 		F: Interact
+	
+		Shift <DEBUGMODE ONLY> : Speed boost
+		R <DEBUGMODE ONLY> : Reset all positions
+		Q <DEBUGMODE ONLY> : Unbound camera
 		
 	PAUSE MENU:
 		↑ & ↓: Change selection
@@ -83,11 +80,12 @@ CONTROLLER:
 		Left stick: Turn / Mid-air control
 		Options (Playstation) / Menu (Xbox)/ + (NS pro): Pause menu
 		□ (Playstation) / X (Xbox) / Y (NS pro): Interact
-		▲ (Playstation) / Y (Xbox) / X (NS pro): reset
 		L1 (Playstation) / LB (Xbox): Use powerup
 		R1 (Playstation) / RB (Xbox): Handbrake
 		R3 (Playstation) / RS (Xbox): Look behind
-		
+	
+		▲ (Playstation) / Y (Xbox) / X (NS pro) <DEBUGMODE ONLY> : reset
+	
 	PAUSE MENU:
 		↑ & ↓: Change selection
 		X (Playstation) / A (Xbox): Select
