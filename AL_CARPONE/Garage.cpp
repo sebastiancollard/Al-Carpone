@@ -68,6 +68,12 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 					std::cout << "upgrading police detection radius from " << before << " to " << upgraded << std::endl;
 					for (PoliceCar* p : state->activePoliceVehicles) p->detectionRadius = upgraded;
 				}
+				else if (u.specifier == UPGRADE_SPECIFIER::MINIMAP) {
+					player->drawRadius = u.delta(u.tier);
+					std::cout << u.delta(u.tier) << std::endl;
+					if (u.tier == 0) std::cout << "police within " << player->drawRadius << "m visible on minimap" << std::endl;
+					else std::cout << "All police visible on minimap" << std::endl;
+				}
 			case UPGRADE_TYPE::ENGINE:
 				if (u.specifier == UPGRADE_SPECIFIER::TOP_SPEED) {
 					PxVehicleEngineData t = player->vehiclePtr->mDriveSimData.getEngineData();
@@ -115,7 +121,8 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 					player->vehiclePtr->mWheelsSimData.setWheelData(1, t);
 				}
 				else if (u.specifier == UPGRADE_SPECIFIER::CAR_FLIP) {
-					// TODO
+					std::cout << "can now recover after flipping upside down" << std::endl;
+					player->canFlip = true;
 				}
 			}
 

@@ -8,6 +8,7 @@ typedef unsigned int uint;
 enum UPGRADE_SPECIFIER {
 	ROB_SPEED = 0,
 	DETECTION_RADIUS,
+	MINIMAP,
 
 	TOP_SPEED,
 	GEAR_SPEED,

@@ -15,6 +15,7 @@
 // MINIMAP paths
 #define MINIMAP_PATH "models/ui/minimap.obj"
 #define PLAYER_MARKER_PATH "models/ui/alcarpone_marker.obj"
+#define POLICE_MARKER_PATH "models/ui/police_marker.obj"
 
 
 
@@ -35,11 +36,16 @@ UI::UI() {
 
 	minimap = new Model(MINIMAP_PATH);
 	player_marker = new Model(PLAYER_MARKER_PATH);
+	police_marker = new Model(POLICE_MARKER_PATH);
 	vec3 a = vec3(0.5, -0.5, 0);
 	player_marker->meshes[0].vertices[0].Position += a;		// Bottom Left
+	police_marker->meshes[0].vertices[0].Position += a;		// Bottom Left
 	player_marker->meshes[0].vertices[1].Position += a;		// Bottom Right
+	police_marker->meshes[0].vertices[1].Position += a;		// Bottom Right
 	player_marker->meshes[0].vertices[2].Position += a;		// Top Right
+	police_marker->meshes[0].vertices[2].Position += a;		// Top Right
 	player_marker->meshes[0].vertices[3].Position += a;		// Top Left
+	police_marker->meshes[0].vertices[3].Position += a;		// Top Left
 }
 
 
@@ -55,11 +61,21 @@ void UI::update(State* state, Player* player, GraphicsSystem* graphics) {
 
 	// Calculate player marker position
 	player_movement = updateMarkerPos(player->getPos());	// Gets translation matrix
-	glm::vec3 out(0, 0, -1);
-	float theta = atan2(glm::dot(glm::cross(player->getDir(), out), glm::vec3(0.f, 1.f, 0.f)), glm::dot(player->getDir(), out));
-	player_movement = glm::rotate(player_movement, theta, out);
+	//glm::vec3 out(0, 0, -1);
+	//float theta = atan2(glm::dot(glm::cross(player->getDir(), out), glm::vec3(0.f, 1.f, 0.f)), glm::dot(player->getDir(), out));
+	//player_movement = glm::rotate(player_movement, theta, out);
 	graphics->shader2D->setMat4("model", player_movement);
 	player_marker->Draw(*graphics->shader2D);
+	for (PoliceCar* p : state->activePoliceVehicles) {
+		if (glm::distance(p->getPos(), player->getPos()) < player->drawRadius) {
+			player_movement = updateMarkerPos(p->getPos());	// Gets translation matrix
+			//glm::vec3 out(0, 0, -1);
+			//theta = atan2(glm::dot(glm::cross(p->getDir(), out), glm::vec3(0.f, 1.f, 0.f)), glm::dot(p->getDir(), out));
+			//player_movement = glm::rotate(player_movement, theta, out);
+			graphics->shader2D->setMat4("model", player_movement);
+			police_marker->Draw(*graphics->shader2D);
+		}
+	}
 
 	// Draw Popups if applicable
 	graphics->shader2D->setMat4("model", mat4(1.f));

@@ -137,6 +137,14 @@ int main()
 	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.4f, true, 90000));
 	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.5f, true, 110000));
 	robbingGarage.upgradeList.push_back(detectionRadius);
+	Upgrade policeOnMap(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::MINIMAP, 2);
+	policeOnMap.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/enhanced_minimap_1.obj"));
+	policeOnMap.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/enhanced_minimap_2.obj"));
+	policeOnMap.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/enhanced_minimap_maxed.obj"));
+	policeOnMap.upgradeInfo.clear();
+	policeOnMap.upgradeInfo.push_back(std::make_tuple(200.f, false, 0));
+	policeOnMap.upgradeInfo.push_back(std::make_tuple(10000.f, false, 0));
+	robbingGarage.upgradeList.push_back(policeOnMap);
 	state.buildings[BUILDINGS::GARAGE1] = &robbingGarage;
 
 	Garage handlingGarage(GarageTypes::HANDLING_GARAGE, PxVec3(-100, -20, -278), PxVec3(19, 2, 10), graphics);

@@ -33,6 +33,7 @@ public:
 	// UI ELEMENTS
 	Model* minimap;
 	Model* player_marker;
+	Model* police_marker;
 
 	UI();
 	

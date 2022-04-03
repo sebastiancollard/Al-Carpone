@@ -136,6 +136,10 @@ bool Player::canExit(State& state) {
 }
 
 
+bool Player::isFlippedOver() {
+	return glm::dot(getUp(), glm::vec3(0, 1, 0)) < 0.1f && glm::length(getLinearVelocity()) < 1.f;
+}
+
 
 void Player::rob(State& state) {
 	
@@ -168,6 +172,7 @@ void Player::rob(State& state) {
 		}
 		alarmCheckTimer = 0.f;
 		alarmChancePerCheck *= 1.5f;
+		std::cout << "alarm chance: " << alarmChancePerCheck * 100 << std::endl;
 	}
 
 
@@ -232,7 +237,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		// Add left turn to the input queue if 'A' is pressed
 		if (vehicleInAir) {
 			glm::vec3 back = -getDir();
-			vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(back.x, back.y, back.z));
+			vehiclePtr->getRigidDynamicActor()->addTorque((500.0f + (isFlippedOver() && canFlip ? 10000 : 0)) * PxVec3(back.x, back.y, back.z));
 		}
 	}
 
@@ -241,7 +246,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	// Add right turn to the input queue if 'D' is pressed
 		if (vehicleInAir) {
 			glm::vec3 front = getDir();
-			vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
+			vehiclePtr->getRigidDynamicActor()->addTorque((500.0f + (isFlippedOver() && canFlip ? 10000 : 0)) * PxVec3(front.x, front.y, front.z));
 		}
 	}
 
