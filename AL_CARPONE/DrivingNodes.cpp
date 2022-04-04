@@ -254,7 +254,7 @@ glm::vec3 DrivingNodes::guideMeFromTo(glm::vec3 a, glm::vec3 b) {
 
 	unsigned int nodeA = getClosestNodeIndex(a);
 
-	if (x_z_distance_squared(a, nodePositions[nodeA]) > 100.0f) return nodePositions[nodeA];
+	if (x_z_distance_squared(a, nodePositions[nodeA]) >= 100.0f) return nodePositions[nodeA];
 
 	unsigned int nodeB = getClosestNodeIndex(b);
 

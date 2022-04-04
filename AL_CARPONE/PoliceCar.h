@@ -39,6 +39,8 @@ public:
 	float baseJailRadius = 20.f;
 	float jailRadius = baseJailRadius;
 
+	glm::vec3 playerPos;
+
 
 	DrivingNodes* dNodes;
 	bool isStunned;
@@ -58,6 +60,7 @@ public:
 	void reset();
 	void startChase();
 	void hardReset();
+	void handleStuckPatrol();
 
 	void update(Player& player, State& state);
 
@@ -68,6 +71,9 @@ public:
 	bool playerDetected; //playerInTrigger && playerInSight
 	bool playerInJailRadius; 
 	bool playerArrestable; //playerInJailRadius && playerInSight
+
+	bool findingPatrolRoute = true;
+	bool chaseJustEnded = false;
 	
 	//debug
 	glm::vec3 getTargetDirection() {

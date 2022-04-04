@@ -477,18 +477,21 @@ int main()
 
 
 			bool shouldArrest = false;
+			int num_arresters = 0;
 
 			for (PoliceCar* p : state.activePoliceVehicles) {
 				if (p->playerArrestable) {
 					shouldArrest = true;
-					break;
+					num_arresters++;
 				}
 			}
 
 
 			if (shouldArrest) {
 
-				player.jailTimer += state.timeStep;
+				if (abs(player.getForwardVelocity()) < 2.f) {
+					player.jailTimer += state.timeStep * (float)num_arresters;
+				}
 
 				if (debugmode != DEBUGMODE::NOJAIL && player.jailTimer >= 5.0f) {
 
@@ -577,7 +580,9 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	if (debugmode == DEBUGMODE::NOJAIL) {
 		for (PoliceCar* p : state->activePoliceVehicles) {
 			model = glm::mat4(1.0f);
-			model = glm::translate(model, p->getTargetNodeLocation());
+			glm::vec3 pos = p->getTargetNodeLocation();
+			pos.y = 0;
+			model = glm::translate(model, pos);
 			graphics->shader3D->setMat4("model", model);
 			dTools.red_node.Draw(*graphics->shader3D);
 		}

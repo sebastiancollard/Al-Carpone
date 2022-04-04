@@ -42,7 +42,7 @@ void PoliceCar::update(Player& player, State& state) {
 
 	extern DEBUGMODE debugmode;
 
-	glm::vec3 playerPos = player.getPos();
+	playerPos = player.getPos();
 
 	myPos = getPos();
 	myDir = getDir();
@@ -157,13 +157,35 @@ void PoliceCar::createModel() {
 // HANDLE AI STATES
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+void PoliceCar::handleStuckPatrol() {
+
+	if (x_z_distance_squared(dNodes->getNextPatrolNodePosition(ID, targetIndex), playerPos) > 1000 && !playerInSight) {
+		shouldReset = true;
+		return;
+	}
+
+	int min_dist_index = 0;
+	float min_dist = 9999999;
+	for (int i = 0; i < dNodes->getPatrolRoutes()[ID].size(); i++) {
+		glm::vec3 pos = dNodes->getNextPatrolNodePosition(ID, i);
+		float dist = x_z_distance_squared(myPos, pos);
+		if (dist < min_dist) {
+			min_dist = dist;
+			min_dist_index = i;
+		}
+	}
+	targetIndex = min_dist_index;
+	targetPosition = dNodes->getNextPatrolNodePosition(ID, min_dist_index);
+}
+
 void PoliceCar::reverse(double timestep, glm::vec3 playerPos) {
 	inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);
 	reverseTime -= timestep;
 
 	if (reverseTime <= 0) {
 		reverseTime = 0;
-		targetPosition = dNodes->getClosestNodePosition(myPos); //Re-orient self
+		if (ai_state == AISTATE::CHASE) targetPosition = dNodes->getClosestNodePosition(myPos); //Re-orient self
+		else handleStuckPatrol();
 
 		if (playerInSight) {
 			targetPosition = playerPos;
@@ -214,14 +236,36 @@ void PoliceCar::idle(double timestep) {
 // If reached a dead end, back up and go back
 void PoliceCar::patrol() {
 
-	// if distance between cop car and its target is less than the threshold, switch to next target location
-	if (x_z_distance_squared(myPos, dNodes->getNextPatrolNodePosition(ID,targetIndex)) < 10.f) {
-		// set target index to the next location. if we're at the end of the location list, target the first location again
-		dNodes->incrementTargetIndex(ID, targetIndex);// targetIndex < dNodes->getPatrolRoutes()[ID].size() ? targetIndex++ : targetIndex = 0;
+	if (chaseJustEnded || findingPatrolRoute) {
+
+		glm::vec3 nextPatrolNode = dNodes->getNextPatrolNodePosition(ID, targetIndex);
+
+		if (chaseJustEnded) targetPosition = dNodes->guideMeFromTo(myPos, nextPatrolNode);
+
+		if (x_z_distance_squared(myPos, nextPatrolNode) < 100.0f) {
+			targetPosition = nextPatrolNode;
+			findingPatrolRoute = false;
+		}
+
+		else if (x_z_distance_squared(myPos,targetPosition) < 100.0f) {
+			if (ID == 0) printf("hi\n");
+			targetPosition = dNodes->guideMeFromTo(myPos, nextPatrolNode);
+		}
+
+		chaseJustEnded = false;
+	}
+	else {
+		// if distance between cop car and its target is less than the threshold, switch to next target location
+		if (x_z_distance_squared(myPos, dNodes->getNextPatrolNodePosition(ID, targetIndex)) < 100.f) {
+			// set target index to the next location. if we're at the end of the location list, target the first location again
+			dNodes->incrementTargetIndex(ID, targetIndex);// targetIndex < dNodes->getPatrolRoutes()[ID].size() ? targetIndex++ : targetIndex = 0;
+		}
+
+		// determine AI inputs
+		targetPosition = dNodes->getNextPatrolNodePosition(ID, targetIndex);
 	}
 
-	// determine AI inputs
-	targetPosition = dNodes->getNextPatrolNodePosition(ID, targetIndex);
+	
 	updateSpeed(PATROL_ACCEL);
 	driveTo(targetPosition);
 }
@@ -242,7 +286,7 @@ void PoliceCar::chase(glm::vec3 playerPos,double timestep) {
 			targetPosition = dNodes->guideMeFromTo(myPos, playerPos);
 			targetingPlayer = false;
 		} 
-		chaseTime -= timestep; // TODO use timer instead
+		
 	}
 
 	//If we need a hard turn
@@ -251,13 +295,16 @@ void PoliceCar::chase(glm::vec3 playerPos,double timestep) {
 		return;
 	}
 
+	chaseTime -= timestep; // TODO use timer instead
 	driveTo(targetPosition);
 	
 	if (chaseTime <= 0) {
 		//TODO stop siren
 		//std::cout << "CHASING END" << std::endl;
 		ai_state = AISTATE::PATROL;
-		shouldReset = true;					//Teleport to start node
+		chaseJustEnded = true;
+		findingPatrolRoute = true;
+		//shouldReset = true;					//Teleport to start node
 	}
 }
 
