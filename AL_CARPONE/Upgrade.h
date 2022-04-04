@@ -7,6 +7,7 @@ typedef unsigned int uint;
 // total list of upgrades go here
 enum UPGRADE_SPECIFIER {
 	ROB_SPEED = 0,
+	ALARM_CHANCE,
 	DETECTION_RADIUS,
 	MINIMAP,
 

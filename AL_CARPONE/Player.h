@@ -68,6 +68,7 @@ public:
 
 	bool canFlip = false;
 	float drawRadius = 0.f;
+	unsigned int numUpgradesPurchased = 0;
 
 	Player() {}
 

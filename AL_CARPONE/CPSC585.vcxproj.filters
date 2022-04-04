@@ -382,5 +382,8 @@
     <None Include="shaderText.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="shaderDetection.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

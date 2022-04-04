@@ -4,9 +4,10 @@
 
 namespace sv = snippetvehicle;
 
-extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*);
+extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere);
 extern void despawnItem();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*);
+
 
 
 int main()
@@ -61,6 +62,7 @@ int main()
 	Model police_car_chassis("models/police_car/police_car_chassis.obj");
 	Model police_car_lwheel("models/police_car/police_car_wheel_left.obj");
 	Model police_car_rwheel("models/police_car/police_car_wheel_right.obj");
+	Model police_detection_sphere("models/police_car/detection_sphere.obj");
 
 	CarModel4W* policeCarModel = new CarModel4W(police_car_chassis, police_car_lwheel, police_car_rwheel);
 
@@ -109,20 +111,28 @@ int main()
 	robbingGarage.selectTop = select1;
 	robbingGarage.selectMid = select2;
 	robbingGarage.selectBot = select3;
-	Upgrade robSpeed(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::ROB_SPEED, 5);
-	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_1.obj"));
-	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_2.obj"));
-	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_3.obj"));
-	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_4.obj"));
-	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_5.obj"));
-	robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_maxed.obj"));
-	robSpeed.upgradeInfo.clear();
-	robSpeed.upgradeInfo.push_back(std::make_tuple(1.25f, true, 5000));
-	robSpeed.upgradeInfo.push_back(std::make_tuple(2.5f, true, 11250));
-	robSpeed.upgradeInfo.push_back(std::make_tuple(5.f, true, 17500));
-	robSpeed.upgradeInfo.push_back(std::make_tuple(10.f, true, 30000));
-	robSpeed.upgradeInfo.push_back(std::make_tuple(20.f, true, 55000));
-	robbingGarage.upgradeList.push_back(robSpeed);
+	//Upgrade robSpeed(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::ROB_SPEED, 5);
+	//robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_1.obj"));
+	//robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_2.obj"));
+	//robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_3.obj"));
+	//robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_4.obj"));
+	//robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_5.obj"));
+	//robSpeed.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/rob_speed_maxed.obj"));
+	//robSpeed.upgradeInfo.clear();
+	//robSpeed.upgradeInfo.push_back(std::make_tuple(1.25f, true, 5000));
+	//robSpeed.upgradeInfo.push_back(std::make_tuple(2.5f, true, 11250));
+	//robSpeed.upgradeInfo.push_back(std::make_tuple(5.f, true, 17500));
+	//robSpeed.upgradeInfo.push_back(std::make_tuple(10.f, true, 30000));
+	//robSpeed.upgradeInfo.push_back(std::make_tuple(20.f, true, 55000));
+	//robbingGarage.upgradeList.push_back(robSpeed);
+	Upgrade alarmChance(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::ALARM_CHANCE, 2);
+	alarmChance.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/alarm_chance_1.obj"));
+	alarmChance.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/alarm_chance_2.obj"));
+	alarmChance.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/alarm_chance_maxed.obj"));
+	alarmChance.upgradeInfo.clear();
+	alarmChance.upgradeInfo.push_back(std::make_tuple(0.25f, true, 0));
+	alarmChance.upgradeInfo.push_back(std::make_tuple(0.5f, true, 0));
+	robbingGarage.upgradeList.push_back(alarmChance);
 	Upgrade detectionRadius(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::DETECTION_RADIUS, 5);
 	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_1.obj"));
 	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_2.obj"));
@@ -131,11 +141,11 @@ int main()
 	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_5.obj"));
 	detectionRadius.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/detection_radius_maxed.obj"));
 	detectionRadius.upgradeInfo.clear();
-	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.1f, true, 15000));
-	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.2f, true, 30000));
-	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.3f, true, 60000));
-	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.4f, true, 90000));
-	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.5f, true, 110000));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.1f, true, 0/*15000*/));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.2f, true, 0/*30000*/));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.3f, true, 0/*60000*/));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.4f, true, 0/*90000*/));
+	detectionRadius.upgradeInfo.push_back(std::make_tuple(0.5f, true, 0/*110000*/));
 	robbingGarage.upgradeList.push_back(detectionRadius);
 	Upgrade policeOnMap(UPGRADE_TYPE::ROBBERY, UPGRADE_SPECIFIER::MINIMAP, 2);
 	policeOnMap.menuElements.push_back(Model("models/garageMenu/robbery_upgrades/enhanced_minimap_1.obj"));
@@ -154,9 +164,9 @@ int main()
 	handlingGarage.selectBot = select3;
 	Upgrade roadFriction(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TIRE_FRICTION, 3);
 	roadFriction.upgradeInfo.clear();
-	roadFriction.upgradeInfo.push_back(std::make_tuple(0.1f, true, 10000));
-	roadFriction.upgradeInfo.push_back(std::make_tuple(0.2f, true, 65000));
-	roadFriction.upgradeInfo.push_back(std::make_tuple(0.3f, true, 105000));
+	roadFriction.upgradeInfo.push_back(std::make_tuple(0.1f, true, 0/*10000*/));
+	roadFriction.upgradeInfo.push_back(std::make_tuple(0.2f, true, 0/*65000*/));
+	roadFriction.upgradeInfo.push_back(std::make_tuple(0.3f, true, 0/*105000*/));
 	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_1.obj"));
 	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_2.obj"));
 	roadFriction.menuElements.push_back(Model("models/garageMenu/handling_upgrades/tire_friction_3.obj"));
@@ -164,15 +174,15 @@ int main()
 	handlingGarage.upgradeList.push_back(roadFriction);
 	Upgrade steerAngle(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::TURN_RADIUS, 2);
 	steerAngle.upgradeInfo.clear();
-	steerAngle.upgradeInfo.push_back(std::make_tuple(1.f / 3.f, true, 12500));
-	steerAngle.upgradeInfo.push_back(std::make_tuple(0.9999f, true, 50000));
+	steerAngle.upgradeInfo.push_back(std::make_tuple(1.f / 3.f, true, 0/*12500*/));
+	steerAngle.upgradeInfo.push_back(std::make_tuple(0.9999f, true, 0/*50000*/));
 	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_1.obj"));
 	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_2.obj"));
 	steerAngle.menuElements.push_back(Model("models/garageMenu/handling_upgrades/steer_angle_maxed.obj"));
 	handlingGarage.upgradeList.push_back(steerAngle);
 	Upgrade flipOver(UPGRADE_TYPE::HANDLING, UPGRADE_SPECIFIER::CAR_FLIP, 1);
 	flipOver.upgradeInfo.clear();
-	flipOver.upgradeInfo.push_back(std::make_tuple(0.f, true, 100000));
+	flipOver.upgradeInfo.push_back(std::make_tuple(0.f, true, 0/*100000*/));
 	flipOver.menuElements.push_back(Model("models/garageMenu/handling_upgrades/car_flipper.obj"));
 	flipOver.menuElements.push_back(Model("models/garageMenu/handling_upgrades/car_flipper_maxed.obj"));
 	handlingGarage.upgradeList.push_back(flipOver);
@@ -185,12 +195,12 @@ int main()
 	engineGarage.selectBot = select3;
 	Upgrade topSpeed(UPGRADE_TYPE::ENGINE, UPGRADE_SPECIFIER::TOP_SPEED, 6);
 	topSpeed.upgradeInfo.clear();
-	topSpeed.upgradeInfo.push_back(std::make_tuple(0.02f, true, 11250));
-	topSpeed.upgradeInfo.push_back(std::make_tuple(0.04f, true, 17500));
-	topSpeed.upgradeInfo.push_back(std::make_tuple(0.08f, true, 30000));
-	topSpeed.upgradeInfo.push_back(std::make_tuple(0.16f, true, 55000));
-	topSpeed.upgradeInfo.push_back(std::make_tuple(0.32f, true, 82500));
-	topSpeed.upgradeInfo.push_back(std::make_tuple(0.50f, true, 105000));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.02f, true, 0/*11250*/));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.04f, true, 0/*17500*/));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.08f, true, 0/*30000*/));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.16f, true, 0/*55000*/));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.32f, true, 0/*82500*/));
+	topSpeed.upgradeInfo.push_back(std::make_tuple(0.50f, true, 0/*105000*/));
 	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_1.obj"));
 	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_2.obj"));
 	topSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/top_speed_3.obj"));
@@ -201,9 +211,9 @@ int main()
 	engineGarage.upgradeList.push_back(topSpeed);
 	Upgrade gearSpeed(UPGRADE_TYPE::ENGINE, UPGRADE_SPECIFIER::GEAR_SPEED, 3);
 	gearSpeed.upgradeInfo.clear();
-	gearSpeed.upgradeInfo.push_back(std::make_tuple(1.f / 9.f, true, 20000));
-	gearSpeed.upgradeInfo.push_back(std::make_tuple(2.f / 9.f, true, 30000));
-	gearSpeed.upgradeInfo.push_back(std::make_tuple(3.f / 9.f, true, 50000));
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(1.f / 9.f, true, 0/*20000*/));
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(2.f / 9.f, true, 0/*30000*/));
+	gearSpeed.upgradeInfo.push_back(std::make_tuple(3.f / 9.f, true, 0/*50000*/));
 	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_1.obj"));
 	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_2.obj"));
 	gearSpeed.menuElements.push_back(Model("models/garageMenu/engine_upgrades/gear_shift_speed_3.obj"));
@@ -530,7 +540,7 @@ int main()
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics, &state);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere);
 
 
 			// DEBUG MODE
@@ -554,7 +564,7 @@ int main()
 
 
 
-void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools, TextRenderer* text_renderer) {
+void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools, TextRenderer* text_renderer, Model* detectionSphere) {
 
 	glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 	glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
@@ -647,6 +657,21 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 					}
 					else if (j == 4) {
 						activeCar->Draw(CHASSIS, *graphics->shader3D, model);
+						// handle detection sphere render
+						if (state->activePoliceVehicles.size() > 0 && activeCar == policeCarModel && !player->beingChased(*state)) {
+							glEnable(GL_BLEND);
+							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							model = glm::scale(model, glm::vec3(state->activePoliceVehicles[0]->detectionRadius-1));
+							graphics->shaderDetection->use();
+							graphics->shaderDetection->setMat4("model", model);
+							graphics->shaderDetection->setMat4("projection", projection);
+							graphics->shaderDetection->setMat4("view", view);
+							graphics->shaderDetection->setFloat("detectionRadius", (state->activePoliceVehicles[0]->detectionRadius));
+							graphics->shaderDetection->setFloat("distance", glm::distance(player->getPos(), glm::vec3(model[3].x, model[3].y, model[3].z)));
+							detectionSphere->Draw(*graphics->shaderDetection);
+							graphics->shader3D->use();
+							glDisable(GL_BLEND);
+						}
 					}
 				}
 			}

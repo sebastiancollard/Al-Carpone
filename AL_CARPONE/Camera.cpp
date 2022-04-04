@@ -163,17 +163,19 @@ BoundCamera::BoundCamera(Player& p, State& state) : player(p) {
 //update pitch and yaw (in the future update zoom)
 void BoundCamera::handleInput(GLFWwindow* window, State& state) {
     // Handles mouse inputs
-
+    usingKeyboard = false;
     // check for state of C key before left mouse button to avoid camera stuttering
     if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+        usingKeyboard = true;
         dir = -player.getDir();
         stoppedLookingBehind = true;
     }
-    else if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE && stoppedLookingBehind) {
+    else if (stoppedLookingBehind) {
         dir = player.getDir();
         stoppedLookingBehind = false;
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+        usingKeyboard = true;
         // Hides mouse cursor
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
@@ -240,7 +242,7 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
         updateLocked(state);
     }
     
-    if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+    if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1) && !usingKeyboard)
     {
         //get controller name
         //const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);

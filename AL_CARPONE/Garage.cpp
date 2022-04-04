@@ -52,10 +52,16 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 
 			switch (u.type) {
 			case UPGRADE_TYPE::ROBBERY:
-				if (u.specifier == UPGRADE_SPECIFIER::ROB_SPEED) {
-					const float upgraded = player->basecashRobbedPerFrame + player->basecashRobbedPerFrame * u.delta(u.tier);
-					std::cout << "upgrading cash robbed per frame from " << player->cashRobbedPerFrame << " to " << upgraded << std::endl;
-					player->cashRobbedPerFrame = upgraded;
+				//if (u.specifier == UPGRADE_SPECIFIER::ROB_SPEED) {
+				//	const float upgraded = player->basecashRobbedPerFrame + player->basecashRobbedPerFrame * u.delta(u.tier);
+				//	std::cout << "upgrading cash robbed per frame from " << player->cashRobbedPerFrame << " to " << upgraded << std::endl;
+				//	player->cashRobbedPerFrame = upgraded;
+				//}
+				if (u.specifier == UPGRADE_SPECIFIER::ALARM_CHANCE) {
+					const float baseChance = player->initAlarmChancePerCheck;
+					const float upgraded = baseChance - baseChance * u.delta(u.tier);
+					std::cout << "upgrading alarm chance from " << player->baseAlarmChancePerCheck << " to " << upgraded << std::endl;
+					player->baseAlarmChancePerCheck = upgraded;
 				}
 				else if (u.specifier == UPGRADE_SPECIFIER::DETECTION_RADIUS) {
 					float upgraded = 10.f;
@@ -126,7 +132,21 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 				}
 			}
 
-
+			++player->numUpgradesPurchased;
+			if (player->numUpgradesPurchased < 16) {
+				if (player->numUpgradesPurchased == 5) {
+					std::cout << "upgrading bonus bank earnings multiplier from 0x to 1.25x" << std::endl;
+					player->cashRobbedPerFrame = player->basecashRobbedPerFrame * 1.25f;
+				}
+				else if (player->numUpgradesPurchased == 10) {
+					std::cout << "upgrading bonus bank earnings multiplier from 1.25x to 5x" << std::endl;
+					player->cashRobbedPerFrame = player->basecashRobbedPerFrame * 5.f;
+				}
+				else if (player->numUpgradesPurchased == 15) {
+					std::cout << "upgrading bonus bank earnings multiplier from 5x to 20x" << std::endl;
+					player->cashRobbedPerFrame = player->basecashRobbedPerFrame * 20.f;
+				}
+			}
 
 			++upgradeList[currentSelection].tier;
 		}
@@ -215,7 +235,9 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 									break;
 								}
 								std::cout << "upgrading police detection radius from " << before << " to " << upgraded << std::endl;
-								for (PoliceCar* p : state->activePoliceVehicles) p->detectionRadius = upgraded;
+								for (PoliceCar* p : state->activePoliceVehicles) { 
+									p->detectionRadius = upgraded; 
+								}
 							}
 						case UPGRADE_TYPE::ENGINE:
 							if (u.specifier == UPGRADE_SPECIFIER::TOP_SPEED) {

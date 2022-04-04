@@ -19,6 +19,7 @@ public:
 	Shader* shader3D;
 	Shader* shader2D;
 	Shader* shaderText;
+	Shader* shaderDetection;
 
 	//Skybox skybox;
 
