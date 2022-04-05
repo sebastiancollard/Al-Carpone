@@ -259,6 +259,9 @@
     <None Include="skybox.fs" />
     <None Include="skybox.vs" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="upgrade params.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

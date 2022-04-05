@@ -386,4 +386,9 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="upgrade params.txt">
+      <Filter>Resource Files\Misc</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

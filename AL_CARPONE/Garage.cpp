@@ -75,6 +75,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 					for (PoliceCar* p : state->activePoliceVehicles) p->detectionRadius = upgraded;
 				}
 				else if (u.specifier == UPGRADE_SPECIFIER::MINIMAP) {
+					++player->minimapMode;
 					player->drawRadius = u.delta(u.tier);
 					std::cout << u.delta(u.tier) << std::endl;
 					if (u.tier == 0) std::cout << "police within " << player->drawRadius << "m visible on minimap" << std::endl;
@@ -133,20 +134,26 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 			}
 
 			++player->numUpgradesPurchased;
-			if (player->numUpgradesPurchased < 16) {
-				if (player->numUpgradesPurchased == 5) {
-					std::cout << "upgrading bonus bank earnings multiplier from 0x to 1.25x" << std::endl;
-					player->cashRobbedPerFrame = player->basecashRobbedPerFrame * 1.25f;
-				}
-				else if (player->numUpgradesPurchased == 10) {
-					std::cout << "upgrading bonus bank earnings multiplier from 1.25x to 5x" << std::endl;
-					player->cashRobbedPerFrame = player->basecashRobbedPerFrame * 5.f;
-				}
-				else if (player->numUpgradesPurchased == 15) {
-					std::cout << "upgrading bonus bank earnings multiplier from 5x to 20x" << std::endl;
-					player->cashRobbedPerFrame = player->basecashRobbedPerFrame * 20.f;
-				}
+			if (player->numUpgradesPurchased <= 5) {
+				//std::cout << "upgrading bonus bank earnings multiplier from 0x to 1.25x" << std::endl;
+				std::cout << "upgrading bank earnings from " << player->cashRobbedPerFrame << " to " << player->cashRobbedPerFrame + player->basecashRobbedPerFrame * .25f << std::endl;
+				player->cashRobbedPerFrame += player->basecashRobbedPerFrame * .25f;
 			}
+			else if (player->numUpgradesPurchased <= 10) {
+				//std::cout << "upgrading bonus bank earnings multiplier from 1.25x to 5x" << std::endl;
+				std::cout << "upgrading bank earnings from " << player->cashRobbedPerFrame << " to " << player->cashRobbedPerFrame + player->basecashRobbedPerFrame * .75f << std::endl;
+				player->cashRobbedPerFrame += player->basecashRobbedPerFrame * 0.75f;
+			}
+			else if (player->numUpgradesPurchased <= 15) {
+				//std::cout << "upgrading bonus bank earnings multiplier from 5x to 20x" << std::endl;
+				std::cout << "upgrading bank earnings from " << player->cashRobbedPerFrame << " to " << player->cashRobbedPerFrame + player->basecashRobbedPerFrame * 3.f << std::endl;
+				player->cashRobbedPerFrame += player->basecashRobbedPerFrame * 3.f;
+			}
+			else if (player->numUpgradesPurchased == 24) {
+				std::cout << "upgrading bonus bank earnings multiplier from 20x to 80x" << std::endl;
+				player->cashRobbedPerFrame = player->basecashRobbedPerFrame * 80.f;
+			}
+			
 
 			++upgradeList[currentSelection].tier;
 		}

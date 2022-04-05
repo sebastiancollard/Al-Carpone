@@ -66,16 +66,33 @@ void UI::update(State* state, Player* player, GraphicsSystem* graphics) {
 	//player_movement = glm::rotate(player_movement, theta, out);
 	graphics->shader2D->setMat4("model", player_movement);
 	player_marker->Draw(*graphics->shader2D);
+	float closest = 9999.f;
 	for (PoliceCar* p : state->activePoliceVehicles) {
-		if (glm::distance(p->getPos(), player->getPos()) < player->drawRadius) {
-			player_movement = updateMarkerPos(p->getPos());	// Gets translation matrix
-			//glm::vec3 out(0, 0, -1);
-			//theta = atan2(glm::dot(glm::cross(p->getDir(), out), glm::vec3(0.f, 1.f, 0.f)), glm::dot(p->getDir(), out));
-			//player_movement = glm::rotate(player_movement, theta, out);
-			graphics->shader2D->setMat4("model", player_movement);
-			police_marker->Draw(*graphics->shader2D);
+		switch (player->minimapMode) {
+			case 1:
+				if (glm::distance(p->getPos(), player->getPos()) < closest) {
+					closest = glm::distance(p->getPos(), player->getPos());
+					player_movement = updateMarkerPos(p->getPos());	// Gets translation matrix
+					graphics->shader2D->setMat4("model", player_movement);
+				}
+				break;
+			case 2:
+				if (glm::distance(p->getPos(), player->getPos()) < player->drawRadius) {
+					player_movement = updateMarkerPos(p->getPos());	// Gets translation matrix
+					graphics->shader2D->setMat4("model", player_movement);
+					police_marker->Draw(*graphics->shader2D);
+				}
+				break;
+			case 3:
+				player_movement = updateMarkerPos(p->getPos());	// Gets translation matrix
+				graphics->shader2D->setMat4("model", player_movement);
+				police_marker->Draw(*graphics->shader2D);
+				break;
 		}
+		//if (glm::distance(p->getPos(), player->getPos()) < player->drawRadius) {
+		
 	}
+	if (player->minimapMode == 1) police_marker->Draw(*graphics->shader2D);
 
 	// Draw Popups if applicable
 	graphics->shader2D->setMat4("model", mat4(1.f));
