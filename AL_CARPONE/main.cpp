@@ -657,11 +657,12 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 						activeCar->Draw(BLWHEEL, *graphics->shader3D, model);
 					}
 					else if (j == 4) {
+						glEnable(GL_BLEND);
+						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 						activeCar->Draw(CHASSIS, *graphics->shader3D, model);
 						// handle detection sphere render
 						if (state->activePoliceVehicles.size() > 0 && activeCar == policeCarModel && !player->beingChased(*state)) {
-							glEnable(GL_BLEND);
-							glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+							
 							model = glm::scale(model, glm::vec3(state->activePoliceVehicles[0]->detectionRadius-1));
 							graphics->shaderDetection->use();
 							graphics->shaderDetection->setMat4("model", model);
@@ -671,8 +672,8 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 							graphics->shaderDetection->setFloat("distance", glm::distance(player->getPos(), glm::vec3(model[3].x, model[3].y, model[3].z)));
 							detectionSphere->Draw(*graphics->shaderDetection);
 							graphics->shader3D->use();
-							glDisable(GL_BLEND);
 						}
+						glDisable(GL_BLEND);
 					}
 				}
 			}
