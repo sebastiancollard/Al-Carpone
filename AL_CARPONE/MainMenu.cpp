@@ -172,7 +172,8 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		{
 			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE])
 			{
-				state.terminateProgram = true;
+				//state.terminateProgram = true;
+				state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 				audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
 				//std::cout << "CIRCLE (xbox b, ns pro a)" << std::endl;
 				return;
@@ -228,6 +229,15 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] == GLFW_RELEASE)
 			{
 				state.dpad_upisHold = false;
+			}
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_PRESS) {
+				if (!state.dpad_startIsHeld) {
+					state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+				}
+				state.dpad_startIsHeld = true;
+			}
+			else {
+				state.dpad_startIsHeld = false;
 			}
 
 		}
