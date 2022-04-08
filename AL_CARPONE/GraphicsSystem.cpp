@@ -31,6 +31,9 @@ GraphicsSystem::GraphicsSystem() {
 	// Create a GLFWwindow object of 800 by 800 pixels
 	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", NULL, NULL);
 	if(debugmode != DEBUGMODE::FALSE) window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", NULL, NULL);
+
+	monitor = glfwGetPrimaryMonitor();
+
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -112,3 +115,12 @@ void GraphicsSystem::updateTitle(State& state, Player& player)
 
 }
 
+void GraphicsSystem::toggleFullscreen() {
+	if (glfwGetWindowMonitor(window) == nullptr){
+		glfwSetWindowMonitor(window, monitor, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+	}
+	else {
+		glfwSetWindowMonitor(window, nullptr, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+
+	}
+}

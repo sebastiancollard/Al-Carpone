@@ -104,6 +104,7 @@ public:
 	bool enter_isHeld = false;
 	bool shift_isHeld = false;
 	bool space_isHeld = false;
+	bool alt_isHeld = false;
 	bool down_isHeld = false;
 	bool up_isHeld = false;
 	bool escape_isHeld = false;
