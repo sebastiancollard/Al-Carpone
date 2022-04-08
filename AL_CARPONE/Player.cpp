@@ -212,8 +212,8 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		updateSpeed(1.0f);
 		inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
 		if (vehicleInAir) {
-			glm::vec3 left = -getRight();
-			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
+			glm::vec3 right = getRight();
+			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(right.x, right.y, right.z));
 		}
 
 		state.W_isHeld = true;
@@ -227,8 +227,8 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 		if (vehicleInAir) {
-			glm::vec3 right = getRight();
-			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(right.x, right.y, right.z));
+			glm::vec3 left = -getRight();
+			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 		}
 	}
 	// Set as an else if for now seeing as you normally can't accelerate frontwards/backwards at the same time...
