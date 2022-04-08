@@ -84,9 +84,11 @@ public:
     glm::vec3 oldVehDir = glm::vec3(0, 0, 1);
 
     bool stoppedLookingBehind = false; // used for switching between looking behind and forward
-
+    bool controllerIdle = false;
+    float controllerTimer = 0.f;
     
     BoundCamera(Player& p, State& state);
+    bool checkController(GLFWgamepadstate state);
     void handleInput(GLFWwindow* window, State& state); //update pitch and yaw (in the future update zoom)
     void checkClipping(GLFWwindow* window);             // adjust camera position if objects are currently obscurring the car
 
@@ -95,6 +97,7 @@ private:
 
     void updateLook();
     void updateLocked(State& state);
+    void updateLockedController(State& state);
 };
 
 #endif

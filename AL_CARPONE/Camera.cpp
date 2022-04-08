@@ -9,7 +9,7 @@
 
 //Update these as we tune
 
-
+#define CONTROLLER_RESET_MAX_TIME 2.f
 
 // General Function
 glm::vec3 getGLMvec3(PxVec3 v) {
@@ -163,17 +163,17 @@ BoundCamera::BoundCamera(Player& p, State& state) : player(p) {
 //update pitch and yaw (in the future update zoom)
 void BoundCamera::handleInput(GLFWwindow* window, State& state) {
     // Handles mouse inputs
-    usingKeyboard = false;
     // check for state of C key before left mouse button to avoid camera stuttering
     if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
         usingKeyboard = true;
         dir = -player.getDir();
         stoppedLookingBehind = true;
     }
-    else if (stoppedLookingBehind) {
+    else if (usingKeyboard && stoppedLookingBehind) {
         dir = player.getDir();
         stoppedLookingBehind = false;
     }
+
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         usingKeyboard = true;
         // Hides mouse cursor
@@ -228,11 +228,10 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
 
         oldVehDir = player.getDir();
     }
-    else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+    else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE && usingKeyboard)
     {
         // Unhides cursor since camera is not looking around anymore
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
         // Makes sure the next time the camera looks around it doesn't jump
         firstClick = true;
 
@@ -242,38 +241,52 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
         updateLocked(state);
     }
     
-    if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1) && !usingKeyboard)
+    if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
     {
         //get controller name
         //const char* controller_name = glfwGetGamepadName(GLFW_JOYSTICK_1);
         //std::cout << controller_name << std::endl;
 
-        GLFWgamepadstate state;
-        if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+        GLFWgamepadstate controller;
+        if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controller))
         {
-            
-            if (abs(state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB]) == 1) {
+            controllerIdle = true;
+            if (abs(controller.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB]) == 1) {
+                controllerIdle = false;
+                controllerTimer = 0.f;
+                if (usingKeyboard) usingKeyboard = false;
                 dir = -player.getDir();
                 stoppedLookingBehind = true;
             }
-            else if (stoppedLookingBehind) {
+            else if (!usingKeyboard && stoppedLookingBehind) {
+                controllerTimer = CONTROLLER_RESET_MAX_TIME;
                 dir = player.getDir();
                 stoppedLookingBehind = false;
             }
 
             float rotX = 0;
             float rotY = 0;
-            if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) > 0.15)
+            if (abs(controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) > 0.15)
             {
-                rotY = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
+                controllerIdle = false;
+                controllerTimer = 0.f;
+                if (usingKeyboard) usingKeyboard = false;
+                rotY = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] * 0.33f;
             }
-            if (abs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) > 0.15)
+            if (abs(controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) > 0.15)
             {
-                rotX = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
+                controllerIdle = false;
+                controllerTimer = 0.f;
+                if (usingKeyboard) usingKeyboard = false;
+                rotX = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] * 0.5f;
+            }
+            if (abs(controller.buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB]) == 1) {
+                controllerTimer = CONTROLLER_RESET_MAX_TIME;
             }
             // Calculates upcoming vertical change in the Orientation
             up = worldUp;
             glm::vec3 newOrientation = glm::rotate(dir, glm::radians(-rotY), glm::normalize(glm::cross(dir, up)));
+
 
             // Decides whether or not the next vertical Orientation is legal or not
             if (abs(glm::angle(newOrientation, up) - glm::radians(90.0f)) <= glm::radians(85.0f))
@@ -283,13 +296,25 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
 
             // Rotates the Orientation left and right
             dir = glm::rotate(dir, glm::radians(-rotX), up);
+            
+            //dir = glm::rotate(dir, atan2(glm::dot(glm::cross(oldVehDir, player.getDir()), up), glm::dot(player.getDir(), oldVehDir)), up);
+
+
             // update position
             pos = player.getPos() + glm::vec3(0, verticalOffset, 0) + -dir * radius;
 
             oldVehDir = player.getDir();
+
+            if (controllerIdle && !usingKeyboard && controllerTimer  < CONTROLLER_RESET_MAX_TIME) {
+                controllerTimer += state.timeStep;
+            }
+        }
+
+        if (!usingKeyboard && controllerTimer >= CONTROLLER_RESET_MAX_TIME) {
+            std::cout << "update " << state.timeStep << std::endl;
+            updateLocked(state);
         }
     }
-    
 
     glm::vec3 velocity = getGLMvec3(player.vehiclePtr->getRigidDynamicActor()->getLinearVelocity());
     //printVec3("velocity", velocity);

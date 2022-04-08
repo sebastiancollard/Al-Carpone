@@ -301,26 +301,22 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			//forwardOrbackward = state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
 			leftOrRightturn = controller_state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
 			
-			
+			if (vehicleInAir) {
+				glm::vec3 right = getRight();
+				vehiclePtr->getRigidDynamicActor()->addTorque(-controller_state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y] * 1500.0f * PxVec3(right.x, right.y, right.z));
+			}
+
 			if (controller_state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
 			{
 				footIsOnGas = true;
 				double newSpeed = controller_state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
 				updateSpeed(newSpeed/2);
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
-				if (vehicleInAir) {
-					glm::vec3 left = -getRight();
-					vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
-				}
 				//std::cout << "right trigger: " << ControlState.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
 			}
 			else if (controller_state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
 			{
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
-				if (vehicleInAir) {
-					glm::vec3 right = getRight();
-					vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(right.x, right.y, right.z));
-				}
 				//std::cout << "left trigger: " << ControlState.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
 			}
 			
