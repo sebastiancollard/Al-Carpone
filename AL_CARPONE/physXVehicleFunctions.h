@@ -7,7 +7,7 @@
 #include "Player.h"
 
 
-#define AL_CARPONE_CHASSIS_MASS 1500.0f //original 1500.0f
+#define AL_CARPONE_CHASSIS_MASS 1300.0f //original 1500.0f
 #define AL_CARPONE_WHEEL_MASS 20.0f //original 20.0f
 #define AL_CARPONE_CHASSIS_DIMS PxVec3(2.00344f, 1.15007f, 5.41695f)
 #define AL_CARPONE_WHEEL_RADIUS 0.3005f

@@ -48,7 +48,7 @@ private:
 
 
 public:
-	float basecashRobbedPerFrame = 500;
+	float basecashRobbedPerFrame = 1000;
 	float cashRobbedPerFrame = basecashRobbedPerFrame;
 
 	float initAlarmChancePerCheck = 0.1f;
@@ -65,6 +65,11 @@ public:
 	float jailTimer = 0;
 
 	bool isSeen = false;
+
+	bool canFlip = false;
+	float drawRadius = 0.f;
+	unsigned int minimapMode = 0;
+	unsigned int numUpgradesPurchased = 0;
 
 	Player() {}
 
@@ -89,6 +94,8 @@ public:
 	void rob(State& state);
 
 	bool beingChased(State& state);
+
+	bool isFlippedOver();
 
 	// Robbing Mehcanism
 	int getCash();

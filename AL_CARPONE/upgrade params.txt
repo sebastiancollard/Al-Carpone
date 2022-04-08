@@ -1,51 +1,72 @@
+- 24 total upgrades
+
+	Rob speed:
+		-> base: 			$500/s 		
+		-> tier 1 (125%): 	$1125/s 	5/23 upgrades purchased
+		-> tier 2 (500%): 	$3000/s 	10/23 upgrades purchased
+		-> tier 3 (2000%): 	$10500/s 	15/23 upgrades purchased
+		-> gold rush(8000%):$40500/s	23/23 upgrades purchased
+
 Robbery Upgrades:
 
-	rob speed:
-		-> base: 		$500/s 		
-		-> tier 1 (125%): 	$1125/s 	$5,000
-		-> tier 2 (250%): 	$1750/s 	$11,250
-		-> tier 3 (500%): 	$3000/s 	$17,500
-		-> tier 4 (1000%):	$5500/s 	$30,000
-		-> tier 5 (2000%): 	$10500/s 	$55,000
+	//rob speed:
+	//	-> base: 			$500/s 		
+	//	-> tier 1 (125%): 	$1125/s 	$5,000
+	//	-> tier 2 (250%): 	$1750/s 	$11,250
+	//	-> tier 3 (500%): 	$3000/s 	$17,500
+	//	-> tier 4 (1000%):	$5500/s 	$30,000
+	//	-> tier 5 (2000%): 	$10500/s 	$55,000
+		
+	alarm chance:
+		-> base: 			10%
+		-> tier 1:			7.5%		$5,625  t1
+		-> tier 2:			5%			$15,000 t2
 
 	detection radius:
-		-> base: 		10m 
-		-> tier 1 (10%): 	9m 		$15,000
-		-> tier 2 (20%): 	8m 		$30,000
-		-> tier 3 (30%): 	7m 		$60,000
-		-> tier 4 (40%): 	6m 		$90,000
-		-> tier 5 (50%): 	5m 		$110,000
+		-> base: 			10m 
+		-> tier 1 (10%): 	9m 		$2,500	base
+		-> tier 2 (20%): 	8m 		$2,500	base
+		-> tier 3 (30%): 	7m 		$5,625	t1
+		-> tier 4 (40%): 	6m 		$5,625	t1
+		-> tier 5 (50%): 	5m 		$15,000 t2
+		
+	enhanced minimap:
+		-> base: 			none	
+		-> tier 1:			closest	$2,500 base
+		-> tier 2:			200m	$5,625 t1
+		-> tier 3:			all		$15,000 t2
 
 Engine upgrades:
 	
 	top speed (peak torque): (police torque = 500)
-		-> base: 		400
-		-> tier 1 (2%):		408		$11,250
-		-> tier 2 (4%): 	416		$17,500
-		-> tier 3 (8%): 	432		$30,000
-		-> tier 4 (16%):	464		$55,000
-		-> tier 5 (32%): 	528		$82,500
-		-> tier 6 (50%): 	600		$105,000
+		-> base: 			400
+		-> tier 1 (10%):	408		$2,500 base
+		-> tier 2 (20%): 	416		$2,500 base
+		-> tier 3 (30%): 	432		$5,625 t1
+		-> tier 4 (40%):	464		$15,000 t2
+		-> tier 5 (50%): 	528		$15,000 t2
+		
+		//-> tier 6 (50%): 	600		$105,000
 
 	gear change speed:
-		-> base: 		0.75s		
-		-> tier 1 (11%):	0.6666s		$20,000
-		-> tier 2 (22%): 	0.5833s		$30,000
-		-> tier 3 (33%): 	0.5s		$50,000
+		-> base: 			0.75s		
+		-> tier 1 (11%):	0.6666s		$2,500	base
+		-> tier 2 (22%): 	0.5833s		$5,625	t1
+		-> tier 3 (33%): 	0.5s		$15,000	t2
 
 Handling upgrades:
 
 	road friction:
 		-> base:
-		-> tier 1 (10%)				$10,000
-		-> tier 2 (20%)				$65,000
-		-> tier 3 (30%)				$105,000
+		-> tier 1 (10%)				$2,500		base
+		-> tier 2 (20%)				$5,625		t1
+		-> tier 3 (30%)				$15,000		t2
 	
 	steer angle:	
-		-> base: 		PI/4		
-		-> tier 1 (33%): 	PI/3		$12,500
-		-> tier 2 (100%):	PI/2		$50,000
+		-> base: 			PI/4		
+		-> tier 1 (33%): 	PI/3		$2,500	base
+		-> tier 2 (100%):	PI/2		$15,000	t2
 
 	car flipper:
 		-> base: 		none		
-		-> tier 1:		can flip car	$100,000	
+		-> tier 1:		can flip car	$5,625 t1

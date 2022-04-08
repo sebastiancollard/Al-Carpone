@@ -68,12 +68,13 @@ void main()
    }
 
    if (shaderMode == SHADER_MODE_DIFFUSE) {
-		FragColor = min((ambient + illum), 1.0f) * textureColor;
+		FragColor = vec4(min((ambient + illum), 1.0f) * textureColor.xyz, textureColor.w);
    }
 
    if (shaderMode == SHADER_MODE_FULL) {
 		vec4 textureSpec = texture(texture_specular1, TexCoords);
-		FragColor = min((ambient + illum), 1.0f) * textureColor + vec4(texture(skybox, R).rgb, 1.0) * textureSpec * 0.5f + textureSpec * specular * min(illum + ambient, 1.0f);
-   }
+		if (textureSpec.w != 1.f) textureSpec.w = 1.f;
+		FragColor = vec4(min((ambient + illum), 1.0f) * textureColor.xyz, textureColor.w) + vec4(texture(skybox, R).rgb, 0) * textureSpec * 0.5 + textureSpec * specular * min(illum + ambient, 1.0f);
+	}
   
 }

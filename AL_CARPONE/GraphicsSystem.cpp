@@ -29,7 +29,7 @@ GraphicsSystem::GraphicsSystem() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create a GLFWwindow object of 800 by 800 pixels
-	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", glfwGetPrimaryMonitor(), NULL);
+	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", NULL, NULL);
 	if(debugmode != DEBUGMODE::FALSE) window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Al Carpone", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
@@ -51,6 +51,7 @@ GraphicsSystem::GraphicsSystem() {
 	shader3D = new Shader("shader3D.vs", "shader3D.fs");
 	shader2D = new Shader("shader2D.vs", "shader2D.fs");
 	shaderText = new Shader("shaderText.vs", "shaderText.fs");
+	shaderDetection = new Shader("shader3D.vs", "shaderDetection.fs");
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCREEN_WIDTH), 0.0f, static_cast<float>(SCREEN_HEIGHT));
 	shaderText->use();
