@@ -9,8 +9,9 @@
 
 // TODO make functions for each input (so gamepad and keyboard are the same)
 //Checks for special inputs that would alter the state, and updates state accordingly
-void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioSystem* audio)
+void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, AudioSystem* audio)
 {
+	GLFWwindow* window = graphics->window;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
 			state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
@@ -57,6 +58,20 @@ void checkSpecialInputs(GLFWwindow* window, State& state, Player& player, AudioS
 		state.M_isHeld = true;
 	}
 	else state.M_isHeld = false;
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS){
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+
+			if (!state.alt_isHeld || !state.enter_isHeld) {
+				graphics->toggleFullscreen();
+			}
+
+			state.alt_isHeld = true;
+			state.enter_isHeld = true;
+		}
+		else state.enter_isHeld = false;
+	}
+	else state.alt_isHeld = false;
 
 
 	//controller input

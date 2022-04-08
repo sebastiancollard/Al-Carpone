@@ -14,6 +14,7 @@ class GraphicsSystem {
 public:
 
 	GLFWwindow* window;
+	GLFWmonitor* monitor;
 	Skybox* skybox;
 
 	Shader* shader3D;
@@ -28,6 +29,7 @@ public:
 	void clearBuffer();
 	void swapBuffers();
 	void cleanup();
+	void toggleFullscreen();
 
 	void updateTitle(State &state, Player& player);
 

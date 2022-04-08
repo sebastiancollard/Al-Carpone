@@ -376,7 +376,7 @@ int main()
 			mainMenu.drawJailScreen(&graphics);
 
 			if (glfwGetKey(graphics.window, GLFW_KEY_F) == GLFW_PRESS) {
-
+				
 				float bail_cost = 2000.f;
 				if (player.getCash() * 0.75 > bail_cost) bail_cost = player.getCash() * 0.75;
 
@@ -539,7 +539,7 @@ int main()
 
 			//Check for special inputs (currently only camera mode change)
 			// NOTE: needs to be put AFTER camera mode and input checking to prevent camera glitches on certain inputs
-			checkSpecialInputs(graphics.window, state, player, &audio);
+			checkSpecialInputs(&graphics, state, player, &audio);
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics, &state);
