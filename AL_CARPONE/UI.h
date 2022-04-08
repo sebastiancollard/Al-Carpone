@@ -15,6 +15,7 @@
 #include "BoxTrigger.h"
 #include "Garage.h"
 #include "ChangePlaylist.h"
+#include "TextRenderer.h"
 
 
 // Make sure to create this after graphics is initialized!!!
@@ -37,12 +38,13 @@ public:
 
 	UI();
 	
-	void update(State* state, Player* player, GraphicsSystem* graphics);
+	void update(State* state, Player* player, GraphicsSystem* graphics, TextRenderer* text_renderer);
 
 private:
 
 	glm::mat4 player_movement = glm::mat4(1.f);
 
+	void drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextRenderer* text_renderer);
 	void drawPopups(State* state, GraphicsSystem* graphics);
 	glm::mat4 updateMarkerPos(glm::vec3 original_pos);
 	glm::vec3 calculateOnMapPos(glm::vec3 pos);

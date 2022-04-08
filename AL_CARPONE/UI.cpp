@@ -4,6 +4,7 @@
 #include "BoxTrigger.h"
 #include "Garage.h"
 #include "SelectItem.h"
+#include "constants.h"
 
 
 
@@ -50,7 +51,10 @@ UI::UI() {
 
 
 // Draw Function Per Frame
-void UI::update(State* state, Player* player, GraphicsSystem* graphics) {
+void UI::update(State* state, Player* player, GraphicsSystem* graphics, TextRenderer* text_renderer) {
+
+	// Draw Texts
+	drawTexts(state, player, graphics, text_renderer);
 
 	graphics->shader2D->use();
 	mat4 i = mat4(1.f);
@@ -97,25 +101,6 @@ void UI::update(State* state, Player* player, GraphicsSystem* graphics) {
 	// Draw Popups if applicable
 	graphics->shader2D->setMat4("model", mat4(1.f));
 	drawPopups(state, graphics);
-
-	/*if (state->g_draw) 
-	{
-		if (state->buildings[BUILDINGS::GARAGE1]->isInRange) {
-			Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE1]));
-			g->handleInput(graphics->window, state, player);
-			g->drawGarageMenu();
-		}
-		else if (state->buildings[BUILDINGS::GARAGE2]->isInRange) {
-			Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE2]));
-			g->handleInput(graphics->window, state, player);
-			g->drawGarageMenu();
-		}
-		else if (state->buildings[BUILDINGS::GARAGE3]->isInRange) {
-			Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE3]));
-			g->handleInput(graphics->window, state, player);
-			g->drawGarageMenu();
-		}
-	}*/
 
 	if (state->buildings[BUILDINGS::GARAGE1]->isInRange) {
 		Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE1]));
@@ -176,10 +161,53 @@ void UI::drawPopups(State* state, GraphicsSystem* graphics) {
 	{
 		interactPrompt->Draw(*graphics->shader2D);
 	}
-	
+}
 
+// Texts
+void UI::drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextRenderer* text_renderer) {
+	//Render (freeType) text
+	Shader& shader = *graphics->shaderText;
+	//TODO: create textbox struct (text, xy, scale, colour) in textRenderer and keep track of certain textboxes such as cash for easy manipulation
+	std::string message = "$" + std::to_string(player->getCash());
+	text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 325, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+	//params: shader, text, x_pos (screen coord), y_pos(screen_coord), scale, colour
 
+	float chaseSum = 0;
+	float chaseMax = 0;
 
+	for (PoliceCar* p : state->activePoliceVehicles) {
+		chaseSum += p->chaseTime;
+		chaseMax += p->maxChaseTime;
+	}
+
+	float ratio = chaseSum / chaseMax;
+
+	message = "Alert Level : ";
+
+	if (ratio > 0) {
+		if (ratio > 0)   message += "* ";
+		if (ratio > 0.2) message += "* ";
+		if (ratio > 0.4) message += "* ";
+		if (ratio > 0.6) message += "* ";
+		if (ratio > 0.8) message += "* ";
+		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 550.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+	}
+	int jailCountdown = 5 - (int)player->jailTimer;
+
+	if (jailCountdown < 5 || ratio > 0) {
+		message = "Jail Countdown : " + std::to_string(jailCountdown);
+		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 500.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+	}
+
+	int num = (int)((float)(player->alarmChancePerCheck - player->baseAlarmChancePerCheck) / (float)(player->baseAlarmChancePerCheck));
+	if (num > 0) {
+		message = "Alarm Risk : ";
+		while (num > 0) {
+			message += "+ ";
+			num--;
+		}
+		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 450.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+	}
 }
 
 
