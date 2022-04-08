@@ -311,7 +311,6 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
         }
 
         if (!usingKeyboard && controllerTimer >= CONTROLLER_RESET_MAX_TIME) {
-            std::cout << "update " << state.timeStep << std::endl;
             updateLocked(state);
         }
     }

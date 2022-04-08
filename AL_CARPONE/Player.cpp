@@ -338,7 +338,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		
 				if (vehicleInAir) {
 					glm::vec3 back = -getDir();
-					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(back.x, back.y, back.z));
+					vehiclePtr->getRigidDynamicActor()->addTorque((500.0f + (isFlippedOver() && canFlip ? 10000 : 0)) * PxVec3(back.x, back.y, back.z));
 				}
 			}
 			else if (leftOrRightturn > 0.05)
@@ -347,7 +347,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	
 				if (vehicleInAir) {
 					glm::vec3 front = getDir();
-					vehiclePtr->getRigidDynamicActor()->addTorque(500.0f * PxVec3(front.x, front.y, front.z));
+					vehiclePtr->getRigidDynamicActor()->addTorque((500.0f + (isFlippedOver() && canFlip ? 10000 : 0)) * PxVec3(front.x, front.y, front.z));
 				}
 			}
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
