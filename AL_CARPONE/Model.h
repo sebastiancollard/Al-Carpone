@@ -350,4 +350,33 @@ private:
 };
 
 
+class ItemModels {
+public:
+    ItemModels(Model tomato, Model donut, Model spike) :
+        Tomato(tomato), Donut(donut), Spike(spike) {
+    }
+
+    void Draw(unsigned int type, Shader& shader, glm::mat4 model_physx) {
+        shader.setMat4("model", model_physx);
+        if (type == 0) {
+            Tomato.Draw(shader);
+            return;
+        }
+        else if (type == 1) {
+            Donut.Draw(shader);
+            return;
+        }
+        else if (type == 2){
+            Spike.Draw(shader);
+            return;
+        }
+    }
+
+private:
+    Model Tomato;
+    Model Donut;
+    Model Spike;
+};
+
+
 #endif

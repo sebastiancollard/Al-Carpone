@@ -7,7 +7,7 @@
 #define DONUT_PATH "models/powerups/doughnut.obj"		//TO CHANGE
 #define SPIKE_PATH "models/powerups/spike.obj"
 
-enum POWER_TYPE {		//NOTE: did not include radio-jamming as I think we decided this was more of a nice-to-have
+enum POWER_TYPE {	
 	NONE,
 	CAMOUFLAGE,
 	TOMATO,

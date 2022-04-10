@@ -40,10 +40,10 @@ extern std::vector<physx_actor_entity> physx_actors;
 
 struct simple_renderable_object {
 	PxRigidActor* actorPtr;
-	Model model;
+	unsigned int type;	//Note: could not make this the POWER_TYPE enum due to circular issues with circular dependancies
 	std::string name;
 };
-extern std::vector<simple_renderable_object> simple_renderables;
+extern std::vector<simple_renderable_object> item_renderables;
 
 extern snippetvehicle::VehicleSceneQueryData* gVehicleSceneQueryData;
 extern PxBatchQuery* gBatchQuery;

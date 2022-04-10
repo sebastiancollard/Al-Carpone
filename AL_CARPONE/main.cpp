@@ -4,9 +4,9 @@
 
 namespace sv = snippetvehicle;
 
-extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere);
+extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere, ItemModels*);
 extern void despawnItem();
-extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, std::vector<Model>);
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*);
 
 
 int main()
@@ -74,14 +74,8 @@ int main()
 	Model donut_model(DONUT_PATH);
 	Model spike_model(SPIKE_PATH);
 
-	std::vector<Model> item_models;
-	item_models.push_back(tomato_model);
-	item_models.push_back(donut_model);
-	item_models.push_back(spike_model);
-	
-	//Model* activeItem;
+	ItemModels* item_models = new ItemModels(tomato_model, donut_model, spike_model);
 
-	
 	// Build list of buildings
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
@@ -554,9 +548,9 @@ int main()
 			checkSpecialInputs(&graphics, state, player, &audio);
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
-			checkForItemActions(&player, &boundCamera, &physics, &state, item_models);
+			checkForItemActions(&player, &boundCamera, &physics, &state);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere, item_models);
 
 
 			// DEBUG MODE
@@ -580,7 +574,7 @@ int main()
 
 
 
-void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools, TextRenderer* text_renderer, Model* detectionSphere) {
+void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools, TextRenderer* text_renderer, Model* detectionSphere, ItemModels* item_models) {
 
 	glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 	glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
@@ -698,7 +692,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			//simple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
 			//with that actor. Is very similar to the above for loop.
 			//Future TODO: for more complex objects, add ability to have multiple models per object (like the cars)
-			for (auto object : simple_renderables) {
+			for (auto object : item_renderables) {
 
 				const PxU32 nbShapes = object.actorPtr->getNbShapes();
 				object.actorPtr->getShapes(shapes, nbShapes);
@@ -710,7 +704,8 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 				Shader& shader = *graphics->shader3D;
 				shader.setMat4("model", model);
-				object.model.Draw(*graphics->shader3D);
+				//object.model.Draw(*graphics->shader3D);
+				item_models->Draw(object.type, *graphics->shader3D, model);
 
 			}
 		}
@@ -722,12 +717,12 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 void despawnItem() 
 {
-	for (int i = 0; i < simple_renderables.size(); i++) 
+	for (int i = 0; i < item_renderables.size(); i++)
 	{
-		if (simple_renderables[i].name == "powerup") 
+		if (item_renderables[i].name == "powerup")
 		{
-			PxRigidActor* ptr = simple_renderables[i].actorPtr;
-			simple_renderables.erase(simple_renderables.begin() + i);	//erase from simple_renderables
+			PxRigidActor* ptr = item_renderables[i].actorPtr;
+			item_renderables.erase(item_renderables.begin() + i);	//erase from simple_renderables
 
 			printf("Erasing item...\n");
 			i = i - 1;
@@ -744,8 +739,8 @@ void despawnItem()
 	}
 }
 
-void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, std::vector<Model> item_models) {
-	Model* activeItem;
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state) {
+	unsigned int type;
 	
 	if (player->getPower()->throw_item) {			//PLAYER THROWS ITEM
 		state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::THROW_OUT);
@@ -758,7 +753,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
 			);
-			activeItem = &item_models[1];
+			type = 1;
 		}
 		else {
 			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
@@ -766,12 +761,12 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
-			activeItem = &item_models[0];
+			type = 0;
 			
 		}
 		
 		//Model model = Model(player->getPower()->getModelPath()); 
-		simple_renderables.push_back({ actor, *activeItem, "powerup"});
+		item_renderables.push_back({ actor, type, "powerup"});
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
 
@@ -784,10 +779,10 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 			PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);
-		activeItem = &item_models[2];
+		type = 2;
 		
 		//Model model = Model(player->getPower()->getModelPath());
-		simple_renderables.push_back({ actor, *activeItem, "powerup" });
+		item_renderables.push_back({ actor, type, "powerup" });
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
 
