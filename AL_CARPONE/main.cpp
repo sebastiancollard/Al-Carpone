@@ -6,8 +6,7 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere);
 extern void despawnItem();
-extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*);
-
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, std::vector<Model>);
 
 
 int main()
@@ -69,6 +68,19 @@ int main()
 	if(debugmode != DEBUGMODE::NOCOPS) createPolice(dNodes, policeCarModel, state);
 
 	DebugTools dTools;
+
+	//Setup powerup models
+	Model tomato_model(TOMATO_PATH);
+	Model donut_model(DONUT_PATH);
+	Model spike_model(SPIKE_PATH);
+
+	std::vector<Model> item_models;
+	item_models.push_back(tomato_model);
+	item_models.push_back(donut_model);
+	item_models.push_back(spike_model);
+	
+	//Model* activeItem;
+
 	
 	// Build list of buildings
 	Bank bank;
@@ -542,7 +554,7 @@ int main()
 			checkSpecialInputs(&graphics, state, player, &audio);
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
-			checkForItemActions(&player, &boundCamera, &physics, &state);
+			checkForItemActions(&player, &boundCamera, &physics, &state, item_models);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere);
 
@@ -732,7 +744,9 @@ void despawnItem()
 	}
 }
 
-void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state) {
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, std::vector<Model> item_models) {
+	Model* activeItem;
+	
 	if (player->getPower()->throw_item) {			//PLAYER THROWS ITEM
 		state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::THROW_OUT);
 		player->getPower()->stopThrow();
@@ -744,6 +758,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
 			);
+			activeItem = &item_models[1];
 		}
 		else {
 			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
@@ -751,10 +766,12 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
+			activeItem = &item_models[0];
+			
 		}
 		
-		Model model = Model(player->getPower()->getModelPath());
-		simple_renderables.push_back({ actor, model, "powerup"});
+		//Model model = Model(player->getPower()->getModelPath()); 
+		simple_renderables.push_back({ actor, *activeItem, "powerup"});
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
 
@@ -767,9 +784,10 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 			PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);
+		activeItem = &item_models[2];
 		
-		Model model = Model(player->getPower()->getModelPath());
-		simple_renderables.push_back({ actor, model , "powerup" });
+		//Model model = Model(player->getPower()->getModelPath());
+		simple_renderables.push_back({ actor, *activeItem, "powerup" });
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
 
