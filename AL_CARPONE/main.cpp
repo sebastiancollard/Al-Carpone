@@ -308,6 +308,49 @@ int main()
 						p->hardReset();
 					}
 
+					// reset garage upgrades
+					for (int i = BUILDINGS::GARAGE1; i <= BUILDINGS::GARAGE3; i++) {
+						for (Upgrade& u : ((Garage*)state.buildings[i])->upgradeList)
+							u.tier = 0;
+					}
+					
+					// reset player stats
+					// alarm chance
+					player.baseAlarmChancePerCheck = player.initAlarmChancePerCheck;
+					
+					// detection radius
+					for (PoliceCar* p : state.activePoliceVehicles) {
+						p->detectionRadius = p->baseDetectionRadius;
+					}
+					
+					// enhanced map
+					player.minimapMode = 0;
+
+					// top speed
+					engineData = player.vehiclePtr->mDriveSimData.getEngineData();
+					engineData.mPeakTorque = PLAYER_BASE_ENGINE_PEAK_TORQUE;
+					player.vehiclePtr->mDriveSimData.setEngineData(engineData);
+					// gear speed
+					gearData = player.vehiclePtr->mDriveSimData.getGearsData();
+					gearData.mSwitchTime = PLAYER_BASE_GEAR_CHANGE_SPEED;
+					player.vehiclePtr->mDriveSimData.setGearsData(gearData);
+
+					
+					// road friction 
+					float rec = 1.f + ((float)timesUpgradedFriction / 10.f);
+					gFrictionPairs->setTypePairFriction(0, 0, gFrictionPairs->getTypePairFriction(0, 0) * (1.f / rec));
+					timesUpgradedFriction = 0;
+
+					// steer angle
+					wheelData = player.vehiclePtr->mWheelsSimData.getWheelData(0);
+					wheelData.mMaxSteer = PLAYER_BASE_STEER_ANGLE;
+					player.vehiclePtr->mWheelsSimData.setWheelData(0, wheelData);
+					wheelData = player.vehiclePtr->mWheelsSimData.getWheelData(1);
+					wheelData.mMaxSteer = PLAYER_BASE_STEER_ANGLE;
+					player.vehiclePtr->mWheelsSimData.setWheelData(1, wheelData);
+					// car flip 
+					player.canFlip = false;
+
 					state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 					state.gameLost = false;
 				}
@@ -337,6 +380,49 @@ int main()
 								for (PoliceCar* p : state.activePoliceVehicles) {
 									p->hardReset();
 								}
+
+								// reset garage upgrades
+								for (int i = BUILDINGS::GARAGE1; i <= BUILDINGS::GARAGE3; i++) {
+									for (Upgrade& u : ((Garage*)state.buildings[i])->upgradeList)
+										u.tier = 0;
+								}
+
+								// reset player stats
+								// alarm chance
+								player.baseAlarmChancePerCheck = player.initAlarmChancePerCheck;
+
+								// detection radius
+								for (PoliceCar* p : state.activePoliceVehicles) {
+									p->detectionRadius = p->baseDetectionRadius;
+								}
+
+								// enhanced map
+								player.minimapMode = 0;
+
+								// top speed
+								engineData = player.vehiclePtr->mDriveSimData.getEngineData();
+								engineData.mPeakTorque = PLAYER_BASE_ENGINE_PEAK_TORQUE;
+								player.vehiclePtr->mDriveSimData.setEngineData(engineData);
+								// gear speed
+								gearData = player.vehiclePtr->mDriveSimData.getGearsData();
+								gearData.mSwitchTime = PLAYER_BASE_GEAR_CHANGE_SPEED;
+								player.vehiclePtr->mDriveSimData.setGearsData(gearData);
+
+
+								// road friction 
+								float rec = 1.f + ((float)timesUpgradedFriction / 10.f);
+								gFrictionPairs->setTypePairFriction(0, 0, gFrictionPairs->getTypePairFriction(0, 0) * (1.f / rec));
+								timesUpgradedFriction = 0;
+
+								// steer angle
+								wheelData = player.vehiclePtr->mWheelsSimData.getWheelData(0);
+								wheelData.mMaxSteer = PLAYER_BASE_STEER_ANGLE;
+								player.vehiclePtr->mWheelsSimData.setWheelData(0, wheelData);
+								wheelData = player.vehiclePtr->mWheelsSimData.getWheelData(1);
+								wheelData.mMaxSteer = PLAYER_BASE_STEER_ANGLE;
+								player.vehiclePtr->mWheelsSimData.setWheelData(1, wheelData);
+								// car flip 
+								player.canFlip = false;
 
 								state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 								state.gameLost = false;
