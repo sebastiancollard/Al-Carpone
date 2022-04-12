@@ -63,6 +63,7 @@ public:
 
 
 	float jailTimer = 0;
+	float flippedOverTimer = 0.f;
 
 	bool isSeen = false;
 
