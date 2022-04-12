@@ -206,39 +206,75 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 					//should select some item
 					//std::cout << "select item number:" << selection << std::endl;
 					int cur_cash = player.getCash();
-					if (cur_cash < 5) { return; }
-					else {
+					
 						switch (selection)
 						{
 						case 0:
-							player.getPower()->setType(TOMATO);
-							player.getPower()->setDuration(15.0f);
-							player.setCash(cur_cash - TOMATO_PRICE);
-							cout << "Tomato 0" << endl;
+							if (cur_cash > TOMATO_PRICE)
+							{
+								player.getPower()->setType(TOMATO);
+								player.getPower()->setDuration(15.0f);
+								player.setCash(cur_cash - TOMATO_PRICE);
+								//cout << "Tomato 0" << endl;
+								
+							}
+							else 
+							{
+								state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+								return;
+							}
 							break;
+							
+
 						case 1:
-							player.getPower()->setType(DONUT);
-							player.getPower()->setDuration(15.0f);
-							player.setCash(cur_cash - DONUT_PRICE);
-							cout << "Donut 1" << endl;
+							if(cur_cash > DONUT_PRICE)
+							{
+								player.getPower()->setType(DONUT);
+								player.getPower()->setDuration(15.0f);
+								player.setCash(cur_cash - DONUT_PRICE);
+								//cout << "Donut 1" << endl;
+							}
+							else 
+							{
+								state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+								return;
+							}
+							
 							break;
 						case 2:
-							player.getPower()->setType(SPIKE_TRAP);
-							player.getPower()->setDuration(15.0f);
-							player.setCash(cur_cash - SPIKE_TRAP_PRICE);
-							cout << "spike_trap 2" << endl;
+							if (cur_cash > SPIKE_TRAP_PRICE)
+							{
+								player.getPower()->setType(SPIKE_TRAP);
+								player.getPower()->setDuration(15.0f);
+								player.setCash(cur_cash - SPIKE_TRAP_PRICE);
+								//cout << "spike_trap 2" << endl;
+							}
+							else
+							{
+								state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+								return;
+							}
+						
 							break;
 						case 3:
-							player.getPower()->setType(CAMOUFLAGE);
-							player.getPower()->setDuration(15.0f);
-							player.setCash(cur_cash - CAMOUFLAG_PRICE);
-							cout << "camouflag 3" << endl;
+							if(cur_cash > CAMOUFLAG_PRICE)
+							{
+								player.getPower()->setType(CAMOUFLAGE);
+								player.getPower()->setDuration(15.0f);
+								player.setCash(cur_cash - CAMOUFLAG_PRICE);
+								//cout << "camouflag 3" << endl;
+							}
+							else 
+							{
+								state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_FAIL);
+								return;
+							}
 							break;
 						}
 						//cout << player.getPower() << endl;
 						//state.gamestate = GAMESTATE_INGAME;
 						player.setChooseTool(false);
-					}
+					
 				}
 				//std::cout << "CROSS (xbox a, ns pro b)" << std::endl;
 				state.cross_isHeld = true;
