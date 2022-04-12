@@ -536,6 +536,14 @@ int main()
 
 			//printf("JAILTIMER: %.2f\n", player.jailTimer);
 
+			// handle when player is flipped over and doesnt have the upgrade
+			if (player.isFlippedOver() && !player.canFlip) {
+				player.flippedOverTimer += state.timeStep;
+			}
+			else if (!player.isFlippedOver() && player.flippedOverTimer != 0.f) player.flippedOverTimer = 0.f;
+			if (player.flippedOverTimer > 5.f) player.sendToJail(state);
+
+			// camera mode
 			if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;
 			else if (state.cameraMode == CAMERA_MODE_UNBOUND_FREELOOK) activeCamera = &freeCamera;
 
