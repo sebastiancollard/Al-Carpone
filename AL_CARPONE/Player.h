@@ -74,13 +74,18 @@ public:
 	unsigned int minimapMode = 0;
 	unsigned int numUpgradesPurchased = 0;
 
+	float headlightForwardOffset1 = 2.174;
+	float headlightHorizontalOffset1 = 0.806;
+	float headlightVerticalOffset1 = -0.101;
+
+	float headlightForwardOffset2 = 2.174;
+	float headlightHorizontalOffset2 = 0.809;
+	float headlightVerticalOffset2 = 0.089;
+
 	Player() {}
 
 	//Call parrent constructor
-	Player(int ID) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, PxVec3(0, 0, 0)) {
-		headlightForwardOffset = 2.5f;
-		headlightHorizontalOffset = 0.7f;
-	}
+	Player(int ID) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, PxVec3(0, 0, 0)) {}
 
 
 	// Must be called after graphics system is initalized!
@@ -102,6 +107,8 @@ public:
 	bool beingChased(State& state);
 
 	bool isFlippedOver();
+
+	std::pair<std::pair<glm::vec3, glm::vec3>, std::pair<glm::vec3, glm::vec3>> getHeadlightPositions();
 
 	// Robbing Mehcanism
 	int getCash();

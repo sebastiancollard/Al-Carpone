@@ -17,6 +17,8 @@ private:
 	bool showPanel = false;
 	bool updateValues = false;
 
+	State* state;
+
 
 
 	// Color (currently unused)
@@ -42,7 +44,7 @@ private:
 
 public:
 	// Functions
-	DebugPanel(GLFWwindow* window);
+	DebugPanel(GLFWwindow* window, State* state);
 	void cleanUp();
 
 	void draw(Player& player);

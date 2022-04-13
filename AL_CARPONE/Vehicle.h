@@ -75,16 +75,13 @@ public:
 
 	void setStart(PxVec3 position, PxVec3 direction);
 
-	std::pair<glm::vec3, glm::vec3> getHeadlightPositions();
-
 	// Resets
 	void setResetPoint(PxTransform t);
 	void reset();
 
 protected:
 	
-	float headlightForwardOffset;
-	float headlightHorizontalOffset;
+
 
 	glm::vec3 velocity;
 	glm::vec3 acceleration;

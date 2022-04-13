@@ -74,6 +74,11 @@ public:
 	//for sound effect
 	int playlist_count = 0;
 
+	float policeFOff = 1.830;
+	float policeOOff = 0.871;
+	float policeVOff = 0.150;
+	
+
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<PoliceCar*> inactivePoliceVehicles = {};
 	Player* playerPtr;

@@ -36,6 +36,10 @@ public:
 	float detectionRadius = baseDetectionRadius;
 	float donutRadius = baseDetectionRadius * 1.5f;
 
+	float headlightForwardOffset;
+	float headlightHorizontalOffset;
+	float headlightVerticalOffset;
+
 	float baseJailRadius = 20.f;
 	float jailRadius = baseJailRadius;
 
@@ -54,6 +58,8 @@ public:
 
 	// Must be called after graphics system is initalized!
 	void createModel();
+
+	std::pair<glm::vec3, glm::vec3> getHeadlightPositions(State*);
 	
 	void handle(glm::vec3 playerPos,double timestep);
 	void stun(double seconds = 5);

@@ -13,7 +13,7 @@ using namespace physx;
 
 
 
-DebugPanel::DebugPanel(GLFWwindow* window) {
+DebugPanel::DebugPanel(GLFWwindow* window, State* state) {
     // Initialize ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -21,6 +21,8 @@ DebugPanel::DebugPanel(GLFWwindow* window) {
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    this->state = state;
 
     // Initialize Driving Model initial values
     speed0 = &gSteerVsForwardSpeedData[1];
@@ -74,6 +76,22 @@ void DebugPanel::draw(Player& player) {
         
         if (Button("ADD CASH")) {
             player.addCash(10000);
+        }
+
+        Spacing();
+        if (CollapsingHeader("Headlights")) {
+            SliderFloat("Police Forward Offset", &(state->policeFOff), 0, 5);
+            SliderFloat("Police Outward Offset", &(state->policeOOff), 0, 5);
+            SliderFloat("Police Vertical Offset", &(state->policeVOff), -5, 5);
+            
+            SliderFloat("Player Forward Offset1", &(state->playerPtr->headlightForwardOffset1), 0, 5);
+            SliderFloat("Player Outward Offset1", &(state->playerPtr->headlightHorizontalOffset1), 0, 5);
+            SliderFloat("Player Vertical Offset1", &(state->playerPtr->headlightVerticalOffset1), -5, 5);
+
+            SliderFloat("Player Forward Offset2", &(state->playerPtr->headlightForwardOffset2), 0, 5);
+            SliderFloat("Player Outward Offset2", &(state->playerPtr->headlightHorizontalOffset2), 0, 5);
+            SliderFloat("Player Vertical Offset2", &(state->playerPtr->headlightVerticalOffset2), 0, 5);
+            
         }
 
         Spacing();

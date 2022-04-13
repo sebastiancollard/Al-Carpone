@@ -52,6 +52,11 @@ public:
     vector<Texture>      textures;
     unsigned int VAO;
 
+    bool is_police_headlight = false;
+
+    int police_headlight_id = -1;
+
+
     Mesh() {}
 
     // constructor
@@ -62,6 +67,13 @@ public:
         this->textures = textures;
         // now that we have all the required data, set the vertex buffers and its attribute pointers.
         setupMesh();
+
+        for (Texture texture : textures) {
+             if (strcmp(texture.path.c_str(), "textures/HEADLIGHTS.png") == 0) {
+                is_police_headlight = true;
+            }
+        }
+
     }
 
     // render the mesh
@@ -75,6 +87,12 @@ public:
       
         for (unsigned int i = 0; i < textures.size(); i++)
         {
+            if (is_police_headlight) {
+                glUniform1i(glGetUniformLocation(shader.ID, "is_police_headlight"), 1);
+            }
+            else {
+                glUniform1i(glGetUniformLocation(shader.ID, "is_police_headlight"), 0);
+            }
             glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
             // retrieve texture number (the N in diffuse_textureN)
             string number;

@@ -61,6 +61,32 @@ bool Player::beingChased(State& state) {
 	return false;
 }
 
+std::pair<std::pair<glm::vec3, glm::vec3>, std::pair<glm::vec3, glm::vec3>> Player::getHeadlightPositions() {
+	glm::vec3 origin = getPos();
+	glm::vec3 uDir = getDir();
+	glm::vec3 uRight = getRight();
+	glm::vec3 uUp = getUp();
+
+	float dForward = headlightForwardOffset1;
+	float dRight = headlightHorizontalOffset1;
+	float dUp = headlightVerticalOffset1;
+
+	glm::vec3 frontCenter = origin + uUp * dUp + uDir * dForward;
+	glm::vec3 rightDiff = uRight * dRight;
+
+	std::pair<glm::vec3, glm::vec3> headlights_set1(glm::vec3(frontCenter - rightDiff), glm::vec3(frontCenter + rightDiff));
+
+	dForward = headlightForwardOffset2;
+	dRight = headlightHorizontalOffset2;
+	dUp = headlightVerticalOffset2;
+
+	frontCenter = origin + uUp * dUp + uDir * dForward;
+	rightDiff = uRight * dRight;
+
+	std::pair<glm::vec3, glm::vec3> headlights_set2(glm::vec3(frontCenter - rightDiff), glm::vec3(frontCenter + rightDiff));
+
+	return std::pair<std::pair<glm::vec3, glm::vec3>, std::pair<glm::vec3, glm::vec3>>(headlights_set1, headlights_set2);
+}
 
 ///////////////////////////////////////////////////////////////////////
 // ROBING FUNCTIONS

@@ -21,7 +21,7 @@ int main()
 
 	// Initialize Windows
 	cout << "	Debug Panel..." << endl;
-	DebugPanel debugPanel(graphics.window);
+	DebugPanel debugPanel(graphics.window, &state);
 	cout << "	Main Menu..." << endl;
 	MainMenu mainMenu;
 	cout << "	Pause Menu..." << endl;
@@ -691,15 +691,11 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	//HEADLIGHTS::
 
 	{
-		std::vector<Vehicle*> allVehicles;
-		if (player->toggleHeadlights) allVehicles.push_back(player);
-		for (PoliceCar* p : state->activePoliceVehicles) allVehicles.push_back(p);
-
-		graphics->shader3D->setInt("numHeadlights",allVehicles.size() * 2);
+		graphics->shader3D->setInt("numHeadlights",state->activePoliceVehicles.size() * 2 + 4);
 
 		int index = 0;
-		for (Vehicle* v : allVehicles) {
-			std::pair<glm::vec3, glm::vec3> headlights = v->getHeadlightPositions();
+		for (PoliceCar* v : state->activePoliceVehicles) {
+			std::pair<glm::vec3, glm::vec3> headlights = v->getHeadlightPositions(state);
 			glm::vec3 direction = v->getDir() - 0.2f * v->getUp();
 			glm::vec3 lHeadlight = headlights.first;
 			glm::vec3 rHeadlight = headlights.second;
@@ -720,6 +716,51 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			index++;
 
 		}
+
+
+		
+		if (player->toggleHeadlights) {
+			std::pair<std::pair<glm::vec3, glm::vec3>, std::pair<glm::vec3, glm::vec3>> headlights = player->getHeadlightPositions();
+			std::pair<glm::vec3, glm::vec3> set_1 = headlights.first;
+			glm::vec3 set_1_l = set_1.first;
+			glm::vec3 set_1_r = set_1.second;
+			std::pair<glm::vec3, glm::vec3> set_2 = headlights.second;
+			glm::vec3 set_2_l = set_2.first;
+			glm::vec3 set_2_r = set_2.second;
+
+			glm::vec3 direction = player->getDir();
+
+			index = 0;
+
+			std::string path = "headlight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), set_1_l);
+			path = "headlight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), direction);
+
+
+			index++;
+
+			path = "headlight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), set_1_r);
+			path = "headlight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), direction);
+
+			index++;
+
+			path = "headlight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), set_2_l);
+			path = "headlight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), direction);
+
+
+			index++;
+
+			path = "headlight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), set_2_r);
+			path = "headlight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), direction);
+		}
+
 	}
 
 

@@ -32,8 +32,9 @@ PoliceCar::PoliceCar(int ID, DrivingNodes* drivingNodes) : Vehicle(VEHICLE_TYPE:
 	//physx::PxVec3 t_pos = physx::PxVec3(pos.x - width, pos.y, -pos.z + 3*pos.z/4);
 	//headlights = new BoxTrigger(false, t_pos, 30.f, 2.f, len);
 	//headlights->addJoint(actorPtr, startTransform);
-	headlightForwardOffset = 2.25f;
-	headlightHorizontalOffset = 0.8;
+	headlightForwardOffset = 1.698;
+	headlightHorizontalOffset = 0.809;
+	headlightVerticalOffset = -0.009;
 	dNodes = drivingNodes;
 	shouldReset = false;
 	//myThread = std::thread(&updateLoop,this);
@@ -371,4 +372,20 @@ void PoliceCar::eatDonut(glm::vec3 donutPos) {
 	else {
 		driveTo(donutPos);
 	}
+}
+
+std::pair<glm::vec3, glm::vec3> PoliceCar::getHeadlightPositions(State*  state) {
+	glm::vec3 origin = getPos();
+	glm::vec3 uDir = getDir();
+	glm::vec3 uRight = getRight();
+	glm::vec3 uUp = getUp();
+
+	float dForward = headlightForwardOffset;
+	float dRight = headlightHorizontalOffset;
+	float dUp = headlightVerticalOffset;
+
+	glm::vec3 frontCenter = origin + uUp * dUp + uDir * dForward;
+	glm::vec3 rightDiff = uRight * dRight;
+
+	return std::pair<glm::vec3, glm::vec3>(glm::vec3(frontCenter - rightDiff), glm::vec3(frontCenter + rightDiff));
 }

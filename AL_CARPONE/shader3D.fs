@@ -17,6 +17,7 @@ uniform samplerCube skybox;
 
 uniform int shaderMode;
 
+uniform int is_police_headlight;
 
 
 #define SHADER_MODE_FLAT 0
@@ -63,7 +64,11 @@ void main()
 		vec4 lPos = vec4(light_positions[i], 1.0f);
 		vec4 lDir = FragPos - lPos;
 		float d = length(lPos - FragPos);
-		illum +=  15.f * abs(dot(lDir, vec4(Normal, 1.0))) / (pow(d,2.5));
+
+		float comp = - dot(vec4(Normal, 1.0),lDir);
+		if(comp < 0) comp = 0;
+
+		illum +=  20.f * comp / (pow(d,2.5));
 
 		// specular lighting
 		vec3 normal = normalize(Normal);
@@ -80,8 +85,14 @@ void main()
    float headlightIllum = 0;
    float headlightSpec = 0;
 
+   //if(comp < -0.9 && d < 1.0f) comp = -comp;
+
+		//if(comp < 0) continue;
+
+		//headlightIllum += 10 * comp  / pow(d,2);
+
    for(int i = 0; i < numHeadlights; i++){
-		// diffuse
+// diffuse
 		vec4 lPos = vec4(headlight_positions[i], 1.0f);
 		vec4 lDir = FragPos - lPos;
 		vec4 headlightForward = vec4(headlight_directions[i],1.0f);
@@ -90,25 +101,44 @@ void main()
 
 		if(comp < 0.8) continue;
 
+		comp =  - dot(lDir, vec4(Normal, 1.0));
+
 		float d = length(lPos - FragPos);
-		headlightIllum +=   1.0f * abs(dot(lDir, vec4(Normal, 1.0))) / pow(d,2);
+
+		//make the headlight source bright
+		if(d < 0.5f && dot(headlightForward.xyz, Normal) >= 0.8 ){
+			comp = abs(comp) * 0.08;
+		}
+		else if(is_police_headlight == 1){
+			comp = abs(comp) * 0.75;
+		}
+		else if(comp < 0) continue;
+
+
+
+		//headlightIllum += 10 * comp  / pow(d,2);
 
 		
+		
+		headlightIllum +=  comp / pow(d,2);
+
+
 		// specular lighting
+		
 		vec3 normal = normalize(Normal);
 		float specularLight = 0.9f;
 		vec3 lightDirection = normalize(light_positions[i] - crntPos);
 		vec3 viewDirection = normalize(camPos - crntPos);
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
-		headlightSpec +=  specAmount * specularLight / (d*d);
+		headlightSpec += comp * specAmount * specularLight / (d*d);
 		 
 	}
    
 
    if (shaderMode == SHADER_MODE_DIFFUSE) {
 		FragColor = 
-		vec4(min((ambient + illum), 1.0f) * textureColor.xyz, textureColor.w) + 
+		vec4((ambient + illum) * textureColor.xyz, textureColor.w) + 
 		headlightIllum * (headlightColor + textureColor);
    }
 
@@ -116,13 +146,13 @@ void main()
 		vec4 textureSpec = texture(texture_specular1, TexCoords);
 		if (textureSpec.w != 1.f) textureSpec.w = 1.f;
 		FragColor =  
-		vec4(min((ambient + illum), 1.0f) * textureColor.xyz, textureColor.w) + 
+		vec4((ambient + illum) * textureColor.xyz, textureColor.w) + 
 		
 		vec4(texture(skybox, R).rgb, 0) * textureSpec * 0.5 + 
-		textureSpec * specular * min(illum + ambient, 1.0f) + 
+		textureSpec * specular * (illum + ambient) + 
 		
 		headlightIllum * (headlightColor + textureColor) +  
-		headlightSpec * textureSpec * min(headlightIllum, 1.0f);
+		headlightSpec * textureSpec * headlightIllum;
 	}
   
 }

@@ -19,7 +19,7 @@ void main()
    //float alpha = (distance < detectionRadius + 10.f ? (distance - detectionRadius) / (detectionRadius) : 1.);
    float alpha;
    if (distance < detectionRadius + 60) alpha = (detectionRadius + 60.f - distance) / 300.f;
-   else alpha = 0.f;
+   else discard;
 
    FragColor = vec4(textureColor.xyz, alpha);
 
