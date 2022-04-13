@@ -49,6 +49,9 @@ public:
 	void stopDrop();
 	std::string getModelPath();
 	bool shouldDespawn();
+	bool isActive();
+
+	float getRemainingTime();
 
 	glm::vec3 getPos();
 };

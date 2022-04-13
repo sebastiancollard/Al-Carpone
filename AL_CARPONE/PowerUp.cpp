@@ -107,6 +107,10 @@ bool PowerUp::shouldDespawn() {
 	return (!timer_active && power_used && (duration_sec > 0.f));
 }
 
+bool PowerUp::isActive() {
+	return (timer_active && power_used);
+}
+
 
 glm::vec3 PowerUp::getPos() {
 	const int MAX_NUM_ACTOR_SHAPES = 128;
@@ -117,4 +121,8 @@ glm::vec3 PowerUp::getPos() {
 
 	PxTransform shapePose(PxShapeExt::getGlobalPose(*shapes[0], *actorPtr));
 	return glm::vec3(shapePose.p.x, shapePose.p.y, shapePose.p.z);
+}
+
+float PowerUp::getRemainingTime() {
+	return duration_sec - timer.getDeltaTime();
 }
