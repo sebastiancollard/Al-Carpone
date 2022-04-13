@@ -61,6 +61,7 @@ bool Player::beingChased(State& state) {
 	return false;
 }
 
+
 ///////////////////////////////////////////////////////////////////////
 // ROBING FUNCTIONS
 ///////////////////////////////////////////////////////////////////////
@@ -223,6 +224,19 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	}
 
 	footIsOnGas = state.W_isHeld;
+
+	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
+
+		if (!state.H_isHeld) {
+			toggleHeadlights = !toggleHeadlights;
+			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::GEAR_SWITCH0);
+		}
+
+		state.H_isHeld = true;
+	}
+	else {
+		state.H_isHeld = false;
+	}
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed

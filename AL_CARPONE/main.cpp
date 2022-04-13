@@ -687,6 +687,44 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 		graphics->shader3D->setVec3(path.c_str(), mainMenu->light_positions[i]);
 	}
 
+
+	//HEADLIGHTS::
+
+	{
+		std::vector<Vehicle*> allVehicles;
+		if (player->toggleHeadlights) allVehicles.push_back(player);
+		for (PoliceCar* p : state->activePoliceVehicles) allVehicles.push_back(p);
+
+		graphics->shader3D->setInt("numHeadlights",allVehicles.size() * 2);
+
+		int index = 0;
+		for (Vehicle* v : allVehicles) {
+			std::pair<glm::vec3, glm::vec3> headlights = v->getHeadlightPositions();
+			glm::vec3 direction = v->getDir() - 0.2f * v->getUp();
+			glm::vec3 lHeadlight = headlights.first;
+			glm::vec3 rHeadlight = headlights.second;
+
+			std::string path = "headlight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), lHeadlight);
+			path = "headlight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), direction);
+
+
+			index++;
+
+			path = "headlight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), rHeadlight);
+			path = "headlight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), direction);
+
+			index++;
+
+		}
+	}
+
+
+	//::HEADLIGHTS
+
 	// render the loaded model
 	glm::mat4 model = glm::mat4(1.0f);
 	graphics->shader3D->setMat4("model", model);
@@ -706,6 +744,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			dTools.red_node.Draw(*graphics->shader3D);
 		}
 	}
+
 
 	// Render dynamic physx shapes
 	{
@@ -805,6 +844,8 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 		}
 	}
 	
+
+
 	// UI needs to be drawn after all 3D elements
 	ui->update(state, player, graphics, text_renderer);
 }

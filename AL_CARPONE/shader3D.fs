@@ -8,6 +8,7 @@ in mat4 Transform;
 in vec3 crntPos;
 
 #define MAX_NR_LIGHTS 128
+#define MAX_NR_HEADLIGHTS 32
 
 uniform sampler2D texture_diffuse1;
 uniform int specLoaded;
@@ -23,8 +24,15 @@ uniform int shaderMode;
 #define SHADER_MODE_FULL 2
 
 uniform int numLights;
+uniform int numHeadlights;
 
 uniform vec3 light_positions[MAX_NR_LIGHTS];
+uniform vec3 headlight_positions[MAX_NR_HEADLIGHTS];
+uniform vec3 headlight_directions[MAX_NR_HEADLIGHTS];
+
+
+
+
 uniform vec3 camPos;
 
 
@@ -48,7 +56,7 @@ void main()
    vec3 I = normalize(FragPos.xyz - camPos);
    vec3 R = reflect(I, normalize(Normal));
 
-
+   
    //Get light contributions
     for(int i = 0; i < numLights; i++){
 		// diffuse
@@ -66,15 +74,55 @@ void main()
 		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
 		specular += specAmount * specularLight / (d*d);
    }
+   
+   vec4 headlightColor = vec4(1.0f,1.0f, 150.f / 255.0f, 0.0f);
+   
+   float headlightIllum = 0;
+   float headlightSpec = 0;
+
+   for(int i = 0; i < numHeadlights; i++){
+		// diffuse
+		vec4 lPos = vec4(headlight_positions[i], 1.0f);
+		vec4 lDir = FragPos - lPos;
+		vec4 headlightForward = vec4(headlight_directions[i],1.0f);
+
+		float comp = dot(normalize(lDir), headlightForward);
+
+		if(comp < 0.8) continue;
+
+		float d = length(lPos - FragPos);
+		headlightIllum +=   1.0f * abs(dot(lDir, vec4(Normal, 1.0))) / pow(d,2);
+
+		
+		// specular lighting
+		vec3 normal = normalize(Normal);
+		float specularLight = 0.9f;
+		vec3 lightDirection = normalize(light_positions[i] - crntPos);
+		vec3 viewDirection = normalize(camPos - crntPos);
+		vec3 reflectionDirection = reflect(-lightDirection, normal);
+		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
+		headlightSpec +=  specAmount * specularLight / (d*d);
+		 
+	}
+   
 
    if (shaderMode == SHADER_MODE_DIFFUSE) {
-		FragColor = vec4(min((ambient + illum), 1.0f) * textureColor.xyz, textureColor.w);
+		FragColor = 
+		vec4(min((ambient + illum), 1.0f) * textureColor.xyz, textureColor.w) + 
+		headlightIllum * (headlightColor + textureColor);
    }
 
    if (shaderMode == SHADER_MODE_FULL) {
 		vec4 textureSpec = texture(texture_specular1, TexCoords);
 		if (textureSpec.w != 1.f) textureSpec.w = 1.f;
-		FragColor = vec4(min((ambient + illum), 1.0f) * textureColor.xyz, textureColor.w) + vec4(texture(skybox, R).rgb, 0) * textureSpec * 0.5 + textureSpec * specular * min(illum + ambient, 1.0f);
+		FragColor =  
+		vec4(min((ambient + illum), 1.0f) * textureColor.xyz, textureColor.w) + 
+		
+		vec4(texture(skybox, R).rgb, 0) * textureSpec * 0.5 + 
+		textureSpec * specular * min(illum + ambient, 1.0f) + 
+		
+		headlightIllum * (headlightColor + textureColor) +  
+		headlightSpec * textureSpec * min(headlightIllum, 1.0f);
 	}
   
 }

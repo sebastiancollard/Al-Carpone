@@ -67,6 +67,8 @@ public:
 
 	bool isSeen = false;
 
+	bool toggleHeadlights = true;
+
 	bool canFlip = false;
 	float drawRadius = 0.f;
 	unsigned int minimapMode = 0;
@@ -75,7 +77,10 @@ public:
 	Player() {}
 
 	//Call parrent constructor
-	Player(int ID) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, PxVec3(0, 0, 0)) {}
+	Player(int ID) : Vehicle(VEHICLE_TYPE::AL_CARPONE, ID, PxVec3(0, 0, 0)) {
+		headlightForwardOffset = 2.5f;
+		headlightHorizontalOffset = 0.7f;
+	}
 
 
 	// Must be called after graphics system is initalized!

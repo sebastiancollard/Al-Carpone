@@ -99,6 +99,7 @@ public:
 	bool W_isHeld = false;
 	bool M_isHeld = false;
 	bool N_isHeld = false;
+	bool H_isHeld = false;
 	bool f5_isHeld = false;
 	bool f_isHeld = false;
 	bool enter_isHeld = false;

@@ -26,12 +26,14 @@ static enum DEBUGMODE {
 PoliceCar::PoliceCar(int ID, DrivingNodes* drivingNodes) : Vehicle(VEHICLE_TYPE::POLICE_CAR, ID, physx::PxVec3(10.f, 0, 0)) {
 
 	// Make Headlights
-	float len = 50.f;
-	float width = 10.f;
-	auto pos = getPos() + glm::vec3(width, 0, len);
-	physx::PxVec3 t_pos = physx::PxVec3(pos.x - width, pos.y, -pos.z + 3*pos.z/4);
+	//float len = 50.f;
+	//float width = 10.f;
+	//auto pos = getPos() + glm::vec3(width, 0, len);
+	//physx::PxVec3 t_pos = physx::PxVec3(pos.x - width, pos.y, -pos.z + 3*pos.z/4);
 	//headlights = new BoxTrigger(false, t_pos, 30.f, 2.f, len);
 	//headlights->addJoint(actorPtr, startTransform);
+	headlightForwardOffset = 2.25f;
+	headlightHorizontalOffset = 0.8;
 	dNodes = drivingNodes;
 	shouldReset = false;
 	//myThread = std::thread(&updateLoop,this);
@@ -341,6 +343,7 @@ void PoliceCar::reset() {
 	targetingPlayer = false;
 	targetPosition = getPos();
 }
+
 
 // Drive to given location
 void PoliceCar::driveTo(glm::vec3 targetPos) {

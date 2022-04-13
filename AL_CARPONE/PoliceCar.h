@@ -75,6 +75,7 @@ public:
 	bool findingPatrolRoute = true;
 	bool chaseJustEnded = false;
 	
+
 	//debug
 	glm::vec3 getTargetDirection() {
 		return glm::normalize(targetPosition - getPos());

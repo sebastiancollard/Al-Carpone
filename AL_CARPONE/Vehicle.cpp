@@ -232,6 +232,20 @@ bool Vehicle::isChangingGears() {
 	return vehicleChangingGears;
 }
 
+std::pair<glm::vec3, glm::vec3> Vehicle::getHeadlightPositions() {
+	glm::vec3 origin = getPos();
+	glm::vec3 uDir = getDir();
+	glm::vec3 uRight = getRight();
+	float dForward = headlightForwardOffset; 
+	float dRight = headlightHorizontalOffset;
+
+	glm::vec3 frontCenter = origin + uDir * dForward;
+	glm::vec3 rightDiff = uRight * dRight;
+
+	return std::pair<glm::vec3, glm::vec3>(glm::vec3(frontCenter - rightDiff), glm::vec3(frontCenter + rightDiff));
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // RESETS
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
