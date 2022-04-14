@@ -6,7 +6,7 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere, ItemModels*);
 extern void despawnItems();
-extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models, PxRigidDynamic* actor);
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models);
 
 int main()
 {
@@ -23,8 +23,6 @@ int main()
 	DebugPanel debugPanel(graphics.window, &state);
 	cout << "	Main Menu..." << endl;
 	MainMenu mainMenu;
-	cout << "	Pause Menu..." << endl;
-	PauseMenu pauseMenu;
 	cout << "	UI..." << endl;
 	UI ui;
 	cout << "	FreeType..." << endl;
@@ -73,7 +71,7 @@ int main()
 	Model donut_model(DONUT_PATH);
 	Model spike_model(SPIKE_PATH);
 
-	PxRigidDynamic* donut_actor = physics.initItemPhysX(donut_model, DONUT);	//THIS IS TO TEST SOMETHING! PROBABLY TO BE DELETED LATER!
+	physics.setupItemMeshes(&tomato_model, &donut_model, &spike_model);
 
 
 	ItemModels* item_models = new ItemModels(tomato_model, donut_model, spike_model);
@@ -655,7 +653,7 @@ int main()
 			checkSpecialInputs(&graphics, state, player, &audio);
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
-			checkForItemActions(&player, &boundCamera, &physics, &state, item_models, donut_actor);
+			checkForItemActions(&player, &boundCamera, &physics, &state, item_models);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere, item_models);
 
@@ -768,8 +766,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 			glm::vec3 brakelightDirection = -player->getDir() - state->brakelight_down_angle * player->getUp();
 
-			index = 0;
-
 			std::string path = "headlight_positions[" + std::to_string(index) + "]";
 			graphics->shader3D->setVec3(path.c_str(), set_1_l);
 			path = "headlight_directions[" + std::to_string(index) + "]";
@@ -821,6 +817,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 		}
 
+		index = 4;
 		
 		for (PoliceCar* v : state->activePoliceVehicles) {
 			std::pair<glm::vec3, glm::vec3> headlights = v->getHeadlightPositions(state);
@@ -873,10 +870,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 
 		}
-
-
-		
-		
 
 	}
 
@@ -1022,7 +1015,8 @@ void despawnItems()
 	}
 }
 
-void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, ItemModels* item_models, PxRigidDynamic* donut_actor) {
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, ItemModels* item_models) {
+
 	PowerUp power;
 	PxRigidDynamic* actor;
 
@@ -1032,20 +1026,15 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->stopThrow();
 
 		if (player->getPower()->getType() == DONUT) {		//PLAYER THROWS DONUT
-			//actor = physics->createDynamicItem(
-			//	item_models->Donut,
-			//	PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
-			//	PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
-			//);
-			actor = donut_actor;
-			actor->setAngularDamping(0.5f);
-			actor->setGlobalPose(PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)));
-			actor->setLinearVelocity(PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f);
+			actor = physics->createDynamicItem(
+				POWER_TYPE::DONUT,
+				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
+				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
+			);
 		}
 		else {
 			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
-				item_models->Tomato,
-				TOMATO,
+				POWER_TYPE::TOMATO,
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
@@ -1065,8 +1054,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->stopDrop();
 
 		actor = physics->createDynamicItem(		//PLAYER DROPS SPIKE TRAP
-			item_models->Spike,
-			SPIKE_TRAP,
+			POWER_TYPE::TOMATO,
 			PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);

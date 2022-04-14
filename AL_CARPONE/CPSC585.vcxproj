@@ -173,7 +173,6 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
-    <ClCompile Include="PauseMenu.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="physXVehicleSettings.cpp" />
     <ClCompile Include="physx_globals.cpp" />
@@ -227,7 +226,6 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="specialInputHandler.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="PauseMenu.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="physXVehicleFunctions.h" />
     <ClInclude Include="physXVehicleSettings.h" />

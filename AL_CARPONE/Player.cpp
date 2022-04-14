@@ -222,7 +222,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		}
 		state.f_isHeld = true;
 	}
-	else {
+	else  if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE) {
 		state.f_isHeld = false;
 	}
 
@@ -236,7 +236,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 		state.W_isHeld = true;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
 		state.W_isHeld = false;
 	}
 
@@ -250,7 +250,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 		state.H_isHeld = true;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_H) == GLFW_RELEASE) {
 		state.H_isHeld = false;
 	}
 
@@ -262,7 +262,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		}
 		state.S_isHeld = true;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {
 		state.S_isHeld = false;
 	}
 
@@ -297,11 +297,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 	footIsOnBrake = state.space_isHeld;
 
-	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
-	{
-		state.tab_isHeld = true;
-	}
-	else state.tab_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld && debugmode != DEBUGMODE::FALSE) {
 		glm::vec3 front = getDir();
