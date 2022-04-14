@@ -222,7 +222,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		}
 		state.f_isHeld = true;
 	}
-	else {
+	else  if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE) {
 		state.f_isHeld = false;
 	}
 
@@ -236,7 +236,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 		state.W_isHeld = true;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
 		state.W_isHeld = false;
 	}
 
@@ -250,7 +250,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 		state.H_isHeld = true;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_H) == GLFW_RELEASE) {
 		state.H_isHeld = false;
 	}
 
@@ -262,7 +262,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		}
 		state.S_isHeld = true;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {
 		state.S_isHeld = false;
 	}
 
@@ -297,11 +297,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 	footIsOnBrake = state.space_isHeld;
 
-	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
-	{
-		state.tab_isHeld = true;
-	}
-	else state.tab_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld && debugmode != DEBUGMODE::FALSE) {
 		glm::vec3 front = getDir();
@@ -348,12 +343,13 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			{
 				footIsOnGas = true;
 				double newSpeed = controller_state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
-				updateSpeed(newSpeed/2);
+				updateSpeed(newSpeed / 2);
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
 				//std::cout << "right trigger: " << ControlState.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
 			}
 			else if (controller_state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
 			{
+				state.S_isHeld = true;
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 				//std::cout << "left trigger: " << ControlState.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
 			}
@@ -390,7 +386,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			}
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
 			{
-				//std::cout << "left bumber (L1)" << std::endl;	//ps4 L1
 				usePower();
 			}
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])

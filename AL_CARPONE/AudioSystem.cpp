@@ -196,7 +196,6 @@ void AudioSystem::updateVehicleSounds(Player* player, State* state) {
 	float pitch = MIN_REV_PITCH + revScale * (MAX_REV_PITCH - MIN_REV_PITCH);
 	float volume = MIN_REV_VOLUME + revScale * (MAX_REV_VOLUME - MIN_REV_VOLUME);
 
-	std::cout << footOnGas << std::endl;
 
 	//Start all loops
 	playSound(SOUND_SELECTION::WIND_LOOP, true);

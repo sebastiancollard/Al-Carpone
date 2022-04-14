@@ -19,7 +19,7 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 		state.escape_isHeld = true;
 		return;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE){
 		state.escape_isHeld = false;
 	}
 
@@ -30,7 +30,7 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 		}
 		state.f5_isHeld = true;
 	}
-	else state.f5_isHeld = false;
+	else if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_RELEASE) state.f5_isHeld = false;
 
 	// Freemode Camera
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS && debugmode != DEBUGMODE::FALSE)
@@ -40,7 +40,7 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 		}
 		state.Q_isHeld = true;
 	}
-	else state.Q_isHeld = false;
+	else  if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE) state.Q_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS && debugmode != DEBUGMODE::FALSE)
 	{
@@ -49,7 +49,7 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 		}
 		state.R_isHeld = true;
 	}
-	else state.R_isHeld = false;
+	else  if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) state.R_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
 		if (!state.M_isHeld) {
@@ -69,9 +69,9 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 			state.alt_isHeld = true;
 			state.enter_isHeld = true;
 		}
-		else state.enter_isHeld = false;
+		else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) state.enter_isHeld = false;
 	}
-	else state.alt_isHeld = false;
+	else  if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_RELEASE) state.alt_isHeld = false;
 
 
 	//controller input
