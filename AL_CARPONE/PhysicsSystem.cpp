@@ -204,26 +204,58 @@ void PhysicsSystem::createDynamic(const PxTransform& t, const PxGeometry& geomet
 }
 
 
-physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(Model item_model, const PxTransform& t, const PxVec3& velocity) {
-	std::vector<PxVec3> positions;
-	for (Vertex& v : item_model.meshes[0].vertices)
-		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
-
-	PxVec3* verts = positions.data();
-
-	PxConvexMeshDesc convexDesc;
-	convexDesc.points.count = positions.size();
-	convexDesc.points.stride = sizeof(PxVec3);
-	convexDesc.points.data = verts;
-	convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
-
-	PxConvexMesh* convexMesh = NULL;
-	PxDefaultMemoryOutputStream buf;
-	if (gCooking->cookConvexMesh(convexDesc, buf))
-	{
-		PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
-		convexMesh = gPhysics->createConvexMesh(id);
+physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(Model& item_model, POWER_TYPE type, const PxTransform& t, const PxVec3& velocity) {
+	bool loaded;
+	if (type == TOMATO) {
+		loaded = tomato_mesh_loaded;
+		tomato_mesh_loaded = true;
 	}
+	else if (type == DONUT) {
+		loaded = donut_mesh_loaded;
+		donut_mesh_loaded = true;
+	}
+	else if (type == SPIKE_TRAP) {
+		loaded = spike_mesh_loaded;
+		spike_mesh_loaded = true;
+	}
+	
+	PxConvexMesh* convexMesh = NULL;
+	if (!loaded) {
+		std::vector<PxVec3> positions;
+		for (Vertex& v : item_model.meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+		PxVec3* verts = positions.data();
+
+		PxConvexMeshDesc convexDesc;
+		convexDesc.points.count = positions.size();
+		convexDesc.points.stride = sizeof(PxVec3);
+		convexDesc.points.data = verts;
+		convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+		PxDefaultMemoryOutputStream buf;
+		if (gCooking->cookConvexMesh(convexDesc, buf))
+		{
+			PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
+			convexMesh = gPhysics->createConvexMesh(id);
+		}
+		
+		if (type == TOMATO)
+			tomatoMesh = convexMesh;
+		else if (type == DONUT) 
+			donutMesh = convexMesh;
+		else if (type == SPIKE_TRAP)
+			spikeMesh = convexMesh;
+	}
+	else {
+		if (type == TOMATO)
+			convexMesh = tomatoMesh;
+		else if (type == DONUT)
+			convexMesh = donutMesh;
+		else if (type == SPIKE_TRAP)
+			convexMesh = spikeMesh;
+	}
+	
 
 	physx::PxRigidDynamic* dynamic = gPhysics->createRigidDynamic(PxTransform(t));
 
@@ -239,6 +271,15 @@ physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(Model item_model, const 
 
 	return dynamic;
 
+}
+
+PxRigidDynamic* PhysicsSystem::initItemPhysX(Model item_model, POWER_TYPE type) {
+	return createDynamicItem(
+		item_model,
+		type,
+		PxTransform(PxVec3(0.f)),
+		PxVec3(0.f)	
+	);
 }
 
 PxTriangleMesh* PhysicsSystem::createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices32, const PxU32 numTris, PxPhysics& physics, PxCooking& cooking) {
