@@ -78,10 +78,7 @@ void DebugPanel::draw(Player& player) {
             player.addCash(10000);
         }
 
-        Spacing();
-        if (CollapsingHeader("BRAKELIGHTS")) {
-            SliderFloat("Angle Offset", &state->brakelight_down_angle, -5, 5);
-        }
+   
 
         Spacing();
         if (CollapsingHeader("Steer Vs Forward Speed")) {

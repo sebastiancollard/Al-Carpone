@@ -24,6 +24,7 @@ private:
 
 	bool footIsOnGas = false;
 	bool footIsOnBrake = false;
+	bool isReversing = false;
 
 	CarModel4W* player_model;
 	CarModel4W* police_model;
@@ -65,7 +66,7 @@ public:
 
 	bool isSeen = false;
 
-	bool toggleHeadlights = true;
+	unsigned int toggleHeadlights = 1;
 
 	bool canFlip = false;
 	float drawRadius = 0.f;
@@ -97,6 +98,7 @@ public:
 
 	bool footOnGas();
 	bool footOnBrake();
+	bool checkIsReversing();
 
 	bool canExit(State& state);
 
