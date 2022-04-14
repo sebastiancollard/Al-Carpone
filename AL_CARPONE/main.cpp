@@ -73,6 +73,8 @@ int main()
 	Model donut_model(DONUT_PATH);
 	Model spike_model(SPIKE_PATH);
 
+	physics.setupItemMeshes(&tomato_model, &donut_model, &spike_model);
+
 	//PxRigidDynamic* tomato_actor;
 	//PxRigidDynamic* donut_actor;
 	//PxRigidDynamic* spike_actor;
@@ -876,10 +878,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 		}
 
-
-		
-		
-
 	}
 
 
@@ -1037,14 +1035,14 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 
 		if (player->getPower()->getType() == DONUT) {		//PLAYER THROWS DONUT
 			actor = physics->createDynamicItem(
-				item_models->Donut,
+				POWER_TYPE::DONUT,
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
 			);
 		}
 		else {
 			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
-				item_models->Tomato,
+				POWER_TYPE::TOMATO,
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
@@ -1064,7 +1062,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->stopDrop();
 
 		actor = physics->createDynamicItem(		//PLAYER DROPS SPIKE TRAP
-			item_models->Spike,
+			POWER_TYPE::TOMATO,
 			PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);

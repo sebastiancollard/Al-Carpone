@@ -14,6 +14,10 @@ private:
 	State& state;
 	Player& player;
 
+	PxConvexMesh* donutMesh;
+	PxConvexMesh* tomatoMesh;
+	PxConvexMesh* spikeMesh;
+
 public:
 
 	PhysicsSystem(State& s, Player& p);
@@ -27,5 +31,6 @@ public:
 	PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices32, const PxU32 numTris, PxPhysics& physics, PxCooking& cooking);
 	PxTriangleMesh* createLevelMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking, unsigned int selection);
 	PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics, PxCooking* cooking, unsigned int selection);
-	PxRigidDynamic* createDynamicItem(Model item_model, const PxTransform& t, const PxVec3& velocity);
+	PxRigidDynamic* createDynamicItem(POWER_TYPE type, const PxTransform& t, const PxVec3& velocity);
+	void setupItemMeshes(Model* tomato, Model* donut, Model* spike);
 };

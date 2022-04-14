@@ -203,27 +203,59 @@ void PhysicsSystem::createDynamic(const PxTransform& t, const PxGeometry& geomet
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 }
 
+void PhysicsSystem::setupItemMeshes(Model* tomato, Model* donut, Model* spike) {
 
-physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(Model item_model, const PxTransform& t, const PxVec3& velocity) {
-	std::vector<PxVec3> positions;
-	for (Vertex& v : item_model.meshes[0].vertices)
-		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+	std::vector<Model> models = { *tomato, *donut, *spike };
 
-	PxVec3* verts = positions.data();
 
-	PxConvexMeshDesc convexDesc;
-	convexDesc.points.count = positions.size();
-	convexDesc.points.stride = sizeof(PxVec3);
-	convexDesc.points.data = verts;
-	convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
 
-	PxConvexMesh* convexMesh = NULL;
-	PxDefaultMemoryOutputStream buf;
-	if (gCooking->cookConvexMesh(convexDesc, buf))
-	{
-		PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
-		convexMesh = gPhysics->createConvexMesh(id);
+	for (int i = 0; i < models.size(); i++) {
+		Model item_model = models[i];
+		std::vector<PxVec3> positions;
+		for (Vertex& v : item_model.meshes[0].vertices)
+			positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
+
+		PxVec3* verts = positions.data();
+
+		PxConvexMeshDesc convexDesc;
+		convexDesc.points.count = positions.size();
+		convexDesc.points.stride = sizeof(PxVec3);
+		convexDesc.points.data = verts;
+		convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+		PxConvexMesh* convexMesh = NULL;
+		PxDefaultMemoryOutputStream buf;
+		if (gCooking->cookConvexMesh(convexDesc, buf))
+		{
+			PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
+
+			if(i == 0)		 tomatoMesh = gPhysics->createConvexMesh(id);
+			else if (i == 1) donutMesh = gPhysics->createConvexMesh(id);
+			else if (i == 2) spikeMesh = gPhysics->createConvexMesh(id);
+
+		}
 	}
+
+
+}
+
+
+
+physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(POWER_TYPE type, const PxTransform& t, const PxVec3& velocity) {
+
+	PxConvexMesh* convexMesh;
+
+	switch (type) {
+	case TOMATO:
+		convexMesh = tomatoMesh;
+		break;
+	case DONUT:
+		convexMesh = donutMesh;
+		break;
+	default:
+		convexMesh = spikeMesh;
+	}
+
 
 	physx::PxRigidDynamic* dynamic = gPhysics->createRigidDynamic(PxTransform(t));
 
