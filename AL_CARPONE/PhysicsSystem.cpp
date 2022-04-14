@@ -203,28 +203,8 @@ void PhysicsSystem::createDynamic(const PxTransform& t, const PxGeometry& geomet
 	physx_actors.push_back({ dynamic, dynamicCounter++ });
 }
 
-//CURRENTLY UNUSED. PLEASE KEEP FOR BACK-UP OPTION
-PxRigidDynamic* PhysicsSystem::createDynamicItemOld(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
-{
-	static PxU32 dynamicCounter = 0;
 
-	PxShape* shape = gPhysics->createShape(geometry, *gMaterial);
-	PxFilterData filter(COLLISION_FLAG_ITEM, COLLISION_FLAG_ITEM_AGAINST, 0, 0);
-	shape->setSimulationFilterData(filter);
-
-	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, *shape, 10.0f);
-
-	dynamic->setAngularDamping(0.5f);
-	dynamic->setLinearVelocity(velocity);
-	gScene->addActor(*dynamic);
-
-	physx_actors.push_back({ dynamic, dynamicCounter++ });
-	return dynamic;
-}
-
-physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(std::string path, const PxTransform& t, const PxVec3& velocity) {
-	Model item_model(path);
-
+physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(Model item_model, const PxTransform& t, const PxVec3& velocity) {
 	std::vector<PxVec3> positions;
 	for (Vertex& v : item_model.meshes[0].vertices)
 		positions.push_back(PxVec3(v.Position[0], v.Position[1], v.Position[2]));
@@ -260,7 +240,6 @@ physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(std::string path, const 
 	return dynamic;
 
 }
-
 
 PxTriangleMesh* PhysicsSystem::createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices32, const PxU32 numTris, PxPhysics& physics, PxCooking& cooking) {
 	PxTriangleMeshDesc meshDesc;

@@ -377,7 +377,7 @@ public:
         }
     }
 
-private:
+public:
     Model Tomato;
     Model Donut;
     Model Spike;

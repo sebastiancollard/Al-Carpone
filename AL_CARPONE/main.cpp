@@ -6,7 +6,7 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere, ItemModels*);
 extern void despawnItems();
-extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*);
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models);
 
 
 int main()
@@ -73,6 +73,11 @@ int main()
 	Model tomato_model(TOMATO_PATH);
 	Model donut_model(DONUT_PATH);
 	Model spike_model(SPIKE_PATH);
+
+	//PxRigidDynamic* tomato_actor;
+	//PxRigidDynamic* donut_actor;
+	//PxRigidDynamic* spike_actor;
+
 
 	ItemModels* item_models = new ItemModels(tomato_model, donut_model, spike_model);
 
@@ -653,7 +658,7 @@ int main()
 			checkSpecialInputs(&graphics, state, player, &audio);
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
-			checkForItemActions(&player, &boundCamera, &physics, &state);
+			checkForItemActions(&player, &boundCamera, &physics, &state, item_models);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere, item_models);
 
@@ -918,7 +923,7 @@ void despawnItems()
 	}
 }
 
-void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state) {
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, ItemModels* item_models) {
 	PowerUp power;
 	PxRigidDynamic* actor;
 
@@ -929,14 +934,14 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 
 		if (player->getPower()->getType() == DONUT) {		//PLAYER THROWS DONUT
 			actor = physics->createDynamicItem(
-				player->getPower()->getModelPath(),
+				item_models->Donut,
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
 			);
 		}
 		else {
 			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
-				player->getPower()->getModelPath(),
+				item_models->Tomato,
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
@@ -956,7 +961,7 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->stopDrop();
 
 		actor = physics->createDynamicItem(		//PLAYER DROPS SPIKE TRAP
-			player->getPower()->getModelPath(),
+			item_models->Spike,
 			PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);
