@@ -159,9 +159,6 @@
     <ClCompile Include="constants.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="PauseMenu.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
@@ -310,9 +307,6 @@
     </ClInclude>
     <ClInclude Include="util.h">
       <Filter>Header Files\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="PauseMenu.h">
-      <Filter>Header Files\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Misc</Filter>

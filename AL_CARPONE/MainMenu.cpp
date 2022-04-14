@@ -67,11 +67,9 @@ void MainMenu::drawJailScreen(GraphicsSystem* graphics) {
 	jailScreen.Draw(*graphics->shader2D);
 }
 
-
 ////////////////////////////////////////////////////////////////////////
 // INPUT HANDLING
 ////////////////////////////////////////////////////////////////////////
-
 
 //Checks for special inputs that would alter the state, and updates state accordingly
 void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio)
@@ -80,7 +78,6 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		if (!state.escape_isHeld) {
 			state.gamestate = GAMESTATE_INGAME;
 			audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
-			return;
 		}
 		state.escape_isHeld = true;
 		return;

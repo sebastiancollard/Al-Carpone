@@ -32,7 +32,6 @@ DEBUGMODE debugmode = DEBUGMODE::FALSE;
 // Window elements
 #include "DebugPanel.h"
 #include "MainMenu.h"
-#include "PauseMenu.h"
 #include "UI.h"
 
 

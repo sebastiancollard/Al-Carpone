@@ -23,8 +23,6 @@ int main()
 	DebugPanel debugPanel(graphics.window, &state);
 	cout << "	Main Menu..." << endl;
 	MainMenu mainMenu;
-	cout << "	Pause Menu..." << endl;
-	PauseMenu pauseMenu;
 	cout << "	UI..." << endl;
 	UI ui;
 	cout << "	FreeType..." << endl;
@@ -768,8 +766,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 			glm::vec3 brakelightDirection = -player->getDir() - state->brakelight_down_angle * player->getUp();
 
-			index = 0;
-
 			std::string path = "headlight_positions[" + std::to_string(index) + "]";
 			graphics->shader3D->setVec3(path.c_str(), set_1_l);
 			path = "headlight_directions[" + std::to_string(index) + "]";
@@ -821,6 +817,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 		}
 
+		index = 4;
 		
 		for (PoliceCar* v : state->activePoliceVehicles) {
 			std::pair<glm::vec3, glm::vec3> headlights = v->getHeadlightPositions(state);

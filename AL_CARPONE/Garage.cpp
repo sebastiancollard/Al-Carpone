@@ -41,6 +41,15 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 	}
 	else if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE) state->f_isHeld = false;
 
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		if (showShop) {
+			state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
+			showShop = false;
+		}
+		state->escape_isHeld = true;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) state->escape_isHeld = false;
+
 	Upgrade u = upgradeList[currentSelection];
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !enterPressed && showShop) {
 		std::cout << "enter" << std::endl;
