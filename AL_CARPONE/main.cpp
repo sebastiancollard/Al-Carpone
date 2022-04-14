@@ -6,7 +6,7 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere, ItemModels*);
 extern void despawnItems();
-extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models, PxRigidDynamic* actor);
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models);
 
 int main()
 {
@@ -74,10 +74,6 @@ int main()
 	Model spike_model(SPIKE_PATH);
 
 	physics.setupItemMeshes(&tomato_model, &donut_model, &spike_model);
-
-	//PxRigidDynamic* tomato_actor;
-	//PxRigidDynamic* donut_actor;
-	//PxRigidDynamic* spike_actor;
 
 
 	ItemModels* item_models = new ItemModels(tomato_model, donut_model, spike_model);
@@ -659,7 +655,7 @@ int main()
 			checkSpecialInputs(&graphics, state, player, &audio);
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
-			checkForItemActions(&player, &boundCamera, &physics, &state, item_models, donut_actor);
+			checkForItemActions(&player, &boundCamera, &physics, &state, item_models);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere, item_models);
 
@@ -1022,7 +1018,8 @@ void despawnItems()
 	}
 }
 
-void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, ItemModels* item_models, PxRigidDynamic* donut_actor) {
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, ItemModels* item_models) {
+
 	PowerUp power;
 	PxRigidDynamic* actor;
 
