@@ -147,6 +147,9 @@ bool Player::footOnBrake() {
 	return footIsOnBrake;
 }
 
+bool Player::checkIsReversing() {
+	return isReversing;
+}
 
 bool Player::canExit(State& state) {
 	//Check that in exit triggerbox and that player cash > exit requirement
@@ -208,6 +211,9 @@ void Player::rob(State& state) {
 void Player::handleInput(GLFWwindow* window, State& state)
 {
 
+	bool input_reverse = false;
+	bool input_accelerate = false;
+	bool input_handbrake = false;
 
 	// Handle interactions
 	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)) {
@@ -233,7 +239,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			glm::vec3 right = getRight();
 			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(right.x, right.y, right.z));
 		}
-
+		input_accelerate = true;
 		state.W_isHeld = true;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
@@ -244,7 +250,8 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
 
 		if (!state.H_isHeld) {
-			toggleHeadlights = !toggleHeadlights;
+			toggleHeadlights++;
+			if (toggleHeadlights > 2) toggleHeadlights = 0;
 			state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::GEAR_SWITCH0);
 		}
 
@@ -261,13 +268,14 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 		}
 		state.S_isHeld = true;
+
+		input_reverse = true;
+
 	}
 	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {
 		state.S_isHeld = false;
 	}
 
-
-	footIsOnGas = state.W_isHeld || state.S_isHeld;
 
 	// Set as an else if for now seeing as you normally can't accelerate frontwards/backwards at the same time...
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
@@ -291,11 +299,10 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 		inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);			// Add handbrake to the input queue if 'spacebar' is pressed
 		state.space_isHeld = true;
-
+		input_handbrake = true;
 	}
 	else state.space_isHeld = false;
 
-	footIsOnBrake = state.space_isHeld;
 
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !state.shift_isHeld && debugmode != DEBUGMODE::FALSE) {
@@ -341,7 +348,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 
 			if (controller_state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] > -1)
 			{
-				footIsOnGas = true;
+				input_accelerate = true;
 				double newSpeed = controller_state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
 				updateSpeed(newSpeed / 2);
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
@@ -391,9 +398,12 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])
 			{
 				inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
-				footIsOnBrake = true;
+				input_handbrake = true;
 			}
 		}
+
+		
+
 	}
 	
 	if (timeSpentRobbing > 0) {
@@ -406,5 +416,16 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		if (alarmChancePerCheck < baseAlarmChancePerCheck) alarmChancePerCheck = baseAlarmChancePerCheck;
 	}
 
+
+	footIsOnGas = input_accelerate;
+	footIsOnBrake = input_handbrake;
+	if (input_reverse) {
+		if (getForwardVelocity() > 0) footIsOnBrake = true;
+		else {
+			footIsOnGas = true;
+			isReversing = true;
+		}
+	}
+	else isReversing = false;
 
 }

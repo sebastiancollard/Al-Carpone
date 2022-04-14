@@ -48,9 +48,6 @@ enum BUILDINGS {
 class State {
 public:
 
-	float brakelight_down_angle = 0.586;
-
-
 	
 	GAMESTATE gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 
