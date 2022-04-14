@@ -240,7 +240,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 		state.W_isHeld = false;
 	}
 
-	footIsOnGas = state.W_isHeld;
 
 	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
 
@@ -261,7 +260,15 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			glm::vec3 left = -getRight();
 			vehiclePtr->getRigidDynamicActor()->addTorque(1500.0f * PxVec3(left.x, left.y, left.z));
 		}
+		state.S_isHeld = true;
 	}
+	else {
+		state.S_isHeld = false;
+	}
+
+
+	footIsOnGas = state.W_isHeld || state.S_isHeld;
+
 	// Set as an else if for now seeing as you normally can't accelerate frontwards/backwards at the same time...
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		updateLeftSpeed(0.5f);
