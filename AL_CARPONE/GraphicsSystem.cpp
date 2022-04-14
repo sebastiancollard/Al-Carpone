@@ -106,6 +106,7 @@ void GraphicsSystem::cleanup() {
 
 
 //Updates the fps/ms in the window title.
+// TODO: not needed anymore
 void GraphicsSystem::updateTitle(State& state, Player& player)
 {
 	std::string FPS = std::to_string((int)ceil(1. / state.timeStep));
