@@ -247,7 +247,7 @@ int main()
 	state.buildings[BUILDINGS::EXIT] = &exit;
 
 	SelectItem selectItem;
-	ChangePlaylist playlist;
+	//ChangePlaylist playlist;
 
 
 	// Initialize Models
@@ -566,7 +566,7 @@ int main()
 			////////////////
 			//radio switch//
 			////////////////
-			if (state.tab_isHeld || state.right_thumb) { playlist.drawMenu(graphics, state, &audio); }
+			//if (state.tab_isHeld || state.right_thumb) { playlist.drawMenu(graphics, state, &audio); }
 			////////////////
 			//corner store//
 			////////////////
