@@ -22,6 +22,12 @@ Timer::Timer() {
 	deltaTime = std::chrono::duration<float>(0.0f);
 }
 
+Timer::Timer(const Timer& t) {
+	startTime = t.startTime;
+	timescale = t.timescale;
+	deltaTime = t.deltaTime;
+}
+
 //Destructor
 Timer::~Timer() {}
 

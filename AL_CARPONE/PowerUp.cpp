@@ -3,6 +3,21 @@
 //Constructors
 PowerUp::PowerUp() {}
 
+PowerUp::PowerUp(const PowerUp &p) {
+	type = p.type;
+	model_path = p.model_path;			
+
+	timer = p.timer;				//a little worried about this one (will they share a instance of this timer??) Should use timer copy constructor
+	duration_sec = p.duration_sec;		
+									
+	power_used = p.power_used;		
+	timer_active = p.timer_active;		
+	throw_item = p.throw_item;
+	drop_item = p.drop_item;
+	itemInWorld = p.itemInWorld;
+	actorPtr = p.actorPtr;
+}
+
 PowerUp::PowerUp(POWER_TYPE power_type) {
 	type = power_type;
 	duration_sec = 15.f;					//default is 15 seconds (choose 0 duration for there to be no timer)
@@ -17,6 +32,16 @@ PowerUp::PowerUp(POWER_TYPE power_type, float duration) {
 
 
 //public functions
+void PowerUp::reset() {
+	setType(NONE);
+	actorPtr = NULL;
+	itemInWorld = false;
+	power_used = false;	
+	timer_active = false;		
+	throw_item = false;
+	drop_item = false;
+}
+
 void PowerUp::activateTimed() {
 	if (!timer_active) {
 		timer_active = true;
@@ -107,6 +132,9 @@ bool PowerUp::shouldDespawn() {
 	return (!timer_active && power_used && (duration_sec > 0.f));
 }
 
+bool PowerUp::isActive() {
+	return (timer_active && power_used);
+}
 
 glm::vec3 PowerUp::getPos() {
 	const int MAX_NUM_ACTOR_SHAPES = 128;
@@ -117,4 +145,8 @@ glm::vec3 PowerUp::getPos() {
 
 	PxTransform shapePose(PxShapeExt::getGlobalPose(*shapes[0], *actorPtr));
 	return glm::vec3(shapePose.p.x, shapePose.p.y, shapePose.p.z);
+}
+
+float PowerUp::getRemainingTime() {
+	return (duration_sec - timer.getDeltaTime());
 }

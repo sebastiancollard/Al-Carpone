@@ -167,11 +167,13 @@ void UI::drawPopups(State* state, GraphicsSystem* graphics) {
 void UI::drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextRenderer* text_renderer) {
 	//Render (freeType) text
 	Shader& shader = *graphics->shaderText;
-	//TODO: create textbox struct (text, xy, scale, colour) in textRenderer and keep track of certain textboxes such as cash for easy manipulation
+	
+	// -- CASH -- 
 	std::string message = "$" + std::to_string(player->getCash());
 	text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 325, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
-	//params: shader, text, x_pos (screen coord), y_pos(screen_coord), scale, colour
+	//params: shader, text, x_pos(screen coord), y_pos(screen_coord), scale, colour
 
+	// -- ALERT LEVEL --
 	float chaseSum = 0;
 	float chaseMax = 0;
 
@@ -194,11 +196,13 @@ void UI::drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextR
 	}
 	int jailCountdown = 5 - (int)player->jailTimer;
 
+	// -- JAIL COUNTDOWN -- 
 	if (jailCountdown < 5 || ratio > 0) {
 		message = "Jail Countdown : " + std::to_string(jailCountdown);
 		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 500.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
 	}
 
+	// -- ALARM RISK
 	int num = (int)((float)(player->alarmChancePerCheck - player->baseAlarmChancePerCheck) / (float)(player->baseAlarmChancePerCheck));
 	if (num > 0) {
 		message = "Alarm Risk : ";
@@ -208,6 +212,42 @@ void UI::drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextR
 		}
 		text_renderer->RenderText(*graphics->shaderText, message, 25.0f, 450.0f, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
 	}
+
+	// -- EQUIPPED POWERUP --
+	PowerUp *pwr = player->getPower();
+	std::string pwr_str;
+	switch (pwr->getType()) {
+	case (POWER_TYPE::CAMOUFLAGE):
+		pwr_str = "Camouflage";
+		break;
+	
+	case (POWER_TYPE::TOMATO):
+		pwr_str = "Tomato";
+		break;
+	
+	case (POWER_TYPE::DONUT):
+		pwr_str = "Donut";
+		break;
+	
+	case (POWER_TYPE::SPIKE_TRAP):
+		pwr_str = "Spike Trap";
+		break;
+
+	default:
+		pwr_str = "";
+	}
+	message = "Power: " + pwr_str;
+	text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 375, 0.6f, glm::vec3(1.0, 1.0f, 1.0f));	//Directly under cash
+
+	// -- LAST POWER TIMER --
+	if (pwr->isActive()) {	//only show timer for equipped item
+		int rounded = (int) (pwr->getRemainingTime()) + 1;
+		message = "Active for " + to_string(rounded) + "s";
+		text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 410, 0.6f, glm::vec3(1.0, 1.0f, 1.0f));	//Directly under Equipped power
+	}
+	
+
+
 }
 
 

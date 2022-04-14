@@ -3,6 +3,8 @@
 #include "PxPhysicsAPI.h"
 #include <vector>
 #include "Model.h"
+#include "PowerUp.h"
+
 
 using namespace physx;
 
@@ -38,12 +40,15 @@ struct physx_actor_entity
 };
 extern std::vector<physx_actor_entity> physx_actors;
 
-struct simple_renderable_object {
-	PxRigidActor* actorPtr;
-	unsigned int type;	//Note: could not make this the POWER_TYPE enum due to circular issues with circular dependancies
-	std::string name;
-};
-extern std::vector<simple_renderable_object> item_renderables;
+//struct simple_renderable_object {
+//	//PxRigidActor* actorPtr;
+//	//unsigned int type;	//Note: could not make this the POWER_TYPE enum due to issues with circular dependancies
+//	PowerUp power;
+//	bool renerable;
+//};
+//extern std::vector<simple_renderable_object> active_items;
+
+extern std::vector<PowerUp> active_items;
 
 extern snippetvehicle::VehicleSceneQueryData* gVehicleSceneQueryData;
 extern PxBatchQuery* gBatchQuery;

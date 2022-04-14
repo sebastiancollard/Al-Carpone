@@ -91,33 +91,34 @@ public:
 		for (PxU32 i = 0; i < nbPairs; i++)
 		{
 			const PxContactPair& cp = pairs[i];
-			
-			physx::PxRigidActor* itemActr = player.getPower()->actorPtr;
-			if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
-			{
-				if ((pairHeader.actors[0] == itemActr) || (pairHeader.actors[1] == itemActr))
+			for (auto& p : active_items) {
+				physx::PxRigidActor* itemActr = p.actorPtr;
+				if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
 				{
-					PxActor* otherActor = (itemActr == pairHeader.actors[0]) ? pairHeader.actors[1] : pairHeader.actors[0];
-					PoliceCar* popo;
+					if ((pairHeader.actors[0] == itemActr) || (pairHeader.actors[1] == itemActr))
+					{
+						PxActor* otherActor = (itemActr == pairHeader.actors[0]) ? pairHeader.actors[1] : pairHeader.actors[0];
 
-					for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
-						//TOMATO collision with police chassis or wheel
-						if ((player.getPower()->getType() == TOMATO) && (otherActor == popo->actorPtr)) {
-							if (popo->isStunned) {
-								popo->stun(7);				//Default stun for 7 seconds. Adjust? could stun police until item despawns.
-								std::cout << "Police was hit by a tomato!" << std::endl;
+						for (PoliceCar* popo : state.activePoliceVehicles) { // Iterate through policeCars
+							//TOMATO collision with police chassis or wheel
+							if ((p.getType() == TOMATO) && (otherActor == popo->actorPtr)) {
+								if (popo->isStunned) {
+									popo->stun(7);				//Default stun for 7 seconds. Adjust? could stun police until item despawns.
+									std::cout << "Police was hit by a tomato!" << std::endl;
+								}
 							}
-						}
-						//SPIKE TRAP collision with police chassis or wheel
-						else if ((player.getPower()->getType() == SPIKE_TRAP) && (otherActor == popo->actorPtr)) {
-							if (!popo->isStunned) {
-								popo->stun(7);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
-								std::cout << "Police ran over a spike trap!" << std::endl;
+							//SPIKE TRAP collision with police chassis or wheel
+							else if ((p.getType() == SPIKE_TRAP) && (otherActor == popo->actorPtr)) {
+								if (!popo->isStunned) {
+									popo->stun(7);				//Default stun for 5 seconds. Adjust? could stun police until item despawns.
+									std::cout << "Police ran over a spike trap!" << std::endl;
+								}
 							}
 						}
 					}
 				}
 			}
+
 		}
 	}
 	

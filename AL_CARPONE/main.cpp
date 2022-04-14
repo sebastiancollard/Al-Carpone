@@ -5,7 +5,7 @@
 namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere, ItemModels*);
-extern void despawnItem();
+extern void despawnItems();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*);
 
 
@@ -578,13 +578,22 @@ int main()
 			player.updatePhysicsVariables(state.timeStep);
 
 			//updateItem/Powerup information
-			player.updatePower();
-			if (player.getPower()->shouldDespawn()) {
-				despawnItem();
-				player.getPower()->setType(NONE);
-				player.getPower()->actorPtr = NULL;
-				player.getPower()->itemInWorld = false;
+			for (auto& p : active_items) {			//update all active powers
+				p.updateTimed();
+
+				if (p.shouldDespawn()) {
+					if (p.getType() == CAMOUFLAGE)
+						player.setDetectable(true);
+				}
 			}
+			if (player.getPower()->isActive()) {	//update currently equipped power (mostly for outputting correct data on the UI)
+				player.getPower()->updateTimed();
+				if (player.getPower()->shouldDespawn()) {
+					player.getPower()->reset();
+				}
+			}
+			despawnItems();
+
 
 
 			bool shouldArrest = false;
@@ -612,6 +621,8 @@ int main()
 					for (PoliceCar* p : state.activePoliceVehicles) {
 						p->hardReset();
 					}
+					active_items.clear();
+					player.getPower()->reset();
 				}
 			}
 					
@@ -866,20 +877,22 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			//simple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
 			//with that actor. Is very similar to the above for loop.
 			//Future TODO: for more complex objects, add ability to have multiple models per object (like the cars)
-			for (auto object : item_renderables) {
+			for (auto &item : active_items) {
 
-				const PxU32 nbShapes = object.actorPtr->getNbShapes();
-				object.actorPtr->getShapes(shapes, nbShapes);
+				if (item.getType() != CAMOUFLAGE) {
+					const PxU32 nbShapes = item.actorPtr->getNbShapes();
+					item.actorPtr->getShapes(shapes, nbShapes);
 
-				//assumption that there is only one shape per object in renderables (currently only used for items)
-				const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *object.actorPtr));
+					//assumption that there is only one shape per object in renderables (currently only used for items)
+					const PxMat44 shapePose(PxShapeExt::getGlobalPose(*shapes[0], *item.actorPtr));
 
-				model = glm::make_mat4(&shapePose.column0.x);
+					model = glm::make_mat4(&shapePose.column0.x);
 
-				Shader& shader = *graphics->shader3D;
-				shader.setMat4("model", model);
-				//object.model.Draw(*graphics->shader3D);
-				item_models->Draw(object.type, *graphics->shader3D, model);
+					Shader& shader = *graphics->shader3D;
+					shader.setMat4("model", model);
+					//object.model.Draw(*graphics->shader3D);
+					item_models->Draw(item.getType(), *graphics->shader3D, model);
+				}
 
 			}
 		}
@@ -891,37 +904,28 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	ui->update(state, player, graphics, text_renderer);
 }
 
-void despawnItem() 
+void despawnItems() 
 {
-	for (int i = 0; i < item_renderables.size(); i++)
+	for (int i = 0; i < active_items.size(); i++)
 	{
-		if (item_renderables[i].name == "powerup")
+		if (active_items[i].getRemainingTime() <= 0.f)
 		{
-			PxRigidActor* ptr = item_renderables[i].actorPtr;
-			item_renderables.erase(item_renderables.begin() + i);	//erase from simple_renderables
+			active_items.erase(active_items.begin() + i);	//erase from simple_renderables
 
 			printf("Erasing item...\n");
 			i = i - 1;
-
-			//for (int j = 0; j < physx_actors.size(); j++) 
-			//{		
-			//	if (physx_actors[j].actorPtr == ptr) 
-			//	{
-			//		physx_actors.erase(physx_actors.begin() + j);		//erase from physx_actors
-			//		break;
-			//	}
-			//}
 		}
 	}
 }
 
 void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state) {
-	unsigned int type;
-	
-	if (player->getPower()->throw_item) {			//PLAYER THROWS ITEM
+	PowerUp power;
+	PxRigidDynamic* actor;
+
+	// -- PLAYER THROWS ITEM --
+	if (player->getPower()->throw_item) {	
 		state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::THROW_OUT);
 		player->getPower()->stopThrow();
-		PxRigidDynamic* actor;
 
 		if (player->getPower()->getType() == DONUT) {		//PLAYER THROWS DONUT
 			actor = physics->createDynamicItem(
@@ -929,7 +933,6 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 30.0f		//donut velocity
 			);
-			type = 1;
 		}
 		else {
 			actor = physics->createDynamicItem(				//PLAYER THROWS TOMATO
@@ -937,37 +940,44 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 				PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 				PxVec3(boundCamera->dir.x, boundCamera->dir.y, boundCamera->dir.z) * 40.0f		//tomato velocity
 			);
-			type = 0;
 			
 		}
 		
-		//Model model = Model(player->getPower()->getModelPath()); 
-		item_renderables.push_back({ actor, type, "powerup"});
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
+		
+		power = *(player->getPower());
+		active_items.push_back(power);	//include tomato or donut in active_items
+
 
 	}
-	else if (player->getPower()->drop_item) {				//PLAYER DROPS SPIKE TRAP
+	// -- PLAYER DROPS ITEM -- 
+	else if (player->getPower()->drop_item) {
 		player->getPower()->stopDrop();
 
-		PxRigidDynamic* actor = physics->createDynamicItem(
+		actor = physics->createDynamicItem(		//PLAYER DROPS SPIKE TRAP
 			player->getPower()->getModelPath(),
 			PxTransform(PxVec3(player->getPos().x, (player->getPos().y + 0.8), player->getPos().z)),
 			PxVec3((-boundCamera->dir.x), boundCamera->dir.y, (-boundCamera->dir.z)) * 8.0f		//spike velocity
 		);
-		type = 2;
-		
-		//Model model = Model(player->getPower()->getModelPath());
-		item_renderables.push_back({ actor, type, "powerup" });
+
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
+		
+		power = *(player->getPower());
+		active_items.push_back(power);	//include spike_trap in active_items
 
 	}
-	else if (!player->isDetectable() && player->getCurrentModelType() == AL_CARPONE) {		//Player is now camouflaged
+	// -- PLAYER BECOMES CAMOUFLAGED --
+	else if (!player->isDetectable() && player->getCurrentModelType() == AL_CARPONE) {	
 		player->setCurrentModel(POLICE_CAR);
+		
+		power = *(player->getPower());
+		active_items.push_back(power);	//include camouflage in active_items
 	}
 	
-	if (player->isDetectable() && player->getCurrentModelType() == POLICE_CAR) {			//Player has just come out of camouflage
+	// -- PLAYER BECOMES UN-CAMOUFLAGED
+	if (player->isDetectable() && player->getCurrentModelType() == POLICE_CAR) {	
 		player->setCurrentModel(AL_CARPONE);
 	}
 

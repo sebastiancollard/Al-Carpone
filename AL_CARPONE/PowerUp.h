@@ -1,7 +1,10 @@
 #pragma once
 #include "Timer.h"
 #include <iostream>
-#include "physx_globals.h"
+#include "PxPhysicsAPI.h"
+#include <glm/gtc/type_ptr.hpp>
+
+using namespace physx;
 
 #define TOMATO_PATH "models/powerups/tomato.obj"
 #define DONUT_PATH "models/powerups/doughnut.obj"		//TO CHANGE
@@ -14,6 +17,7 @@ enum POWER_TYPE {
 	DONUT,
 	SPIKE_TRAP
 };
+
 
 class PowerUp {
 private:
@@ -34,6 +38,7 @@ public:
 	physx::PxRigidActor* actorPtr;
 
 	PowerUp();
+	PowerUp(const PowerUp& p);		//copy constructor
 	PowerUp(POWER_TYPE power_type);
 	PowerUp(POWER_TYPE power_type, float duration);
 
@@ -41,6 +46,7 @@ public:
 	void deactivateTimed();			//sets isActive to false
 	void updateTimed();				//If there is a timed ability, make a tick on the timer and deactivate the ability when time is up
 	void dropOrThrow();				//Set flags necessary to drop/throw the appropriate item
+	void reset();
 	
 	POWER_TYPE getType();
 	void setType(POWER_TYPE t);		//resets appropriate variables and changes the power type
@@ -49,6 +55,9 @@ public:
 	void stopDrop();
 	std::string getModelPath();
 	bool shouldDespawn();
+	bool isActive();
+
+	float getRemainingTime();
 
 	glm::vec3 getPos();
 };
