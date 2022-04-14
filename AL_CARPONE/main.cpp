@@ -246,6 +246,7 @@ int main()
 	SelectItem selectItem;
 	//ChangePlaylist playlist;
 
+	
 
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
@@ -296,7 +297,7 @@ int main()
 
 		if (state.gameWon) {
 			mainMenu.drawWinScreen(graphics);
-			
+			state.isFinishGame = true;
 		}
 		else if (state.gameLost) {
 			mainMenu.drawLoseScreen(graphics);
@@ -570,6 +571,13 @@ int main()
 			if (player.canChooseTool(state) && (state.buildings[BUILDINGS::CORNERSTORE1]->isInRange 
 				|| state.buildings[BUILDINGS::CORNERSTORE2]->isInRange))
 			{ selectItem.drawMenu(graphics, state, player); }
+
+			//over the police roof
+			glm::vec3 pos = player.getPos();
+			if (176 > pos.x > 117 && -190 > pos.z > -205) {
+				state.isRoofOfPoliceStation = true;
+				cout << "finished accomplishment over roof of police" << endl;
+			}
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);

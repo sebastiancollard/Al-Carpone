@@ -70,7 +70,12 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
-	
+	//for achievement
+	bool isFinishGame = false;
+	bool isDupeThePolice = false;
+	bool isJumpOutOfMap = false;
+	bool isRoofOfPoliceStation = false;
+	bool isUnlockAllUpdate = false;
 
 	//garage
 	bool g_draw = false;
