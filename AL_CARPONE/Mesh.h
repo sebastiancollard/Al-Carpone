@@ -53,6 +53,7 @@ public:
     unsigned int VAO;
 
     bool is_police_headlight = false;
+    bool is_brakelight = false;
 
     int police_headlight_id = -1;
 
@@ -69,9 +70,14 @@ public:
         setupMesh();
 
         for (Texture texture : textures) {
-             if (strcmp(texture.path.c_str(), "textures/HEADLIGHTS.png") == 0) {
+             if (strcmp(texture.path.c_str(), "textures\\\\HEADLIGHTS.png") == 0) {
                 is_police_headlight = true;
-            }
+             }
+             else if (strcmp(texture.path.c_str(), "textures\\\\BRAKELIGHTS.png") == 0 || 
+                      strcmp(texture.path.c_str(), "textures\\\\BRAKELIGHTS.jpg") == 0) {
+                 cout << texture.path.c_str() << endl;
+                 is_brakelight = true;
+             }
         }
 
     }
@@ -93,6 +99,14 @@ public:
             else {
                 glUniform1i(glGetUniformLocation(shader.ID, "is_police_headlight"), 0);
             }
+            if (is_brakelight) {
+                glUniform1i(glGetUniformLocation(shader.ID, "is_brakelight"), 1);
+            }
+            else {
+                glUniform1i(glGetUniformLocation(shader.ID, "is_brakelight"), 0);
+            }
+
+
             glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
             // retrieve texture number (the N in diffuse_textureN)
             string number;

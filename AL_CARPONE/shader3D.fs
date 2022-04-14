@@ -9,6 +9,7 @@ in vec3 crntPos;
 
 #define MAX_NR_LIGHTS 128
 #define MAX_NR_HEADLIGHTS 32
+#define MAX_NR_BRAKELIGHTS 32
 
 uniform sampler2D texture_diffuse1;
 uniform int specLoaded;
@@ -18,6 +19,7 @@ uniform samplerCube skybox;
 uniform int shaderMode;
 
 uniform int is_police_headlight;
+uniform int is_brakelight;
 
 
 #define SHADER_MODE_FLAT 0
@@ -26,10 +28,15 @@ uniform int is_police_headlight;
 
 uniform int numLights;
 uniform int numHeadlights;
+uniform int numBrakelights;
+
+uniform float brakelightMultiplier;
 
 uniform vec3 light_positions[MAX_NR_LIGHTS];
 uniform vec3 headlight_positions[MAX_NR_HEADLIGHTS];
+uniform vec3 brakelight_positions[MAX_NR_BRAKELIGHTS];
 uniform vec3 headlight_directions[MAX_NR_HEADLIGHTS];
+uniform vec3 brakelight_directions[MAX_NR_BRAKELIGHTS];
 
 
 
@@ -85,14 +92,9 @@ void main()
    float headlightIllum = 0;
    float headlightSpec = 0;
 
-   //if(comp < -0.9 && d < 1.0f) comp = -comp;
 
-		//if(comp < 0) continue;
-
-		//headlightIllum += 10 * comp  / pow(d,2);
-
+	//HANDLE HEADLIGHTS
    for(int i = 0; i < numHeadlights; i++){
-// diffuse
 		vec4 lPos = vec4(headlight_positions[i], 1.0f);
 		vec4 lDir = FragPos - lPos;
 		vec4 headlightForward = vec4(headlight_directions[i],1.0f);
@@ -136,10 +138,81 @@ void main()
 	}
    
 
+   vec4 brakelightColor = vec4(1.0f,20.f / 255.0f, 10.f / 255.0f, 0.0f);
+   float brakelightIllum = 0;
+   float brakelightSpec = 0;
+   float base_brakelightStrength = 0.1f;
+
+   if(is_brakelight == 1){
+			brakelightIllum = 0.5f;
+			if(
+				(length(brakelight_positions[0]- FragPos.xyz) < 1 ||
+				length(brakelight_positions[1]- FragPos.xyz) < 1 ||
+				length(brakelight_positions[2]- FragPos.xyz) < 1 ||
+				length(brakelight_positions[3]- FragPos.xyz) < 1)
+				)
+				brakelightIllum += brakelightMultiplier;
+
+			brakelightSpec = 1;
+   } else if(true){
+	   //HANDLE BRAKELIGHTS
+	   for(int i = 0; i < numBrakelights; i++){
+			float brakelightStrength = base_brakelightStrength;
+			float cutoff = 0.85f;
+			if(i < 4){
+				brakelightStrength = base_brakelightStrength * brakelightMultiplier;
+				if(brakelightMultiplier > 1){
+					cutoff = 0.75f;
+				}
+			}
+
+			vec4 lPos = vec4(brakelight_positions[i], 1.0f);
+			vec4 lDir = FragPos - lPos;
+			vec4 brakelightForward = vec4(brakelight_directions[i],1.0f);
+
+			float comp = dot(normalize(lDir), brakelightForward);
+			if(comp < 0) continue;
+
+			
+			
+
+			if(comp < cutoff){
+				if(comp < 0) continue;
+				continue;
+				//comp = comp * comp * 5 * brakelightStrength;
+			}
+
+			comp =  - dot(lDir, vec4(Normal, 1.0));
+
+			float d = length(lPos - FragPos);
+
+			//make the brakelight source bright
+		
+			
+		
+			brakelightIllum += brakelightStrength * comp / pow(d,2);
+
+			// specular lighting
+		
+			vec3 normal = normalize(Normal);
+			float specularLight = 0.9f;
+			vec3 lightDirection = normalize(light_positions[i] - crntPos);
+			vec3 viewDirection = normalize(camPos - crntPos);
+			vec3 reflectionDirection = reflect(-lightDirection, normal);
+			float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
+			brakelightSpec += brakelightStrength * comp * specAmount * specularLight / (d*d);
+		 
+		}
+   }
+
+	
+
+
    if (shaderMode == SHADER_MODE_DIFFUSE) {
 		FragColor = 
 		vec4((ambient + illum) * textureColor.xyz, textureColor.w) + 
-		headlightIllum * (headlightColor + textureColor);
+		headlightIllum * (headlightColor + textureColor) + 
+		brakelightIllum * (brakelightColor + textureColor);
    }
 
    if (shaderMode == SHADER_MODE_FULL) {
@@ -149,10 +222,13 @@ void main()
 		vec4((ambient + illum) * textureColor.xyz, textureColor.w) + 
 		
 		vec4(texture(skybox, R).rgb, 0) * textureSpec * 0.5 + 
-		textureSpec * specular * (illum + ambient) + 
+		textureSpec * specular * (illum + ambient) +
 		
 		headlightIllum * (headlightColor + textureColor) +  
-		headlightSpec * textureSpec * headlightIllum;
+		headlightSpec * textureSpec * headlightIllum +
+		
+		brakelightIllum * (brakelightColor + textureColor) +  
+		brakelightSpec * textureSpec * brakelightIllum;
 	}
   
 }
