@@ -143,7 +143,7 @@ BoundCamera::BoundCamera(Player& p, State& state) : player(p) {
     worldUp = glm::vec3(0, 1, 0);
 
     pos = player.getPos() - player.getDir() * 15.0f + glm::vec3(0, 2.5f, 0);
-    dir = player.getDir();
+    dir = -player.getDir();
 
     pitch = 0;
     yaw = 0;
