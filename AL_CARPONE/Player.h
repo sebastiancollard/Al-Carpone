@@ -101,7 +101,6 @@ public:
 	bool canExit(State& state);
 
 	void sendToJail(State& state);
-	void tow(State& state);
 	void rob(State& state);
 
 	bool beingChased(State& state);
