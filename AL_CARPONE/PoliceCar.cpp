@@ -165,7 +165,7 @@ void PoliceCar::createModel() {
 
 void PoliceCar::handleStuckPatrol() {
 
-	if (x_z_distance_squared(dNodes->getNextPatrolNodePosition(ID, targetIndex), playerPos) > 1000 && !playerInSight) {
+	if (x_z_distance_squared(dNodes->getNextPatrolNodePosition(ID, 0), playerPos) > 2500 && !playerInSight) {	//I doubled the distance: 1000 was still basically within the chase trigger region
 		shouldReset = true;
 		return;
 	}
