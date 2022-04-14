@@ -350,12 +350,13 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			{
 				input_accelerate = true;
 				double newSpeed = controller_state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0;
-				updateSpeed(newSpeed/2);
+				updateSpeed(newSpeed / 2);
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_FORWARDS);		// Add accelerate forwards to the input queue if 'W' is pressed
 				//std::cout << "right trigger: " << ControlState.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] << std::endl;
 			}
 			else if (controller_state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] > -1)
 			{
+				state.S_isHeld = true;
 				inputQueue.push(DriveMode::eDRIVE_MODE_ACCEL_REVERSE);		// Add accelerate backwards (reverse) to the input queue if 'S' is pressed
 				//std::cout << "left trigger: " << ControlState.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] << std::endl;	//press = 1, idle = -1
 			}
@@ -392,7 +393,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			}
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER])
 			{
-				//std::cout << "left bumber (L1)" << std::endl;	//ps4 L1
 				usePower();
 			}
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER])
