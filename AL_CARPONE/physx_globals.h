@@ -39,15 +39,6 @@ struct physx_actor_entity
 	PxU32 actorId;
 };
 extern std::vector<physx_actor_entity> physx_actors;
-
-//struct simple_renderable_object {
-//	//PxRigidActor* actorPtr;
-//	//unsigned int type;	//Note: could not make this the POWER_TYPE enum due to issues with circular dependancies
-//	PowerUp power;
-//	bool renerable;
-//};
-//extern std::vector<simple_renderable_object> active_items;
-
 extern std::vector<PowerUp> active_items;
 
 extern snippetvehicle::VehicleSceneQueryData* gVehicleSceneQueryData;
