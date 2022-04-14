@@ -9,6 +9,8 @@
 #define POLICE_CAR_LWHEEL_PATH "models/police_car/police_car_wheel_left.obj"
 #define POLICE_CAR_RWHEEL_PATH "models/police_car/police_car_wheel_right.obj"
 
+float tow_price = 1000;
+
 static enum DEBUGMODE {
 	FALSE,
 	TRUE,
@@ -53,6 +55,13 @@ void Player::sendToJail(State& state) {
 	jailTimer = 0;
 	state.gamestate = GAMESTATE::GAMESTATE_JAILED;
 	return;
+}
+
+
+void Player::tow(State& state) {
+	player.setCash(player.getCash() - tow_price);
+	if (player.getCash() < 0) player.setCash(0);
+	reset();
 }
 
 bool Player::beingChased(State& state) {

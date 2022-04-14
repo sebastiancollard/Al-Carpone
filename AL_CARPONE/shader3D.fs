@@ -113,15 +113,8 @@ void main()
 			comp = abs(comp) * 0.75;
 		}
 		else if(comp < 0) continue;
-
-
-
-		//headlightIllum += 10 * comp  / pow(d,2);
-
-		
 		
 		headlightIllum +=  comp / pow(d,2);
-
 
 		// specular lighting
 		
