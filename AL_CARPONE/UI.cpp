@@ -173,6 +173,13 @@ void UI::drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextR
 	text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 325, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
 	//params: shader, text, x_pos(screen coord), y_pos(screen_coord), scale, colour
 
+	// -- CASH MULTIPLIER --
+	std::string robSpeed = "$" + std::to_string((int)player->cashRobbedPerFrame) + "/s";
+	text_renderer->RenderText(*graphics->shaderText, robSpeed, 25, 75, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+	std::string upgradesPurchased = "Upgrades: " + std::to_string((int)player->numUpgradesPurchased) + "/" + std::to_string(24);
+	text_renderer->RenderText(*graphics->shaderText, upgradesPurchased, 25, 25, 0.7f, glm::vec3(1.0, 1.0f, 1.0f));
+
+
 	// -- ALERT LEVEL --
 	float chaseSum = 0;
 	float chaseMax = 0;
@@ -218,26 +225,26 @@ void UI::drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextR
 	std::string pwr_str;
 	switch (pwr->getType()) {
 	case (POWER_TYPE::CAMOUFLAGE):
-		pwr_str = "Camouflage";
+		pwr_str = "PowerUp: Camouflage";
 		break;
 	
 	case (POWER_TYPE::TOMATO):
-		pwr_str = "Tomato";
+		pwr_str = "PowerUp: Tomato";
 		break;
 	
 	case (POWER_TYPE::DONUT):
-		pwr_str = "Donut";
+		pwr_str = "PowerUp: Donut";
 		break;
 	
 	case (POWER_TYPE::SPIKE_TRAP):
-		pwr_str = "Spike Trap";
+		pwr_str = "PowerUp: Spike Trap";
 		break;
 
 	default:
 		pwr_str = "";
 	}
-	message = "Power: " + pwr_str;
-	text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 375, 0.6f, glm::vec3(1.0, 1.0f, 1.0f));	//Directly under cash
+	//message = "Power: " + pwr_str;
+	text_renderer->RenderText(*graphics->shaderText, pwr_str, 25, SCREEN_HEIGHT - 375, 0.6f, glm::vec3(1.0, 1.0f, 1.0f));	//Directly under cash
 
 	// -- LAST POWER TIMER --
 	if (pwr->isActive()) {	//only show timer for equipped item
