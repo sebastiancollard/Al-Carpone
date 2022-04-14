@@ -58,10 +58,11 @@ DEBUGMODE debugmode = DEBUGMODE::FALSE;
 #include "ChangePlaylist.h"
 
 struct DebugTools {
-	Model red_arrow, blue_arrow, grey_arrow, red_node, blue_node, grey_node;
+	Model red_arrow, blue_arrow, grey_arrow, red_node, blue_node, grey_node, red_sphere;
 	DebugTools() :
 		red_arrow("models/debug/red_arrow.obj"), blue_arrow("models/debug/blue_arrow.obj"), grey_arrow("models/debug/grey_arrow.obj"),
-		red_node("models/debug/red_node.obj"), blue_node("models/debug/blue_node.obj"), grey_node("models/debug/grey_node.obj") {}
+		red_node("models/debug/red_node.obj"), blue_node("models/debug/blue_node.obj"), grey_node("models/debug/grey_node.obj"),
+		red_sphere("models/debug/red_sphere.obj"){}
 
 };
 

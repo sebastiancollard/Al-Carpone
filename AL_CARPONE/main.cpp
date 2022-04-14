@@ -8,7 +8,6 @@ extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*,
 extern void despawnItems();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models);
 
-
 int main()
 {
 	// TODO clean up
@@ -704,38 +703,35 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	}
 
 
-	//HEADLIGHTS::
+	//HEADLIGHTS&&BRAKELIGHTS::
 
 	{
 		graphics->shader3D->setInt("numHeadlights",state->activePoliceVehicles.size() * 2 + 4);
+		graphics->shader3D->setInt("numBrakelights", state->activePoliceVehicles.size() * 2 + 4);
+
+
+		float player_brakelight_FOFF = -3.0f;
+		float player_brakelight_VOFF = 0.6;
+
+		float player_brakelight1_OOFF = 0.72;
+		float player_brakelight2_OOFF = 0.47;
+		float player_brakelight3_OOFF = -0.72;
+		float player_brakelight4_OOFF = -0.47;
+
+
+		float police_car_brakelight_FOFF = -2.75;
+		float police_car_brakelight_VOFF = 0.089;
+
+		float police_car_brakelight1_OOFF = 0.788;
+		float police_car_brakelight2_OOFF = -0.788;
 
 		int index = 0;
-		for (PoliceCar* v : state->activePoliceVehicles) {
-			std::pair<glm::vec3, glm::vec3> headlights = v->getHeadlightPositions(state);
-			glm::vec3 direction = v->getDir() - 0.2f * v->getUp();
-			glm::vec3 lHeadlight = headlights.first;
-			glm::vec3 rHeadlight = headlights.second;
-
-			std::string path = "headlight_positions[" + std::to_string(index) + "]";
-			graphics->shader3D->setVec3(path.c_str(), lHeadlight);
-			path = "headlight_directions[" + std::to_string(index) + "]";
-			graphics->shader3D->setVec3(path.c_str(), direction);
-
-
-			index++;
-
-			path = "headlight_positions[" + std::to_string(index) + "]";
-			graphics->shader3D->setVec3(path.c_str(), rHeadlight);
-			path = "headlight_directions[" + std::to_string(index) + "]";
-			graphics->shader3D->setVec3(path.c_str(), direction);
-
-			index++;
-
-		}
-
-
 		
 		if (player->toggleHeadlights) {
+
+			if(player->footOnBrake()) graphics->shader3D->setFloat("brakelightMultiplier", 3.5f);
+			else graphics->shader3D->setFloat("brakelightMultiplier", 1.0f);
+
 			std::pair<std::pair<glm::vec3, glm::vec3>, std::pair<glm::vec3, glm::vec3>> headlights = player->getHeadlightPositions();
 			std::pair<glm::vec3, glm::vec3> set_1 = headlights.first;
 			glm::vec3 set_1_l = set_1.first;
@@ -744,29 +740,71 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			glm::vec3 set_2_l = set_2.first;
 			glm::vec3 set_2_r = set_2.second;
 
-			glm::vec3 direction = player->getDir();
+			glm::vec3 headlightDirection = player->getDir();
+
+			glm::vec3 origin = player->getPos();
+			glm::vec3 uFront = player->getDir();
+			glm::vec3 uUp = player->getUp();
+			glm::vec3 uRight = player->getRight();
+
+			glm::vec3 lBrakelight1 =
+				origin +
+				uFront * player_brakelight_FOFF +
+				uRight * player_brakelight1_OOFF +
+				uUp * player_brakelight_VOFF;
+			glm::vec3 lBrakelight2 =
+				origin +
+				uFront * player_brakelight_FOFF +
+				uRight * player_brakelight2_OOFF +
+				uUp * player_brakelight_VOFF;
+			glm::vec3 rBrakelight1 =
+				origin +
+				uFront * player_brakelight_FOFF +
+				uRight * player_brakelight3_OOFF +
+				uUp * player_brakelight_VOFF;
+			glm::vec3 rBrakelight2 =
+				origin +
+				uFront * player_brakelight_FOFF +
+				uRight * player_brakelight4_OOFF +
+				uUp * player_brakelight_VOFF;
+
+			glm::vec3 brakelightDirection = -player->getDir() - state->brakelight_down_angle * player->getUp();
 
 			index = 0;
 
 			std::string path = "headlight_positions[" + std::to_string(index) + "]";
 			graphics->shader3D->setVec3(path.c_str(), set_1_l);
 			path = "headlight_directions[" + std::to_string(index) + "]";
-			graphics->shader3D->setVec3(path.c_str(), direction);
+			graphics->shader3D->setVec3(path.c_str(), headlightDirection);
 
+			path = "brakelight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), rBrakelight1);
+			path = "brakelight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), brakelightDirection);
 
 			index++;
 
 			path = "headlight_positions[" + std::to_string(index) + "]";
 			graphics->shader3D->setVec3(path.c_str(), set_1_r);
 			path = "headlight_directions[" + std::to_string(index) + "]";
-			graphics->shader3D->setVec3(path.c_str(), direction);
+			graphics->shader3D->setVec3(path.c_str(), headlightDirection);
+
+			path = "brakelight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), rBrakelight2);
+			path = "brakelight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), brakelightDirection);
 
 			index++;
 
 			path = "headlight_positions[" + std::to_string(index) + "]";
 			graphics->shader3D->setVec3(path.c_str(), set_2_l);
 			path = "headlight_directions[" + std::to_string(index) + "]";
-			graphics->shader3D->setVec3(path.c_str(), direction);
+			graphics->shader3D->setVec3(path.c_str(), headlightDirection);
+
+			path = "brakelight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), lBrakelight1);
+			path = "brakelight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), brakelightDirection);
 
 
 			index++;
@@ -774,13 +812,78 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			path = "headlight_positions[" + std::to_string(index) + "]";
 			graphics->shader3D->setVec3(path.c_str(), set_2_r);
 			path = "headlight_directions[" + std::to_string(index) + "]";
-			graphics->shader3D->setVec3(path.c_str(), direction);
+			graphics->shader3D->setVec3(path.c_str(), headlightDirection);
+
+			path = "brakelight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), lBrakelight2);
+			path = "brakelight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), brakelightDirection);
+
+
+
 		}
+
+		
+		for (PoliceCar* v : state->activePoliceVehicles) {
+			std::pair<glm::vec3, glm::vec3> headlights = v->getHeadlightPositions(state);
+			glm::vec3 headlightDirection = v->getDir() - 0.2f * v->getUp();
+			glm::vec3 lHeadlight = headlights.first;
+			glm::vec3 rHeadlight = headlights.second;
+
+			glm::vec3 origin = v->getPos();
+			glm::vec3 uFront = v->getDir();
+			glm::vec3 uUp = v->getUp();
+			glm::vec3 uRight = v->getRight();
+
+			glm::vec3 lBrakelight =
+				origin +
+				uFront * police_car_brakelight_FOFF +
+				uRight * police_car_brakelight1_OOFF +
+				uUp * police_car_brakelight_VOFF;
+			glm::vec3 rBrakelight =
+				origin +
+				uFront * police_car_brakelight_FOFF +
+				uRight * police_car_brakelight2_OOFF +
+				uUp * police_car_brakelight_VOFF;
+
+			glm::vec3 brakelightDirection = -v->getDir() - state->brakelight_down_angle * v->getUp();
+
+			std::string path = "headlight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), lHeadlight);
+			path = "headlight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), headlightDirection);
+
+			path = "brakelight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), lBrakelight);
+			path = "brakelight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), brakelightDirection);
+
+
+			index++;
+
+			path = "headlight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), rHeadlight);
+			path = "headlight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), headlightDirection);
+
+			path = "brakelight_positions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), rBrakelight);
+			path = "brakelight_directions[" + std::to_string(index) + "]";
+			graphics->shader3D->setVec3(path.c_str(), brakelightDirection);
+
+			index++;
+
+
+		}
+
+
+		
+		
 
 	}
 
 
-	//::HEADLIGHTS
+	//::HEADLIGHTS&&BRAKELIGHTS
 
 	// render the loaded model
 	glm::mat4 model = glm::mat4(1.0f);

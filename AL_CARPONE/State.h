@@ -47,6 +47,10 @@ enum BUILDINGS {
 //Stores information pertaning to the current state of the game.
 class State {
 public:
+
+	float brakelight_down_angle = 0.586;
+
+
 	
 	GAMESTATE gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 

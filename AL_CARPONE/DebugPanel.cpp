@@ -79,19 +79,8 @@ void DebugPanel::draw(Player& player) {
         }
 
         Spacing();
-        if (CollapsingHeader("Headlights")) {
-            SliderFloat("Police Forward Offset", &(state->policeFOff), 0, 5);
-            SliderFloat("Police Outward Offset", &(state->policeOOff), 0, 5);
-            SliderFloat("Police Vertical Offset", &(state->policeVOff), -5, 5);
-            
-            SliderFloat("Player Forward Offset1", &(state->playerPtr->headlightForwardOffset1), 0, 5);
-            SliderFloat("Player Outward Offset1", &(state->playerPtr->headlightHorizontalOffset1), 0, 5);
-            SliderFloat("Player Vertical Offset1", &(state->playerPtr->headlightVerticalOffset1), -5, 5);
-
-            SliderFloat("Player Forward Offset2", &(state->playerPtr->headlightForwardOffset2), 0, 5);
-            SliderFloat("Player Outward Offset2", &(state->playerPtr->headlightHorizontalOffset2), 0, 5);
-            SliderFloat("Player Vertical Offset2", &(state->playerPtr->headlightVerticalOffset2), 0, 5);
-            
+        if (CollapsingHeader("BRAKELIGHTS")) {
+            SliderFloat("Angle Offset", &state->brakelight_down_angle, -5, 5);
         }
 
         Spacing();
