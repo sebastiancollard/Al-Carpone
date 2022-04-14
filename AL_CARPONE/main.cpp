@@ -727,7 +727,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 		
 		if (player->toggleHeadlights) {
 
-			if(player->footOnBrake()) graphics->shader3D->setFloat("brakelightMultiplier", 3.5f);
+			if(state->S_isHeld) graphics->shader3D->setFloat("brakelightMultiplier", 3.5f);
 			else graphics->shader3D->setFloat("brakelightMultiplier", 1.0f);
 
 			std::pair<std::pair<glm::vec3, glm::vec3>, std::pair<glm::vec3, glm::vec3>> headlights = player->getHeadlightPositions();
