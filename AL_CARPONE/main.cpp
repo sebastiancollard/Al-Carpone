@@ -6,7 +6,7 @@ namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere, ItemModels*);
 extern void despawnItems();
-extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models);
+extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models, PxRigidDynamic* actor);
 
 int main()
 {
@@ -248,7 +248,7 @@ int main()
 	state.buildings[BUILDINGS::EXIT] = &exit;
 
 	SelectItem selectItem;
-	ChangePlaylist playlist;
+	//ChangePlaylist playlist;
 
 
 	// Initialize Models
@@ -567,7 +567,7 @@ int main()
 			////////////////
 			//radio switch//
 			////////////////
-			if (state.tab_isHeld || state.right_thumb) { playlist.drawMenu(graphics, state, &audio); }
+			//if (state.tab_isHeld || state.right_thumb) { playlist.drawMenu(graphics, state, &audio); }
 			////////////////
 			//corner store//
 			////////////////
@@ -659,7 +659,7 @@ int main()
 			checkSpecialInputs(&graphics, state, player, &audio);
 
 			//Check if player has thrown an item (used a tomato or donut powerup)
-			checkForItemActions(&player, &boundCamera, &physics, &state, item_models);
+			checkForItemActions(&player, &boundCamera, &physics, &state, item_models, donut_actor);
 
 			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere, item_models);
 
@@ -1004,8 +1004,6 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 		}
 	}
 	
-
-
 	// UI needs to be drawn after all 3D elements
 	ui->update(state, player, graphics, text_renderer);
 }
@@ -1024,7 +1022,7 @@ void despawnItems()
 	}
 }
 
-void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, ItemModels* item_models) {
+void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, ItemModels* item_models, PxRigidDynamic* donut_actor) {
 	PowerUp power;
 	PxRigidDynamic* actor;
 

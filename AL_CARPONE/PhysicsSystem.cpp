@@ -273,6 +273,15 @@ physx::PxRigidDynamic* PhysicsSystem::createDynamicItem(POWER_TYPE type, const P
 
 }
 
+PxRigidDynamic* PhysicsSystem::initItemPhysX(Model item_model, POWER_TYPE type) {
+	return createDynamicItem(
+		item_model,
+		type,
+		PxTransform(PxVec3(0.f)),
+		PxVec3(0.f)	
+	);
+}
+
 PxTriangleMesh* PhysicsSystem::createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices32, const PxU32 numTris, PxPhysics& physics, PxCooking& cooking) {
 	PxTriangleMeshDesc meshDesc;
 	meshDesc.points.count = numVerts;
