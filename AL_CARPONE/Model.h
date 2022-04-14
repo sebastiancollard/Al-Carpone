@@ -13,6 +13,7 @@
 #include <stb/stb_image.h>
 #include "Mesh.h"
 #include "shader.h"
+#include "PowerUp.h"
 
 #include <string>
 #include <fstream>
@@ -362,15 +363,15 @@ public:
 
     void Draw(unsigned int type, Shader& shader, glm::mat4 model_physx) {
         shader.setMat4("model", model_physx);
-        if (type == 0) {
+        if (type == TOMATO) {
             Tomato.Draw(shader);
             return;
         }
-        else if (type == 1) {
+        else if (type == DONUT) {
             Donut.Draw(shader);
             return;
         }
-        else if (type == 2){
+        else if (type == SPIKE_TRAP){
             Spike.Draw(shader);
             return;
         }

@@ -31,6 +31,7 @@ public:
 	void tick();
 //private:
 	Timer();
+	Timer(const Timer& t);
 	~Timer();
 
 };

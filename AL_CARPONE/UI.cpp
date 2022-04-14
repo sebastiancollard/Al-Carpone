@@ -240,10 +240,10 @@ void UI::drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextR
 	text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 375, 0.6f, glm::vec3(1.0, 1.0f, 1.0f));	//Directly under cash
 
 	// -- LAST POWER TIMER --
-	if (pwr->isActive()) {
+	if (pwr->isActive()) {	//only show timer for equipped item
 		int rounded = (int) (pwr->getRemainingTime()) + 1;
-		message = "Active for: " + to_string(rounded) + "s";
-		text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 425, 0.6f, glm::vec3(1.0, 1.0f, 1.0f));	//Directly under Equipped power
+		message = "Active for " + to_string(rounded) + "s";
+		text_renderer->RenderText(*graphics->shaderText, message, 25, SCREEN_HEIGHT - 410, 0.6f, glm::vec3(1.0, 1.0f, 1.0f));	//Directly under Equipped power
 	}
 	
 

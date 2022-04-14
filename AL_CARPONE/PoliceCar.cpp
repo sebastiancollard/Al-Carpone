@@ -71,22 +71,25 @@ void PoliceCar::update(Player& player, State& state) {
 	playerArrestable = playerInSight && playerInJailRadius && player.isDetectable();
 
 
+	for (auto& p : active_items) {
+		if((p.getType() == DONUT) && (p.itemInWorld)) {
+			glm::vec3 donutPos = p.getPos();
+			float distance = glm::distance(donutPos, myPos);
 
-	if ((player.getPower()->getType() == DONUT) && (player.getPower()->itemInWorld)) {
-		glm::vec3 donutPos = player.getPower()->getPos();
-		float distance = glm::distance(donutPos , myPos);
+			direction = -glm::normalize(donutPos - myPos);
 
-		direction = -glm::normalize(donutPos - myPos);
+			origin = PxVec3(donutPos.x, donutPos.y, donutPos.z) + vOffset;
+			PxVec3 unitDir = PxVec3(direction.x, direction.y, direction.z);
+			bool seesDonut = !gScene->raycast(origin, unitDir, distance, hit, PxHitFlag::eMESH_BOTH_SIDES);
 
-		origin = PxVec3(donutPos.x, donutPos.y, donutPos.z) + vOffset;
-		PxVec3 unitDir = PxVec3(direction.x, direction.y, direction.z);
-		bool seesDonut = !gScene->raycast(origin, unitDir, distance, hit, PxHitFlag::eMESH_BOTH_SIDES);
-
-		if (distance < detectionRadius * 3 && seesDonut) {
-			eatDonut(player.getPower()->getPos());
-			return;
+			if (distance < detectionRadius * 3 && seesDonut) {
+				eatDonut(donutPos);
+				return;
+			}
+			//break;
 		}
 	}
+	
 
 	if (debugmode == DEBUGMODE::NOALERT) return;
 

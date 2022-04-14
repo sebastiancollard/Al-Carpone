@@ -16,8 +16,6 @@ Player Entity Class
 */
 
 
-
-
 class Player : public Vehicle {
 
 private:
@@ -33,7 +31,7 @@ private:
 
 	bool detectable = true;					//Flag that specifies whether the player is detectable to enemies
 	VEHICLE_TYPE model_type = AL_CARPONE;	//Used for model switching when using the camouflage power
-	unsigned int cash = 0;						//Amount of cash the player has on-hand. Private variable with accessors & mutators?
+	unsigned int cash = 0;					//Amount of cash the player has on-hand. Private variable with accessors & mutators?
 
 	double cashRateMultiplier = 1;
 
@@ -82,6 +80,7 @@ public:
 	float headlightHorizontalOffset2 = 0.809;
 	float headlightVerticalOffset2 = 0.089;
 
+
 	Player() {}
 
 	//Call parrent constructor
@@ -122,7 +121,6 @@ public:
 	VEHICLE_TYPE getCurrentModelType();
 	PowerUp* getPower();
 	void usePower();
-	void updatePower();
 	bool canChooseTool(State& state);
 	void setChooseTool(bool b);
 };

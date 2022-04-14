@@ -131,15 +131,6 @@ void Player::usePower() {
 	}
 }
 
-void Player::updatePower() {
-	equippedPower.updateTimed();
-
-	if (equippedPower.shouldDespawn()) {
-		if (equippedPower.getType() == CAMOUFLAGE)
-			detectable = true;
-	}
-}
-
 bool Player::canChooseTool(State& state) {
 	return can_choosePowerTool;
 }
