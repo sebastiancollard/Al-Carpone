@@ -578,7 +578,7 @@ int main()
 			glm::vec3 pos = player.getPos();
 			if(!state.isRoofOfPoliceStation)
 			{
-				if ((176 > pos.x) && ( pos.x > 117) && (-190 > pos.z) && (pos.z > -205)) {
+				if ((176 > pos.x) && ( pos.x > 117) && (-190 > pos.z) && (pos.z > -205) && (pos.y > 10)) {
 					state.isRoofOfPoliceStation = true;
 					cout << "Finished accomplishment over roof of police" << endl;
 				}
