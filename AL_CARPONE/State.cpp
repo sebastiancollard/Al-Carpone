@@ -55,6 +55,7 @@ float State::getAlertLevel() {
 	return ratio;
 }
 
+
 void State::despawnItems()
 {
 	for (int i = 0; i < active_items.size(); i++)
@@ -66,6 +67,7 @@ void State::despawnItems()
 		}
 	}
 }
+
 
 
 void State::checkAchievements(Player& player) {

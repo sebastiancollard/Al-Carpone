@@ -48,7 +48,7 @@ CONTROLS:
 		W: Accelerate
 		A: Turn left
 		S: Brake/Reverse
-		D: Turn left
+		D: Turn right
 		WASD: Mid-air control
 		Space: Handbrake
 		Left Click (Hold): Move camera
@@ -56,6 +56,8 @@ CONTROLS:
 		C: Look behind
 		E: Use powerup
 		F: Interact
+		H: Headlights
+		T: Request towing service 
 	
 		Shift <DEBUGMODE ONLY> : Speed boost
 		R <DEBUGMODE ONLY> : Reset all positions
@@ -69,13 +71,13 @@ CONTROLS:
 	CORNER STORE & GARAGE MENUS:
 		↑ & ↓: Change selection
 		Enter: Select
-		Esc: Exit menu (only works on garage menu for the moment)
+		F: Enter/exit menu 
 
 CONTROLLER:
 
 	MAIN MENU:
-		↑ & ↓: Change level selection
-		X (Playstation) / A (Xbox): Select highlighted level
+		↑ & ↓: Change selection
+		X (Playstation) / A (Xbox): Select 
 		O (Playstation) / B (Xbox): Close game
 	
 	IN GAME:
@@ -87,6 +89,9 @@ CONTROLLER:
 		L1 (Playstation) / LB (Xbox): Use powerup
 		R1 (Playstation) / RB (Xbox): Handbrake
 		R3 (Playstation) / RS (Xbox): Look behind
+		L3 (Playstation) / LS (Xbox): Center camera
+		DPad Up: Switch headlight mode
+		? : Request towing service
 	
 		▲ (Playstation) / Y (Xbox) / X (NS pro) <DEBUGMODE ONLY> : reset
 	
@@ -98,6 +103,6 @@ CONTROLLER:
 	CORNER STORE & GARAGE MENUS:
 		↑ & ↓: Change selection
 		X (Playstation) / A (Xbox): Select
-		O (Playstation) / B (Xbox): Exit menu
+		□ (Playstation) / X (Xbox): Enter/exit menu
 		
 	

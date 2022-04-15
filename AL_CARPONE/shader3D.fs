@@ -51,6 +51,7 @@ void main()
 {    
    vec4 textureColor =  texture(texture_diffuse1, TexCoords);
  
+   if(textureColor.a == 0) discard;
   
 
    if(shaderMode == SHADER_MODE_FLAT){
@@ -123,14 +124,7 @@ void main()
 		}
 		else if(comp < 0) continue;
 
-
-
-		//headlightIllum += 10 * comp  / pow(d,2);
-
-		
-		
 		headlightIllum +=  comp / pow(d,2);
-
 
 		// specular lighting
 		

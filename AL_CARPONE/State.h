@@ -68,6 +68,10 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
+	//for achievement
+	bool isFinishGame = false;
+	bool isDupeThePolice = false;
+	bool isJumpOutOfMap = false;
 	bool isRoofOfPoliceStation = false;
 	bool unlockedAllUpgrades = false;
 	bool previousStateChase = false;
@@ -146,5 +150,4 @@ public:
 	float getAlertLevel();
 	void despawnItems();
 	void checkAchievements(Player &player);
-
 };

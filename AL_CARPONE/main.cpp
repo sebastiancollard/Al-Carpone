@@ -289,12 +289,20 @@ int main()
 		graphics.clearBuffer();
 		audio.updateAudio(&player, &state); // Update all audio elements
 
-		if (state.gameWon) {
-			mainMenu.drawWinScreen(graphics);
-			state.isFinishGame = true;
-		}
-		else if (state.gameLost) {
-			mainMenu.drawLoseScreen(graphics);
+		//if (state.gameWon) {
+		//	mainMenu.drawWinScreen(graphics);
+		//	
+		//}
+		if (state.gameLost || state.gameWon) {
+
+			if (state.gameLost) {
+				mainMenu.drawLoseScreen(graphics);
+			} 
+			else {
+				std::string message = "... AND ESCAPED WITH $" + std::to_string((int)player.getCash() - 250000) + "!";
+				ui.text_renderer->RenderText(*graphics.shaderText, message, 575.0f, SCREEN_HEIGHT - 383.0f, 1.25f, glm::vec3(0.f));
+				mainMenu.drawWinScreen(graphics);
+			}
 			if (glfwGetKey(graphics.window, GLFW_KEY_F) == GLFW_PRESS) {
 				if (!state.f_isHeld) {
 					
@@ -348,8 +356,11 @@ int main()
 					// car flip 
 					player.canFlip = false;
 
-					state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+					if (state.gameLost) state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+					else if (state.gameWon) state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
+					audio.setMusicVolume(0.25f);
 					state.gameLost = false;
+					state.gameWon = false;
 				}
 				state.f_isHeld = true;
 			}
@@ -370,7 +381,6 @@ int main()
 					if (controlState.buttons[GLFW_GAMEPAD_BUTTON_SQUARE])
 					{
 							if (!state.square_isHeld) {
-
 								player.setCash(0);
 								player.reset();
 
@@ -421,12 +431,15 @@ int main()
 								// car flip 
 								player.canFlip = false;
 
-								state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+								if (state.gameLost) state.gamestate = GAMESTATE::GAMESTATE_INGAME;
+								else if (state.gameWon) state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
+								audio.setMusicVolume(0.25f);
 								state.gameLost = false;
+								state.gameWon = false;
 							}
 							state.square_isHeld = true;
-						}
-						else {
+					}
+					else {
 						state.square_isHeld = false;
 					}
 					

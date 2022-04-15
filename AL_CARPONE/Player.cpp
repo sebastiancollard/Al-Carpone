@@ -385,6 +385,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 						return;
 					}
 				}
+				state.square_isHeld = true;
 			} else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE] == GLFW_RELEASE) state.square_isHeld = false;
 
 
