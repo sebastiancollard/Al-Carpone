@@ -1,6 +1,9 @@
 #include "MainMenu.h"
 #include "physx_globals.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "util.h" //load_positions
 
 
@@ -12,7 +15,7 @@ MainMenu::MainMenu() {
 	gameWinScreen = Model("models/mainMenu/WINSCREEN.obj");
 	gameLoseScreen = Model("models/mainMenu/LOSESCREEN.obj");
 	jailScreen = Model("models/mainMenu/BUSTED.obj");
-
+	checkmark = Model("models/mainMenu/checkmark.obj");
 	
 	selectionScreens = {
 		// Main menu
@@ -21,14 +24,18 @@ MainMenu::MainMenu() {
 		Model("models/mainMenu/2_QUIT.obj"),
 
 		// Options
-		Model("models/mainMenu/OPTIONS_0_togglefullscreen.obj"),
-		Model("models/mainMenu/OPTIONS_1_controls.obj"),
-		Model("models/mainMenu/OPTIONS_2_back.obj"),
+		Model("models/mainMenu/OPTIONS_togglefullscreen.obj"),
+		Model("models/mainMenu/OPTIONS_achievements.obj"),
+		Model("models/mainMenu/OPTIONS_controls.obj"),
+		Model("models/mainMenu/OPTIONS_back.obj"),
 
 		// Controls
 		Model("models/mainMenu/CONTROLS_0_keyboard.obj"),
 		Model("models/mainMenu/CONTROLS_1_controller.obj"),
-		Model("models/mainMenu/CONTROLS_2_back.obj")
+		Model("models/mainMenu/CONTROLS_2_back.obj"),
+
+		// Achievements
+		Model("models/mainMenu/ACHIEVEMENTS.obj")
 	};
 
 	light_positions = load_positions("models/map/light_positions.obj");
@@ -46,8 +53,12 @@ MainMenu::MainMenu() {
 ////////////////////////////////////////////////////////////////////////
 
 void MainMenu::drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio) {
+
 	graphics.shader2D->use();
 	selectionScreens[selectedOption].Draw(*graphics.shader2D);
+	if (selectedOption == MenuSelection::ACHIEVEMENTS) {
+		drawCheckmarks(graphics, state);
+	}
 	handleInputs(state, audio, &graphics);
 }
 
@@ -72,12 +83,52 @@ void MainMenu::drawLoseScreen(GraphicsSystem& graphics) {
 	gameLoseScreen.Draw(*graphics.shader2D);
 }
 
-
-
 void MainMenu::drawJailScreen(GraphicsSystem* graphics) {
 	graphics->shader2D->use();
 	jailScreen.Draw(*graphics->shader2D);
 }
+
+// Where to place checkmark
+void MainMenu::drawCheckmarks(GraphicsSystem& graphics, State& state) {
+
+	// Left side
+	if (state.isJumpOutOfMap) {
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.8, 0.5, 0));
+		graphics.shader2D->setMat4("model", pos);
+		checkmark.Draw(*graphics.shader2D);
+	}
+	if (state.isFinishGame) {
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.8, -0.1, 0));
+		graphics.shader2D->setMat4("model", pos);
+		checkmark.Draw(*graphics.shader2D);
+	}
+	if (state.isDupeThePolice) {
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.8, -0.8, 0));
+		graphics.shader2D->setMat4("model", pos);
+		checkmark.Draw(*graphics.shader2D);
+	}
+	
+	// Right side
+	if (state.unlockedAllUpgrades) {
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.3, 0.5, 0));
+		graphics.shader2D->setMat4("model", pos);
+		checkmark.Draw(*graphics.shader2D);
+	}
+	if (state.isMillionaire) {
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.3, -0.1, 0));
+		graphics.shader2D->setMat4("model", pos);
+		checkmark.Draw(*graphics.shader2D);
+	}
+	if (state.isRoofOfPoliceStation) {
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.3, -0.8, 0));
+		graphics.shader2D->setMat4("model", pos);
+		checkmark.Draw(*graphics.shader2D);
+	}
+	graphics.shader2D->setMat4("model", glm::mat4(1.f));
+	std::cout << "drawing checkmarks" << std::endl;
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////
 // INPUT HANDLING
@@ -85,15 +136,56 @@ void MainMenu::drawJailScreen(GraphicsSystem* graphics) {
 
 
 void MainMenu::selectUp(State& state, AudioSystem* audio) {
-	selectedOption = (selectedOption - 1) % 3; // Each menu has 3 options
-	selectedOption += selectedMenu * 3;
+
+	std::cout << selectedMenu << ", " << selectedOption << std::endl;
+
+	switch (selectedMenu) {
+
+	case MenuType::MAIN_MENU:
+		selectedOption = (selectedOption - 1);
+		if (selectedOption == -1) selectedOption = 2;
+		break;
+
+	case MenuType::OPTIONS_MENU:
+		selectedOption = (selectedOption - 1);
+		if (selectedOption == 2) selectedOption = 6;
+		break;
+
+	case MenuType::CONTROLS_MENU:
+		selectedOption = (selectedOption - 1);
+		if (selectedOption == 6) selectedOption = 9;
+		break;
+
+	case MenuType::ACHIEVEMENTS_MENU:
+		selectedOption = MenuSelection::A_BACK_TO_OPTIONS;
+		break;
+	}
+
 	audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 }
 
 
 void MainMenu::selectDown(State& state, AudioSystem* audio) {
-	selectedOption = (selectedOption + 1) % 3; // Each menu has 3 options
-	selectedOption += selectedMenu * 3;
+	switch (selectedMenu) {
+
+	case MenuType::MAIN_MENU:
+		selectedOption = (selectedOption + 1) % 3;
+		break;
+
+	case MenuType::OPTIONS_MENU:
+		selectedOption = (selectedOption + 1);
+		if (selectedOption == 7) selectedOption = 3;
+		break;
+
+	case MenuType::CONTROLS_MENU:
+		selectedOption = (selectedOption + 1);
+		if (selectedOption == 10) selectedOption = 7;
+		break;
+
+	case MenuType::ACHIEVEMENTS_MENU:
+		selectedOption = MenuSelection::A_BACK_TO_OPTIONS;
+		break;
+	}
 	audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 }
 
@@ -119,6 +211,11 @@ void MainMenu::selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* g
 		graphics->toggleFullscreen();
 		break;
 
+	case MenuSelection::ACHIEVEMENTS:
+		selectedMenu = MenuType::ACHIEVEMENTS_MENU;
+		selectedOption = MenuSelection::A_BACK_TO_OPTIONS;
+		break;
+
 	case MenuSelection::CONTROLS:
 		selectedMenu = MenuType::CONTROLS_MENU;
 		selectedOption = MenuSelection::KEYBOARD;
@@ -129,12 +226,17 @@ void MainMenu::selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* g
 		selectedOption = MenuSelection::PLAYGAME;
 		break;
 
-		// just show screens (no functionality needed)
+	// just show screens (no functionality needed)
 	case MenuSelection::KEYBOARD:
 	case MenuSelection::CONTROLLER:
 		break;
-
+	
 	case MenuSelection::BACK_TO_OPTIONS:
+		selectedMenu = MenuType::OPTIONS_MENU;
+		selectedOption = MenuSelection::BACK_TO_MAIN;
+		break;
+	
+	case MenuSelection::A_BACK_TO_OPTIONS:
 		selectedMenu = MenuType::OPTIONS_MENU;
 		selectedOption = MenuSelection::BACK_TO_MAIN;
 		break;

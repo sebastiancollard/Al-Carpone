@@ -55,6 +55,21 @@ float State::getAlertLevel() {
 	return ratio;
 }
 
+
+void State::despawnItems()
+{
+	for (int i = 0; i < active_items.size(); i++)
+	{
+		if (active_items[i].getRemainingTime() <= 0.f)
+		{
+			active_items.erase(active_items.begin() + i);	//erase from simple_renderables
+			i = i - 1;
+		}
+	}
+}
+
+
+
 void State::checkAchievements(Player& player) {
 	glm::vec3 pos = player.getPos();
 	
@@ -131,17 +146,13 @@ void State::checkAchievements(Player& player) {
 			 previousStateChase = true;
 		 }
 	}
-}
 
-
-void State::despawnItems()
-{
-	for (int i = 0; i < active_items.size(); i++)
+	if (!isMillionaire) 
 	{
-		if (active_items[i].getRemainingTime() <= 0.f)
+		if(player.getCash() > 1000000)
 		{
-			active_items.erase(active_items.begin() + i);	//erase from simple_renderables
-			i = i - 1;
+			isMillionaire = true;
+			cout << "you are a millionaire" << endl;
 		}
 	}
 }

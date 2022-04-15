@@ -156,7 +156,6 @@
     <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ChangePlaylist.cpp" />
     <ClCompile Include="constants.cpp" />
     <ClCompile Include="CornerStore.cpp" />
     <ClCompile Include="DebugPanel.cpp" />
@@ -205,7 +204,6 @@
     <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="ChangePlaylist.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="CornerStore.h" />
     <ClInclude Include="DebugPanel.h" />
