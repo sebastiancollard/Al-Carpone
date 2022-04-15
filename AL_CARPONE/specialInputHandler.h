@@ -99,7 +99,7 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 				state.option_isHeld = false;
 			}
 
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] && debugmode != DEBUGMODE::FALSE)
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] == GLFW_PRESS && debugmode != DEBUGMODE::FALSE)
 			{
 				//std::cout << "TRIANGLE (xbox y, ns pro x)" << std::endl;
 				if (!state.triangle_isHeld)
@@ -108,7 +108,7 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 				}
 				state.R_isHeld = true;
 			}
-			else state.triangle_isHeld = false;
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] == GLFW_RELEASE) state.triangle_isHeld = false;
 
 			
 		}

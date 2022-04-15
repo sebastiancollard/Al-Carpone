@@ -10,8 +10,8 @@
 
 // OBJ paths
 #define INTERACT_PATH "models/ui/interact.obj"
-
 #define EXIT_PATH "models/ui/interact_exit.obj"
+#define TOW_PATH "models/ui/towPrompt.obj"
 
 // MINIMAP paths
 #define MINIMAP_PATH "models/ui/minimap.obj"
@@ -34,6 +34,7 @@ UI::UI() {
 
 	interactPrompt = new Model(INTERACT_PATH);
 	exitPrompt = new Model(EXIT_PATH);
+	towPrompt = new Model(TOW_PATH);
 
 	minimap = new Model(MINIMAP_PATH);
 	player_marker = new Model(PLAYER_MARKER_PATH);
@@ -131,6 +132,19 @@ void UI::update(State* state, Player* player, GraphicsSystem* graphics, TextRend
 		Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE3]));
 		g->showShop = false;
 	}
+
+
+
+	if (towPromptDisplayed) {
+		towPrompt->Draw(*graphics->shader2D);
+		towPromptTimer -= state->timeStep;
+
+		if (towPromptTimer <= 0) {
+			towPromptTimer = 2.0f;
+			towPromptDisplayed = false;
+		}
+	}
+
 }
 
 
@@ -258,6 +272,16 @@ void UI::drawTexts(State* state, Player* player, GraphicsSystem* graphics, TextR
 }
 
 
+void UI::showTowPrompt() {
+	towPromptDisplayed = true;
+}
+bool UI::shouldTow(State& state) {
+	return towPromptDisplayed && !state.policeAlerted();
+}
+void UI::resetTowPrompt() {
+	towPromptDisplayed = false;
+	towPromptTimer = 2.f;
+}
 
 // Return corresponding translation matrix to pass on to the shader later
 mat4 UI::updateMarkerPos(vec3 original_pos) {

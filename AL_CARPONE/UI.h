@@ -28,6 +28,7 @@ public:
 	//Model* press_f_to_enter_garage;
 	Model* interactPrompt;
 	Model* exitPrompt;
+	Model* towPrompt;
 	Model* Item;
 
 	// UI ELEMENTS
@@ -35,10 +36,16 @@ public:
 	Model* player_marker;
 	Model* police_marker;
 
+	
+	bool towPromptDisplayed = false;
+	float towPromptTimer = 2.0f;
+
 	UI();
 	
 	void update(State* state, Player* player, GraphicsSystem* graphics, TextRenderer* text_renderer);
-
+	void showTowPrompt();
+	bool shouldTow(State&);
+	void resetTowPrompt();
 private:
 
 	glm::mat4 player_movement = glm::mat4(1.f);
