@@ -231,7 +231,7 @@ void MainMenu::selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* g
 	case MenuSelection::CONTROLLER:
 		break;
 
-	case MenuSelection::BACK_TO_OPTIONS:
+	case MenuSelection::A_BACK_TO_OPTIONS:
 		selectedMenu = MenuType::OPTIONS_MENU;
 		selectedOption = MenuSelection::BACK_TO_MAIN;
 		break;
