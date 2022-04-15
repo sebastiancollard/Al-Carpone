@@ -9,13 +9,36 @@
 
 enum MenuSelection
 {
+	// main menu
 	PLAYGAME = 0,
-	QUIT
+	OPTIONS,
+	QUIT,
+	// options menu
+	TOGGLE_FULLSCREEN,
+	CONTROLS,
+	BACK_TO_MAIN,
+	// controls menu
+	KEYBOARD,
+	CONTROLLER,
+	BACK_TO_OPTIONS
+};
+
+enum MenuType
+{
+	MAIN_MENU = 0,
+	OPTIONS_MENU,
+	CONTROLS_MENU
 };
 
 static class MainMenu {
 
 	unsigned int selectedOption = MenuSelection::PLAYGAME;
+	unsigned int selectedMenu = MenuType::MAIN_MENU;
+
+	// Menu selection
+	void selectUp(State& state, AudioSystem* audio);
+	void selectDown(State& state, AudioSystem* audio);
+	void selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* graphics);
 
 public:
 
@@ -40,6 +63,6 @@ public:
 	void drawWinScreen(GraphicsSystem&);	
 	void drawJailScreen(GraphicsSystem* graphics);
 	void drawLoseScreen(GraphicsSystem&);
-	void handleInputs(GLFWwindow* window, State& state, AudioSystem* audio);
+	void handleInputs(State& state, AudioSystem* audio, GraphicsSystem* graphics);
 
 };
