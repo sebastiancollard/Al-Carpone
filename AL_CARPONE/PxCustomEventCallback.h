@@ -91,7 +91,7 @@ public:
 		for (PxU32 i = 0; i < nbPairs; i++)
 		{
 			const PxContactPair& cp = pairs[i];
-			for (auto& p : active_items) {
+			for (auto& p : state.active_items) {
 				physx::PxRigidActor* itemActr = p.actorPtr;
 				if (cp.events & PxPairFlag::eNOTIFY_TOUCH_FOUND)
 				{

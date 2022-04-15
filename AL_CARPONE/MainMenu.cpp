@@ -16,8 +16,8 @@ MainMenu::MainMenu() {
 	
 	selectionScreens = {
 		Model("models/mainMenu/0_PLAYGAME.obj"),
-		Model("models/mainMenu/1_QUIT.obj"),
-		
+		//Model("models/mainMenu/1_OPTIONS.obj"),
+		Model("models/mainMenu/2_QUIT.obj")
 	};
 
 	light_positions = load_positions("models/map/light_positions.obj");

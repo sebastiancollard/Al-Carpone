@@ -7,6 +7,7 @@
 #include "Vehicle.h"
 #include "Building.h"
 #include "PoliceCar.h"
+#include "PowerUp.h"
 
 
 //Locked position and orientation. Used for third person view behind the car.
@@ -22,6 +23,8 @@ class Building;
 class Vehicle;
 class PoliceCar;
 class AudioSystem;
+
+
 
 enum GAMESTATE {
 	GAMESTATE_MAIN_MENU,
@@ -65,8 +68,17 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
-
-
+	//for achievement
+	bool isFinishGame = false;
+	bool isDupeThePolice = false;
+	bool isJumpOutOfMap = false;
+	bool isRoofOfPoliceStation = false;
+	bool unlockedAllUpgrades = false;
+	bool previousStateChase = false;
+	float dupe_level = 0;
+	float dupe_timer = 0;
+	float dupe_shouldArrest = false;
+	
 	//garage
 	bool g_draw = false;
 
@@ -77,6 +89,7 @@ public:
 	float policeOOff = 0.871;
 	float policeVOff = 0.150;
 
+	std::vector<PowerUp> active_items;
 
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<PoliceCar*> inactivePoliceVehicles = {};
@@ -136,5 +149,7 @@ public:
 	void alertPolice();
 	bool policeAlerted();
 	float getAlertLevel();
+	void checkAchievements(Player &player);
 
+	void despawnItems();
 };

@@ -71,7 +71,7 @@ void PoliceCar::update(Player& player, State& state) {
 	playerArrestable = playerInSight && playerInJailRadius && player.isDetectable();
 
 
-	for (auto& p : active_items) {
+	for (auto& p : state.active_items) {
 		if((p.getType() == DONUT) && (p.itemInWorld)) {
 			glm::vec3 donutPos = p.getPos();
 			float distance = glm::distance(donutPos, myPos);

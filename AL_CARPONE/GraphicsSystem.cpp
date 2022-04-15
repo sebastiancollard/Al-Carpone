@@ -72,7 +72,7 @@ GraphicsSystem::GraphicsSystem() {
 
 void GraphicsSystem::clearBuffer() {
 	// Specify the color of the background
-	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+	glClearColor(1.f, 1.f, 1.f, 1.0f);
 	// Clean the back buffer and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Tell OpenGL which Shader Program we want to use
@@ -103,17 +103,6 @@ void GraphicsSystem::cleanup() {
 // OTHER FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-//Updates the fps/ms in the window title.
-void GraphicsSystem::updateTitle(State& state, Player& player)
-{
-	std::string FPS = std::to_string((int)ceil(1. / state.timeStep));
-	std::string RT = std::to_string((state.timeStep) * 1000);
-	std::string title = "Al Carpone / " + FPS + "FPS / " + RT + "ms / PLAYER CASH: $" + std::to_string(player.getCash());
-	glfwSetWindowTitle(window, title.c_str());
-
-}
 
 void GraphicsSystem::toggleFullscreen() {
 	if (glfwGetWindowMonitor(window) == nullptr){

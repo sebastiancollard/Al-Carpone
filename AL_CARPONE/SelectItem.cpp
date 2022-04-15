@@ -65,11 +65,9 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 			switch (selection)
 			{
 			case 0:
-				if (cur_cash > TOMATO_PRICE ) 
+				if (cur_cash >= TOMATO_PRICE ) 
 				{
-					player.getPower()->setType(TOMATO);
-					player.getPower()->setDuration(15.0f);
-					player.setCash(cur_cash - TOMATO_PRICE);
+					player.gainPower(TOMATO, TOMATO_PRICE);
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 				}
 				else 
@@ -80,11 +78,9 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 					
 				break;
 			case 1:
-				if (cur_cash > DONUT_PRICE)
+				if (cur_cash >= DONUT_PRICE)
 				{
-					player.getPower()->setType(DONUT);
-					player.getPower()->setDuration(15.0f);
-					player.setCash(cur_cash - DONUT_PRICE);
+					player.gainPower(DONUT, DONUT_PRICE);
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 				}
 				else
@@ -94,11 +90,9 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 				}
 				break;
 			case 2:
-				if (cur_cash > SPIKE_TRAP_PRICE)
+				if (cur_cash >= SPIKE_TRAP_PRICE)
 				{
-					player.getPower()->setType(SPIKE_TRAP);
-					player.getPower()->setDuration(15.0f);
-					player.setCash(cur_cash - SPIKE_TRAP_PRICE);
+					player.gainPower(SPIKE_TRAP, SPIKE_TRAP_PRICE);
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 				}
 				else 
@@ -108,11 +102,9 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 				}
 				break;
 			case 3:
-				if (cur_cash > CAMOUFLAG_PRICE)
+				if (cur_cash >= CAMOUFLAG_PRICE)
 				{
-					player.getPower()->setType(CAMOUFLAGE);
-					player.getPower()->setDuration(15.0f);
-					player.setCash(cur_cash - CAMOUFLAG_PRICE);	//1000
+					player.gainPower(CAMOUFLAGE, CAMOUFLAG_PRICE);
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::PURCHASE_SUCCESS);
 				}
 				else 

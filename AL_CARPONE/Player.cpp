@@ -120,6 +120,13 @@ PowerUp* Player::getPower() {
 	return &equippedPower;
 }
 
+void Player::gainPower(POWER_TYPE type, float price) {
+	equippedPower.setType(type);
+	equippedPower.setDuration(15.0f);
+	setCash(getCash() - price);
+	hasPower = true;
+}
+
 void Player::usePower() {
 	//std:cout << equippedPower.getType() << std::endl;
 	if (equippedPower.getType() == CAMOUFLAGE) {
@@ -129,6 +136,7 @@ void Player::usePower() {
 	else {
 		equippedPower.dropOrThrow();
 	}
+	hasPower = false;
 }
 
 bool Player::canChooseTool(State& state) {
@@ -320,7 +328,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		usePower();
+		if (hasPower) usePower();
 	}
 
 	/*
@@ -377,6 +385,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 						return;
 					}
 				}
+				state.square_isHeld = true;
 			} else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE] == GLFW_RELEASE) state.square_isHeld = false;
 
 

@@ -26,16 +26,7 @@ PxMaterial* gMaterial = NULL;
 
 PxPvd* gPvd = NULL;
 
-/* TODO: put this in a function:
-if (physx_actors.size() == 0) {
-		physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), 0 });
-	}
-	else {
-		physx_actors.push_back({ vehiclePtr->getRigidDynamicActor(), physx_actors.back().actorId + 1 });
-	}
-*/
 std::vector<physx_actor_entity> physx_actors;
-std::vector<PowerUp> active_items;
 
 
 snippetvehicle::VehicleSceneQueryData* gVehicleSceneQueryData = NULL;
