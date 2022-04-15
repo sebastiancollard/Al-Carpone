@@ -236,7 +236,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 				state.start_isHeld = true;
 			}
 			else if(controlState.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_RELEASE) {
-				state.tartIsHeld = false;
+				state.start_isHeld = false;
 			}
 
 		}
