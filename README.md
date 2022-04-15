@@ -1,19 +1,6 @@
-# AL CARPONE
-## CPSC 585 - Team 3
+# AL CARPONE - CPSC 585 - TEAM 3
 
-
-Libraries:
-- OpenGL (https://www.opengl.org//)
-- glew (http://glew.sourceforge.net/)
-- glfw (https://www.glfw.org/)
-- PhysX (https://www.nvidia.com/en-us/drivers/physx/physx-9-19-0218-driver/)
-- ImGui (https://github.com/ocornut/imgui)
-- Assimp (https://github.com/assimp/assimp)
-- stb (https://github.com/nothings/stb)
-- Irrklang (https://www.ambiera.com/irrklang/downloads.html)
-- Freetype (https://freetype.org/)
-
-Hello, here is our Milestone 4!
+## HOW TO PLAY
 
 The goal of the game is to escape town. This requires unlocking the gate which costs $250,000. To get this money, you must rob the bank! Rob speed starts out slow so you have to upgrade your rob speed at one of the garages. To help escape the police (who take your money if they catch you) you can buy upgrades for your car at the other garages. You can also buy temporary powerups at cornerstores to trick and distract police. Explore the symbols on the minimap to find all these locations. 
 
@@ -30,79 +17,100 @@ Sidenotes:
 - 	We are planning on adding an additional upgrade to the starting garage which would allow the player to see police locations on the minimap. The upgrade path 
 	would consist of increasing the radius around the player and reveal all police locations within that radius.
 
+	
+## CONTROLS
+### KEYBOARD
 
-TO RUN STANDALONE:
+MAIN MENU:
+	
+	↑ & ↓: Change selection
+	Enter: Select
+	Escape: Close game
+
+IN GAME:
+	
+	W: Accelerate
+	A: Turn left
+	S: Brake/Reverse
+	D: Turn right
+	WASD: Mid-air control
+	Space: Handbrake
+	Left Click (Hold): Move camera
+	ESC: Pause
+	C: Look behind
+	E: Use powerup
+	F: Interact
+	H: Headlights
+	T: Request towing service 
+
+	Shift <DEBUGMODE ONLY> : Speed boost
+	R <DEBUGMODE ONLY> : Reset all positions
+	Q <DEBUGMODE ONLY> : Unbound camera
+		
+PAUSE MENU:
+	
+	↑ & ↓: Change selection
+	Enter: Select
+	ESC: Go back to game
+	
+CORNER STORE & GARAGE MENUS:
+		
+	↑ & ↓: Change selection
+	Enter: Select
+	F: Enter/exit menu 
+
+### CONTROLLER
+
+MAIN MENU:
+	
+	↑ & ↓: Change selection
+	X (Playstation) / A (Xbox): Select 
+	O (Playstation) / B (Xbox): Close game
+	
+IN GAME:
+	
+	Left trigger: Reverse
+	Right trigger: Move forward
+	Left stick: Turn / Mid-air control
+	Options (Playstation) / Menu (Xbox)/ + (NS pro): Pause menu
+	□ (Playstation) / X (Xbox) / Y (NS pro): Interact
+	L1 (Playstation) / LB (Xbox): Use powerup
+	R1 (Playstation) / RB (Xbox): Handbrake
+	R3 (Playstation) / RS (Xbox): Look behind
+	L3 (Playstation) / LS (Xbox): Center camera
+	DPad Up: Switch headlight mode
+	▲ : Request towing service
+
+	▲ (Playstation) / Y (Xbox) / X (NS pro) <DEBUGMODE ONLY> : reset
+	
+PAUSE MENU:
+	
+	↑ & ↓: Change selection
+	X (Playstation) / A (Xbox): Select
+	Options (Playstation) / Menu (Xbox) / + (NS pro): Go back to game
+	
+CORNER STORE & GARAGE MENUS:
+	
+	↑ & ↓: Change selection
+	X (Playstation) / A (Xbox): Select
+	□ (Playstation) / X (Xbox): Enter/exit menu
+	
+## ACHIEVMENTS LIST
+
+## HOW TO RUN STANDALONE
 
 	1) Download the Release.zip archive provided below
 	2) Extract Release.zip to create the 'Release' folder
 	3) Run Release/AL_CARPONE.exe
 	
-CONTROLS:
-
-	MAIN MENU:
-		↑ & ↓: Change selection
-		Enter: Select
-	        Escape: Close game
-
-	IN GAME:
-		W: Accelerate
-		A: Turn left
-		S: Brake/Reverse
-		D: Turn right
-		WASD: Mid-air control
-		Space: Handbrake
-		Left Click (Hold): Move camera
-		ESC: Pause
-		C: Look behind
-		E: Use powerup
-		F: Interact
-		H: Headlights
-		T: Request towing service 
-	
-		Shift <DEBUGMODE ONLY> : Speed boost
-		R <DEBUGMODE ONLY> : Reset all positions
-		Q <DEBUGMODE ONLY> : Unbound camera
-		
-	PAUSE MENU:
-		↑ & ↓: Change selection
-		Enter: Select
-		ESC: Go back to game
-	
-	CORNER STORE & GARAGE MENUS:
-		↑ & ↓: Change selection
-		Enter: Select
-		F: Enter/exit menu 
-
-CONTROLLER:
-
-	MAIN MENU:
-		↑ & ↓: Change selection
-		X (Playstation) / A (Xbox): Select 
-		O (Playstation) / B (Xbox): Close game
-	
-	IN GAME:
-		Left trigger: Reverse
-		Right trigger: Move forward
-		Left stick: Turn / Mid-air control
-		Options (Playstation) / Menu (Xbox)/ + (NS pro): Pause menu
-		□ (Playstation) / X (Xbox) / Y (NS pro): Interact
-		L1 (Playstation) / LB (Xbox): Use powerup
-		R1 (Playstation) / RB (Xbox): Handbrake
-		R3 (Playstation) / RS (Xbox): Look behind
-		L3 (Playstation) / LS (Xbox): Center camera
-		DPad Up: Switch headlight mode
-		? : Request towing service
-	
-		▲ (Playstation) / Y (Xbox) / X (NS pro) <DEBUGMODE ONLY> : reset
-	
-	PAUSE MENU:
-		↑ & ↓: Change selection
-		X (Playstation) / A (Xbox): Select
-		Options (Playstation) / Menu (Xbox) / + (NS pro): Go back to game
-	
-	CORNER STORE & GARAGE MENUS:
-		↑ & ↓: Change selection
-		X (Playstation) / A (Xbox): Select
-		□ (Playstation) / X (Xbox): Enter/exit menu
-		
+## Libraries
+- OpenGL (https://www.opengl.org//)
+- glew (http://glew.sourceforge.net/)
+- glfw (https://www.glfw.org/)
+- PhysX (https://www.nvidia.com/en-us/drivers/physx/physx-9-19-0218-driver/)
+- ImGui (https://github.com/ocornut/imgui)
+- Assimp (https://github.com/assimp/assimp)
+- stb (https://github.com/nothings/stb)
+- Irrklang (https://www.ambiera.com/irrklang/downloads.html)
+- Freetype (https://freetype.org/)
 	
