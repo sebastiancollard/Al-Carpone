@@ -100,8 +100,6 @@ void MainMenu::selectDown(State& state, AudioSystem* audio) {
 
 void MainMenu::selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* graphics) {
 
-	std::cout << selectedOption << ',' << selectedMenu << std::endl;
-
 	switch (selectedOption) {
 
 	case MenuSelection::PLAYGAME:
