@@ -271,14 +271,14 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
                 controllerIdle = false;
                 controllerTimer = 0.f;
                 if (usingKeyboard) usingKeyboard = false;
-                rotY = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] * 0.5f;
+                rotY = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] * 100.f * state.timeStep;
             }
             if (abs(controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) > 0.15)
             {
                 controllerIdle = false;
                 controllerTimer = 0.f;
                 if (usingKeyboard) usingKeyboard = false;
-                rotX = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] * 0.75f;
+                rotX = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] * 150.f * state.timeStep;
             }
             if (abs(controller.buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB]) == 1) {
                 controllerTimer = CONTROLLER_RESET_MAX_TIME;
