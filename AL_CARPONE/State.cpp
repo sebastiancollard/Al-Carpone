@@ -111,7 +111,7 @@ void State::checkAchievements(Player& player) {
 		 }
 
 		 // If the player was previously being chased by at least one police car but is now being chased by none. All police cars must be patrolling (not idle)
-		 if (!currentlyChased && previousStateChase) {
+		 if (!currentlyChased && previousStateChase && !GAMESTATE::GAMESTATE_JAILED) {
 		 	isDupeThePolice = true;
 		 	cout << "Player has duped the police!" << endl;
 		 }
@@ -126,7 +126,6 @@ void State::checkAchievements(Player& player) {
 		 }
 		 else if (currentlyChased)
 		 {
-
 			 previousStateChase = true;
 		 }
 	}
