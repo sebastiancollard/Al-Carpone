@@ -122,7 +122,7 @@ public:
 	bool dpad_upisHold = false;
 	bool dpad_leftIsHold = false;
 	bool dpad_rightIsHold = false;
-	bool dpad_startIsHeld = false;
+	bool start_isHeld = false;
 	bool cross_isHeld = false;
 	bool circle_isHeld = false;
 	bool triangle_isHeld = false;

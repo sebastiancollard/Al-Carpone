@@ -230,13 +230,13 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 				state.dpad_upisHold = false;
 			}
 			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_PRESS) {
-				if (!state.dpad_startIsHeld) {
+				if (!state.start_isHeld) {
 					state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 				}
-				state.dpad_startIsHeld = true;
+				state.start_isHeld = true;
 			}
 			else if(controlState.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_RELEASE) {
-				state.dpad_startIsHeld = false;
+				state.tartIsHeld = false;
 			}
 
 		}
