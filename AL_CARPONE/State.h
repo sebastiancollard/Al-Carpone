@@ -77,7 +77,10 @@ public:
 	bool isRoofOfPoliceStation = false;
 	bool unlockedAllUpgrades = false;
 	bool previousStateChase = false;
-
+	float dupe_level = 0;
+	float dupe_timer = 0;
+	float dupe_shouldArrest = false;
+	
 	//garage
 	bool g_draw = false;
 

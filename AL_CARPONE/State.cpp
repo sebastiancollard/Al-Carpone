@@ -92,23 +92,42 @@ void State::checkAchievements(Player& player) {
 
 	//Dupe police
 	if (!isDupeThePolice) {
-		bool currentlyChased = false;
+		
 	
-		for (PoliceCar* p : activePoliceVehicles) {	//if at least one police car is still chasing the player, make the "overall" state chase
-			if ((p->ai_state != AISTATE::PATROL)) {
-				currentlyChased = true;
-			}
-		}
+		//cout << "dupe_level" << dupe_level << "dupe_timer" << dupe_timer << endl;
 
-		//If the player was previously being chased by at least one police car but is now being chased by none. All police cars must be patrolling (not idle)
-		if (!currentlyChased && previousStateChase) {
-			isDupeThePolice = true;
-			cout << "Player has duped the police!" << endl;
-		}
+		
+		bool currentlyChased = false;
+		
 
-		if(currentlyChased)
-			previousStateChase = true;
-		else
-			previousStateChase = false;
+		////cout << " currentlyChased is : " << currentlyChased << endl;
+		
+		
+
+		 for (PoliceCar* p : activePoliceVehicles) {	// if at least one police car is still chasing the player, make the "overall" state chase
+		 	if ((p->ai_state != AISTATE::PATROL)) {
+		 		currentlyChased = true;
+		 	}
+		 }
+
+		 // If the player was previously being chased by at least one police car but is now being chased by none. All police cars must be patrolling (not idle)
+		 if (!currentlyChased && previousStateChase) {
+		 	isDupeThePolice = true;
+		 	cout << "Player has duped the police!" << endl;
+		 }
+
+		 if (currentlyChased && dupe_level > 0.9 && dupe_timer == 1)
+		 {
+			 previousStateChase = true;
+		 }
+		 else if(!previousStateChase)
+		 {
+			 previousStateChase = false;
+		 }
+		 else if (currentlyChased)
+		 {
+
+			 previousStateChase = true;
+		 }
 	}
 }
