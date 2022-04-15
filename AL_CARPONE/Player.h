@@ -36,7 +36,7 @@ private:
 
 	double cashRateMultiplier = 1;
 
-	PowerUp equippedPower =  PowerUp(POWER_TYPE::SPIKE_TRAP); //TODO
+	PowerUp equippedPower;
 	bool can_choosePowerTool = false;
 
 
@@ -81,7 +81,7 @@ public:
 	float headlightHorizontalOffset2 = 0.809;
 	float headlightVerticalOffset2 = 0.089;
 
-	bool hasPower = true; // false; TODO
+	bool hasPower = false;
 
 
 	Player() {}
