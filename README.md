@@ -88,6 +88,18 @@ CORNER STORE & GARAGE MENUS
 	□ (Playstation) / X (Xbox): Enter/exit menu
 	
 ## ACHIEVMENTS LIST
+- Freedom!
+	- Fall off the map
+- Play for the win
+	- Finish the game
+- Dupe the police
+	- Escape with a jail countdown of 1, and 5-star alert level
+- Transformer
+	- Get all the upgrades
+- Millionaire
+	-  Get $1,000,000
+-  Parkour
+	- Get on top of the police station    
 
 ## UPGRADE LIST
 
