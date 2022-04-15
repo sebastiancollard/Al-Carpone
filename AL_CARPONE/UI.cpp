@@ -201,6 +201,11 @@ void UI::drawTexts(State* state, Player* player) {
 		text_renderer->RenderText(shader, message, 25.0f, 500.0f, 0.7f);
 	}
 
+	state->dupe_level = ratio;
+	state->dupe_timer = jailCountdown;
+
+	
+
 	// -- ALARM RISK
 	int num = (int)((float)(player->alarmChancePerCheck - player->baseAlarmChancePerCheck) / (float)(player->baseAlarmChancePerCheck));
 	if (num > 0) {
