@@ -130,7 +130,7 @@ void State::checkAchievements(Player& player) {
 		 }
 	}
 }
-}
+
 
 void State::despawnItems()
 {
