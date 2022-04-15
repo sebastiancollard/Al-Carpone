@@ -167,9 +167,9 @@ CORNER STORE & GARAGE MENUS
 
 ## HOW TO RUN STANDALONE
 
-	1) Download the Release.zip archive provided below
-	2) Extract Release.zip to create the 'Release' folder
-	3) Run Release/AL_CARPONE.exe
+	1) Download AlCarpone.zip archive provided below
+	2) Extract AlCarpone.zip to create the 'AlCarpone' folder
+	3) Run AlCarpone/AL_CARPONE.exe
 
 ## SIDENOTES 
 - Pressing F5 enables the dev menu 
