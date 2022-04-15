@@ -21,7 +21,9 @@ enum MenuSelection
 	// controls menu
 	KEYBOARD,
 	CONTROLLER,
-	BACK_TO_OPTIONS
+	BACK_TO_OPTIONS,
+	// achievements menu
+	A_BACK_TO_OPTIONS
 };
 
 enum MenuType
@@ -49,6 +51,7 @@ public:
 	Model gameWinScreen;
 	Model gameLoseScreen;
 	Model jailScreen;
+	Model checkmark;
 
 
 	std::vector<Model> selectionScreens;
@@ -59,6 +62,7 @@ public:
 
 
 	MainMenu();
+	void drawCheckmarks(GraphicsSystem& graphics, State& state);
 	void drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio);
 	void drawLoadingGameScreen(GraphicsSystem& graphics);
 	void drawLoadingMapScreen(GraphicsSystem& graphics);

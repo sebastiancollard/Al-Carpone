@@ -69,16 +69,16 @@ public:
 	bool gameLost = false;
 
 	//for achievement
-	bool isFinishGame = false;
-	bool isDupeThePolice = false;
-	bool isJumpOutOfMap = false;
-	bool isRoofOfPoliceStation = false;
-	bool unlockedAllUpgrades = false;
+	bool isFinishGame = true;//false;
+	bool isDupeThePolice = true;// false;
+	bool isJumpOutOfMap = true; // false;
+	bool isRoofOfPoliceStation = true;// false;
+	bool unlockedAllUpgrades = true;// false;
 	bool previousStateChase = false;
 	float dupe_level = 0;
 	float dupe_timer = 0;
 	float dupe_shouldArrest = false;
-	bool isMillionaire = false;
+	bool isMillionaire = true;// false;
 	//garage
 	bool g_draw = false;
 
