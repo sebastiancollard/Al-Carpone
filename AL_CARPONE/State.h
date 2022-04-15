@@ -76,7 +76,7 @@ public:
 	bool isJumpOutOfMap = false;
 	bool isRoofOfPoliceStation = false;
 	bool unlockedAllUpgrades = false;
-	AISTATE previousAIState = AISTATE::PATROL;
+	bool previousStateChase = false;
 
 	//garage
 	bool g_draw = false;
