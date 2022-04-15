@@ -142,17 +142,18 @@ void MainMenu::selectUp(State& state, AudioSystem* audio) {
 	switch (selectedMenu) {
 
 	case MenuType::MAIN_MENU:
-		selectedOption = (selectedOption - 1) % 3;
+		selectedOption = (selectedOption - 1);
+		if (selectedOption == -1) selectedOption = 2;
 		break;
 
 	case MenuType::OPTIONS_MENU:
-		selectedOption = (selectedOption - 1) % 4;
-		selectedOption += 3;
+		selectedOption = (selectedOption - 1);
+		if (selectedOption == 2) selectedOption = 6;
 		break;
 
 	case MenuType::CONTROLS_MENU:
-		selectedOption = (selectedOption - 1) % 3;
-		selectedOption += 7;
+		selectedOption = (selectedOption - 1);
+		if (selectedOption == 6) selectedOption = 9;
 		break;
 
 	case MenuType::ACHIEVEMENTS_MENU:
@@ -172,13 +173,13 @@ void MainMenu::selectDown(State& state, AudioSystem* audio) {
 		break;
 
 	case MenuType::OPTIONS_MENU:
-		selectedOption = (selectedOption + 1) % 4;
-		selectedOption += 3;
+		selectedOption = (selectedOption + 1);
+		if (selectedOption == 7) selectedOption = 3;
 		break;
 
 	case MenuType::CONTROLS_MENU:
-		selectedOption = (selectedOption + 1) % 3;
-		selectedOption += 7;
+		selectedOption = (selectedOption + 1);
+		if (selectedOption == 10) selectedOption = 7;
 		break;
 
 	case MenuType::ACHIEVEMENTS_MENU:
