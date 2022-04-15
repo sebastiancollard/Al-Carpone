@@ -5,7 +5,6 @@
 namespace sv = snippetvehicle;
 
 extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, Model* detectionSphere, ItemModels*);
-extern void despawnItems();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models);
 
 int main()
@@ -575,7 +574,7 @@ int main()
 			player.updatePhysicsVariables(state.timeStep);
 
 			//updateItem/Powerup information
-			for (auto& p : active_items) {			//update all active powers
+			for (auto& p : state.active_items) {			//update all active powers
 				p.updateTimed();
 
 				if (p.shouldDespawn()) {
@@ -583,13 +582,13 @@ int main()
 						player.setDetectable(true);
 				}
 			}
-			if (player.getPower()->isActive()) {	//update currently equipped power (mostly for outputting correct data on the UI)
-				player.getPower()->updateTimed();
+			//if (player.getPower()->isActive()) {	//update currently equipped power (mostly for outputting correct data on the UI)
+				//player.getPower()->updateTimed();
 				if (player.getPower()->shouldDespawn()) {
 					player.getPower()->reset();
 				}
-			}
-			despawnItems();
+			//}
+			state.despawnItems(); // remove used powerups
 
 
 
@@ -618,7 +617,7 @@ int main()
 					for (PoliceCar* p : state.activePoliceVehicles) {
 						p->hardReset();
 					}
-					active_items.clear();
+					state.active_items.clear();
 					player.getPower()->reset();
 				}
 			}
@@ -983,7 +982,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 			//simple_renderables vector. This is a vector of structs that each contain an actor pointer and a singular model associated
 			//with that actor. Is very similar to the above for loop.
 			//Future TODO: for more complex objects, add ability to have multiple models per object (like the cars)
-			for (auto &item : active_items) {
+			for (auto& item : state->active_items) {
 
 				if (item.getType() != CAMOUFLAGE) {
 					const PxU32 nbShapes = item.actorPtr->getNbShapes();
@@ -1008,23 +1007,11 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	ui->update(state, player);
 }
 
-void despawnItems() 
-{
-	for (int i = 0; i < active_items.size(); i++)
-	{
-		if (active_items[i].getRemainingTime() <= 0.f)
-		{
-			active_items.erase(active_items.begin() + i);	//erase from simple_renderables
 
-			printf("Erasing item...\n");
-			i = i - 1;
-		}
-	}
-}
 
 void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* physics, State* state, ItemModels* item_models) {
 
-	PowerUp power;
+	PowerUp* power;
 	PxRigidDynamic* actor;
 
 	// -- PLAYER THROWS ITEM --
@@ -1051,8 +1038,8 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
 		
-		power = *(player->getPower());
-		active_items.push_back(power);	//include tomato or donut in active_items
+		power = player->getPower();
+		state->active_items.push_back(*power);	//include tomato or donut in active_items
 
 
 	}
@@ -1069,16 +1056,16 @@ void checkForItemActions(Player* player, Camera* boundCamera, PhysicsSystem* phy
 		player->getPower()->actorPtr = actor;
 		player->getPower()->itemInWorld = true;
 		
-		power = *(player->getPower());
-		active_items.push_back(power);	//include spike_trap in active_items
+		power = player->getPower();
+		state->active_items.push_back(*power);	//include spike_trap in active_items
 
 	}
 	// -- PLAYER BECOMES CAMOUFLAGED --
 	else if (!player->isDetectable() && player->getCurrentModelType() == AL_CARPONE) {	
 		player->setCurrentModel(POLICE_CAR);
 		
-		power = *(player->getPower());
-		active_items.push_back(power);	//include camouflage in active_items
+		power = player->getPower();
+		state->active_items.push_back(*power);	//include camouflage in active_items
 	}
 	
 	// -- PLAYER BECOMES UN-CAMOUFLAGED

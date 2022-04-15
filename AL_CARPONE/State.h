@@ -7,7 +7,7 @@
 #include "Vehicle.h"
 #include "Building.h"
 #include "PoliceCar.h"
-#include "Player.h"
+#include "PowerUp.h"
 
 
 
@@ -24,6 +24,8 @@ class Building;
 class Vehicle;
 class PoliceCar;
 class AudioSystem;
+
+
 
 enum GAMESTATE {
 	GAMESTATE_MAIN_MENU,
@@ -79,6 +81,7 @@ public:
 	float policeOOff = 0.871;
 	float policeVOff = 0.150;
 
+	std::vector<PowerUp> active_items;
 
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<PoliceCar*> inactivePoliceVehicles = {};
@@ -137,5 +140,5 @@ public:
 	void alertPolice();
 	bool policeAlerted();
 	float getAlertLevel();
-
+	void despawnItems();
 };

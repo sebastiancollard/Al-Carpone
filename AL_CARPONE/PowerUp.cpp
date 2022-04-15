@@ -45,7 +45,6 @@ void PowerUp::reset() {
 void PowerUp::activateTimed() {
 	if (!timer_active) {
 		timer_active = true;
-		std::cout << "Power timer started" << std::endl;
 		power_used = true;
 		timer.reset();
 	}
@@ -53,7 +52,6 @@ void PowerUp::activateTimed() {
 
 void PowerUp::deactivateTimed() {
 	timer_active = false;
-	std::cout << "Power timer ended" << std::endl;
 	//leaving as separate function from update in case more is added here
 }
 
@@ -74,20 +72,17 @@ void PowerUp::dropOrThrow() {
 			model_path = TOMATO_PATH;
 			throw_item = true;
 			activateTimed();
-			std::cout << "Using tomato power!" << std::endl;
 			break;
 		case DONUT:
 			//player to throws donut
 			model_path = DONUT_PATH;
 			throw_item = true;
 			activateTimed();
-			std::cout << "Using doughnut power!" << std::endl;
 			break;
 		case SPIKE_TRAP:
 			model_path = SPIKE_PATH;
 			drop_item = true;
 			activateTimed();
-			std::cout << "Using spike power!" << std::endl;
 			break;
 		default:
 			//Do nothing
@@ -131,6 +126,10 @@ std::string PowerUp::getModelPath() {
 bool PowerUp::shouldDespawn() {
 	return (!timer_active && power_used && (duration_sec > 0.f));
 }
+
+//bool PowerUp::shouldDespawn() {
+	//return (!timer_active && power_used && (duration_sec <= 0.f));
+//}
 
 bool PowerUp::isActive() {
 	return (timer_active && power_used);
