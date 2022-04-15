@@ -380,7 +380,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			} else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE] == GLFW_RELEASE) state.square_isHeld = false;
 
 
-			if (leftOrRightturn < -0.05)
+			if (leftOrRightturn < -0.15)
 			{
 				updateLeftSpeed(-leftOrRightturn * 0.5f);
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		
@@ -389,7 +389,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 					vehiclePtr->getRigidDynamicActor()->addTorque((500.0f + (isFlippedOver() && canFlip ? 10000 : 0)) * PxVec3(back.x, back.y, back.z));
 				}
 			}
-			else if (leftOrRightturn > 0.05)
+			else if (leftOrRightturn > 0.15)
 			{
 				updateRightSpeed(-leftOrRightturn * 0.5f);
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	
