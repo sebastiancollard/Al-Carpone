@@ -15,6 +15,7 @@ enum MenuSelection
 	QUIT,
 	// options menu
 	TOGGLE_FULLSCREEN,
+	ACHIEVEMENTS,
 	CONTROLS,
 	BACK_TO_MAIN,
 	// controls menu
@@ -27,7 +28,8 @@ enum MenuType
 {
 	MAIN_MENU = 0,
 	OPTIONS_MENU,
-	CONTROLS_MENU
+	CONTROLS_MENU,
+	ACHIEVEMENTS_MENU
 };
 
 static class MainMenu {

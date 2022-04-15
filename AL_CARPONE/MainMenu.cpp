@@ -21,14 +21,18 @@ MainMenu::MainMenu() {
 		Model("models/mainMenu/2_QUIT.obj"),
 
 		// Options
-		Model("models/mainMenu/OPTIONS_0_togglefullscreen.obj"),
-		Model("models/mainMenu/OPTIONS_1_controls.obj"),
-		Model("models/mainMenu/OPTIONS_2_back.obj"),
+		Model("models/mainMenu/OPTIONS_togglefullscreen.obj"),
+		Model("models/mainMenu/OPTIONS_achievements.obj"),
+		Model("models/mainMenu/OPTIONS_controls.obj"),
+		Model("models/mainMenu/OPTIONS_back.obj"),
 
 		// Controls
 		Model("models/mainMenu/CONTROLS_0_keyboard.obj"),
 		Model("models/mainMenu/CONTROLS_1_controller.obj"),
-		Model("models/mainMenu/CONTROLS_2_back.obj")
+		Model("models/mainMenu/CONTROLS_2_back.obj"),
+
+		// Achievements
+		Model("models/mainMenu/ACHIEVEMENTS.obj")
 	};
 
 	light_positions = load_positions("models/map/light_positions.obj");
@@ -85,8 +89,16 @@ void MainMenu::drawJailScreen(GraphicsSystem* graphics) {
 
 
 void MainMenu::selectUp(State& state, AudioSystem* audio) {
-	selectedOption = (selectedOption - 1) % 3; // Each menu has 3 options
-	selectedOption += selectedMenu * 3;
+
+	if (selectedMenu == MenuType::ACHIEVEMENTS_MENU) { // special case
+		selectedOption = MenuSelection::BACK_TO_OPTIONS;
+	}
+	else {
+		int options = (selectedMenu == MenuType::OPTIONS_MENU) ? 4 : 3;
+		selectedOption = (selectedOption - 1) % options; // Each menu has 3 options (except options)
+		selectedOption += selectedMenu * 3;
+	}
+
 	audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 }
 
@@ -117,6 +129,11 @@ void MainMenu::selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* g
 
 	case MenuSelection::TOGGLE_FULLSCREEN:
 		graphics->toggleFullscreen();
+		break;
+
+	case MenuSelection::ACHIEVEMENTS:
+		selectedMenu = MenuType::ACHIEVEMENTS_MENU;
+		selectedOption = MenuSelection::BACK_TO_OPTIONS;
 		break;
 
 	case MenuSelection::CONTROLS:
