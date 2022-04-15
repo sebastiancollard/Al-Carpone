@@ -78,7 +78,7 @@ public:
 	float dupe_level = 0;
 	float dupe_timer = 0;
 	float dupe_shouldArrest = false;
-	
+	bool isMillionaire = false;
 	//garage
 	bool g_draw = false;
 

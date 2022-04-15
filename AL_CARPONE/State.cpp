@@ -131,6 +131,15 @@ void State::checkAchievements(Player& player) {
 			 previousStateChase = true;
 		 }
 	}
+
+	if (!isMillionaire) 
+	{
+		if(player.getCash() > 1000000)
+		{
+			isMillionaire = true;
+			cout << "you are a millionaire" << endl;
+		}
+	}
 }
 
 
