@@ -36,7 +36,7 @@ private:
 
 	double cashRateMultiplier = 1;
 
-	PowerUp equippedPower =  PowerUp();
+	PowerUp equippedPower;
 	bool can_choosePowerTool = false;
 
 
@@ -80,6 +80,8 @@ public:
 	float headlightForwardOffset2 = 2.174;
 	float headlightHorizontalOffset2 = 0.809;
 	float headlightVerticalOffset2 = 0.089;
+
+	bool hasPower = false;
 
 
 	Player() {}
@@ -126,4 +128,5 @@ public:
 	void usePower();
 	bool canChooseTool(State& state);
 	void setChooseTool(bool b);
+	void gainPower(POWER_TYPE type, float price);
 };

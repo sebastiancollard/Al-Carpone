@@ -82,7 +82,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		state.escape_isHeld = true;
 		return;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
 		state.escape_isHeld = false;
 	}
 
@@ -103,7 +103,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 
 		return;
 	}
-	else {
+	else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
 		state.enter_isHeld = false;
 	}
 
@@ -116,7 +116,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		state.S_isHeld = true;
 		return;
 	}
-	else state.S_isHeld = false;
+	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) state.S_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
 		if (!state.M_isHeld) {
@@ -125,7 +125,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		}
 		state.M_isHeld = true;
 	}
-	else state.M_isHeld = false;
+	else if (glfwGetKey(window, GLFW_KEY_M) == GLFW_RELEASE) state.M_isHeld = false;
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
@@ -136,7 +136,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		state.down_isHeld = true;
 		return;
 	}
-	else state.down_isHeld = false;
+	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE)state.down_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		if (!state.W_isHeld) {
@@ -147,7 +147,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		state.W_isHeld = true;
 		return;
 	}
-	else state.W_isHeld = false;
+	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) state.W_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		if (!state.up_isHeld) {
@@ -159,7 +159,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		state.up_isHeld = true;
 		return;
 	}
-	else state.up_isHeld = false;
+	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) state.up_isHeld = false;
 
 	//this part is for controller input
 	if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
@@ -167,16 +167,18 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 		GLFWgamepadstate controlState;
 		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controlState))
 		{
-			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE])
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE] == GLFW_PRESS)
 			{
 				//state.terminateProgram = true;
 				state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 				audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
 				//std::cout << "CIRCLE (xbox b, ns pro a)" << std::endl;
+				state.circle_isHeld = true;
 				return;
 			}
+			else if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE] == GLFW_RELEASE) state.circle_isHeld = false;
 			
-			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS])
+			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS] == GLFW_PRESS)
 			{
 				if (!state.cross_isHeld) 
 				{
@@ -195,7 +197,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 				return;
 				//std::cout << "CROSS (xbox a, ns pro b)" << std::endl;
 			}
-			else 
+			else if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CROSS] == GLFW_RELEASE)
 			{
 				state.cross_isHeld = false;
 			}
@@ -228,13 +230,13 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 				state.dpad_upisHold = false;
 			}
 			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_PRESS) {
-				if (!state.dpad_startIsHeld) {
+				if (!state.start_isHeld) {
 					state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 				}
-				state.dpad_startIsHeld = true;
+				state.start_isHeld = true;
 			}
-			else {
-				state.dpad_startIsHeld = false;
+			else if(controlState.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_RELEASE) {
+				state.start_isHeld = false;
 			}
 
 		}

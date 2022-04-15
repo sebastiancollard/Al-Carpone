@@ -30,7 +30,7 @@ public:
     std::map<GLchar, Character> Characters;
     
     void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-	void RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color);
+	void RenderText(Shader& shader, std::string text, float x, float y, float scale, glm::vec3 color = glm::vec3(1,1,1));
     
     int initFont();        //Functionality based off of the contents of "main" in the example. Sets up the font for use.
 private:

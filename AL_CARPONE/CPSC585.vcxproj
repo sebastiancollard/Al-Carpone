@@ -224,6 +224,7 @@
     <ClInclude Include="init.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="specialInputHandler.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PhysicsSystem.h" />
@@ -259,6 +260,13 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="upgrade params.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\..\Users\Judgy\Downloads\logo.ico" />
+    <Image Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AL_CARPONE.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
