@@ -299,7 +299,7 @@ int main()
 			} 
 			else {
 				std::string message = "... AND ESCAPED WITH $" + std::to_string((int)player.getCash() - 250000) + "!";
-				text_renderer.RenderText(*graphics.shaderText, message, 575.0f, SCREEN_HEIGHT - 383.0f, 1.25f, glm::vec3(0.f));
+				ui.text_renderer->RenderText(*graphics.shaderText, message, 575.0f, SCREEN_HEIGHT - 383.0f, 1.25f, glm::vec3(0.f));
 				mainMenu.drawWinScreen(graphics);
 			}
 			if (glfwGetKey(graphics.window, GLFW_KEY_F) == GLFW_PRESS) {

@@ -17,6 +17,7 @@
 class UI {
 
 public:
+	TextRenderer* text_renderer;
 
 	UI(GraphicsSystem* graphics);
 	void update(State* state, Player* player);
@@ -29,7 +30,6 @@ private:
 
 	// Graphics
 	GraphicsSystem* graphics;
-	TextRenderer* text_renderer;
 
 	// POPUPS
 	bool building_activated;
