@@ -184,7 +184,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 		GLFWgamepadstate controller_state;
 		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controller_state))
 		{
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] && showShop)
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_PRESS && showShop)
 			{
 				if (!gpDownPressed) {
 					state->audioSystemPtr->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
@@ -193,7 +193,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 				
 				gpDownPressed = true;
 			}
-			else gpDownPressed = false;
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE] == GLFW_RELEASE) gpDownPressed = false;
 
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] && showShop)
 			{
@@ -215,7 +215,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 				}
 				gpSquarePressed = true;
 			}
-			else gpSquarePressed = false;
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE] == GLFW_RELEASE) gpSquarePressed = false;
 
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE] && showShop)
 			{
@@ -226,7 +226,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 				}
 				gpCirclePressed = true;
 			}
-			else gpCirclePressed = false;
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE] == GLFW_RELEASE) gpCirclePressed = false;
 
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_CROSS] && showShop)
 			{
@@ -348,7 +348,7 @@ void Garage::handleInput(GLFWwindow* window, State* state, Player* player) {
 				
 				gpXPressed = true;
 			}
-			else gpXPressed = false;
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_CROSS] == GLFW_RELEASE) gpXPressed = false;
 
 
 		}

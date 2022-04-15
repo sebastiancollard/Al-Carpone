@@ -7,8 +7,6 @@
 #include "Vehicle.h"
 #include "Building.h"
 #include "PoliceCar.h"
-#include "Player.h"
-
 
 
 //Locked position and orientation. Used for third person view behind the car.
@@ -106,6 +104,7 @@ public:
 	bool M_isHeld = false;
 	bool N_isHeld = false;
 	bool H_isHeld = false;
+	bool T_isHeld = false;
 	bool f5_isHeld = false;
 	bool f_isHeld = false;
 	bool enter_isHeld = false;
