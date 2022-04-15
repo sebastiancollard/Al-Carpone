@@ -648,12 +648,6 @@ int main()
 
 			}
 
-
-			//printf("JAILTIMER: %.2f\n", player.jailTimer);
-					
-			
-
-
 			// handle when player is flipped over and doesnt have the upgrade
 			if (player.isFlippedOver() && !player.canFlip) {
 				player.flippedOverTimer += state.timeStep;
