@@ -229,7 +229,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			if (b->isInRange) {
 
 				b->triggerFunction(*this, state);
-				return;
+				break;
 			}
 		}
 		state.f_isHeld = true;
@@ -374,9 +374,10 @@ void Player::handleInput(GLFWwindow* window, State& state)
 					if (b == nullptr) continue;
 					if (b->isInRange) {
 						b->triggerFunction(*this, state);
-						return;
+						break;
 					}
 				}
+				state.square_isHeld = true;
 			} else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE] == GLFW_RELEASE) state.square_isHeld = false;
 
 
