@@ -2,13 +2,12 @@
 
 ## HOW TO PLAY
 
-The goal of the game is to escape town. This requires unlocking the gate which costs $250,000. To get this money, you must rob the bank! Rob speed starts out slow so you have to upgrade your rob speed at one of the garages. To help escape the police (who take your money if they catch you) you can buy upgrades for your car at the other garages. You can also buy temporary powerups at cornerstores to trick and distract police. Explore the symbols on the minimap to find all these locations. 
+The goal of the game is to escape town. This requires unlocking the gate which costs $250,000. To get this money, you must rob the bank! This will be difficult at the beginning, as your car is junky and your rob speed is low. Buy upgrades for your car at garages, and this will passively increase your rob speed. Explore the icons on the mini-map, they will lead you to the bank, cornerstores, and garages. 
 
 
 If you are detected by the police (get too close) they will begin to chase you. If you can evade them for long enough they will return to their regular patrol state. If they get too close they will start arresting you. If your jail countdown reaches 0 you are sent to jail and must pay at least $2000, or 75% of your money.
 
-
-
+If you get stuck at any point, dont worry, call the tow truck! Press T on keyboard or Triangle/Y on controller to get towed. This will cost you $2500, but if you cant afford it, the tow truck will lend you a kindness and tow you anyway. 
 	
 ## CONTROLS
 ### KEYBOARD
@@ -88,6 +87,18 @@ CORNER STORE & GARAGE MENUS
 	□ (Playstation) / X (Xbox): Enter/exit menu
 	
 ## ACHIEVMENTS LIST
+- Freedom!
+	- Fall off the map
+- Play for the win
+	- Finish the game
+- Dupe the police
+	- Escape with a jail countdown of 1, and 5-star alert level
+- Transformer
+	- Get all the upgrades
+- Millionaire
+	-  Get $1,000,000
+-  Parkour
+	- Get on top of the police station    
 
 ## UPGRADE LIST
 

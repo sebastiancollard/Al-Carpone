@@ -418,8 +418,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			}
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] == GLFW_PRESS) {
 				if (!state.dpad_upisHold) {
-					toggleHeadlights++;
-					if (toggleHeadlights > 2) toggleHeadlights = 0;
+					toggleHeadlights = toggleHeadlights + 1 % 3;
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::GEAR_SWITCH0);
 				}
 				state.dpad_upisHold = true;
@@ -429,8 +428,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			}
 			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_PRESS) {
 				if (!state.dpad_downisHold) {
-					toggleHeadlights--;
-					if (toggleHeadlights < 0) toggleHeadlights = 2;
+					toggleHeadlights = (toggleHeadlights - 1) % 3;
 					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::GEAR_SWITCH0);
 				}
 				state.dpad_downisHold = true;

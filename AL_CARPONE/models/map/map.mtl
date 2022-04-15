@@ -1,5 +1,5 @@
 # Blender MTL File: 'map_BKP.blend'
-# Material Count: 89
+# Material Count: 95
 
 newmtl BARK1
 Ns 225.000000
@@ -55,6 +55,30 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd textures\\GREEN_SIDING.jpg
+
+newmtl Gate_Light:light_lower_texture.001
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump textures\\lightlower_normal.jpg
+map_Kd textures\\lightlower_diffuse.jpg
+
+newmtl Gate_Light:light_upper_texture.001
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump textures\\lightupper_normal.jpg
+map_Kd textures\\lightupper_diffuse.jpg
 
 newmtl Glass_Opaque_Interior_Inst
 Ns 10.000002
@@ -198,6 +222,28 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd textures\\Alien_Glass_Bulletproof_512.tga
+
+newmtl Material.012
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures\\garage_concrete.jpg
+
+newmtl Material.013
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd textures\\garage_concrete.jpg
 
 newmtl Material__405
 Ns 10.000002
@@ -760,6 +806,18 @@ d 1.000000
 illum 2
 map_Kd textures\\fence.png
 
+newmtl gate_texture.001
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump textures\\gate_normal.jpg
+map_Kd textures\\gate_diffuse.jpg
+
 newmtl grass
 Ns 225.000000
 Ka 1.000000 1.000000 1.000000
@@ -803,6 +861,18 @@ Ni 1.450000
 d 1.000000
 illum 2
 map_Kd textures\\pillar.jpg
+
+newmtl pillar_texture.001
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump textures\\pillar_normalmap.jpg
+map_Kd textures\\pillar_diffuse.jpg
 
 newmtl pinkbuildingbare
 Ns 225.000000

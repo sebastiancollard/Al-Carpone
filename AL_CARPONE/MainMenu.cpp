@@ -140,16 +140,19 @@ void MainMenu::selectUp(State& state, AudioSystem* audio) {
 	switch (selectedMenu) {
 
 	case MenuType::MAIN_MENU:
+		audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 		selectedOption = (selectedOption - 1);
 		if (selectedOption == -1) selectedOption = 2;
 		break;
 
 	case MenuType::OPTIONS_MENU:
+		audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 		selectedOption = (selectedOption - 1);
 		if (selectedOption == 2) selectedOption = 6;
 		break;
 
 	case MenuType::CONTROLS_MENU:
+		audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
 		selectedOption = (selectedOption - 1);
 		if (selectedOption == 6) selectedOption = 9;
 		break;
@@ -159,7 +162,7 @@ void MainMenu::selectUp(State& state, AudioSystem* audio) {
 		break;
 	}
 
-	audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
+	
 }
 
 
@@ -167,15 +170,18 @@ void MainMenu::selectDown(State& state, AudioSystem* audio) {
 	switch (selectedMenu) {
 
 	case MenuType::MAIN_MENU:
+		audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 		selectedOption = (selectedOption + 1) % 3;
 		break;
 
 	case MenuType::OPTIONS_MENU:
+		audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 		selectedOption = (selectedOption + 1);
 		if (selectedOption == 7) selectedOption = 3;
 		break;
 
 	case MenuType::CONTROLS_MENU:
+		audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
 		selectedOption = (selectedOption + 1);
 		if (selectedOption == 10) selectedOption = 7;
 		break;
@@ -184,7 +190,7 @@ void MainMenu::selectDown(State& state, AudioSystem* audio) {
 		selectedOption = MenuSelection::A_BACK_TO_OPTIONS;
 		break;
 	}
-	audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
+	
 }
 
 
@@ -243,6 +249,32 @@ void MainMenu::selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* g
 	audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
 }
 
+void MainMenu::backCurrent(State& state, AudioSystem* audio, GraphicsSystem* graphics) {
+
+	switch (selectedMenu) {
+
+	case MenuType::MAIN_MENU:
+		state.gamestate = GAMESTATE_INGAME;
+		break;
+
+	case MenuType::OPTIONS_MENU:
+		selectedMenu = MenuType::MAIN_MENU;
+		selectedOption = MenuSelection::PLAYGAME;
+		break;
+
+	case MenuType::CONTROLS_MENU:
+		selectedMenu = MenuType::OPTIONS_MENU;
+		selectedOption = MenuSelection::TOGGLE_FULLSCREEN;
+		break;
+
+	case MenuType::ACHIEVEMENTS_MENU:
+		selectedMenu = MenuType::OPTIONS_MENU;
+		selectedOption = MenuSelection::TOGGLE_FULLSCREEN;
+		break;
+	}
+
+	audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
+}
 
 
 
@@ -254,8 +286,7 @@ void MainMenu::handleInputs(State& state, AudioSystem* audio, GraphicsSystem* gr
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
-			state.gamestate = GAMESTATE_INGAME;
-			audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
+			backCurrent(state, audio, graphics);
 		}
 		state.escape_isHeld = true;
 		return;
@@ -330,10 +361,9 @@ void MainMenu::handleInputs(State& state, AudioSystem* audio, GraphicsSystem* gr
 		{
 			if (controlState.buttons[GLFW_GAMEPAD_BUTTON_CIRCLE] == GLFW_PRESS)
 			{
-				//state.terminateProgram = true;
-				state.gamestate = GAMESTATE::GAMESTATE_INGAME;
-				audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
-				//std::cout << "CIRCLE (xbox b, ns pro a)" << std::endl;
+				if (!state.circle_isHeld) {
+					backCurrent(state, audio, graphics);
+				}
 				state.circle_isHeld = true;
 				return;
 			}

@@ -254,7 +254,6 @@ void PoliceCar::patrol() {
 		}
 
 		else if (x_z_distance_squared(myPos,targetPosition) < 100.0f) {
-			if (ID == 0) printf("hi\n");
 			targetPosition = dNodes->guideMeFromTo(myPos, nextPatrolNode);
 		}
 

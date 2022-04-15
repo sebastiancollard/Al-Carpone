@@ -92,7 +92,7 @@ void PhysicsSystem::step(GLFWwindow* window)
 {
 	float timestep = state.timeStep * state.simulationSpeed;
 
-	float substepSize = 1 / 10.f;
+	float substepSize = 1 / 30.f;
 
 	std::vector<Vehicle*> activevehicles;
 
@@ -100,7 +100,6 @@ void PhysicsSystem::step(GLFWwindow* window)
 		p->update(player, state);
 		activevehicles.push_back(p);
 	}
-	if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
 	activevehicles.push_back(&player);
 
 	while (timestep > 0) {
@@ -108,6 +107,8 @@ void PhysicsSystem::step(GLFWwindow* window)
 		float substep = substepSize;
 
 		if (timestep < substepSize) substep = timestep;
+
+		if (state.cameraMode == CAMERA_MODE_BOUND) player.handleInput(window, state);
 
 		for (int i = 0; i < activevehicles.size(); i++) {
 

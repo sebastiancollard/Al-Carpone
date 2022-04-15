@@ -349,9 +349,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader3D.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
     <None Include="shader3D.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
@@ -374,6 +371,9 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="shaderDetection.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shader3D.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

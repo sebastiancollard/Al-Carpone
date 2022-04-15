@@ -43,6 +43,7 @@ static class MainMenu {
 	void selectUp(State& state, AudioSystem* audio);
 	void selectDown(State& state, AudioSystem* audio);
 	void selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* graphics);
+	void backCurrent(State& state, AudioSystem* audio, GraphicsSystem* graphics);
 
 public:
 
