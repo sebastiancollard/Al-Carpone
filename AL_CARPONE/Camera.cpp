@@ -143,7 +143,7 @@ BoundCamera::BoundCamera(Player& p, State& state) : player(p) {
     worldUp = glm::vec3(0, 1, 0);
 
     pos = player.getPos() - player.getDir() * 15.0f + glm::vec3(0, 2.5f, 0);
-    dir = player.getDir();
+    dir = -player.getDir();
 
     pitch = 0;
     yaw = 0;
@@ -271,14 +271,14 @@ void BoundCamera::handleInput(GLFWwindow* window, State& state) {
                 controllerIdle = false;
                 controllerTimer = 0.f;
                 if (usingKeyboard) usingKeyboard = false;
-                rotY = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] * 0.33f;
+                rotY = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] * 0.5f;
             }
             if (abs(controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) > 0.15)
             {
                 controllerIdle = false;
                 controllerTimer = 0.f;
                 if (usingKeyboard) usingKeyboard = false;
-                rotX = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] * 0.5f;
+                rotX = controller.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] * 0.75f;
             }
             if (abs(controller.buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB]) == 1) {
                 controllerTimer = CONTROLLER_RESET_MAX_TIME;

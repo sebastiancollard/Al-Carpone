@@ -31,6 +31,7 @@ uniform int numHeadlights;
 uniform int numBrakelights;
 
 uniform float brakelightMultiplier;
+uniform int playerHeadlightMode;
 
 uniform vec3 light_positions[MAX_NR_LIGHTS];
 uniform vec3 headlight_positions[MAX_NR_HEADLIGHTS];
@@ -38,11 +39,10 @@ uniform vec3 brakelight_positions[MAX_NR_BRAKELIGHTS];
 uniform vec3 headlight_directions[MAX_NR_HEADLIGHTS];
 uniform vec3 brakelight_directions[MAX_NR_BRAKELIGHTS];
 
-
-
-
 uniform vec3 camPos;
 
+
+vec4 brakelightColor = vec4(1.0f,0.1f,0.1f,0.0f);
 
 float ambient = 0.15f;
 
@@ -94,7 +94,14 @@ void main()
 
 
 	//HANDLE HEADLIGHTS
-   for(int i = 0; i < numHeadlights; i++){
+
+	int i = 0;
+		
+	   
+	//Skip the first headlights based on player headlight mode.
+	if(playerHeadlightMode == 0) i = 4;
+	if(playerHeadlightMode == 1) i = 2;
+	for(i; i < numHeadlights; i++){
 		vec4 lPos = vec4(headlight_positions[i], 1.0f);
 		vec4 lDir = FragPos - lPos;
 		vec4 headlightForward = vec4(headlight_directions[i],1.0f);
@@ -138,7 +145,6 @@ void main()
 	}
    
 
-   vec4 brakelightColor = vec4(1.0f,20.f / 255.0f, 10.f / 255.0f, 0.0f);
    float brakelightIllum = 0;
    float brakelightSpec = 0;
    float base_brakelightStrength = 0.1f;

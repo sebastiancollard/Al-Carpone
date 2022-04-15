@@ -48,16 +48,13 @@ enum BUILDINGS {
 class State {
 public:
 
-	float brakelight_down_angle = 0.586;
-
-
 	
 	GAMESTATE gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 
 	// Time
-	double currTime = 0.;				
-	double prevTime = 0.;				
-	double timeStep = 1.0f / 60.0f;		
+	double currTime = 0.;
+	double prevTime = 0.;
+	double timeStep = 1.0f / 60.0f;
 	float simulationSpeed = 2.f;
 	double timeSinceLastFpsUpdate = 0;
 
@@ -70,7 +67,7 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
-	
+
 
 	//garage
 	bool g_draw = false;
@@ -81,7 +78,7 @@ public:
 	float policeFOff = 1.830;
 	float policeOOff = 0.871;
 	float policeVOff = 0.150;
-	
+
 
 	std::vector<PoliceCar*> activePoliceVehicles = {};
 	std::vector<PoliceCar*> inactivePoliceVehicles = {};
@@ -89,7 +86,7 @@ public:
 
 	AudioSystem* audioSystemPtr;
 
-	std::vector<Building*> buildings = 
+	std::vector<Building*> buildings =
 	{
 		NULL, //BANK
 		NULL, //GARAGE1
@@ -99,7 +96,7 @@ public:
 		NULL, //CORNERSTORE2
 		NULL  //EXIT
 	};
-				
+
 	//Used to check for single input to prevent the key from being spammed.
 	//This could be moved to some sort of general input class at somepoint.
 	bool Q_isHeld = false;
