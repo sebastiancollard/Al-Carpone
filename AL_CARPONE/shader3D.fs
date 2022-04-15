@@ -176,7 +176,8 @@ void main()
 			vec4 lDir = FragPos - lPos;
 			vec4 brakelightForward = vec4(brakelight_directions[i],1.0f);
 
-			float comp = dot(normalize(lDir), brakelightForward);
+			float comp = dot(normalize(lDir), brakelightForward);
+
 			if(comp < 0) continue;
 
 			
@@ -188,7 +189,9 @@ void main()
 				//comp = comp * comp * 5 * brakelightStrength;
 			}
 
-			comp =  - dot(lDir, vec4(Normal, 1.0));
+			comp = - dot(lDir, vec4(Normal, 1.0));
+
+			if(comp < 0) continue;
 
 			float d = length(lPos - FragPos);
 
@@ -211,8 +214,10 @@ void main()
 		}
    }
 
-	
-
+	if(headlightIllum < 0) headlightIllum = 0;
+	if(brakelightIllum < 0) brakelightIllum = 0;
+	if(headlightSpec < 0) headlightSpec = 0;
+	if(brakelightSpec < 0) brakelightSpec = 0;
 
    if (shaderMode == SHADER_MODE_DIFFUSE) {
 		FragColor = 
