@@ -15,9 +15,20 @@ MainMenu::MainMenu() {
 
 	
 	selectionScreens = {
+		// Main menu
 		Model("models/mainMenu/0_PLAYGAME.obj"),
-		//Model("models/mainMenu/1_OPTIONS.obj"),
-		Model("models/mainMenu/2_QUIT.obj")
+		Model("models/mainMenu/1_OPTIONS.obj"),
+		Model("models/mainMenu/2_QUIT.obj"),
+
+		// Options
+		Model("models/mainMenu/OPTIONS_0_togglefullscreen.obj"),
+		Model("models/mainMenu/OPTIONS_1_controls.obj"),
+		Model("models/mainMenu/OPTIONS_2_back.obj"),
+
+		// Controls
+		Model("models/mainMenu/CONTROLS_0_keyboard.obj"),
+		Model("models/mainMenu/CONTROLS_1_controller.obj"),
+		Model("models/mainMenu/CONTROLS_2_back.obj")
 	};
 
 	light_positions = load_positions("models/map/light_positions.obj");
@@ -37,8 +48,9 @@ MainMenu::MainMenu() {
 void MainMenu::drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio) {
 	graphics.shader2D->use();
 	selectionScreens[selectedOption].Draw(*graphics.shader2D);
-	handleInputs(graphics.window, state, audio);
+	handleInputs(state, audio, &graphics);
 }
+
 
 void MainMenu::drawLoadingGameScreen(GraphicsSystem& graphics) {
 	graphics.shader2D->use();
@@ -71,9 +83,77 @@ void MainMenu::drawJailScreen(GraphicsSystem* graphics) {
 // INPUT HANDLING
 ////////////////////////////////////////////////////////////////////////
 
+
+void MainMenu::selectUp(State& state, AudioSystem* audio) {
+	selectedOption = (selectedOption - 1) % 3; // Each menu has 3 options
+	selectedOption += selectedMenu * 3;
+	audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
+}
+
+
+void MainMenu::selectDown(State& state, AudioSystem* audio) {
+	selectedOption = (selectedOption + 1) % 3; // Each menu has 3 options
+	selectedOption += selectedMenu * 3;
+	audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
+}
+
+
+void MainMenu::selectCurrent(State& state, AudioSystem* audio, GraphicsSystem* graphics) {
+
+	std::cout << selectedOption << ',' << selectedMenu << std::endl;
+
+	switch (selectedOption) {
+
+	case MenuSelection::PLAYGAME:
+		state.gamestate = GAMESTATE_INGAME;
+		break;
+
+	case MenuSelection::OPTIONS:
+		selectedMenu = MenuType::OPTIONS_MENU;
+		selectedOption = MenuSelection::TOGGLE_FULLSCREEN;
+		break;
+
+	case MenuSelection::QUIT:
+		state.terminateProgram = true;
+		break;
+
+	case MenuSelection::TOGGLE_FULLSCREEN:
+		graphics->toggleFullscreen();
+		break;
+
+	case MenuSelection::CONTROLS:
+		selectedMenu = MenuType::CONTROLS_MENU;
+		selectedOption = MenuSelection::KEYBOARD;
+		break;
+
+	case MenuSelection::BACK_TO_MAIN:
+		selectedMenu = MenuType::MAIN_MENU;
+		selectedOption = MenuSelection::PLAYGAME;
+		break;
+
+		// just show screens (no functionality needed)
+	case MenuSelection::KEYBOARD:
+	case MenuSelection::CONTROLLER:
+		break;
+
+	case MenuSelection::BACK_TO_OPTIONS:
+		selectedMenu = MenuType::OPTIONS_MENU;
+		selectedOption = MenuSelection::BACK_TO_MAIN;
+		break;
+	}
+
+	audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
+}
+
+
+
+
 //Checks for special inputs that would alter the state, and updates state accordingly
-void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio)
+void MainMenu::handleInputs(State& state, AudioSystem* audio, GraphicsSystem* graphics)
 {
+	GLFWwindow* window = graphics->window;
+
+
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (!state.escape_isHeld) {
 			state.gamestate = GAMESTATE_INGAME;
@@ -88,19 +168,9 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
 		if (!state.enter_isHeld) {
-			if (selectedOption == MenuSelection::PLAYGAME) {
-				state.gamestate = GAMESTATE_INGAME;
-				audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
-				return;
-			}
-			else if(selectedOption == MenuSelection::QUIT) {
-				state.terminateProgram = true;
-				audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
-				return;
-			}			
+			selectCurrent(state, audio, graphics);
 		}
 		state.enter_isHeld = true;
-
 		return;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
@@ -110,8 +180,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		if (!state.S_isHeld) {
-			selectedOption = (selectedOption + 1) % 2;
-			audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
+			selectDown(state, audio);
 		}
 		state.S_isHeld = true;
 		return;
@@ -130,8 +199,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		if (!state.down_isHeld) {
-			selectedOption = (selectedOption + 1) % 2;
-			audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
+			selectDown(state, audio);
 		}
 		state.down_isHeld = true;
 		return;
@@ -140,9 +208,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		if (!state.W_isHeld) {
-
-			selectedOption = (selectedOption - 1) % 2;
-			audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
+			selectUp(state, audio);
 		}
 		state.W_isHeld = true;
 		return;
@@ -151,10 +217,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		if (!state.up_isHeld) {
-
-			selectedOption = (selectedOption - 1) % 2;
-			audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
-
+			selectUp(state, audio);
 		}
 		state.up_isHeld = true;
 		return;
@@ -182,16 +245,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 			{
 				if (!state.cross_isHeld) 
 				{
-					if (selectedOption == MenuSelection::PLAYGAME) {
-						state.gamestate = GAMESTATE_INGAME;
-						audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
-						return;
-					}
-					else if (selectedOption == MenuSelection::QUIT) {
-						state.terminateProgram = true;
-						audio->playSoundEffect(SOUND_SELECTION::MENU_SELECT);
-						return;
-					}
+					selectCurrent(state, audio, graphics);
 				}
 				state.cross_isHeld = true;
 				return;
@@ -205,8 +259,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 			if ((controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_PRESS))
 			{
 				if (!state.dpad_downisHold) {
-					audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_LOW);
-					selectedOption = (selectedOption + 1) % 2;
+					selectDown(state, audio);
 				}
 				state.dpad_downisHold = true;
 				return;
@@ -219,8 +272,7 @@ void MainMenu::handleInputs(GLFWwindow* window, State& state, AudioSystem* audio
 			if ((controlState.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] == GLFW_PRESS))
 			{
 				if (!state.dpad_upisHold) {
-					audio->playSoundEffect(SOUND_SELECTION::MENU_CLICK_HIGH);
-					selectedOption = (selectedOption - 1) % 2;
+					selectUp(state, audio);
 				}
 				state.dpad_upisHold = true;
 				return;
