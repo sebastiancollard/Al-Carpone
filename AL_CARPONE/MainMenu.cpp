@@ -55,10 +55,11 @@ MainMenu::MainMenu() {
 void MainMenu::drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio) {
 
 	graphics.shader2D->use();
-	selectionScreens[selectedOption].Draw(*graphics.shader2D);
-	if (selectedOption == MenuSelection::ACHIEVEMENTS) {
+	if (selectedMenu == MenuType::ACHIEVEMENTS_MENU) {
 		drawCheckmarks(graphics, state);
 	}
+	selectionScreens[selectedOption].Draw(*graphics.shader2D);
+	
 	handleInputs(state, audio, &graphics);
 }
 
@@ -93,39 +94,38 @@ void MainMenu::drawCheckmarks(GraphicsSystem& graphics, State& state) {
 
 	// Left side
 	if (state.isJumpOutOfMap) {
-		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.8, 0.5, 0));
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.83, 0.29, 0));
 		graphics.shader2D->setMat4("model", pos);
 		checkmark.Draw(*graphics.shader2D);
 	}
 	if (state.isFinishGame) {
-		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.8, -0.1, 0));
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.83, -0.15, 0));
 		graphics.shader2D->setMat4("model", pos);
 		checkmark.Draw(*graphics.shader2D);
 	}
 	if (state.isDupeThePolice) {
-		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.8, -0.8, 0));
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(-0.83, -0.6, 0));
 		graphics.shader2D->setMat4("model", pos);
 		checkmark.Draw(*graphics.shader2D);
 	}
 	
 	// Right side
 	if (state.unlockedAllUpgrades) {
-		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.3, 0.5, 0));
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.2, 0.29, 0));
 		graphics.shader2D->setMat4("model", pos);
 		checkmark.Draw(*graphics.shader2D);
 	}
 	if (state.isMillionaire) {
-		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.3, -0.1, 0));
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.2, -0.15, 0));
 		graphics.shader2D->setMat4("model", pos);
 		checkmark.Draw(*graphics.shader2D);
 	}
 	if (state.isRoofOfPoliceStation) {
-		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.3, -0.8, 0));
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(0.2, -0.6, 0));
 		graphics.shader2D->setMat4("model", pos);
 		checkmark.Draw(*graphics.shader2D);
 	}
 	graphics.shader2D->setMat4("model", glm::mat4(1.f));
-	std::cout << "drawing checkmarks" << std::endl;
 }
 
 
@@ -136,8 +136,6 @@ void MainMenu::drawCheckmarks(GraphicsSystem& graphics, State& state) {
 
 
 void MainMenu::selectUp(State& state, AudioSystem* audio) {
-
-	std::cout << selectedMenu << ", " << selectedOption << std::endl;
 
 	switch (selectedMenu) {
 
