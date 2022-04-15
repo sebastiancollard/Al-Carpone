@@ -10,7 +10,6 @@
 #include "PowerUp.h"
 
 
-
 //Locked position and orientation. Used for third person view behind the car.
 #define CAMERA_MODE_BOUND 0
 //Player has full control of position and orientation of the camera, loses control of the car.
@@ -109,6 +108,7 @@ public:
 	bool M_isHeld = false;
 	bool N_isHeld = false;
 	bool H_isHeld = false;
+	bool T_isHeld = false;
 	bool f5_isHeld = false;
 	bool f_isHeld = false;
 	bool enter_isHeld = false;
@@ -126,7 +126,7 @@ public:
 	bool dpad_upisHold = false;
 	bool dpad_leftIsHold = false;
 	bool dpad_rightIsHold = false;
-	bool dpad_startIsHeld = false;
+	bool start_isHeld = false;
 	bool cross_isHeld = false;
 	bool circle_isHeld = false;
 	bool triangle_isHeld = false;

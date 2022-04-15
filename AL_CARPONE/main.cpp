@@ -627,14 +627,62 @@ int main()
 				if (player.jailTimer < 0) player.jailTimer = 0;
 			}
 
-			//printf("JAILTIMER: %.2f\n", player.jailTimer);
 
 			// handle when player is flipped over and doesnt have the upgrade
 			if (player.isFlippedOver() && !player.canFlip) {
 				player.flippedOverTimer += state.timeStep;
 			}
 			else if (!player.isFlippedOver() && player.flippedOverTimer != 0.f) player.flippedOverTimer = 0.f;
-			if (player.flippedOverTimer > 5.f) player.sendToJail(state);
+
+
+			//Cant access ui from player, so have to put this in main
+			if (player.flippedOverTimer > 5.f) {
+				ui.showTowPrompt();
+			}  
+			if (glfwGetKey(graphics.window, GLFW_KEY_T) == GLFW_PRESS) {
+				
+				if (!state.T_isHeld) {
+					if (ui.shouldTow(state)) {
+						player.tow();
+						audio.playSoundEffect(SOUND_SELECTION::TOW_TRUCK);
+						ui.resetTowPrompt();
+					}
+					else {
+						audio.playSoundEffect(SOUND_SELECTION::POP_TRIGGER_MENU);
+						ui.showTowPrompt();
+					}
+				}
+
+				state.T_isHeld = true;
+			}
+			else if (glfwGetKey(graphics.window, GLFW_KEY_T) == GLFW_RELEASE) {
+				state.T_isHeld = false;
+			}
+
+			if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
+			{
+				GLFWgamepadstate controller_state;
+				if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controller_state))
+				{
+					if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] == GLFW_PRESS)
+					{
+						if (!state.triangle_isHeld) {
+							if (ui.shouldTow(state)) {
+								player.tow();
+								audio.playSoundEffect(SOUND_SELECTION::TOW_TRUCK);
+								ui.resetTowPrompt();
+							}
+							else {
+								audio.playSoundEffect(SOUND_SELECTION::POP_TRIGGER_MENU);
+								ui.showTowPrompt();
+							}
+						}
+						state.triangle_isHeld = true;
+					}
+					else if(controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] == GLFW_RELEASE) state.triangle_isHeld = false;
+				}
+			}
+
 
 			// camera mode
 			if (state.cameraMode == CAMERA_MODE_BOUND) activeCamera = &boundCamera;

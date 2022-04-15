@@ -57,7 +57,7 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 		}
 		state.M_isHeld = true;
 	}
-	else state.M_isHeld = false;
+	else if (glfwGetKey(window, GLFW_KEY_M) == GLFW_RELEASE) state.M_isHeld = false;
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS){
 		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
@@ -84,22 +84,22 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 		GLFWgamepadstate controller_state;
 		if (glfwGetGamepadState(GLFW_JOYSTICK_1, &controller_state))
 		{
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_START])
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_PRESS)
 			{
 				//std::cout << "start (PS4 options, XBOX menu, nspro +) " << std::endl;	//ps4 - options
-				if (!state.option_isHeld) 
+				if (!state.start_isHeld) 
 				{
 					state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
 				}
-				state.option_isHeld = true;
+				state.start_isHeld = true;
 				return;
 			}
-			else 
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_RELEASE)
 			{
-				state.option_isHeld = false;
+				state.start_isHeld = false;
 			}
 
-			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] && debugmode != DEBUGMODE::FALSE)
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] == GLFW_PRESS && debugmode != DEBUGMODE::FALSE)
 			{
 				//std::cout << "TRIANGLE (xbox y, ns pro x)" << std::endl;
 				if (!state.triangle_isHeld)
@@ -108,7 +108,7 @@ void checkSpecialInputs(GraphicsSystem* graphics, State& state, Player& player, 
 				}
 				state.R_isHeld = true;
 			}
-			else state.triangle_isHeld = false;
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_TRIANGLE] == GLFW_RELEASE) state.triangle_isHeld = false;
 
 			
 		}

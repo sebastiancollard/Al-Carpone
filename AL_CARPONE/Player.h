@@ -110,6 +110,7 @@ public:
 	bool beingChased(State& state);
 
 	bool isFlippedOver();
+	void tow();
 
 	std::pair<std::pair<glm::vec3, glm::vec3>, std::pair<glm::vec3, glm::vec3>> getHeadlightPositions();
 

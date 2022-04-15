@@ -8,6 +8,7 @@
 // OBJ paths
 #define INTERACT_PATH "models/ui/interact.obj"
 #define EXIT_PATH "models/ui/interact_exit.obj"
+#define TOW_PATH "models/ui/towPrompt.obj"
 
 #define TOMATO_UI_PATH "models/ui/tomato_ui.obj"
 #define DONUT_UI_PATH "models/ui/donut_ui.obj"
@@ -35,6 +36,7 @@ UI::UI(GraphicsSystem* g) : graphics(g) {
 
 	interactPrompt = new Model(INTERACT_PATH);
 	exitPrompt = new Model(EXIT_PATH);
+	towPrompt = new Model(TOW_PATH);
 
 	pwr_tomato = new Model(TOMATO_UI_PATH);
 	pwr_donut = new Model(DONUT_UI_PATH);
@@ -102,6 +104,19 @@ void UI::update(State* state, Player* player) {
 		Garage* g = ((Garage*)(state->buildings[BUILDINGS::GARAGE3]));
 		g->showShop = false;
 	}
+
+
+
+	if (towPromptDisplayed) {
+		towPrompt->Draw(*graphics->shader2D);
+		towPromptTimer -= state->timeStep;
+
+		if (towPromptTimer <= 0) {
+			towPromptTimer = 2.0f;
+			towPromptDisplayed = false;
+		}
+	}
+
 }
 
 
@@ -279,7 +294,6 @@ void UI::drawPowerups(State* state, Player* player) {
 
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MINIMAP MARKER POSITIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -340,4 +354,22 @@ glm::vec3 UI::calculateOnMapPos(glm::vec3 pos) {
 	float offsetz = 0.505;
 
 	return vec3(scalex * pos.x + offsetx, scalez * pos.z + offsetz, 0.f);
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TOWING
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+void UI::showTowPrompt() {
+	towPromptDisplayed = true;
+}
+bool UI::shouldTow(State& state) {
+	return towPromptDisplayed && !state.policeAlerted();
+}
+void UI::resetTowPrompt() {
+	towPromptDisplayed = false;
+	towPromptTimer = 2.f;
 }

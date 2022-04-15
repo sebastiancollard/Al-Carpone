@@ -21,6 +21,10 @@ public:
 	UI(GraphicsSystem* graphics);
 	void update(State* state, Player* player);
 
+	void showTowPrompt();
+	bool shouldTow(State&);
+	void resetTowPrompt();
+
 private:
 
 	// Graphics
@@ -35,12 +39,17 @@ private:
 	Model* pwr_donut;
 	Model* pwr_spike;
 	Model* pwr_camo;
+	Model* towPrompt;
+	Model* Item;
 
 	// MINIMAP ELEMENTS
 	Model* minimap;
 	Model* player_marker;
 	Model* police_marker;
 	glm::mat4 player_movement = glm::mat4(1.f);
+
+	bool towPromptDisplayed = false;
+	float towPromptTimer = 2.0f;
 
 
 	void drawTexts(State* state, Player* player);

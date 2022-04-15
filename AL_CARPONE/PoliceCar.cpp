@@ -12,7 +12,7 @@
 // Car Speeds
 #define PATROL_ACCEL 0.625f
 #define PERSUIT_ACCEL 0.7f
-#define CHASE_ACCEL 0.8f
+#define CHASE_ACCEL 1.f
 static enum DEBUGMODE {
 	FALSE,
 	TRUE,

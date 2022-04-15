@@ -210,6 +210,12 @@ void Player::rob(State& state) {
 // CASH_ROBBED_PER_FRAME* state.timeStep
 }
 
+void Player::tow() {
+	reset();
+	setCash(getCash() - 2500);
+	if (getCash() < 0) setCash(0);
+}
+
 ///////////////////////////////////////////////////////////////////////
 // INPUT HANDLING
 ///////////////////////////////////////////////////////////////////////
@@ -283,7 +289,6 @@ void Player::handleInput(GLFWwindow* window, State& state)
 	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {
 		state.S_isHeld = false;
 	}
-
 
 	// Set as an else if for now seeing as you normally can't accelerate frontwards/backwards at the same time...
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
@@ -380,9 +385,10 @@ void Player::handleInput(GLFWwindow* window, State& state)
 						return;
 					}
 				}
-			}
+			} else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_SQUARE] == GLFW_RELEASE) state.square_isHeld = false;
 
-			if (leftOrRightturn < -0.05)
+
+			if (leftOrRightturn < -0.15)
 			{
 				updateLeftSpeed(-leftOrRightturn * 0.5f);
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_LEFT);		
@@ -391,7 +397,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 					vehiclePtr->getRigidDynamicActor()->addTorque((500.0f + (isFlippedOver() && canFlip ? 10000 : 0)) * PxVec3(back.x, back.y, back.z));
 				}
 			}
-			else if (leftOrRightturn > 0.05)
+			else if (leftOrRightturn > 0.15)
 			{
 				updateRightSpeed(-leftOrRightturn * 0.5f);
 				inputQueue.push(DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT);	
@@ -409,6 +415,29 @@ void Player::handleInput(GLFWwindow* window, State& state)
 				inputQueue.push(DriveMode::eDRIVE_MODE_HANDBRAKE);
 				input_handbrake = true;
 			}
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] == GLFW_PRESS) {
+				if (!state.dpad_upisHold) {
+					toggleHeadlights++;
+					if (toggleHeadlights > 2) toggleHeadlights = 0;
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::GEAR_SWITCH0);
+				}
+				state.dpad_upisHold = true;
+			}
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP] == GLFW_RELEASE) {
+				state.dpad_upisHold = false;
+			}
+			if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_PRESS) {
+				if (!state.dpad_downisHold) {
+					toggleHeadlights--;
+					if (toggleHeadlights < 0) toggleHeadlights = 2;
+					state.audioSystemPtr->playSoundEffect(SOUND_SELECTION::GEAR_SWITCH0);
+				}
+				state.dpad_downisHold = true;
+			}
+			else if (controller_state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] == GLFW_RELEASE) {
+				state.dpad_downisHold = false;
+			}
+
 		}
 
 		
