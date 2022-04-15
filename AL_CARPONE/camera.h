@@ -27,7 +27,7 @@ public:
     float mouseSensitivity;
     float zoom;
 
-    bool usingKeyboard = false;
+    bool usingKeyboard = true;
 
     // prevent first click snap
     bool firstClick = true;
