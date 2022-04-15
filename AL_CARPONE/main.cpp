@@ -76,8 +76,8 @@ int main()
 	Bank bank;
 	state.buildings[BUILDINGS::BANK] = &bank;
 
-
-
+	
+	
 	// update player stats to starter stats
 	
 	// robbery speed done by default
@@ -240,6 +240,7 @@ int main()
 	SelectItem selectItem;
 	//ChangePlaylist playlist;
 
+	
 
 	// Initialize Models
 	player.createModel(); //TODO: If player is moved here as well, we can create model in constructors instead.
@@ -577,6 +578,11 @@ int main()
 			if (player.canChooseTool(state) && (state.buildings[BUILDINGS::CORNERSTORE1]->isInRange 
 				|| state.buildings[BUILDINGS::CORNERSTORE2]->isInRange))
 			{ selectItem.drawMenu(graphics, state, player); }
+			///////////////
+			//Achievement//
+			///////////////
+			
+			state.checkAchievements(player);
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);
@@ -606,6 +612,7 @@ int main()
 
 
 			bool shouldArrest = false;
+			
 			int num_arresters = 0;
 
 			for (PoliceCar* p : state.activePoliceVehicles) {
@@ -617,11 +624,11 @@ int main()
 
 
 			if (shouldArrest) {
-
+				state.dupe_shouldArrest = true;
 				if (abs(player.getForwardVelocity()) < 2.f) {
 					player.jailTimer += state.timeStep * (float)num_arresters;
 				}
-
+				//cout << "jailTime : " << player.jailTimer << "num_arresters: " << num_arresters << endl;
 				if (debugmode != DEBUGMODE::NOJAIL && player.jailTimer >= 5.0f) {
 
 					player.sendToJail(state);
@@ -638,7 +645,13 @@ int main()
 			else {
 				player.jailTimer -= state.timeStep * 0.1f;
 				if (player.jailTimer < 0) player.jailTimer = 0;
+
 			}
+
+
+			//printf("JAILTIMER: %.2f\n", player.jailTimer);
+					
+			
 
 
 			// handle when player is flipped over and doesnt have the upgrade
