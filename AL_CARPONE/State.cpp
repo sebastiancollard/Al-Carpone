@@ -74,13 +74,15 @@ void State::checkAchievements(Player& player) {
 	}
 
 	//Made it out of the map
-	if (!isJumpOutOfMap)
-	{
-		if (pos.y < -21) {
+	if (pos.y < -21) {			//allways check for this, reset the player to start pos if so.
+		if (!isJumpOutOfMap)
+		{
 			isJumpOutOfMap = true;
 			cout << "Player made it outside of the map!" << endl;
 		}
+		player.reset();
 	}
+
 
 	//Finish Game
 	if (!isFinishGame) {
