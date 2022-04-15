@@ -4,7 +4,7 @@
 
 namespace sv = snippetvehicle;
 
-extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, TextRenderer*, Model* detectionSphere, ItemModels*);
+extern void renderAll(Camera*, GraphicsSystem*, MainMenu*, Player*, UI*, State*, CarModel4W*, DebugTools, Model* detectionSphere, ItemModels*);
 extern void despawnItems();
 extern void checkForItemActions(Player* , Camera* , PhysicsSystem*, State*, ItemModels* item_models);
 
@@ -24,10 +24,7 @@ int main()
 	cout << "	Main Menu..." << endl;
 	MainMenu mainMenu;
 	cout << "	UI..." << endl;
-	UI ui;
-	cout << "	FreeType..." << endl;
-	TextRenderer text_renderer;
-	text_renderer.initFont();
+	UI ui(&graphics);
 
 	graphics.clearBuffer();
 	mainMenu.drawLoadingGameScreen(graphics);
@@ -655,7 +652,7 @@ int main()
 			//Check if player has thrown an item (used a tomato or donut powerup)
 			checkForItemActions(&player, &boundCamera, &physics, &state, item_models);
 
-			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &text_renderer, &police_detection_sphere, item_models);
+			renderAll(activeCamera, &graphics, &mainMenu, &player, &ui,  &state, policeCarModel, dTools, &police_detection_sphere, item_models);
 
 
 			// DEBUG MODE
@@ -679,7 +676,7 @@ int main()
 
 
 
-void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools, TextRenderer* text_renderer, Model* detectionSphere, ItemModels* item_models) {
+void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMenu, Player* player, UI* ui, State* state, CarModel4W* policeCarModel, DebugTools dTools, Model* detectionSphere, ItemModels* item_models) {
 
 	glm::mat4 projection = glm::perspective(glm::radians(activeCamera->zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, NEAR_CLIPPING_PLANE, FAR_CLIPPING_PLANE);
 	glm::mat4 view = glm::mat4(glm::mat3(activeCamera->GetViewMatrix())); // remove translation from the view matrix
@@ -998,7 +995,7 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 	}
 	
 	// UI needs to be drawn after all 3D elements
-	ui->update(state, player, graphics, text_renderer);
+	ui->update(state, player);
 }
 
 void despawnItems() 

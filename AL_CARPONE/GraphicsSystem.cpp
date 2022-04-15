@@ -104,18 +104,6 @@ void GraphicsSystem::cleanup() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-//Updates the fps/ms in the window title.
-// TODO: not needed anymore
-void GraphicsSystem::updateTitle(State& state, Player& player)
-{
-	std::string FPS = std::to_string((int)ceil(1. / state.timeStep));
-	std::string RT = std::to_string((state.timeStep) * 1000);
-	std::string title = "Al Carpone / " + FPS + "FPS / " + RT + "ms / PLAYER CASH: $" + std::to_string(player.getCash());
-	glfwSetWindowTitle(window, title.c_str());
-
-}
-
 void GraphicsSystem::toggleFullscreen() {
 	if (glfwGetWindowMonitor(window) == nullptr){
 		glfwSetWindowMonitor(window, monitor, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
