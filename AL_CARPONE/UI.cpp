@@ -54,6 +54,8 @@ UI::UI(GraphicsSystem* g) : graphics(g) {
 		marker->meshes[0].vertices[2].Position += a;		// Top Right
 		marker->meshes[0].vertices[3].Position += a;		// Top Left
 	}
+
+	for (int i = 0; i < 10; i++) timer.tick();
 }
 
 
@@ -215,6 +217,19 @@ void UI::drawTexts(State* state, Player* player) {
 			num--;
 		}
 		text_renderer->RenderText(shader, message, 25.0f, 450.0f, 0.7f);
+	}
+
+
+	// -- Achievements
+	if (state->newAchievement) {
+		timer.reset();
+		state->newAchievement = false;
+		timer.tick();
+	}
+	if (timer.getDeltaTime() < 5.f) {
+		message = "* New Achievement Unlocked! *";
+		text_renderer->RenderText(shader, message, SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT - 50, 0.7f);
+		timer.tick();
 	}
 
 

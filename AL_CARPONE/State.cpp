@@ -71,6 +71,7 @@ void State::despawnItems()
 
 
 void State::checkAchievements(Player& player) {
+	//newAchievement = false;
 	glm::vec3 pos = player.getPos();
 	
 	//over the police roof
@@ -78,6 +79,7 @@ void State::checkAchievements(Player& player) {
 	{
 		if ((176 > pos.x) && (pos.x > 117) && (-190 > pos.z) && (pos.z > -205) && (pos.y > 18)) {
 			isRoofOfPoliceStation = true;
+			newAchievement = true;
 			cout << "Player made it over the police station roof!" << endl;
 		}
 	}
@@ -85,6 +87,7 @@ void State::checkAchievements(Player& player) {
 	//unlock all upgrade
 	if (player.numUpgradesPurchased == 24 && !unlockedAllUpgrades) {
 		unlockedAllUpgrades = true;
+		newAchievement = true;
 		cout << "Unlock all upgrade materials!" << endl;
 	}
 
@@ -93,6 +96,7 @@ void State::checkAchievements(Player& player) {
 		if (!isJumpOutOfMap)
 		{
 			isJumpOutOfMap = true;
+			newAchievement = true;
 			cout << "Player made it outside of the map!" << endl;
 		}
 		player.reset();
@@ -102,8 +106,11 @@ void State::checkAchievements(Player& player) {
 	//Finish Game
 	if (!isFinishGame) {
 		isFinishGame = gameWon;		//kinda redundant. We dont really need this bool
-		if(gameWon)
+		if (gameWon) {
+			newAchievement = true;
 			cout << "Player has won the game!" << endl;
+		}
+			
 	}
 
 
@@ -130,6 +137,7 @@ void State::checkAchievements(Player& player) {
 		 // If the player was previously being chased by at least one police car but is now being chased by none. All police cars must be patrolling (not idle)
 		 if (!currentlyChased && previousStateChase && !GAMESTATE::GAMESTATE_JAILED) {
 		 	isDupeThePolice = true;
+			newAchievement = true;
 		 	cout << "Player has duped the police!" << endl;
 		 }
 
@@ -152,6 +160,7 @@ void State::checkAchievements(Player& player) {
 		if(player.getCash() > 1000000)
 		{
 			isMillionaire = true;
+			newAchievement = true;
 			cout << "you are a millionaire" << endl;
 		}
 	}

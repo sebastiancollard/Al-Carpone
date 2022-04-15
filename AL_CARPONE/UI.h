@@ -42,6 +42,8 @@ private:
 	Model* towPrompt;
 	Model* Item;
 
+	Timer timer;
+
 	// MINIMAP ELEMENTS
 	Model* minimap;
 	Model* player_marker;

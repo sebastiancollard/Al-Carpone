@@ -152,7 +152,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Achievements.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -198,7 +197,6 @@
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Achievements.h" />
     <ClInclude Include="AI.h" />
     <ClInclude Include="BoxTrigger.h" />
     <ClInclude Include="AudioSystem.h" />

@@ -69,6 +69,7 @@ public:
 	bool gameLost = false;
 
 	//for achievement
+	bool newAchievement = false;
 	bool isFinishGame = false;
 	bool isDupeThePolice = false;
 	bool isJumpOutOfMap = false;
