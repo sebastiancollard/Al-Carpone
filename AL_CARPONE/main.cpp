@@ -574,21 +574,8 @@ int main()
 			///////////////
 			//Achievement//
 			///////////////
-			//over the police roof
-			glm::vec3 pos = player.getPos();
-			if(!state.isRoofOfPoliceStation)
-			{
-				if ((176 > pos.x) && ( pos.x > 117) && (-190 > pos.z) && (pos.z > -205) && (pos.y > 10)) {
-					state.isRoofOfPoliceStation = true;
-					cout << "Finished accomplishment over roof of police" << endl;
-				}
-			}
 			
-			//unlock all upgrade
-			if (player.numUpgradesPurchased == 24 && !state.isUnlockAllUpdate) {
-				state.isUnlockAllUpdate = true;
-				cout << "Unlock all upgrade materials" << endl;
-			}
+			state.checkAchievements(player);
 
 			//Simulate physics through the timestep
 			physics.step(graphics.window);

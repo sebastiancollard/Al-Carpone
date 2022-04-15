@@ -54,3 +54,59 @@ float State::getAlertLevel() {
 
 	return ratio;
 }
+
+void State::checkAchievements(Player& player) {
+	glm::vec3 pos = player.getPos();
+	
+	//over the police roof
+	if (!isRoofOfPoliceStation)
+	{
+		if ((176 > pos.x) && (pos.x > 117) && (-190 > pos.z) && (pos.z > -205) && (pos.y > 18)) {
+			isRoofOfPoliceStation = true;
+			cout << "Player made it over the police station roof!" << endl;
+		}
+	}
+
+	//unlock all upgrade
+	if (player.numUpgradesPurchased == 24 && !unlockedAllUpgrades) {
+		unlockedAllUpgrades = true;
+		cout << "Unlock all upgrade materials!" << endl;
+	}
+
+	//Made it out of the map
+	if (!isJumpOutOfMap)
+	{
+		if (pos.y < -21) {
+			isJumpOutOfMap = true;
+			cout << "Player made it outside of the map!" << endl;
+		}
+	}
+
+	//Finish Game
+	if (!isFinishGame) {
+		isFinishGame = gameWon;		//kinda redundant. We dont really need this bool
+		if(gameWon)
+			cout << "Player has won the game!" << endl;
+	}
+
+
+	//Dupe police
+	if (!isDupeThePolice) {
+		AISTATE currentAIState = AISTATE::PATROL;
+	
+		for (PoliceCar* p : activePoliceVehicles) {	//if at least one police car is still chasing the player, make the "overall" state chase
+			if ((p->ai_state != AISTATE::PATROL)) {
+				currentAIState == AISTATE::CHASE;
+				cout << "Player is being chased...." << endl;
+			}
+		}
+
+		//If the player was previously being chased by at least one police car but is now being chased by none. All police cars must be patrolling (not idle)
+		if ((currentAIState == AISTATE::PATROL) && (previousAIState == AISTATE::CHASE)) {	
+			isDupeThePolice = true;
+			cout << "Player has duped the police!" << endl;
+		}
+
+		previousAIState = currentAIState;
+	}
+}

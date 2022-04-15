@@ -75,7 +75,8 @@ public:
 	bool isDupeThePolice = false;
 	bool isJumpOutOfMap = false;
 	bool isRoofOfPoliceStation = false;
-	bool isUnlockAllUpdate = false;
+	bool unlockedAllUpgrades = false;
+	AISTATE previousAIState = AISTATE::PATROL;
 
 	//garage
 	bool g_draw = false;
@@ -145,5 +146,6 @@ public:
 	void alertPolice();
 	bool policeAlerted();
 	float getAlertLevel();
+	void checkAchievements(Player &player);
 
 };
