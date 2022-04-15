@@ -41,7 +41,8 @@ static enum SOUND_SELECTION {
 	RADIO_LOOP2,
 	RADIO_LOOP3,
 	SONG_DRUMS,
-	TOW_TRUCK
+	TOW_TRUCK,
+	ACHIEVEMENT
 };
 
 static std::vector<std::string> soundPaths{
@@ -79,7 +80,8 @@ static std::vector<std::string> soundPaths{
 		"audio/loop2.wav",			//31
 		"audio/loop3.wav",			//32
 		"audio/song_drums.wav",		//33
-		"audio/tow_truck.wav"		//34
+		"audio/tow_truck.wav",		//34
+		"audio/achievement.mp3"		//35
 };
 
 class AudioSystem {

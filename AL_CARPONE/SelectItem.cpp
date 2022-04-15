@@ -55,6 +55,17 @@ void SelectItem::handleInputs(GLFWwindow* window, State& state, Player& player)
 	else {
 		state.escape_isHeld = false;
 	}
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+		if (!state.f_isHeld) {
+			//state.gamestate = GAMESTATE_INGAME;
+			player.setChooseTool(false);
+		}
+		state.f_isHeld = true;
+		return;
+	}
+	else {
+		state.f_isHeld = false;
+	}
 
 	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
 		if (!state.enter_isHeld) {

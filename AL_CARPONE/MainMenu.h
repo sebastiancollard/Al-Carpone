@@ -15,19 +15,23 @@ enum MenuSelection
 	QUIT,
 	// options menu
 	TOGGLE_FULLSCREEN,
+	ACHIEVEMENTS,
 	CONTROLS,
 	BACK_TO_MAIN,
 	// controls menu
 	KEYBOARD,
 	CONTROLLER,
-	BACK_TO_OPTIONS
+	BACK_TO_OPTIONS,
+	// achievements menu
+	A_BACK_TO_OPTIONS
 };
 
 enum MenuType
 {
 	MAIN_MENU = 0,
 	OPTIONS_MENU,
-	CONTROLS_MENU
+	CONTROLS_MENU,
+	ACHIEVEMENTS_MENU
 };
 
 static class MainMenu {
@@ -47,6 +51,7 @@ public:
 	Model gameWinScreen;
 	Model gameLoseScreen;
 	Model jailScreen;
+	Model checkmark;
 
 
 	std::vector<Model> selectionScreens;
@@ -57,6 +62,7 @@ public:
 
 
 	MainMenu();
+	void drawCheckmarks(GraphicsSystem& graphics, State& state);
 	void drawMenu(GraphicsSystem& graphics, State& state, AudioSystem* audio);
 	void drawLoadingGameScreen(GraphicsSystem& graphics);
 	void drawLoadingMapScreen(GraphicsSystem& graphics);
