@@ -357,6 +357,7 @@ int main()
 
 					if (state.gameLost) state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 					else if (state.gameWon) state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
+					audio.setMusicVolume(0.25f);
 					state.gameLost = false;
 					state.gameWon = false;
 				}
@@ -431,6 +432,7 @@ int main()
 
 								if (state.gameLost) state.gamestate = GAMESTATE::GAMESTATE_INGAME;
 								else if (state.gameWon) state.gamestate = GAMESTATE::GAMESTATE_MAIN_MENU;
+								audio.setMusicVolume(0.25f);
 								state.gameLost = false;
 								state.gameWon = false;
 							}

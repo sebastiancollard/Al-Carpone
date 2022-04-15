@@ -237,7 +237,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 			if (b->isInRange) {
 
 				b->triggerFunction(*this, state);
-				break;
+				return;
 			}
 		}
 		state.f_isHeld = true;
@@ -382,7 +382,7 @@ void Player::handleInput(GLFWwindow* window, State& state)
 					if (b == nullptr) continue;
 					if (b->isInRange) {
 						b->triggerFunction(*this, state);
-						break;
+						return;
 					}
 				}
 				state.square_isHeld = true;
