@@ -571,12 +571,23 @@ int main()
 			if (player.canChooseTool(state) && (state.buildings[BUILDINGS::CORNERSTORE1]->isInRange 
 				|| state.buildings[BUILDINGS::CORNERSTORE2]->isInRange))
 			{ selectItem.drawMenu(graphics, state, player); }
-
+			///////////////
+			//Achievement//
+			///////////////
 			//over the police roof
 			glm::vec3 pos = player.getPos();
-			if (176 > pos.x > 117 && -190 > pos.z > -205) {
-				state.isRoofOfPoliceStation = true;
-				cout << "finished accomplishment over roof of police" << endl;
+			if(!state.isRoofOfPoliceStation)
+			{
+				if (176 > pos.x > 117 && -190 > pos.z > -205) {
+					state.isRoofOfPoliceStation = true;
+					cout << "Finished accomplishment over roof of police" << endl;
+				}
+			}
+			
+			//unlock all upgrade
+			if (player.numUpgradesPurchased == 24 && !state.isUnlockAllUpdate) {
+				state.isUnlockAllUpdate = true;
+				cout << "Unlock all upgrade materials" << endl;
 			}
 
 			//Simulate physics through the timestep

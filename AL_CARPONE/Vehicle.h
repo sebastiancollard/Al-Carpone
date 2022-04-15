@@ -26,6 +26,7 @@ class Vehicle {
 public:
 
 	double speed = 1.0; // max accel [0,1]
+	double leftTurn = 0.5f;
 	double rightTurn = -0.5f;
 
 	bool vehicleInAir = true;
