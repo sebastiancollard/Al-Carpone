@@ -68,13 +68,17 @@ public:
 	bool gameWon = false;
 	bool gameLost = false;
 
-
-
+	bool isRoofOfPoliceStation = false;
+	bool unlockedAllUpgrades = false;
+	bool previousStateChase = false;
+	float dupe_level = 0;
+	float dupe_timer = 0;
+	float dupe_shouldArrest = false;
+	
 	//garage
 	bool g_draw = false;
 
 	//for sound effect
-	int playlist_count = 0;
 
 	float policeFOff = 1.830;
 	float policeOOff = 0.871;
@@ -141,4 +145,6 @@ public:
 	bool policeAlerted();
 	float getAlertLevel();
 	void despawnItems();
+	void checkAchievements(Player &player);
+
 };
