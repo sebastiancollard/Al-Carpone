@@ -11,7 +11,6 @@ public:
 
 	Exit() { 
 		createTrigger();
-		press_f_to_exit = Model("models/popups/press_f_to_exit.obj");
 	}
 
 	void createTrigger(); // Must only be called once!

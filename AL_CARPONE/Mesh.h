@@ -75,7 +75,6 @@ public:
              }
              else if (strcmp(texture.path.c_str(), "textures\\\\BRAKELIGHTS.png") == 0 || 
                       strcmp(texture.path.c_str(), "textures\\\\BRAKELIGHTS.jpg") == 0) {
-                 cout << texture.path.c_str() << endl;
                  is_brakelight = true;
              }
         }
