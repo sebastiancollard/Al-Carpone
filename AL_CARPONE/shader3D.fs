@@ -72,6 +72,7 @@ void main()
 		vec4 lPos = vec4(light_positions[i], 1.0f);
 		vec4 lDir = FragPos - lPos;
 		float d = length(lPos - FragPos);
+		if(d > 150) continue;
 
 		float comp = - dot(vec4(Normal, 1.0),lDir);
 		if(comp < 0) comp = 0;
@@ -96,47 +97,52 @@ void main()
 
 	//HANDLE HEADLIGHTS
 
-	int i = 0;
+
 		
 	   
 	//Skip the first headlights based on player headlight mode.
-	if(playerHeadlightMode == 0) i = 4;
-	if(playerHeadlightMode == 1) i = 2;
-	for(i; i < numHeadlights; i++){
-		vec4 lPos = vec4(headlight_positions[i], 1.0f);
-		vec4 lDir = FragPos - lPos;
-		vec4 headlightForward = vec4(headlight_directions[i],1.0f);
+	{
+		int i = 0;
+		if(playerHeadlightMode == 0) i = 4;
+		if(playerHeadlightMode == 1) i = 2;
+		for(i; i < numHeadlights; i++){
+			vec4 lPos = vec4(headlight_positions[i], 1.0f);
+			float d = length(lPos - FragPos);
+			if(d > 150) continue;
+			vec4 lDir = FragPos - lPos;
+			vec4 headlightForward = vec4(headlight_directions[i],1.0f);
 
-		float comp = dot(normalize(lDir), headlightForward);
+			float comp = dot(normalize(lDir), headlightForward);
 
-		if(comp < 0.8) continue;
+			if(comp < 0.8) continue;
 
-		comp =  - dot(lDir, vec4(Normal, 1.0));
+			comp =  - dot(lDir, vec4(Normal, 1.0));
 
-		float d = length(lPos - FragPos);
 
-		//make the headlight source bright
-		if(d < 0.5f && dot(headlightForward.xyz, Normal) >= 0.8 ){
-			comp = abs(comp) * 0.08;
-		}
-		else if(is_police_headlight == 1){
-			comp = abs(comp) * 0.75;
-		}
-		else if(comp < 0) continue;
+			//make the headlight source bright
+			if(d < 0.5f && dot(headlightForward.xyz, Normal) >= 0.8 ){
+				comp = abs(comp) * 0.08;
+			}
+			else if(is_police_headlight == 1){
+				comp = abs(comp) * 0.75;
+			}
+			else if(comp < 0) continue;
 
-		headlightIllum +=  comp / pow(d,2);
+			headlightIllum +=  comp / pow(d,2);
 
-		// specular lighting
+			// specular lighting
 		
-		vec3 normal = normalize(Normal);
-		float specularLight = 0.9f;
-		vec3 lightDirection = normalize(light_positions[i] - crntPos);
-		vec3 viewDirection = normalize(camPos - crntPos);
-		vec3 reflectionDirection = reflect(-lightDirection, normal);
-		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
-		headlightSpec += comp * specAmount * specularLight / (d*d);
+			vec3 normal = normalize(Normal);
+			float specularLight = 0.9f;
+			vec3 lightDirection = normalize(light_positions[i] - crntPos);
+			vec3 viewDirection = normalize(camPos - crntPos);
+			vec3 reflectionDirection = reflect(-lightDirection, normal);
+			float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 64);
+			headlightSpec += comp * specAmount * specularLight / (d*d);
 		 
+		}
 	}
+	
    
 
    float brakelightIllum = 0;
@@ -156,7 +162,14 @@ void main()
 			brakelightSpec = 1;
    } else if(true){
 	   //HANDLE BRAKELIGHTS
-	   for(int i = 0; i < numBrakelights; i++){
+
+	   int i = 0;
+	   if(playerHeadlightMode == 0) i = 4;
+
+	   for(i; i < numBrakelights; i++){
+			vec4 lPos = vec4(brakelight_positions[i], 1.0f);
+			float d = length(lPos - FragPos);
+			if(d > 150) continue;
 			float brakelightStrength = base_brakelightStrength;
 			float cutoff = 0.85f;
 			if(i < 4){
@@ -166,7 +179,6 @@ void main()
 				}
 			}
 
-			vec4 lPos = vec4(brakelight_positions[i], 1.0f);
 			vec4 lDir = FragPos - lPos;
 			vec4 brakelightForward = vec4(brakelight_directions[i],1.0f);
 
@@ -186,8 +198,6 @@ void main()
 			comp = - dot(lDir, vec4(Normal, 1.0));
 
 			if(comp < 0) continue;
-
-			float d = length(lPos - FragPos);
 
 			//make the brakelight source bright
 		

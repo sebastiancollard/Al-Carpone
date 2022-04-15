@@ -796,6 +796,8 @@ void renderAll(Camera* activeCamera, GraphicsSystem* graphics, MainMenu* mainMen
 
 		graphics->shader3D->setInt("playerHeadlightMode", player->toggleHeadlights);
 
+		std::cout << player->toggleHeadlights << std::endl;
+
 		if (player->toggleHeadlights != 0) {
 
 			if(player->footOnBrake() || player->checkIsReversing()) graphics->shader3D->setFloat("brakelightMultiplier", 3.5f);

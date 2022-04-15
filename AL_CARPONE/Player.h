@@ -66,7 +66,7 @@ public:
 
 	bool isSeen = false;
 
-	unsigned int toggleHeadlights = 1;
+	int toggleHeadlights = 1;
 
 	bool canFlip = false;
 	float drawRadius = 0.f;
