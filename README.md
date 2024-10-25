@@ -3,6 +3,14 @@
 	<img width="480" height="430" src="https://user-images.githubusercontent.com/60115955/166864495-de452d4a-742b-43d4-ba86-dce0d597bcf1.png">
 </p>
 
+## AUTHORS
+
+Ryan McHale\
+Sebastian Collard\
+Yihan Wang\
+Zahra Ghavasieh\
+Liana Tomecek
+
 ## DEMO
 
 [A demo video demonstrating some gameplay can be found here.](https://youtu.be/XYE0egtQ99s)
